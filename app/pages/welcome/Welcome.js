@@ -12,7 +12,7 @@ import {
    getAllTypes,
 } from '_utils/redux/actions/action_creators';
 import { ArticleService } from '_utils';
-import { articles, types, categories } from '_components/mock/data';
+//import { articles, types, categories } from '_components/mock/data';
 
 export default function Welcome({ navigation }) {
    //all datas
@@ -24,17 +24,17 @@ export default function Welcome({ navigation }) {
 
    //all fetch || functions
    const getArticles = async () => {
-      let results = articles; //await ArticleService.getArticlesFromServ();
+      let results = await ArticleService.getArticlesFromServ();
       dispatch(getAllArticles(results));
    };
 
    const getThematiques = async () => {
-      let results = categories; //await ArticleService.getThematiqueFromServ();
+      let results = await ArticleService.getThematiqueFromServ();
       dispatch(getAllThematiques(results));
    };
 
    const getTypes = async () => {
-      let results = types; //await ArticleService.getTypeFromServ();
+      let results = await ArticleService.getTypeFromServ();
       dispatch(getAllTypes(results));
    };
 

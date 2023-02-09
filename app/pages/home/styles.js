@@ -21,12 +21,12 @@ export const styles = StyleSheet.create({
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-evenly',
-      alignItems: 'center'
+      alignItems: 'center',
    },
    text_landing_screen: {
       fontSize: 22,
       color: Colors.white,
-      fontWeight: 'bold'
+      fontWeight: 'bold',
    },
    content_in_landing_screen: {
       display: 'flex',
@@ -51,12 +51,12 @@ export const styles = StyleSheet.create({
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
-      alignItems: 'center'
+      alignItems: 'center',
    },
    image_for_categorie: {
       width: 60,
       height: 60,
-      borderRadius: 60
+      borderRadius: 60,
    },
    /*Types*/
    one_item_type: {
@@ -65,18 +65,23 @@ export const styles = StyleSheet.create({
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
-      alignItems: 'center'
+      alignItems: 'center',
    },
    image_for_types: {
       width: 80,
       height: 70,
-      borderRadius: 20
+      borderRadius: 20,
    },
    view_carousel: {
       width: '100%',
       flexDirection: 'row',
    },
    image_poster_style: {
+      height: 130,
+      width: 230,
+      borderRadius: 15,
+   },
+   image_poster_style_type: {
       height: 130,
       width: 230,
       borderRadius: 15,

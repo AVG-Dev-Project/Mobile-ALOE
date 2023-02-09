@@ -18,7 +18,12 @@ export const styles = StyleSheet.create({
       marginVertical: 4,
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+   },
+   view_in_filtre: {
+      display: 'flex',
+      flexDirection: 'row',
       alignItems: 'center',
    },
    view_for_input_search: {
@@ -29,7 +34,7 @@ export const styles = StyleSheet.create({
    input: {
       borderWidth: 1,
       padding: 16,
-      width: Dimensions.get('window').width < 370 ? 270 : 300,
+      width: Dimensions.get('window').width < 370 ? 270 : '88%',
       borderRightWidth: 0,
    },
    boutton_search: {

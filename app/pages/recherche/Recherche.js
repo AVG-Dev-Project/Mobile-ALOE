@@ -276,57 +276,114 @@ export default function Recherche({ navigation }) {
             </View>
 
             <View style={styles.view_for_filtre}>
-               <Text
-                  style={{
-                     textAlign: 'center',
-                     fontWeight: 'bold',
-                     fontSize: 18,
-                  }}
-               >
-                  {langueActual === 'fr' ? 'Filtre' : 'Sivana'}
-               </Text>
-               <TouchableOpacity activeOpacity={0.8}>
-                  <Menu>
-                     <MenuTrigger customStyles={{}}>
-                        <Icon
-                           name={'filter-list'}
-                           color={Colors.violet}
-                           size={34}
-                        />
-                     </MenuTrigger>
-                     <MenuOptions
-                        customStyles={{
-                           optionsContainer: {
-                              padding: 8,
-                           },
-                           optionText: {
-                              fontSize: 22,
-                           },
-                        }}
-                     >
-                        {allTypes.map((type) => (
-                           <MenuOption
-                              onSelect={() =>
-                                 filterResultByType(
-                                    langueActual === 'fr'
-                                       ? type.nom
-                                       : type.nom_mg
-                                 )
-                              }
-                              key={type.id}
-                           >
-                              <MenuOptionCustom
-                                 text={
-                                    langueActual === 'fr'
-                                       ? type.nom
-                                       : type.nom_mg
+               <View style={styles.view_in_filtre}>
+                  <Text
+                     style={{
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                        fontSize: 18,
+                     }}
+                  >
+                     {langueActual === 'fr' ? 'Thématique' : 'Lohahevitra'}
+                  </Text>
+                  <TouchableOpacity activeOpacity={0.8}>
+                     <Menu>
+                        <MenuTrigger customStyles={{}}>
+                           <Icon
+                              name={'filter-list'}
+                              color={Colors.violet}
+                              size={34}
+                           />
+                        </MenuTrigger>
+                        <MenuOptions
+                           customStyles={{
+                              optionsContainer: {
+                                 padding: 8,
+                              },
+                              optionText: {
+                                 fontSize: 22,
+                              },
+                           }}
+                        >
+                           {allTypes.map((type) => (
+                              <MenuOption
+                                 onSelect={() =>
+                                    filterResultByType(
+                                       langueActual === 'fr'
+                                          ? type.nom
+                                          : type.nom_mg
+                                    )
                                  }
-                              />
-                           </MenuOption>
-                        ))}
-                     </MenuOptions>
-                  </Menu>
-               </TouchableOpacity>
+                                 key={type.id}
+                              >
+                                 <MenuOptionCustom
+                                    text={
+                                       langueActual === 'fr'
+                                          ? type.nom
+                                          : type.nom_mg
+                                    }
+                                 />
+                              </MenuOption>
+                           ))}
+                        </MenuOptions>
+                     </Menu>
+                  </TouchableOpacity>
+               </View>
+
+               <View style={styles.view_in_filtre}>
+                  <TouchableOpacity activeOpacity={0.8}>
+                     <Menu>
+                        <MenuTrigger customStyles={{}}>
+                           <Icon
+                              name={'filter-list'}
+                              color={Colors.violet}
+                              size={34}
+                           />
+                        </MenuTrigger>
+                        <MenuOptions
+                           customStyles={{
+                              optionsContainer: {
+                                 padding: 8,
+                              },
+                              optionText: {
+                                 fontSize: 22,
+                              },
+                           }}
+                        >
+                           {allTypes.map((type) => (
+                              <MenuOption
+                                 onSelect={() =>
+                                    filterResultByType(
+                                       langueActual === 'fr'
+                                          ? type.nom
+                                          : type.nom_mg
+                                    )
+                                 }
+                                 key={type.id}
+                              >
+                                 <MenuOptionCustom
+                                    text={
+                                       langueActual === 'fr'
+                                          ? type.nom
+                                          : type.nom_mg
+                                    }
+                                 />
+                              </MenuOption>
+                           ))}
+                        </MenuOptions>
+                     </Menu>
+                  </TouchableOpacity>
+
+                  <Text
+                     style={{
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                        fontSize: 18,
+                     }}
+                  >
+                     {langueActual === 'fr' ? 'Type' : 'Karazana'}
+                  </Text>
+               </View>
             </View>
          </View>
          <View style={styles.view_for_result}>
