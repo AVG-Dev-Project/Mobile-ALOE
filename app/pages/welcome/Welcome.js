@@ -12,6 +12,7 @@ import {
    getAllTypes,
 } from '_utils/redux/actions/action_creators';
 import { ArticleService } from '_utils';
+import { articles, types, categories } from '_components/mock/data';
 
 export default function Welcome({ navigation }) {
    //all datas
@@ -23,17 +24,17 @@ export default function Welcome({ navigation }) {
 
    //all fetch || functions
    const getArticles = async () => {
-      let results = await ArticleService.getArticlesFromServ();
+      let results = articles; //await ArticleService.getArticlesFromServ();
       dispatch(getAllArticles(results));
    };
 
    const getThematiques = async () => {
-      let results = await ArticleService.getThematiqueFromServ();
+      let results = categories; //await ArticleService.getThematiqueFromServ();
       dispatch(getAllThematiques(results));
    };
 
    const getTypes = async () => {
-      let results = await ArticleService.getTypeFromServ();
+      let results = types; //await ArticleService.getTypeFromServ();
       dispatch(getAllTypes(results));
    };
 

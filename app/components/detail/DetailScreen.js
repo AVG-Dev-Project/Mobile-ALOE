@@ -201,8 +201,7 @@ export default function Detail({ navigation, route }) {
                                     color={Colors.violet}
                                     size={16}
                                  />{' '}
-                                 {oneArticle.Sous_section.numero_sous_section ??
-                                    '...'}
+                                 Sous section
                               </Text>
                            </MenuOption>
                            <MenuOption>

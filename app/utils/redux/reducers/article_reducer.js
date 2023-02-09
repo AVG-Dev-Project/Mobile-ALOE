@@ -30,9 +30,8 @@ export const articleReducer = (state = initialState, action) => {
       case addFavoris().type:
          return produce(state, (draft) => {
             if (
-               state.favoris.findIndex(
-                  (favori) => favori.id === action.payload.id
-               ) !== -1
+               state.favoris.filter((favori) => favori.id === action.payload.id)
+                  .length > 0
             ) {
                draft.favoris = draft.favoris.filter(
                   (favori) => favori.id !== action.payload.id
