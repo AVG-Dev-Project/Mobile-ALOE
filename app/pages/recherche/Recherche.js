@@ -8,6 +8,7 @@ import {
    TextInput,
    TouchableOpacity,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { filter } from 'lodash';
 import {
    Menu,
@@ -43,23 +44,48 @@ const MenuOptionCustom = ({ text }) => {
    );
 };
 
+//filter global include search bar / filter by thematique and type
+const filterGlobal = (array, theme, type, query) => {
+   let res = array;
+   if (query) {
+      res = res.filter(
+         (_loi) =>
+            _loi.Titre.titre_fr.toLowerCase().indexOf(query.toLowerCase()) !==
+            -1
+      );
+   }
+
+   if (theme) {
+      res = res.filter((item) => item.Thematique.nom_Thematique_fr === theme);
+   }
+   if (type) {
+      res = res.filter((_article) => _article.Type.nom_Type_fr === type);
+   }
+
+   return res;
+};
+
 export default function Recherche({ navigation, route }) {
    //all data
    const dispatch = useDispatch();
    const [valueForSearch, setValueForSearch] = useState('');
    const allArticles = useSelector((selector) => selector.article.articles);
+   // console.log('allArticles : ', allArticles);
    const [allArticlesFilter, setAllArticlesFilter] = useState([]);
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
    const allTypes = useSelector((selector) => selector.article.types);
+   const allThematiques = useSelector(
+      (selector) => selector.article.thematiques
+   );
    //data from navigation
    const type = route.params ? route.params.type : null;
    const thematique = route.params ? route.params.thematique : null;
    const [typeChecked, setTypeChecked] = useState(null);
    const [thematiqueChecked, setThematiqueChecked] = useState(null);
 
-   // console.log('article pr e : ', thematiqueChecked + ' / ' + typeChecked);
+   console.log('filtre pr e : ', typeChecked);
 
    //all effect
    useEffect(() => {
@@ -67,30 +93,57 @@ export default function Recherche({ navigation, route }) {
       setThematiqueChecked(thematique);
    }, [type, thematique]);
 
+   // useEffect(() => {
+   //    if (
+   //       (typeChecked !== null || typeChecked !== undefined) &&
+   //       thematiqueChecked === undefined
+   //    ) {
+   //       let res = filter(
+   //          allArticles,
+   //          (_article) => _article.Type.nom_Type_fr === typeChecked
+   //       );
+   //       setAllArticlesFilter(res);
+   //    } else if (
+   //       (thematiqueChecked !== null || thematiqueChecked !== undefined) &&
+   //       typeChecked === undefined
+   //    ) {
+   //       let res = filter(
+   //          allArticles,
+   //          (_article) =>
+   //             _article.Thematique.nom_Thematique_fr === thematiqueChecked
+   //       );
+   //       setAllArticlesFilter(res);
+   //    }
+   // }, [typeChecked, thematiqueChecked]);
+
    useEffect(() => {
-      if (
-         (typeChecked !== null || typeChecked !== undefined) &&
-         thematiqueChecked === undefined
-      ) {
-         let res = filter(
+      setAllArticlesFilter(
+         filterGlobal(
             allArticles,
-            (_article) => _article.Type.nom_Type_fr === typeChecked
-         );
-         setAllArticlesFilter(res);
-         console.log('Ato anaty type checked');
-      } else if (
-         (thematiqueChecked !== null || thematiqueChecked !== undefined) &&
-         typeChecked === undefined
-      ) {
-         let res = filter(
-            allArticles,
-            (_article) =>
-               _article.Thematique.nom_Thematique_fr === thematiqueChecked
-         );
-         setAllArticlesFilter(res);
-         console.log('Ato anaty thematique checked');
-      }
-   }, [typeChecked, thematiqueChecked]);
+            thematiqueChecked,
+            typeChecked,
+            valueForSearch
+         )
+      );
+      // let res = filterGlobal(
+      //    allArticles,
+      //    thematiqueChecked,
+      //    typeChecked,
+      //    valueForSearch
+      // );
+      // console.log('res : ', res);
+   }, [typeChecked, thematiqueChecked, valueForSearch]);
+
+   //necessary when we come back from home page i.e rehefa unmount page
+   useFocusEffect(
+      useCallback(() => {
+         return () => {
+            setAllArticlesFilter([]);
+            setTypeChecked(null);
+            setThematiqueChecked(null);
+         };
+      }, [])
+   );
 
    //all function
    const findObjectContainValueSearch = (word) => {
@@ -133,22 +186,12 @@ export default function Recherche({ navigation, route }) {
       setValueForSearch(text);
    };
 
-   const filterResultByType = (text) => {
-      if (langueActual === 'fr') {
-         let resultFilter = allArticlesFilter.filter(
-            (item) =>
-               item.Type.nom_Type_fr.toLowerCase() === text.toLowerCase() ??
-               valueForSearch.toLowerCase()
-         );
-         setAllArticlesFilter(resultFilter);
-      } else {
-         let resultFilter = allArticlesFilter.filter(
-            (item) =>
-               item.Type.nom_Type_mg.toLowerCase() === text.toLowerCase() ??
-               valueForSearch.toLowerCase()
-         );
-         setAllArticlesFilter(resultFilter);
-      }
+   const filterByType = (text) => {
+      setTypeChecked(text);
+   };
+
+   const filterByThematique = (text) => {
+      setThematiqueChecked(text);
    };
 
    //all render
@@ -350,10 +393,10 @@ export default function Recherche({ navigation, route }) {
                               },
                            }}
                         >
-                           {allTypes.map((type) => (
+                           {allThematiques.map((type) => (
                               <MenuOption
                                  onSelect={() =>
-                                    filterResultByType(
+                                    filterByThematique(
                                        langueActual === 'fr'
                                           ? type.nom
                                           : type.nom_mg
@@ -398,7 +441,7 @@ export default function Recherche({ navigation, route }) {
                            {allTypes.map((type) => (
                               <MenuOption
                                  onSelect={() =>
-                                    filterResultByType(
+                                    filterByType(
                                        langueActual === 'fr'
                                           ? type.nom
                                           : type.nom_mg
@@ -436,7 +479,7 @@ export default function Recherche({ navigation, route }) {
             </View>
          </View>
          <View style={styles.view_for_result}>
-            {allArticlesFilter.length > 0 && (
+            {allArticlesFilter?.length > 0 && (
                <Text style={{ textAlign: 'center' }}>
                   {allArticlesFilter.length}{' '}
                   {langueActual === 'fr'
