@@ -8,6 +8,7 @@ import {
    TextInput,
    TouchableOpacity,
 } from 'react-native';
+import { filter } from 'lodash';
 import {
    Menu,
    MenuOptions,
@@ -42,16 +43,54 @@ const MenuOptionCustom = ({ text }) => {
    );
 };
 
-export default function Recherche({ navigation }) {
+export default function Recherche({ navigation, route }) {
    //all data
    const dispatch = useDispatch();
    const [valueForSearch, setValueForSearch] = useState('');
    const allArticles = useSelector((selector) => selector.article.articles);
    const [allArticlesFilter, setAllArticlesFilter] = useState([]);
-   const allTypes = useSelector((selector) => selector.article.types);
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const allTypes = useSelector((selector) => selector.article.types);
+   //data from navigation
+   const type = route.params ? route.params.type : null;
+   const thematique = route.params ? route.params.thematique : null;
+   const [typeChecked, setTypeChecked] = useState(null);
+   const [thematiqueChecked, setThematiqueChecked] = useState(null);
+
+   // console.log('article pr e : ', thematiqueChecked + ' / ' + typeChecked);
+
+   //all effect
+   useEffect(() => {
+      setTypeChecked(type);
+      setThematiqueChecked(thematique);
+   }, [type, thematique]);
+
+   useEffect(() => {
+      if (
+         (typeChecked !== null || typeChecked !== undefined) &&
+         thematiqueChecked === undefined
+      ) {
+         let res = filter(
+            allArticles,
+            (_article) => _article.Type.nom_Type_fr === typeChecked
+         );
+         setAllArticlesFilter(res);
+         console.log('Ato anaty type checked');
+      } else if (
+         (thematiqueChecked !== null || thematiqueChecked !== undefined) &&
+         typeChecked === undefined
+      ) {
+         let res = filter(
+            allArticles,
+            (_article) =>
+               _article.Thematique.nom_Thematique_fr === thematiqueChecked
+         );
+         setAllArticlesFilter(res);
+         console.log('Ato anaty thematique checked');
+      }
+   }, [typeChecked, thematiqueChecked]);
 
    //all function
    const findObjectContainValueSearch = (word) => {
@@ -277,15 +316,21 @@ export default function Recherche({ navigation }) {
 
             <View style={styles.view_for_filtre}>
                <View style={styles.view_in_filtre}>
-                  <Text
-                     style={{
-                        textAlign: 'center',
-                        fontWeight: 'bold',
-                        fontSize: 18,
-                     }}
-                  >
-                     {langueActual === 'fr' ? 'Thématique' : 'Lohahevitra'}
-                  </Text>
+                  <View>
+                     <Text
+                        style={{
+                           textAlign: 'center',
+                           fontWeight: 'bold',
+                           fontSize: 18,
+                           marginTop: 10,
+                        }}
+                     >
+                        {langueActual === 'fr' ? 'Thématique' : 'Lohahevitra'}
+                     </Text>
+                     {thematiqueChecked !== null && (
+                        <Text>{thematiqueChecked}</Text>
+                     )}
+                  </View>
                   <TouchableOpacity activeOpacity={0.8}>
                      <Menu>
                         <MenuTrigger customStyles={{}}>
@@ -374,15 +419,19 @@ export default function Recherche({ navigation }) {
                      </Menu>
                   </TouchableOpacity>
 
-                  <Text
-                     style={{
-                        textAlign: 'center',
-                        fontWeight: 'bold',
-                        fontSize: 18,
-                     }}
-                  >
-                     {langueActual === 'fr' ? 'Type' : 'Karazana'}
-                  </Text>
+                  <View>
+                     <Text
+                        style={{
+                           textAlign: 'center',
+                           fontWeight: 'bold',
+                           fontSize: 18,
+                           marginTop: 10,
+                        }}
+                     >
+                        {langueActual === 'fr' ? 'Type' : 'Karazana'}
+                     </Text>
+                     {typeChecked !== null && <Text>{typeChecked}</Text>}
+                  </View>
                </View>
             </View>
          </View>

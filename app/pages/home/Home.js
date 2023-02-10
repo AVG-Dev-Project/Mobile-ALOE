@@ -75,11 +75,9 @@ export default function Home({ navigation }) {
          <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => {
-               navigation.navigate(nameNav.detailPage, {
-                  titleScreen: `${
-                     langueActual === 'fr' ? 'Article n° ' : 'Lahatsoratra '
-                  } ${item.Article.numero_Article}`,
-                  articleToViewDetail: item,
+               navigation.navigate('Recherche', {
+                  screen: 'Recherche',
+                  type: item.Type.nom_Type_fr,
                });
             }}
          >
@@ -111,10 +109,7 @@ export default function Home({ navigation }) {
             onPress={() => {
                navigation.navigate('Recherche', {
                   screen: 'Recherche',
-                  /*params: {
-                    param: 'param1',
-                    another: 'anotheraram',
-                  },*/
+                  thematique: item.Thematique.nom_Thematique_fr,
                });
             }}
          >
@@ -184,20 +179,6 @@ export default function Home({ navigation }) {
                   <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
                      {t('thematique')}
                   </Text>
-                  {/*<Icon
-                     name={'arrow-forward'}
-                     color={Colors.violet}
-                     size={30}
-                     onPress={() => {
-                        navigation.navigate(nameNav.listCategorie, {
-                           titleScreen:
-                              langueActual === 'fr'
-                                 ? 'Tous les thèmes'
-                                 : 'Ireo lohahevitra',
-                           dataToList: allThematiques,
-                        });
-                     }}
-                  />*/}
                </View>
                <View>
                   <SafeAreaView>
@@ -270,6 +251,20 @@ export default function Home({ navigation }) {
                   <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
                      {t('publie_recemment')}
                   </Text>
+                  <Icon
+                     name={'arrow-forward'}
+                     color={Colors.violet}
+                     size={30}
+                     onPress={() => {
+                        navigation.navigate(nameNav.listPage, {
+                           titleScreen:
+                              langueActual === 'fr'
+                                 ? 'Tous les articles'
+                                 : 'Ireo lahatsoratra',
+                           dataToList: allArticles,
+                        });
+                     }}
+                  />
                </View>
                <View>
                   <SafeAreaView>

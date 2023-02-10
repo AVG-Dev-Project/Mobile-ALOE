@@ -34,7 +34,7 @@ export const styles = StyleSheet.create({
    input: {
       borderWidth: 1,
       padding: 16,
-      width: Dimensions.get('window').width < 370 ? 270 : '88%',
+      width: Dimensions.get('window').width < 370 ? 270 : '83%',
       borderRightWidth: 0,
    },
    boutton_search: {
