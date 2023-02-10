@@ -46,7 +46,7 @@ const MenuOptionCustom = ({ text }) => {
 
 //filter global include search bar / filter by thematique and type
 const filterGlobal = (array, theme, type, query) => {
-   let res = array;
+   let res = theme === null && type === null && query === null ? [] : array;
    if (query) {
       res = res.filter(
          (_loi) =>
@@ -93,29 +93,6 @@ export default function Recherche({ navigation, route }) {
       setThematiqueChecked(thematique);
    }, [type, thematique]);
 
-   // useEffect(() => {
-   //    if (
-   //       (typeChecked !== null || typeChecked !== undefined) &&
-   //       thematiqueChecked === undefined
-   //    ) {
-   //       let res = filter(
-   //          allArticles,
-   //          (_article) => _article.Type.nom_Type_fr === typeChecked
-   //       );
-   //       setAllArticlesFilter(res);
-   //    } else if (
-   //       (thematiqueChecked !== null || thematiqueChecked !== undefined) &&
-   //       typeChecked === undefined
-   //    ) {
-   //       let res = filter(
-   //          allArticles,
-   //          (_article) =>
-   //             _article.Thematique.nom_Thematique_fr === thematiqueChecked
-   //       );
-   //       setAllArticlesFilter(res);
-   //    }
-   // }, [typeChecked, thematiqueChecked]);
-
    useEffect(() => {
       setAllArticlesFilter(
          filterGlobal(
@@ -125,13 +102,6 @@ export default function Recherche({ navigation, route }) {
             valueForSearch
          )
       );
-      // let res = filterGlobal(
-      //    allArticles,
-      //    thematiqueChecked,
-      //    typeChecked,
-      //    valueForSearch
-      // );
-      // console.log('res : ', res);
    }, [typeChecked, thematiqueChecked, valueForSearch]);
 
    //necessary when we come back from home page i.e rehefa unmount page
@@ -398,8 +368,8 @@ export default function Recherche({ navigation, route }) {
                                  onSelect={() =>
                                     filterByThematique(
                                        langueActual === 'fr'
-                                          ? type.nom
-                                          : type.nom_mg
+                                          ? type.nom?.substring(0, 5)
+                                          : type.nom_mg?.substring(0, 5)
                                     )
                                  }
                                  key={type.id}
