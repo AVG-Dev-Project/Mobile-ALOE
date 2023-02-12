@@ -47,19 +47,17 @@ const MenuOptionCustom = ({ text }) => {
 //filter global include search bar / filter by thematique and type
 const filterGlobal = (array, theme, type, query) => {
    let res = theme === null && type === null && query === null ? [] : array;
-   if (query) {
-      res = res.filter(
-         (_loi) =>
-            _loi.Titre.titre_fr.toLowerCase().indexOf(query.toLowerCase()) !==
-            -1
-      );
-   }
 
    if (theme) {
       res = res.filter((item) => item.Thematique.nom_Thematique_fr === theme);
    }
    if (type) {
       res = res.filter((_article) => _article.Type.nom_Type_fr === type);
+   }
+   if (query) {
+      res = res.filter((_loi) =>
+         _loi.Titre.titre_fr.toLowerCase().includes(query.toLowerCase())
+      );
    }
 
    return res;
@@ -85,12 +83,14 @@ export default function Recherche({ navigation, route }) {
    const [typeChecked, setTypeChecked] = useState(null);
    const [thematiqueChecked, setThematiqueChecked] = useState(null);
 
-   console.log('filtre pr e : ', typeChecked);
+   console.log('filtre pr e : ', typeChecked + ' / ' + thematiqueChecked);
 
    //all effect
    useEffect(() => {
-      setTypeChecked(type);
-      setThematiqueChecked(thematique);
+      if (typeChecked || thematiqueChecked) {
+         setTypeChecked(type);
+         setThematiqueChecked(thematique);
+      }
    }, [type, thematique]);
 
    useEffect(() => {
@@ -116,7 +116,7 @@ export default function Recherche({ navigation, route }) {
    );
 
    //all function
-   const findObjectContainValueSearch = (word) => {
+   /*const findObjectContainValueSearch = (word) => {
       if (word !== '') {
          if (langueActual === 'fr') {
             let resultSearch = allArticles.filter(
@@ -150,7 +150,7 @@ export default function Recherche({ navigation, route }) {
       } else {
          setAllArticlesFilter([]);
       }
-   };
+   };*/
 
    const onHandleChangeValueSearch = (text) => {
       setValueForSearch(text);
@@ -317,9 +317,9 @@ export default function Recherche({ navigation, route }) {
                />
                <TouchableOpacity
                   activeOpacity={0.8}
-                  onPress={() => {
+                  /*onPress={() => {
                      findObjectContainValueSearch(valueForSearch);
-                  }}
+                  }}*/
                >
                   <Text style={styles.boutton_search}>
                      <Icon name={'search'} color={Colors.black} size={40} />
