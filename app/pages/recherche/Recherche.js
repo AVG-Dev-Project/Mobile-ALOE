@@ -96,14 +96,18 @@ export default function Recherche({ navigation, route }) {
    }, [typeFromParams, thematiqueFromParams]);
 
    useEffect(() => {
-      setAllArticlesFilter(
-         filterGlobal(
-            allArticles,
-            thematiqueChecked,
-            typeChecked,
-            valueForSearch
-         )
-      );
+      if (typeChecked || thematiqueChecked || valueForSearch) {
+         setAllArticlesFilter(
+            filterGlobal(
+               allArticles,
+               thematiqueChecked,
+               typeChecked,
+               valueForSearch
+            )
+         );
+      } else {
+         setAllArticlesFilter([]);
+      }
    }, [typeChecked, thematiqueChecked, valueForSearch]);
 
    //necessary when we come back from home page i.e rehefa unmount page
