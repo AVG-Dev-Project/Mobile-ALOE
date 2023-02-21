@@ -8,8 +8,8 @@ import { Welcome } from '_pages';
 import { configStack } from './configStack';
 import { useSelector, useDispatch } from 'react-redux';
 import Listing from '_components/listing/ListingScreen';
-import ListingCatg from '_components/allCategories/ListingCatg';
-import ListingTypes from '_components/allTypes/ListingTypes';
+// import ListingCatg from '_components/allCategories/ListingCatg';
+// import ListingTypes from '_components/allTypes/ListingTypes';
 import Detail from '_components/detail/DetailScreen';
 
 let Stack = createStackNavigator();
@@ -31,21 +31,21 @@ export default function StackNavigation() {
                })}
             />
 
-            <Stack.Screen
+            {/* <Stack.Screen
                name={nameNav.listCategorie}
                component={ListingCatg}
                options={({ route }) => ({
                   title: route.params.titleScreen,
                })}
-            />
+            /> */}
 
-            <Stack.Screen
+            {/* <Stack.Screen
                name={nameNav.listType}
                component={ListingTypes}
                options={({ route }) => ({
                   title: route.params.titleScreen,
                })}
-            />
+            /> */}
          </Stack.Group>
 
          <Stack.Group

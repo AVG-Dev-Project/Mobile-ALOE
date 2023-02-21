@@ -8,6 +8,8 @@ import {
    TextInput,
    TouchableOpacity,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { filter } from 'lodash';
 import {
    Menu,
    MenuOptions,
@@ -42,19 +44,87 @@ const MenuOptionCustom = ({ text }) => {
    );
 };
 
-export default function Recherche({ navigation }) {
+//filter global include search bar / filter by thematique and type
+const filterGlobal = (array, theme, type, query) => {
+   let res = theme === null && type === null && query === null ? [] : array;
+
+   if (theme) {
+      res = res.filter((item) => item.Thematique.nom_Thematique_fr === theme);
+   }
+   if (type) {
+      res = res.filter((_article) => _article.Type.nom_Type_fr === type);
+   }
+   if (query) {
+      res = res.filter((_loi) =>
+         _loi.Titre.titre_fr.toLowerCase().includes(query.toLowerCase())
+      );
+   }
+
+   return res;
+};
+
+export default function Recherche({ navigation, route }) {
    //all data
    const dispatch = useDispatch();
    const [valueForSearch, setValueForSearch] = useState('');
    const allArticles = useSelector((selector) => selector.article.articles);
    const [allArticlesFilter, setAllArticlesFilter] = useState([]);
-   const allTypes = useSelector((selector) => selector.article.types);
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const allTypes = useSelector((selector) => selector.article.types);
+   const allThematiques = useSelector(
+      (selector) => selector.article.thematiques
+   );
+   //data from navigation
+   let typeFromParams = route.params ? route.params.type : null;
+   let thematiqueFromParams = route.params ? route.params.thematique : null;
+   const [typeChecked, setTypeChecked] = useState(null);
+   const [thematiqueChecked, setThematiqueChecked] = useState(null);
+
+   console.log(
+      'filtre vao e : ',
+      typeFromParams + ' / ' + thematiqueFromParams
+   );
+
+   //all effect
+   useEffect(() => {
+      if (typeFromParams || thematiqueFromParams) {
+         setTypeChecked(typeFromParams);
+         setThematiqueChecked(thematiqueFromParams);
+      }
+   }, [typeFromParams, thematiqueFromParams]);
+
+   useEffect(() => {
+      if (typeChecked || thematiqueChecked || valueForSearch) {
+         setAllArticlesFilter(
+            filterGlobal(
+               allArticles,
+               thematiqueChecked,
+               typeChecked,
+               valueForSearch
+            )
+         );
+      } else {
+         setAllArticlesFilter([]);
+      }
+   }, [typeChecked, thematiqueChecked, valueForSearch]);
+
+   //necessary when we come back from home page i.e rehefa unmount page
+   useFocusEffect(
+      useCallback(() => {
+         return () => {
+            typeFromParams = null;
+            thematiqueFromParams = null;
+            setAllArticlesFilter([]);
+            setTypeChecked(null);
+            setThematiqueChecked(null);
+         };
+      }, [])
+   );
 
    //all function
-   const findObjectContainValueSearch = (word) => {
+   /*const findObjectContainValueSearch = (word) => {
       if (word !== '') {
          if (langueActual === 'fr') {
             let resultSearch = allArticles.filter(
@@ -88,28 +158,18 @@ export default function Recherche({ navigation }) {
       } else {
          setAllArticlesFilter([]);
       }
-   };
+   };*/
 
    const onHandleChangeValueSearch = (text) => {
       setValueForSearch(text);
    };
 
-   const filterResultByType = (text) => {
-      if (langueActual === 'fr') {
-         let resultFilter = allArticlesFilter.filter(
-            (item) =>
-               item.Type.nom_Type_fr.toLowerCase() === text.toLowerCase() ??
-               valueForSearch.toLowerCase()
-         );
-         setAllArticlesFilter(resultFilter);
-      } else {
-         let resultFilter = allArticlesFilter.filter(
-            (item) =>
-               item.Type.nom_Type_mg.toLowerCase() === text.toLowerCase() ??
-               valueForSearch.toLowerCase()
-         );
-         setAllArticlesFilter(resultFilter);
-      }
+   const filterByType = (text) => {
+      setTypeChecked(text);
+   };
+
+   const filterByThematique = (text) => {
+      setThematiqueChecked(text);
    };
 
    //all render
@@ -265,9 +325,9 @@ export default function Recherche({ navigation }) {
                />
                <TouchableOpacity
                   activeOpacity={0.8}
-                  onPress={() => {
+                  /*onPress={() => {
                      findObjectContainValueSearch(valueForSearch);
-                  }}
+                  }}*/
                >
                   <Text style={styles.boutton_search}>
                      <Icon name={'search'} color={Colors.black} size={40} />
@@ -277,15 +337,21 @@ export default function Recherche({ navigation }) {
 
             <View style={styles.view_for_filtre}>
                <View style={styles.view_in_filtre}>
-                  <Text
-                     style={{
-                        textAlign: 'center',
-                        fontWeight: 'bold',
-                        fontSize: 18,
-                     }}
-                  >
-                     {langueActual === 'fr' ? 'Thématique' : 'Lohahevitra'}
-                  </Text>
+                  <View>
+                     <Text
+                        style={{
+                           textAlign: 'center',
+                           fontWeight: 'bold',
+                           fontSize: 18,
+                           marginTop: 10,
+                        }}
+                     >
+                        {langueActual === 'fr' ? 'Thématique' : 'Lohahevitra'}
+                     </Text>
+                     {thematiqueChecked !== null && (
+                        <Text>{thematiqueChecked}</Text>
+                     )}
+                  </View>
                   <TouchableOpacity activeOpacity={0.8}>
                      <Menu>
                         <MenuTrigger customStyles={{}}>
@@ -305,13 +371,13 @@ export default function Recherche({ navigation }) {
                               },
                            }}
                         >
-                           {allTypes.map((type) => (
+                           {allThematiques.map((type) => (
                               <MenuOption
                                  onSelect={() =>
-                                    filterResultByType(
+                                    filterByThematique(
                                        langueActual === 'fr'
-                                          ? type.nom
-                                          : type.nom_mg
+                                          ? type.nom?.substring(0, 5)
+                                          : type.nom_mg?.substring(0, 5)
                                     )
                                  }
                                  key={type.id}
@@ -353,7 +419,7 @@ export default function Recherche({ navigation }) {
                            {allTypes.map((type) => (
                               <MenuOption
                                  onSelect={() =>
-                                    filterResultByType(
+                                    filterByType(
                                        langueActual === 'fr'
                                           ? type.nom
                                           : type.nom_mg
@@ -374,20 +440,24 @@ export default function Recherche({ navigation }) {
                      </Menu>
                   </TouchableOpacity>
 
-                  <Text
-                     style={{
-                        textAlign: 'center',
-                        fontWeight: 'bold',
-                        fontSize: 18,
-                     }}
-                  >
-                     {langueActual === 'fr' ? 'Type' : 'Karazana'}
-                  </Text>
+                  <View>
+                     <Text
+                        style={{
+                           textAlign: 'center',
+                           fontWeight: 'bold',
+                           fontSize: 18,
+                           marginTop: 10,
+                        }}
+                     >
+                        {langueActual === 'fr' ? 'Type' : 'Karazana'}
+                     </Text>
+                     {typeChecked !== null && <Text>{typeChecked}</Text>}
+                  </View>
                </View>
             </View>
          </View>
          <View style={styles.view_for_result}>
-            {allArticlesFilter.length > 0 && (
+            {allArticlesFilter?.length > 0 && (
                <Text style={{ textAlign: 'center' }}>
                   {allArticlesFilter.length}{' '}
                   {langueActual === 'fr'
