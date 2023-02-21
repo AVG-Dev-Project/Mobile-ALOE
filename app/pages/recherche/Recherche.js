@@ -68,7 +68,6 @@ export default function Recherche({ navigation, route }) {
    const dispatch = useDispatch();
    const [valueForSearch, setValueForSearch] = useState('');
    const allArticles = useSelector((selector) => selector.article.articles);
-   // console.log('allArticles : ', allArticles);
    const [allArticlesFilter, setAllArticlesFilter] = useState([]);
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
@@ -78,20 +77,23 @@ export default function Recherche({ navigation, route }) {
       (selector) => selector.article.thematiques
    );
    //data from navigation
-   const type = route.params ? route.params.type : null;
-   const thematique = route.params ? route.params.thematique : null;
+   let typeFromParams = route.params ? route.params.type : null;
+   let thematiqueFromParams = route.params ? route.params.thematique : null;
    const [typeChecked, setTypeChecked] = useState(null);
    const [thematiqueChecked, setThematiqueChecked] = useState(null);
 
-   console.log('filtre pr e : ', typeChecked + ' / ' + thematiqueChecked);
+   console.log(
+      'filtre vao e : ',
+      typeFromParams + ' / ' + thematiqueFromParams
+   );
 
    //all effect
    useEffect(() => {
-      if (typeChecked || thematiqueChecked) {
-         setTypeChecked(type);
-         setThematiqueChecked(thematique);
+      if (typeFromParams || thematiqueFromParams) {
+         setTypeChecked(typeFromParams);
+         setThematiqueChecked(thematiqueFromParams);
       }
-   }, [type, thematique]);
+   }, [typeFromParams, thematiqueFromParams]);
 
    useEffect(() => {
       setAllArticlesFilter(
@@ -108,6 +110,8 @@ export default function Recherche({ navigation, route }) {
    useFocusEffect(
       useCallback(() => {
          return () => {
+            typeFromParams = null;
+            thematiqueFromParams = null;
             setAllArticlesFilter([]);
             setTypeChecked(null);
             setThematiqueChecked(null);

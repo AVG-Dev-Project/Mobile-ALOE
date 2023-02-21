@@ -93,9 +93,10 @@ export default function Home({ navigation }) {
                   }}
                   numberOfLines={2}
                >
-                  {langueActual === 'fr'
+                  {/*langueActual === 'fr'
                      ? item.Titre?.titre_fr
-                     : item.Titre?.titre_mg}
+               : item.Titre?.titre_mg*/}
+                  {item.Type.nom_Type_fr}
                </Text>
             </View>
          </TouchableOpacity>
@@ -125,9 +126,10 @@ export default function Home({ navigation }) {
                   }}
                   numberOfLines={2}
                >
-                  {langueActual === 'fr'
+                  {/*langueActual === 'fr'
                      ? item.Titre?.titre_fr
-                     : item.Titre?.titre_mg}
+               : item.Titre?.titre_mg*/}
+                  {item.Thematique.nom_Thematique_fr}
                </Text>
             </View>
          </TouchableOpacity>
