@@ -13,6 +13,11 @@ import {
 } from '_utils/redux/actions/action_creators';
 import { ArticleService } from '_utils';
 //import { articles, types, categories } from '_components/mock/data';
+import {
+   storeDataToLocalStorage,
+   getDataFromLocalStorage,
+   removeInLocalStorage,
+} from '_utils';
 
 export default function Welcome({ navigation }) {
    //all datas
@@ -21,6 +26,7 @@ export default function Welcome({ navigation }) {
    );
    const animation = useRef(null);
    const dispatch = useDispatch();
+   const [dataFromAS, setDataFromAS] = useState([]);
 
    //all fetch || functions
    const getArticles = async () => {
@@ -31,6 +37,7 @@ export default function Welcome({ navigation }) {
    const getThematiques = async () => {
       let results = await ArticleService.getThematiqueFromServ();
       dispatch(getAllThematiques(results));
+      //storeDataToLocalStorage('dama', results);
    };
 
    const getTypes = async () => {
@@ -38,12 +45,20 @@ export default function Welcome({ navigation }) {
       dispatch(getAllTypes(results));
    };
 
+   const fetchDataFromAS = async () => {
+      return setDataFromAS(await getDataFromLocalStorage('dama'));
+   };
+
    //all effects
    useEffect(() => {
       getArticles();
       getThematiques();
       getTypes();
+      //fetchDataFromAS();
+      //removeInLocalStorage('@dama');
    }, []);
+
+   console.log('dataFromAS : ', dataFromAS);
 
    return (
       <View style={styles.view_container_welcome}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
    View,
    Text,
@@ -8,14 +8,14 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { styles } from './styles';
 import { Icon } from '@rneui/themed';
 import Carousel from 'react-native-snap-carousel';
+import { useSelector } from 'react-redux';
 
 import HeaderGlobal from '_components/header/HeaderGlobal';
-import { nameStackNavigation as nameNav } from '_utils/constante/NameStackNavigation';
+import { nameStackNavigation as nameNav } from '_utils';
+import { styles } from './styles';
 import { Colors } from '_theme/Colors';
-import { useSelector } from 'react-redux';
 
 export default function Home({ navigation }) {
    //all states
@@ -27,6 +27,7 @@ export default function Home({ navigation }) {
    const allThematiques = useSelector(
       (selector) => selector.article.thematiques
    );
+
    //all efects
    const { t } = useTranslation();
 
