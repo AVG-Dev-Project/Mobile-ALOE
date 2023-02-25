@@ -8,6 +8,12 @@ import {
    Types,
 } from './constante/Data';
 import { ArticleService } from './services/ArticleService';
+import {
+   storeDataToLocalStorage,
+   getDataFromLocalStorage,
+   removeInLocalStorage,
+   getAllKeys,
+} from './helper/functionHelper';
 
 export {
    nameStackNavigation,
@@ -19,4 +25,8 @@ export {
    Types,
    Thematique,
    ArticleService,
+   storeDataToLocalStorage,
+   getDataFromLocalStorage,
+   removeInLocalStorage,
+   getAllKeys,
 };

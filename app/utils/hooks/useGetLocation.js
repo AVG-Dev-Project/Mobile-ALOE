@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+/*import { useState, useContext, useEffect } from 'react';
 import * as Location from 'expo-location';
 
 export const useGetLocation = () => {
@@ -24,4 +24,4 @@ export const useGetLocation = () => {
       })();
    }, []);
    return { position, errorMsgLocation };
-};
+};*/
