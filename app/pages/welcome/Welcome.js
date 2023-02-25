@@ -79,7 +79,6 @@ export default function Welcome({ navigation }) {
    /*effect pour ecouter quand l'user active sa connexion*/
    useEffect(() => {
       const unsubscribe = NetInfo.addEventListener((state) => {
-         console.log('Connection type', state.type);
          dispatch(isConnectedToInternet(state.isConnected));
       });
       setUnsubscribe(unsubscribe);
@@ -93,7 +92,7 @@ export default function Welcome({ navigation }) {
    }, [unsubscribe]);
 
    useEffect(() => {
-      //getOnlineDatas();
+      getOnlineDatas();
       getOfflineDatas();
    }, []);
 
