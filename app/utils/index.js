@@ -12,6 +12,7 @@ import {
    storeDataToLocalStorage,
    getDataFromLocalStorage,
    removeInLocalStorage,
+   getAllKeys,
 } from './helper/functionHelper';
 
 export {
@@ -27,4 +28,5 @@ export {
    storeDataToLocalStorage,
    getDataFromLocalStorage,
    removeInLocalStorage,
+   getAllKeys,
 };

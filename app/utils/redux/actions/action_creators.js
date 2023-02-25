@@ -5,6 +5,7 @@ import {
    GET_ALL_THEMATIQUES,
    GET_ALL_TYPES,
    CHANGE_LANGUAGE,
+   IS_CONNECTED_INTERNET,
 } from './action_names';
 
 export const getStarted = () => ({
@@ -34,4 +35,9 @@ export const getAllTypes = (types) => ({
 export const addFavoris = (article) => ({
    type: ADD_FAVORIS,
    payload: article,
+});
+
+export const isConnectedToInternet = (status) => ({
+   type: IS_CONNECTED_INTERNET,
+   payload: status,
 });

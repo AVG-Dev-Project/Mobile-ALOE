@@ -30,3 +30,13 @@ export const removeInLocalStorage = async (key) => {
 
    console.log('Remove done');
 };
+
+export const getAllKeys = async () => {
+   let keys = [];
+   try {
+      keys = await AsyncStorage.getAllKeys();
+      console.log('all keys : ', keys);
+   } catch (e) {
+      console.log('error in function get all keys : ', e);
+   }
+};
