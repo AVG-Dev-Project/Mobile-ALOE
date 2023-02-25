@@ -38,7 +38,7 @@ export default function Welcome({ navigation }) {
    const [unsubscribe, setUnsubscribe] = useState(null);
 
    //all fetch || functions
-   /*fonction pour getter les données en ligne*/
+   /*fetching data function*/
    const getArticles = async () => {
       let results = await ArticleService.getArticlesFromServ();
       dispatch(getAllArticles(results));
@@ -50,7 +50,6 @@ export default function Welcome({ navigation }) {
       dispatch(getAllThematiques(results));
       storeDataToLocalStorage('thematiques', results);
    };
-
    const getTypes = async () => {
       let results = await ArticleService.getTypeFromServ();
       dispatch(getAllTypes(results));
@@ -92,9 +91,14 @@ export default function Welcome({ navigation }) {
    }, [unsubscribe]);
 
    useEffect(() => {
-      getOnlineDatas();
-      getOfflineDatas();
-   }, []);
+      if (connexion) {
+         getOnlineDatas();
+         console.log("ato amin'ny mis connexion");
+      } else {
+         getOfflineDatas();
+         console.log("ato amin'ny tsy misy pr connexion");
+      }
+   }, [connexion]);
 
    /*effect pour loader les data offlines en cas de non présence de connexion*/
    useEffect(() => {
@@ -116,8 +120,8 @@ export default function Welcome({ navigation }) {
                style={{ fontSize: 34, fontWeight: 'bold', textAlign: 'center' }}
             >
                {langueActual === 'fr'
-                  ? 'Bienvenue sur loIT'
-                  : "Tongasoa eto amin'ny loIT"}
+                  ? 'Bienvenue sur Aloe'
+                  : "Tongasoa eto amin'ny Aloe"}
             </Text>
             <Text style={{ textAlign: 'center', marginVertical: 10 }}>
                C'est une application mobile où vous trouvez tous les lois ici à
