@@ -1,7 +1,7 @@
-# Aloe
+# Aloe (Accès sur les LOis Environnementales)
 
 ### presentation
 
 ### Command to build for Android :
 
-<p>expo build:android -t app-bundle</p>
+<p>eas build --profile --plateform android</p>

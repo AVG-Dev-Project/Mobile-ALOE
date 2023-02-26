@@ -24,18 +24,18 @@ import {
 
 export default function Welcome({ navigation }) {
    //all datas
-   const langueActual = useSelector(
-      (selector) => selector.fonctionnality.langue
-   );
-   const connexion = useSelector(
-      (selector) => selector.fonctionnality.isConnectedToInternet
-   );
    const animation = useRef(null);
    const dispatch = useDispatch();
    const [articlesFromAS, setArticlesFromAS] = useState([]);
    const [thematiquesFromAS, setThematiquesFromAS] = useState([]);
    const [typesFromAS, setTypesFromAS] = useState([]);
    const [unsubscribe, setUnsubscribe] = useState(null);
+   const langueActual = useSelector(
+      (selector) => selector.fonctionnality.langue
+   );
+   const connexion = useSelector(
+      (selector) => selector.fonctionnality.isConnectedToInternet
+   );
 
    //all fetch || functions
    /*fetching data function*/

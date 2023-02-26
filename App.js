@@ -1,6 +1,6 @@
 //import './ignoreWarning';
 import 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { MenuProvider } from 'react-native-popup-menu';
 import { Colors } from '_theme/Colors';
@@ -15,7 +15,7 @@ export default function App() {
       <Provider store={store}>
          <MenuProvider>
             <SafeAreaProvider>
-               <StatusBar backgroundColor={'white'} />
+               <StatusBar backgroundColor={Colors.violet} />
                <Navigation />
             </SafeAreaProvider>
          </MenuProvider>

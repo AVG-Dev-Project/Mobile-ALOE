@@ -8,9 +8,8 @@ import { Welcome } from '_pages';
 import { configStack } from './configStack';
 import { useSelector, useDispatch } from 'react-redux';
 import Listing from '_components/listing/ListingScreen';
-// import ListingCatg from '_components/allCategories/ListingCatg';
-// import ListingTypes from '_components/allTypes/ListingTypes';
 import Detail from '_components/detail/DetailScreen';
+import { Doleance } from '_pages';
 
 let Stack = createStackNavigator();
 export default function StackNavigation() {
@@ -30,22 +29,6 @@ export default function StackNavigation() {
                   title: route.params.titleScreen,
                })}
             />
-
-            {/* <Stack.Screen
-               name={nameNav.listCategorie}
-               component={ListingCatg}
-               options={({ route }) => ({
-                  title: route.params.titleScreen,
-               })}
-            /> */}
-
-            {/* <Stack.Screen
-               name={nameNav.listType}
-               component={ListingTypes}
-               options={({ route }) => ({
-                  title: route.params.titleScreen,
-               })}
-            /> */}
          </Stack.Group>
 
          <Stack.Group
@@ -54,6 +37,14 @@ export default function StackNavigation() {
             <Stack.Screen
                name={nameNav.detailPage}
                component={Detail}
+               options={({ route }) => ({
+                  title: route.params.titleScreen,
+               })}
+            />
+
+            <Stack.Screen
+               name={nameNav.doleance}
+               component={Doleance}
                options={({ route }) => ({
                   title: route.params.titleScreen,
                })}

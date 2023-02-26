@@ -9,7 +9,6 @@ import {
    TouchableOpacity,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { filter } from 'lodash';
 import {
    Menu,
    MenuOptions,

@@ -6,4 +6,5 @@ export const nameStackNavigation = {
    listType: 'Types',
    detailPage: 'Details',
    about: 'About',
+   doleance: 'Doleance',
 };
