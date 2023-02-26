@@ -32,7 +32,7 @@ export default function About({ navigation }) {
                      color: Colors.violet,
                   }}
                >
-                  LoIT
+                  Aloe
                </Text>
                <Text>
                   {langueActual === 'fr' ? 'Version' : 'Fanovana'} 1.0.0

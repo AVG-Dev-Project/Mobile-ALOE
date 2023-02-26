@@ -93,10 +93,8 @@ export default function Welcome({ navigation }) {
    useEffect(() => {
       if (connexion) {
          getOnlineDatas();
-         console.log("ato amin'ny mis connexion");
       } else {
          getOfflineDatas();
-         console.log("ato amin'ny tsy misy pr connexion");
       }
    }, [connexion]);
 
