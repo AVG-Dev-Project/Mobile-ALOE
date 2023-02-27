@@ -81,11 +81,6 @@ export default function Recherche({ navigation, route }) {
    const [typeChecked, setTypeChecked] = useState(null);
    const [thematiqueChecked, setThematiqueChecked] = useState(null);
 
-   console.log(
-      'filtre vao e : ',
-      typeFromParams + ' / ' + thematiqueFromParams
-   );
-
    //all effect
    useEffect(() => {
       if (typeFromParams || thematiqueFromParams) {

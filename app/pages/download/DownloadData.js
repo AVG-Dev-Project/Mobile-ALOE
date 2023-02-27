@@ -1,0 +1,322 @@
+import { useRef, useEffect, useState } from 'react';
+import { Text, View, Image, TouchableOpacity } from 'react-native';
+import { Colors } from '_theme/Colors';
+import Lottie from 'lottie-react-native';
+import { Icon, Button } from '@rneui/themed';
+import { useDispatch, useSelector } from 'react-redux';
+import NetInfo from '@react-native-community/netinfo';
+import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
+import {
+   getStarted,
+   getAllArticles,
+   getAllThematiques,
+   getAllTypes,
+   isConnectedToInternet,
+} from '_utils/redux/actions/action_creators';
+import { ArticleService, realm } from '_utils';
+import styles from './styles';
+//import { articles, types, categories } from '_components/mock/data';
+
+export default function DownloadData({ navigation }) {
+   //all datas
+   const animation = useRef(null);
+   const dispatch = useDispatch();
+   const langueActual = useSelector(
+      (selector) => selector.fonctionnality.langue
+   );
+   const connexion = useSelector(
+      (selector) => selector.fonctionnality.isConnectedToInternet
+   );
+   const [importedData, setImportedData] = useState(null);
+   const [isImported, setIsImported] = useState(false);
+   const [isTestConnexion, setIsTestConnexion] = useState(false);
+   const [isFetchData, setIsFetchData] = useState(false);
+   const [isUploadData, setIsUploadData] = useState(false);
+
+   //all fetch || functions
+   /*fetching data function by download from API*/
+
+   /*const getThematiques = async () => {
+      let results = await ArticleService.getThematiqueFromServ();
+      dispatch(getAllThematiques(results));
+   };
+   const getTypes = async () => {
+      let results = await ArticleService.getTypeFromServ();
+      dispatch(getAllTypes(results));
+   };*/
+   const getArticles = () => {
+      ArticleService.getArticlesFromServ()
+         .then((results) => {
+            dispatch(getAllArticles(results));
+         })
+         .catch((error) => {
+            console.error('Error while getting articles:', error);
+         });
+   };
+   const getThematiques = () => {
+      ArticleService.getThematiqueFromServ()
+         .then((results) => {
+            dispatch(getAllThematiques(results));
+         })
+         .catch((error) => {
+            console.error('Error while getting thematiques:', error);
+         });
+   };
+   const getTypes = () => {
+      ArticleService.getTypeFromServ()
+         .then((results) => {
+            dispatch(getAllTypes(results));
+            setIsFetchData(false);
+         })
+         .catch((error) => {
+            console.error('Error while getting types:', error);
+         });
+   };
+
+   // functions selon disponibilité de connexion 1 pour démarrer tous les fonction fetch depuis API 2 pour importer les données depuis le fichier
+   const getOnlineDatas = () => {
+      setIsFetchData(true);
+      getArticles();
+      getThematiques();
+      getTypes();
+   };
+
+   const article = [
+      {
+         _id: 1,
+         numero: 1,
+         titre: 'Titre numero 1',
+         contenu: 'Contenu numéro 1',
+         date: '2019-02-12',
+         thematique: 'Thématique 1',
+         type: 'Type 1',
+      },
+      {
+         _id: 2,
+         numero: 2,
+         titre: 'Titre numero 2',
+         contenu: 'Contenu numéro 2',
+         date: '2019-02-12',
+         thematique: 'Thématique 2',
+         type: 'Type 2',
+      },
+   ];
+   /*aza kitihana*/
+   /*try {
+         const file = await DocumentPicker.getDocumentAsync({
+            type: 'application/json',
+         });
+         if (file.type === 'success') {
+            const fileContent = await FileSystem.readAsStringAsync(file.uri);
+            const parsedData = JSON.parse(fileContent);
+
+            setImportedData(parsedData);
+            setIsImported(true);
+
+            // Open a Realm instance and write the imported data to the database
+            const realm = await Realm.open({ schema: [ArticleSchema] });
+            realm.write(() => {
+               parsedData.forEach((article) => {
+                  realm.create('Article', article);
+               });
+               setIsUploadData(false);
+            });
+         }
+      } catch (error) {
+         console.log(error);
+      }*/
+   const handleFileSelection = async () => {
+      setIsUploadData(true);
+      realm.write(() => {
+         article.forEach((article) => {
+            realm.write(() => {
+               realm.create('Article', {
+                  _id: article._id,
+                  numero: article.numero,
+                  titre: article.titre,
+                  contenu: article.contenu,
+                  date: article.date,
+                  thematique: article.thematique,
+                  type: article.type,
+               });
+            });
+         });
+      });
+   };
+
+   const testConnexion = () => {
+      setIsTestConnexion(true);
+      NetInfo.fetch().then((state) => {
+         dispatch(isConnectedToInternet(state.isConnected));
+         setTimeout(() => {
+            setIsTestConnexion(false);
+         }, 1000);
+      });
+   };
+
+   const showData = async () => {
+      let article = realm.objects('Article');
+      console.log('article fake : ', article);
+   };
+
+   //all effects
+   /*effect pour ecouter quand l'user active sa connexion*/
+   useEffect(() => {
+      testConnexion();
+   }, []);
+
+   return (
+      <View style={styles.view_container_download}>
+         <Lottie
+            autoPlay
+            ref={animation}
+            style={styles.images_welcome}
+            source={require('_images/upload.json')}
+         />
+         <View style={styles.view_instruction}>
+            <View style={styles.view_status_connexion}>
+               <Text
+                  style={{
+                     fontSize: 16,
+                     fontWeight: 'bold',
+                     textAlign: 'center',
+                  }}
+               >
+                  Status :{' '}
+                  {connexion
+                     ? 'Vous êtes connectés à internet'
+                     : "Vous n'êtes pas connectés"}
+               </Text>
+               {connexion ? (
+                  <Icon
+                     name={'sentiment-satisfied-alt'}
+                     color={Colors.violet}
+                     size={24}
+                  />
+               ) : (
+                  <Icon
+                     name={'sentiment-very-dissatisfied'}
+                     color={Colors.orange}
+                     size={24}
+                  />
+               )}
+            </View>
+            <Text style={{ textAlign: 'center' }}>
+               {connexion
+                  ? `Ici vous avez le choix entre télécharger les données via votre connexion ou préférez-vous importer vos données depuis votre appareil `
+                  : "Comme vous n'êtes pas connecté vous pouvez importé le fichier depuis votre appareil!"}
+            </Text>
+            <View style={styles.view_for_button}>
+               <Button
+                  title="Tester votre connexion"
+                  onPress={() => testConnexion()}
+                  icon={{
+                     name: 'restore',
+                     type: 'material',
+                     size: 24,
+                     color: Colors.white,
+                  }}
+                  titleStyle={{ fontSize: 16 }}
+                  buttonStyle={{
+                     borderRadius: 15,
+                     backgroundColor: Colors.violet,
+                  }}
+                  containerStyle={{
+                     width: 250,
+                     marginVertical: 5,
+                  }}
+                  loading={isTestConnexion}
+               />
+
+               <Button
+                  title="Télecharger les datas"
+                  icon={{
+                     name: 'file-download',
+                     type: 'material',
+                     size: 24,
+                     color: Colors.white,
+                  }}
+                  titleStyle={{ fontSize: 16 }}
+                  buttonStyle={{
+                     borderRadius: 15,
+                     backgroundColor: Colors.violet,
+                  }}
+                  containerStyle={{
+                     width: 250,
+                     marginVertical: 5,
+                  }}
+                  onPress={() => getOnlineDatas()}
+                  loading={isFetchData}
+               />
+
+               <Text style={{ textAlign: 'center', fontSize: 18 }}> ou </Text>
+
+               <Button
+                  title="Importer le fichier"
+                  icon={{
+                     name: 'file-upload',
+                     type: 'material',
+                     size: 24,
+                     color: Colors.white,
+                  }}
+                  titleStyle={{ fontSize: 16 }}
+                  buttonStyle={{
+                     borderRadius: 15,
+                     backgroundColor: Colors.violet,
+                  }}
+                  containerStyle={{
+                     width: 250,
+                     marginVertical: 5,
+                  }}
+                  onPress={() => handleFileSelection()}
+                  loading={isUploadData}
+               />
+
+               <Button
+                  title="Show data"
+                  icon={{
+                     name: 'file-upload',
+                     type: 'material',
+                     size: 24,
+                     color: Colors.white,
+                  }}
+                  titleStyle={{ fontSize: 16 }}
+                  buttonStyle={{
+                     borderRadius: 15,
+                     backgroundColor: Colors.violet,
+                  }}
+                  containerStyle={{
+                     width: 250,
+                     marginVertical: 5,
+                  }}
+                  onPress={() => showData()}
+               />
+            </View>
+         </View>
+         <View>
+            <Button
+               title="Commencer"
+               icon={{
+                  name: 'double-arrow',
+                  type: 'material',
+                  size: 24,
+                  color: Colors.white,
+               }}
+               titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
+               buttonStyle={{
+                  borderRadius: 30,
+                  backgroundColor: Colors.violet,
+                  paddingVertical: 24,
+               }}
+               containerStyle={{
+                  marginVertical: 10,
+               }}
+               onPress={() => {
+                  dispatch(getStarted());
+               }}
+            />
+         </View>
+      </View>
+   );
+}

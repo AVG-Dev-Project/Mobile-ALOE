@@ -4,12 +4,11 @@ import { nameStackNavigation as nameNav } from '_utils';
 /*tab Navitation (top and bottom both)*/
 import BottomBarTabs from '_components/navigation/tabs/BottomBarTabs';
 /*screen normal |screen indépendant à afficher|*/
-import { Welcome } from '_pages';
+import { Welcome, Doleance, DownloadData } from '_pages';
 import { configStack } from './configStack';
 import { useSelector, useDispatch } from 'react-redux';
 import Listing from '_components/listing/ListingScreen';
 import Detail from '_components/detail/DetailScreen';
-import { Doleance } from '_pages';
 
 let Stack = createStackNavigator();
 export default function StackNavigation() {
@@ -52,9 +51,13 @@ export default function StackNavigation() {
          </Stack.Group>
       </Stack.Navigator>
    ) : (
-      <Stack.Navigator initialRouteName={nameNav.login}>
+      <Stack.Navigator initialRouteName={nameNav.welcome}>
          <Stack.Group screenOptions={configStack.screenOptionsForHeaderDisable}>
             <Stack.Screen name={nameNav.welcome} component={Welcome} />
+            <Stack.Screen
+               name={nameNav.downloadData}
+               component={DownloadData}
+            />
          </Stack.Group>
       </Stack.Navigator>
    );

@@ -9,7 +9,6 @@
       "web": "expo start --web"
    },
    "dependencies": {
-      "@hookform/resolvers": "^2.8.5",
       "@react-native-async-storage/async-storage": "~1.17.3",
       "@react-native-community/netinfo": "9.3.5",
       "@react-native-masked-view/masked-view": "0.2.8",
@@ -17,6 +16,7 @@
       "@react-navigation/material-top-tabs": "^6.2.2",
       "@react-navigation/native": "^6.0.11",
       "@react-navigation/stack": "^6.2.2",
+      "@realm/react": "^0.4.3",
       "@rneui/base": "^4.0.0-rc.5",
       "@rneui/themed": "^4.0.0-rc.5",
       "add": "^2.0.6",
@@ -24,6 +24,8 @@
       "babel-plugin-transform-remove-console": "^6.9.4",
       "deprecated-react-native-prop-types": "2.2.0",
       "expo": "^47.0.13",
+      "expo-document-picker": "~11.0.1",
+      "expo-file-system": "~15.1.1",
       "expo-speech": "~11.0.0",
       "i18next": "^22.0.6",
       "i18next-browser-languagedetector": "^7.0.1",
@@ -49,6 +51,7 @@
       "react-native-vector-icons": "^9.2.0",
       "react-native-web": "~0.18.9",
       "react-redux": "^8.0.5",
+      "realm": "^11.5.1",
       "redux": "^4.2.0",
       "yarn": "^1.22.19"
    },

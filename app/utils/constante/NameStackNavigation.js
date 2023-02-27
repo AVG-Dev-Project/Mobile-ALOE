@@ -7,4 +7,5 @@ export const nameStackNavigation = {
    detailPage: 'Details',
    about: 'About',
    doleance: 'Doleance',
+   downloadData: 'DownloadData',
 };

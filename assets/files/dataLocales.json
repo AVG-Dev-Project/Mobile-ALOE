@@ -1,0 +1,26 @@
+{
+   "0": {
+      "numero": "1",
+      "titre": "Titre de l'article 1",
+      "contenu": "Contenu de l'article 1",
+      "date": "2019-01-01",
+      "thematique": "Thematique de l'article 1",
+      "type": "Type de l'article 1"
+   },
+   "1": {
+      "numero": "2",
+      "titre": "Titre de l'article 2",
+      "contenu": "Contenu de l'article 2",
+      "date": "2019-01-02",
+      "thematique": "Thematique de l'article 2",
+      "type": "Type de l'article 2"
+   },
+   "2": {
+      "numero": "3",
+      "titre": "Titre de l'article 3",
+      "contenu": "Contenu de l'article 3",
+      "date": "2019-01-03",
+      "thematique": "Thematique de l'article 3",
+      "type": "Type de l'article 3"
+   }
+}
