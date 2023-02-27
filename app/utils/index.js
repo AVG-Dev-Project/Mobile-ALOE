@@ -14,7 +14,6 @@ import {
    removeInLocalStorage,
    getAllKeys,
 } from './storage/asyncStorage';
-import realm from './storage/schema/ArticleSchema';
 
 export {
    nameStackNavigation,
@@ -30,5 +29,4 @@ export {
    getDataFromLocalStorage,
    removeInLocalStorage,
    getAllKeys,
-   realm,
 };

@@ -14,7 +14,7 @@ import {
    getAllTypes,
    isConnectedToInternet,
 } from '_utils/redux/actions/action_creators';
-import { ArticleService, realm } from '_utils';
+import { ArticleService } from '_utils';
 import styles from './styles';
 //import { articles, types, categories } from '_components/mock/data';
 
@@ -45,6 +45,7 @@ export default function DownloadData({ navigation }) {
       let results = await ArticleService.getTypeFromServ();
       dispatch(getAllTypes(results));
    };*/
+
    const getArticles = () => {
       ArticleService.getArticlesFromServ()
          .then((results) => {
@@ -81,27 +82,6 @@ export default function DownloadData({ navigation }) {
       getThematiques();
       getTypes();
    };
-
-   const article = [
-      {
-         _id: 1,
-         numero: 1,
-         titre: 'Titre numero 1',
-         contenu: 'Contenu numéro 1',
-         date: '2019-02-12',
-         thematique: 'Thématique 1',
-         type: 'Type 1',
-      },
-      {
-         _id: 2,
-         numero: 2,
-         titre: 'Titre numero 2',
-         contenu: 'Contenu numéro 2',
-         date: '2019-02-12',
-         thematique: 'Thématique 2',
-         type: 'Type 2',
-      },
-   ];
    /*aza kitihana*/
    /*try {
          const file = await DocumentPicker.getDocumentAsync({
@@ -126,24 +106,6 @@ export default function DownloadData({ navigation }) {
       } catch (error) {
          console.log(error);
       }*/
-   const handleFileSelection = async () => {
-      setIsUploadData(true);
-      realm.write(() => {
-         article.forEach((article) => {
-            realm.write(() => {
-               realm.create('Article', {
-                  _id: article._id,
-                  numero: article.numero,
-                  titre: article.titre,
-                  contenu: article.contenu,
-                  date: article.date,
-                  thematique: article.thematique,
-                  type: article.type,
-               });
-            });
-         });
-      });
-   };
 
    const testConnexion = () => {
       setIsTestConnexion(true);
@@ -153,11 +115,6 @@ export default function DownloadData({ navigation }) {
             setIsTestConnexion(false);
          }, 1000);
       });
-   };
-
-   const showData = async () => {
-      let article = realm.objects('Article');
-      console.log('article fake : ', article);
    };
 
    //all effects
@@ -269,7 +226,6 @@ export default function DownloadData({ navigation }) {
                      width: 250,
                      marginVertical: 5,
                   }}
-                  onPress={() => handleFileSelection()}
                   loading={isUploadData}
                />
 
@@ -290,7 +246,6 @@ export default function DownloadData({ navigation }) {
                      width: 250,
                      marginVertical: 5,
                   }}
-                  onPress={() => showData()}
                />
             </View>
          </View>
