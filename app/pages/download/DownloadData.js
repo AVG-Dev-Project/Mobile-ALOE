@@ -34,12 +34,6 @@ export default function DownloadData({ navigation }) {
    const [isTestConnexion, setIsTestConnexion] = useState(false);
    const [isUploadData, setIsUploadData] = useState(false);
 
-   // const props = {
-   //    name: 'Bob',
-   //    color: 'Brown',
-   //    age: 2,
-   // };
-
    // ArticleSchema.create(props);
 
    //all fetch || functions
@@ -90,30 +84,6 @@ export default function DownloadData({ navigation }) {
       getThematiques();
       getTypes();
    };
-   /*aza kitihana*/
-   /*try {
-         const file = await DocumentPicker.getDocumentAsync({
-            type: 'application/json',
-         });
-         if (file.type === 'success') {
-            const fileContent = await FileSystem.readAsStringAsync(file.uri);
-            const parsedJSONData = JSON.parse(fileContent);
-
-            setImportedData(parsedJSONData);
-            setIsImported(true);
-
-            // Open a Realm instance and write the imported data to the database
-            const realm = await Realm.open({ schema: [ArticleSchema] });
-            realm.write(() => {
-               parsedJSONData.forEach((article) => {
-                  realm.create('Article', article);
-               });
-               setIsUploadData(false);
-            });
-         }
-      } catch (error) {
-         console.log(error);
-      }*/
 
    const testConnexion = () => {
       setIsTestConnexion(true);
