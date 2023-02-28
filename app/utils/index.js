@@ -14,6 +14,7 @@ import {
    removeInLocalStorage,
    getAllKeys,
 } from './storage/asyncStorage';
+import ArticleSchema from './storage/database';
 
 export {
    nameStackNavigation,
@@ -29,4 +30,5 @@ export {
    getDataFromLocalStorage,
    removeInLocalStorage,
    getAllKeys,
+   ArticleSchema,
 };

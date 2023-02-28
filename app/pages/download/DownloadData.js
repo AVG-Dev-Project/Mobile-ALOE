@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import NetInfo from '@react-native-community/netinfo';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
+import DatabaseLayer from 'expo-sqlite-orm/src/DatabaseLayer';
+import * as SQLite from 'expo-sqlite';
 import {
    getStarted,
    getAllArticles,
@@ -14,7 +16,7 @@ import {
    getAllTypes,
    isConnectedToInternet,
 } from '_utils/redux/actions/action_creators';
-import { ArticleService } from '_utils';
+import { ArticleService, ArticleSchema } from '_utils';
 import styles from './styles';
 //import { articles, types, categories } from '_components/mock/data';
 
@@ -28,11 +30,17 @@ export default function DownloadData({ navigation }) {
    const connexion = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
-   const [importedData, setImportedData] = useState(null);
-   const [isImported, setIsImported] = useState(false);
-   const [isTestConnexion, setIsTestConnexion] = useState(false);
    const [isFetchData, setIsFetchData] = useState(false);
+   const [isTestConnexion, setIsTestConnexion] = useState(false);
    const [isUploadData, setIsUploadData] = useState(false);
+
+   // const props = {
+   //    name: 'Bob',
+   //    color: 'Brown',
+   //    age: 2,
+   // };
+
+   // ArticleSchema.create(props);
 
    //all fetch || functions
    /*fetching data function by download from API*/
@@ -89,15 +97,15 @@ export default function DownloadData({ navigation }) {
          });
          if (file.type === 'success') {
             const fileContent = await FileSystem.readAsStringAsync(file.uri);
-            const parsedData = JSON.parse(fileContent);
+            const parsedJSONData = JSON.parse(fileContent);
 
-            setImportedData(parsedData);
+            setImportedData(parsedJSONData);
             setIsImported(true);
 
             // Open a Realm instance and write the imported data to the database
             const realm = await Realm.open({ schema: [ArticleSchema] });
             realm.write(() => {
-               parsedData.forEach((article) => {
+               parsedJSONData.forEach((article) => {
                   realm.create('Article', article);
                });
                setIsUploadData(false);
@@ -115,6 +123,42 @@ export default function DownloadData({ navigation }) {
             setIsTestConnexion(false);
          }, 1000);
       });
+   };
+
+   const optionsQuery = {
+      columns: '*',
+   };
+   const showData = () => {
+      return ArticleSchema.query(optionsQuery).then((res) => console.log(res));
+   };
+
+   const handleFileSelectionAndImportData = async () => {
+      setIsUploadData(true);
+      try {
+         const file = await DocumentPicker.getDocumentAsync({
+            type: 'application/json',
+         });
+         if (file.type === 'success') {
+            const fileContent = await FileSystem.readAsStringAsync(file.uri);
+            const parsedJSONData = JSON.parse(fileContent);
+            const parsedJsonToArray = Object.values(parsedJSONData);
+            // parsedJsonToArray.forEach((article) => {
+            //    ArticleSchema.create(article);
+            //    console.log('vita ny 1 !!!');
+            // });
+            const databaseLayer = new DatabaseLayer(
+               async () => SQLite.openDatabase('database.db'),
+               'article'
+            );
+            databaseLayer
+               .bulkInsertOrReplace(parsedJsonToArray)
+               .then((response) => {
+                  setIsUploadData(false);
+               });
+         }
+      } catch (error) {
+         console.log(error);
+      }
    };
 
    //all effects
@@ -226,6 +270,7 @@ export default function DownloadData({ navigation }) {
                      width: 250,
                      marginVertical: 5,
                   }}
+                  onPress={() => handleFileSelectionAndImportData()}
                   loading={isUploadData}
                />
 
@@ -246,6 +291,7 @@ export default function DownloadData({ navigation }) {
                      width: 250,
                      marginVertical: 5,
                   }}
+                  onPress={() => showData()}
                />
             </View>
          </View>
