@@ -16,7 +16,13 @@ import {
    getAllTypes,
    isConnectedToInternet,
 } from '_utils/redux/actions/action_creators';
-import { ArticleService, ArticleSchema } from '_utils';
+import {
+   ArticleService,
+   ArticleSchema,
+   ContenuSchema,
+   TypeSchema,
+   ThematiqueSchema,
+} from '_utils';
 import styles from './styles';
 //import { articles, types, categories } from '_components/mock/data';
 
@@ -112,22 +118,54 @@ export default function DownloadData({ navigation }) {
             const fileContent = await FileSystem.readAsStringAsync(file.uri);
             const parsedJSONData = JSON.parse(fileContent);
             const parsedJsonToArray = Object.values(parsedJSONData);
+            let [type, thematique, article, contenu] = parsedJsonToArray;
+
             // parsedJsonToArray.forEach((article) => {
             //    ArticleSchema.create(article);
             //    console.log('vita ny 1 !!!');
             // });
+
+            //type
+            /*const databaseLayer = new DatabaseLayer(
+               async () => SQLite.openDatabase('database.db'),
+               'type'
+            );
+            databaseLayer
+               .bulkInsertOrReplace(type)
+               .then((response) => {
+                  setIsUploadData(false);
+               })
+               .catch((e) => console.log('error on insert type :', e));*/
+
+            //thematique
+            /*const databaseLayer = new DatabaseLayer(
+               async () => SQLite.openDatabase('database.db'),
+               'thematique'
+            );
+            databaseLayer
+               .bulkInsertOrReplace(thematique)
+               .then((response) => {
+                  setIsUploadData(false);
+               })
+               .catch((e) => console.log('error on insert type :', e));*/
+
+            //article
             const databaseLayer = new DatabaseLayer(
                async () => SQLite.openDatabase('database.db'),
                'article'
             );
             databaseLayer
-               .bulkInsertOrReplace(parsedJsonToArray)
+               .bulkInsertOrReplace(article)
                .then((response) => {
                   setIsUploadData(false);
-               });
+               })
+               .catch((e) => console.log('error on insert type :', e));
+         } else {
+            setIsUploadData(false);
          }
       } catch (error) {
          console.log(error);
+         setIsUploadData(false);
       }
    };
 

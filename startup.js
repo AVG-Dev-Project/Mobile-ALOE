@@ -1,3 +1,11 @@
-import { ArticleSchema } from '_utils';
+import {
+   ArticleSchema,
+   ContenuSchema,
+   TypeSchema,
+   ThematiqueSchema,
+} from '_utils';
 
+TypeSchema.createTable();
+ThematiqueSchema.createTable();
 ArticleSchema.createTable();
+ContenuSchema.createTable();
