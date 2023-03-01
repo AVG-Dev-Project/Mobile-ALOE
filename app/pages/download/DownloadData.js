@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { Text, View, Image, TouchableOpacity } from 'react-native';
+import { Text, View } from 'react-native';
 import { Colors } from '_theme/Colors';
 import Lottie from 'lottie-react-native';
 import { Icon, Button } from '@rneui/themed';
@@ -7,17 +7,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import NetInfo from '@react-native-community/netinfo';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
-import DatabaseLayer from 'expo-sqlite-orm/src/DatabaseLayer';
-import * as SQLite from 'expo-sqlite';
 import {
    getStarted,
-   getAllArticles,
-   getAllThematiques,
-   getAllTypes,
    isConnectedToInternet,
 } from '_utils/redux/actions/action_creators';
 import {
-   ArticleService,
    ArticleSchema,
    ContenuSchema,
    TypeSchema,
@@ -26,9 +20,11 @@ import {
    parseStructureDataForArticle,
    parseStructureDataForContenu,
    storeDataToLocalStorage,
+   fetchTypesToApi,
+   fetchArticlesToApi,
+   fetchThematiquesToApi,
 } from '_utils';
 import styles from './styles';
-//import { articles, types, categories } from '_components/mock/data';
 
 export default function DownloadData({ navigation }) {
    //all datas
@@ -41,69 +37,16 @@ export default function DownloadData({ navigation }) {
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
    const [isFetchData, setIsFetchData] = useState(false);
-   const [isTestConnexion, setIsTestConnexion] = useState(false);
    const [isUploadData, setIsUploadData] = useState(false);
 
-   // ArticleSchema.create(props);
-
-   //all fetch || functions
-   /*fetching data function by download from API*/
-
-   /*const getThematiques = async () => {
-      let results = await ArticleService.getThematiqueFromServ();
-      dispatch(getAllThematiques(results));
-   };
-   const getTypes = async () => {
-      let results = await ArticleService.getTypeFromServ();
-      dispatch(getAllTypes(results));
-   };*/
-
-   const getArticles = () => {
-      ArticleService.getArticlesFromServ()
-         .then((results) => {
-            dispatch(getAllArticles(results));
-         })
-         .catch((error) => {
-            console.error('Error while getting articles:', error);
-         });
-   };
-   const getThematiques = () => {
-      ArticleService.getThematiqueFromServ()
-         .then((results) => {
-            dispatch(getAllThematiques(results));
-         })
-         .catch((error) => {
-            console.error('Error while getting thematiques:', error);
-         });
-   };
-   const getTypes = () => {
-      ArticleService.getTypeFromServ()
-         .then((results) => {
-            dispatch(getAllTypes(results));
-            setIsFetchData(false);
-            storeDataToLocalStorage('isDataDownloaded', 'true');
-         })
-         .catch((error) => {
-            console.error('Error while getting types:', error);
-         });
-   };
-
+   //all functions
    // functions selon disponibilité de connexion 1 pour démarrer tous les fonction fetch depuis API 2 pour importer les données depuis le fichier
-   const getOnlineDatas = () => {
-      setIsFetchData(true);
-      getArticles();
-      getThematiques();
-      getTypes();
-   };
-
-   const testConnexion = () => {
-      setIsTestConnexion(true);
-      NetInfo.fetch().then((state) => {
-         dispatch(isConnectedToInternet(state.isConnected));
-         setTimeout(() => {
-            setIsTestConnexion(false);
-         }, 1000);
-      });
+   const getOnlineDatas = async () => {
+      fetchArticlesToApi(dispatch);
+      fetchThematiquesToApi(dispatch);
+      await fetchTypesToApi(dispatch);
+      setIsFetchData(false);
+      storeDataToLocalStorage('isDataDownloaded', 'true');
    };
 
    const showData = () => {
@@ -154,19 +97,14 @@ export default function DownloadData({ navigation }) {
       }
    };
 
-   const getConnexionStatusText = () => {
-      if (isTestConnexion) {
-         return '...';
-      }
-      if (connexion) return 'Vous êtes connectés à internet';
-
-      return "Vous n'êtes pas connectés";
-   };
-
    //all effects
    /*effect pour ecouter quand l'user active sa connexion*/
    useEffect(() => {
-      testConnexion();
+      const unsubscribe = NetInfo.addEventListener((state) => {
+         dispatch(isConnectedToInternet(state.isConnected));
+      });
+
+      return unsubscribe;
    }, []);
 
    return (
@@ -186,7 +124,10 @@ export default function DownloadData({ navigation }) {
                      textAlign: 'center',
                   }}
                >
-                  Status : {getConnexionStatusText()}
+                  Status :{' '}
+                  {connexion
+                     ? 'Vous êtes connectés à internet'
+                     : "Vous n'êtes pas connectés"}
                </Text>
                {connexion ? (
                   <Icon
@@ -208,27 +149,6 @@ export default function DownloadData({ navigation }) {
                   : "Comme vous n'êtes pas connecté vous pouvez importé le fichier depuis votre appareil!"}
             </Text>
             <View style={styles.view_for_button}>
-               <Button
-                  title="Tester votre connexion"
-                  onPress={() => testConnexion()}
-                  icon={{
-                     name: 'restore',
-                     type: 'material',
-                     size: 24,
-                     color: Colors.white,
-                  }}
-                  titleStyle={{ fontSize: 16 }}
-                  buttonStyle={{
-                     borderRadius: 15,
-                     backgroundColor: Colors.violet,
-                  }}
-                  containerStyle={{
-                     width: 250,
-                     marginVertical: 5,
-                  }}
-                  loading={isTestConnexion}
-               />
-
                {connexion && (
                   <Button
                      title="Télecharger les datas"
@@ -247,7 +167,10 @@ export default function DownloadData({ navigation }) {
                         width: 250,
                         marginVertical: 5,
                      }}
-                     onPress={() => getOnlineDatas()}
+                     onPress={() => {
+                        setIsFetchData(true);
+                        getOnlineDatas();
+                     }}
                      loading={isFetchData}
                   />
                )}

@@ -26,6 +26,12 @@ import {
    parseStructureDataForContenu,
 } from './helper/functionHelpler';
 
+import {
+   fetchTypesToApi,
+   fetchArticlesToApi,
+   fetchThematiquesToApi,
+} from './helper/functionFetching';
+
 export {
    nameStackNavigation,
    ContexteProvider,
@@ -47,4 +53,7 @@ export {
    insertOrUpdateToDBFunc,
    parseStructureDataForArticle,
    parseStructureDataForContenu,
+   fetchTypesToApi,
+   fetchArticlesToApi,
+   fetchThematiquesToApi,
 };

@@ -8,17 +8,12 @@ import { Icon } from '@rneui/base';
 import { useSelector, useDispatch } from 'react-redux';
 import {
    getStarted,
-   getAllArticles,
-   getAllThematiques,
-   getAllTypes,
    isConnectedToInternet,
 } from '_utils/redux/actions/action_creators';
 import {
-   ArticleService,
    nameStackNavigation as nameNav,
    getDataFromLocalStorage,
 } from '_utils';
-//import { articles, types, categories } from '_components/mock/data';
 
 export default function Welcome({ navigation }) {
    //all datas
@@ -32,24 +27,10 @@ export default function Welcome({ navigation }) {
    );
    const [isDataAlsoDownloaded, setIsDataAlsoDownloaded] = useState(false);
 
-   //all fetch || functions
-   /*fetching data function*/
-   /*const getArticles = async () => {
-      let results = await ArticleService.getArticlesFromServ();
-      dispatch(getAllArticles(results));
-   };
-
-   const getThematiques = async () => {
-      let results = await ArticleService.getThematiqueFromServ();
-      dispatch(getAllThematiques(results));
-   };
-   const getTypes = async () => {
-      let results = await ArticleService.getTypeFromServ();
-      dispatch(getAllTypes(results));
-   };
+   //functions
 
    //deux functions selon disponibilité de connexion
-   const getOnlineDatas = () => {
+   /*const getOnlineDatas = () => {
       getArticles();
       getThematiques();
       getTypes();
@@ -57,21 +38,15 @@ export default function Welcome({ navigation }) {
 
    //all effects
    /*effect pour ecouter quand l'user active sa connexion*/
-   /*useEffect(() => {
+   useEffect(() => {
       const unsubscribe = NetInfo.addEventListener((state) => {
          dispatch(isConnectedToInternet(state.isConnected));
       });
-      setUnsubscribe(unsubscribe);
-   }, []);
-   useEffect(() => {
-      return () => {
-         if (unsubscribe) {
-            unsubscribe();
-         }
-      };
-   }, [unsubscribe]);
 
-   useEffect(() => {
+      return unsubscribe;
+   }, []);
+
+   /*useEffect(() => {
       if (connexion) {
          getOnlineDatas();
       }
@@ -80,9 +55,6 @@ export default function Welcome({ navigation }) {
    useEffect(() => {
       getDataFromLocalStorage('isDataDownloaded').then((res) => {
          if (res === 'true') setIsDataAlsoDownloaded(true);
-      });
-      NetInfo.fetch().then((state) => {
-         dispatch(isConnectedToInternet(state.isConnected));
       });
    }, []);
 
