@@ -33,7 +33,7 @@ export default function Home({ navigation }) {
    const { t } = useTranslation();
 
    //all components
-   const _renderItemArticle = ({ item }) => {
+   const _renderItemContenu = ({ item }) => {
       return (
          <TouchableOpacity
             activeOpacity={0.8}
@@ -260,7 +260,7 @@ export default function Home({ navigation }) {
                   }}
                >
                   <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-                     {t('publie_recemment')}
+                     {t('contenu')}
                   </Text>
                   <Icon
                      name={'arrow-forward'}
@@ -270,8 +270,8 @@ export default function Home({ navigation }) {
                         navigation.navigate(nameNav.listPage, {
                            titleScreen:
                               langueActual === 'fr'
-                                 ? 'Tous les articles'
-                                 : 'Ireo lahatsoratra',
+                                 ? 'Tous les contenus'
+                                 : 'Ireo kaontenu',
                            dataToList: allArticles,
                         });
                      }}
@@ -287,7 +287,7 @@ export default function Home({ navigation }) {
                            loop={true}
                            loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
                            //fin des props spéficifique au section annonce
-                           renderItem={_renderItemArticle}
+                           renderItem={_renderItemContenu}
                            sliderWidth={150}
                            itemWidth={240}
                            inactiveSlideOpacity={0.9} //on uniformise tous les opacity
