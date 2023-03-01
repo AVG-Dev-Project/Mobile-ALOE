@@ -2,18 +2,35 @@ import { useRef, useEffect, useState } from 'react';
 import { Text, View, Image, TouchableOpacity } from 'react-native';
 import styles from './styles';
 import { Colors } from '_theme/Colors';
+import NetInfo from '@react-native-community/netinfo';
 import Lottie from 'lottie-react-native';
 import { Icon } from '@rneui/base';
-import { useSelector } from 'react-redux';
-import { ArticleService, nameStackNavigation as nameNav } from '_utils';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+   getStarted,
+   getAllArticles,
+   getAllThematiques,
+   getAllTypes,
+   isConnectedToInternet,
+} from '_utils/redux/actions/action_creators';
+import {
+   ArticleService,
+   nameStackNavigation as nameNav,
+   getDataFromLocalStorage,
+} from '_utils';
 //import { articles, types, categories } from '_components/mock/data';
 
 export default function Welcome({ navigation }) {
    //all datas
    const animation = useRef(null);
+   const dispatch = useDispatch();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const connexion = useSelector(
+      (selector) => selector.fonctionnality.isConnectedToInternet
+   );
+   const [isDataAlsoDownloaded, setIsDataAlsoDownloaded] = useState(false);
 
    //all fetch || functions
    /*fetching data function*/
@@ -60,6 +77,15 @@ export default function Welcome({ navigation }) {
       }
    }, [connexion]);*/
 
+   useEffect(() => {
+      getDataFromLocalStorage('isDataDownloaded').then((res) => {
+         if (res === 'true') setIsDataAlsoDownloaded(true);
+      });
+      NetInfo.fetch().then((state) => {
+         dispatch(isConnectedToInternet(state.isConnected));
+      });
+   }, []);
+
    return (
       <View style={styles.view_container_welcome}>
          <Lottie
@@ -82,21 +108,59 @@ export default function Welcome({ navigation }) {
                moment. Avec ou sans internet, vous pouvez la consulter avec
                toute tranquilité.
             </Text>
-            <Text style={{ textAlign: 'center' }}>
-               Pour commencer cliquez sur le bouton ci-dessous pour télecharger
-               ou importer les données
-            </Text>
+            {connexion ? (
+               <Text style={{ textAlign: 'center' }}>
+                  Vos données sont prêts, vous pouvez commencer à lire. Veuillez
+                  cliquer la flèche droite...
+               </Text>
+            ) : (
+               <Text style={{ textAlign: 'center' }}>
+                  Pour commencer cliquez sur le bouton ci-dessous pour
+                  télecharger ou importer les données
+               </Text>
+            )}
          </View>
-         <View style={styles.view_button_start}>
-            <TouchableOpacity
-               style={styles.boutton_start}
-               activeOpacity={0.8}
-               onPress={() => {
-                  navigation.navigate(nameNav.downloadData);
-               }}
-            >
-               <Icon name={'arrow-forward'} color={Colors.white} size={34} />
-            </TouchableOpacity>
+         <View
+            style={{
+               display: 'flex',
+               flexDirection: 'row',
+               width: '100%',
+               justifyContent: 'space-evenly',
+            }}
+         >
+            <View style={styles.view_button_arrondi}>
+               <TouchableOpacity
+                  style={styles.boutton_arrondi}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                     navigation.navigate(nameNav.downloadData);
+                  }}
+               >
+                  <Icon
+                     name={'cloud-download'}
+                     color={Colors.white}
+                     size={34}
+                  />
+               </TouchableOpacity>
+            </View>
+
+            {isDataAlsoDownloaded && (
+               <View style={styles.view_button_arrondi}>
+                  <TouchableOpacity
+                     style={styles.boutton_arrondi}
+                     activeOpacity={0.8}
+                     onPress={() => {
+                        dispatch(getStarted());
+                     }}
+                  >
+                     <Icon
+                        name={'arrow-forward'}
+                        color={Colors.white}
+                        size={34}
+                     />
+                  </TouchableOpacity>
+               </View>
+            )}
          </View>
       </View>
    );

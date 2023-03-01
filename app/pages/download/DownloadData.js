@@ -25,6 +25,7 @@ import {
    insertOrUpdateToDBFunc,
    parseStructureDataForArticle,
    parseStructureDataForContenu,
+   storeDataToLocalStorage,
 } from '_utils';
 import styles from './styles';
 //import { articles, types, categories } from '_components/mock/data';
@@ -80,6 +81,7 @@ export default function DownloadData({ navigation }) {
          .then((results) => {
             dispatch(getAllTypes(results));
             setIsFetchData(false);
+            storeDataToLocalStorage('isDataDownloaded', 'true');
          })
          .catch((error) => {
             console.error('Error while getting types:', error);
@@ -142,6 +144,7 @@ export default function DownloadData({ navigation }) {
                parseStructureDataForContenu(contenu)
             );
             setIsUploadData(false);
+            storeDataToLocalStorage('isDataDownloaded', 'true');
          } else {
             setIsUploadData(false);
          }
@@ -149,6 +152,15 @@ export default function DownloadData({ navigation }) {
          console.log(error);
          setIsUploadData(false);
       }
+   };
+
+   const getConnexionStatusText = () => {
+      if (isTestConnexion) {
+         return '...';
+      }
+      if (connexion) return 'Vous êtes connectés à internet';
+
+      return "Vous n'êtes pas connectés";
    };
 
    //all effects
@@ -174,10 +186,7 @@ export default function DownloadData({ navigation }) {
                      textAlign: 'center',
                   }}
                >
-                  Status :{' '}
-                  {connexion
-                     ? 'Vous êtes connectés à internet'
-                     : "Vous n'êtes pas connectés"}
+                  Status : {getConnexionStatusText()}
                </Text>
                {connexion ? (
                   <Icon
@@ -220,28 +229,35 @@ export default function DownloadData({ navigation }) {
                   loading={isTestConnexion}
                />
 
-               <Button
-                  title="Télecharger les datas"
-                  icon={{
-                     name: 'file-download',
-                     type: 'material',
-                     size: 24,
-                     color: Colors.white,
-                  }}
-                  titleStyle={{ fontSize: 16 }}
-                  buttonStyle={{
-                     borderRadius: 15,
-                     backgroundColor: Colors.violet,
-                  }}
-                  containerStyle={{
-                     width: 250,
-                     marginVertical: 5,
-                  }}
-                  onPress={() => getOnlineDatas()}
-                  loading={isFetchData}
-               />
+               {connexion && (
+                  <Button
+                     title="Télecharger les datas"
+                     icon={{
+                        name: 'file-download',
+                        type: 'material',
+                        size: 24,
+                        color: Colors.white,
+                     }}
+                     titleStyle={{ fontSize: 16 }}
+                     buttonStyle={{
+                        borderRadius: 15,
+                        backgroundColor: Colors.violet,
+                     }}
+                     containerStyle={{
+                        width: 250,
+                        marginVertical: 5,
+                     }}
+                     onPress={() => getOnlineDatas()}
+                     loading={isFetchData}
+                  />
+               )}
 
-               <Text style={{ textAlign: 'center', fontSize: 18 }}> ou </Text>
+               {connexion && (
+                  <Text style={{ textAlign: 'center', fontSize: 18 }}>
+                     {' '}
+                     ou{' '}
+                  </Text>
+               )}
 
                <Button
                   title="Importer le fichier"
