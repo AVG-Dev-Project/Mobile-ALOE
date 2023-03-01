@@ -4,6 +4,7 @@ import {
    Text,
    Image,
    SafeAreaView,
+   StyleSheet,
    TouchableOpacity,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -47,9 +48,10 @@ export default function Home({ navigation }) {
          >
             <View key={item.id} style={styles.view_container_renderItemArticle}>
                <Image
-                  style={styles.image_poster_style}
-                  source={item.photo ?? require('_images/book_loi.jpg')}
+                  style={styles.image_poster_style_article}
+                  source={require('_images/book_loi.jpg')}
                />
+
                <Text
                   style={{
                      marginVertical: 8,
@@ -85,14 +87,17 @@ export default function Home({ navigation }) {
             <View key={item.id} style={styles.view_container_renderItemType}>
                <Image
                   style={styles.image_poster_style_type}
-                  source={item.photo ?? require('_images/book_loi.jpg')}
+                  source={require('_images/book_loi.jpg')}
                />
+               <View
+                  style={[StyleSheet.absoluteFillObject, styles.maskImageCatg]}
+               ></View>
                <Text
-                  style={{
-                     marginVertical: 8,
-                     fontSize: 16,
-                  }}
-                  numberOfLines={2}
+                  style={[
+                     StyleSheet.absoluteFillObject,
+                     styles.text_descriptif_for_carousel,
+                  ]}
+                  numberOfLines={1}
                >
                   {/*langueActual === 'fr'
                      ? item.Titre?.titre_fr
@@ -118,13 +123,16 @@ export default function Home({ navigation }) {
             <View key={item.id} style={styles.view_container_renderItemType}>
                <Image
                   style={styles.image_poster_style_type}
-                  source={item.photo ?? require('_images/book_loi.jpg')}
+                  source={require('_images/book_loi.jpg')}
                />
+               <View
+                  style={[StyleSheet.absoluteFillObject, styles.maskImageCatg]}
+               ></View>
                <Text
-                  style={{
-                     marginVertical: 8,
-                     fontSize: 16,
-                  }}
+                  style={[
+                     StyleSheet.absoluteFillObject,
+                     styles.text_descriptif_for_carousel,
+                  ]}
                   numberOfLines={2}
                >
                   {/*langueActual === 'fr'
