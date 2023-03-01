@@ -22,6 +22,9 @@ import {
    ContenuSchema,
    TypeSchema,
    ThematiqueSchema,
+   insertOrUpdateToDBFunc,
+   parseStructureDataForArticle,
+   parseStructureDataForContenu,
 } from '_utils';
 import styles from './styles';
 //import { articles, types, categories } from '_components/mock/data';
@@ -120,46 +123,26 @@ export default function DownloadData({ navigation }) {
             const parsedJsonToArray = Object.values(parsedJSONData);
             let [type, thematique, article, contenu] = parsedJsonToArray;
 
-            // parsedJsonToArray.forEach((article) => {
-            //    ArticleSchema.create(article);
-            //    console.log('vita ny 1 !!!');
-            // });
-
             //type
-            /*const databaseLayer = new DatabaseLayer(
-               async () => SQLite.openDatabase('database.db'),
-               'type'
-            );
-            databaseLayer
-               .bulkInsertOrReplace(type)
-               .then((response) => {
-                  setIsUploadData(false);
-               })
-               .catch((e) => console.log('error on insert type :', e));*/
+            insertOrUpdateToDBFunc('database', 'type', type);
 
             //thematique
-            /*const databaseLayer = new DatabaseLayer(
-               async () => SQLite.openDatabase('database.db'),
-               'thematique'
-            );
-            databaseLayer
-               .bulkInsertOrReplace(thematique)
-               .then((response) => {
-                  setIsUploadData(false);
-               })
-               .catch((e) => console.log('error on insert type :', e));*/
+            insertOrUpdateToDBFunc('database', 'thematique', thematique);
 
             //article
-            const databaseLayer = new DatabaseLayer(
-               async () => SQLite.openDatabase('database.db'),
-               'article'
+            insertOrUpdateToDBFunc(
+               'database',
+               'article',
+               parseStructureDataForArticle(article)
             );
-            databaseLayer
-               .bulkInsertOrReplace(article)
-               .then((response) => {
-                  setIsUploadData(false);
-               })
-               .catch((e) => console.log('error on insert type :', e));
+
+            //contenu
+            await insertOrUpdateToDBFunc(
+               'database',
+               'contenu',
+               parseStructureDataForContenu(contenu)
+            );
+            setIsUploadData(false);
          } else {
             setIsUploadData(false);
          }

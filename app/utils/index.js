@@ -20,6 +20,11 @@ import {
    TypeSchema,
    ThematiqueSchema,
 } from './storage/database';
+import { insertOrUpdateToDBFunc } from './storage/querySqlite';
+import {
+   parseStructureDataForArticle,
+   parseStructureDataForContenu,
+} from './helper/functionHelpler';
 
 export {
    nameStackNavigation,
@@ -39,4 +44,7 @@ export {
    ContenuSchema,
    TypeSchema,
    ThematiqueSchema,
+   insertOrUpdateToDBFunc,
+   parseStructureDataForArticle,
+   parseStructureDataForContenu,
 };

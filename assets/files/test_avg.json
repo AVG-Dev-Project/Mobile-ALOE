@@ -1,0 +1,54 @@
+{
+   "type": [
+      { "id": 1, "name_fr": "Loi", "name_mg": "Lalàna" },
+      { "id": 2, "name_fr": "Decret", "name_mg": "Decret" }
+   ],
+   "thematique": [{ "id": 1, "name_fr": "Flore", "name_mg": "Zava-maniry" }],
+   "article": [
+      {
+         "id": 1,
+         "numero": 1,
+         "titre": {
+            "id": 1,
+            "numero": 1,
+            "titre_fr": "DEFINITION DE LA FORET",
+            "titre_mg": "FAMARITANA NY ALA"
+         },
+         "chapitre": null,
+         "fr": "dama fr",
+         "mg": "dama mg"
+      }
+   ],
+   "contenu": [
+      {
+         "id": 1,
+         "type": { "id": 1, "name_fr": "Loi", "name_mg": "Lalàna" },
+         "thematique": {
+            "id": 1,
+            "name_fr": "Flore",
+            "name_mg": "Zava-maniry"
+         },
+         "objet": {
+            "id": 1,
+            "name_fr": "Portant révision de la Législation Forestière",
+            "name_mg": "Anavaozana ny lalàna fitantanana ny ala"
+         },
+         "en_tete": {
+            "id": 1,
+            "_mot_cle": "L’Assemblée Nationale a adopt",
+            "name_fr": "en_tete_fr",
+            "name_mg": "en_tete_mg"
+         },
+         "expose_des_motifs": null,
+         "etat": null,
+         "note": null,
+         "organisme": {
+            "id": 1,
+            "name_fr": "MINISTERE DES EAUX ET FORETS",
+            "name_mg": "MINISITERAN’NY RANO SY ALA"
+         },
+         "signature": "",
+         "attachement": "http://127.0.0.1:8000/file/attachements/VF-Loi_97-017_r%C3%A9vision_legislation_forestiere.pdf"
+      }
+   ]
+}
