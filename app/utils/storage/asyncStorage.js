@@ -20,7 +20,7 @@ export const getDataFromLocalStorage = async (key) => {
 export const removeInLocalStorage = async (key) => {
    //const keys = [key1, key2];
    try {
-      await AsyncStorage.removeItem(key);
+      await AsyncStorage.removeItem(`@${key}`);
       //await AsyncStorage.multiRemove(keys);
    } catch (e) {
       console.log('error in function remove from async storage');

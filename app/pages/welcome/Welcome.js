@@ -13,6 +13,10 @@ import {
 import {
    nameStackNavigation as nameNav,
    getDataFromLocalStorage,
+   ArticleSchema,
+   ContenuSchema,
+   TypeSchema,
+   ThematiqueSchema,
 } from '_utils';
 
 export default function Welcome({ navigation }) {
@@ -25,16 +29,29 @@ export default function Welcome({ navigation }) {
    const connexion = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
-   const [isDataAlsoDownloaded, setIsDataAlsoDownloaded] = useState(false);
+   const [isAllDataAlsoUploaded, setIsAllDataAlsoUploaded] = useState(false);
+   const [isAllDataAlsoDownloaded, setIsAllDataAlsoDownloaded] =
+      useState(false);
 
    //functions
 
    //deux functions selon disponibilité de connexion
-   /*const getOnlineDatas = () => {
-      getArticles();
-      getThematiques();
-      getTypes();
+   /*const getSmallDatasOnLine = () => {
+      fetchThematiquesToApi(dispatch),
+      fetchArticlesToApi(dispatch),
+      fetchTypesToApi(dispatch),
    };*/
+
+   const getAllDataFromLocalDataBase = () => {
+      //article
+      ArticleSchema.query({ columns: '*' }).then((res) => console.log(res));
+      //contenu
+      ContenuSchema.query({ columns: '*' }).then((res) => console.log(res));
+      //thematique
+      ThematiqueSchema.query({ columns: '*' }).then((res) => console.log(res));
+      //type
+      TypeSchema.query({ columns: '*' }).then((res) => console.log(res));
+   };
 
    //all effects
    /*effect pour ecouter quand l'user active sa connexion*/
@@ -48,13 +65,17 @@ export default function Welcome({ navigation }) {
 
    /*useEffect(() => {
       if (connexion) {
-         getOnlineDatas();
+         return getSmallDatasOnLine();
       }
+      getAllDataFromLocalDataBase()
    }, [connexion]);*/
 
    useEffect(() => {
-      getDataFromLocalStorage('isDataDownloaded').then((res) => {
-         if (res === 'true') setIsDataAlsoDownloaded(true);
+      getDataFromLocalStorage('isAllDataImported').then((res) => {
+         if (res === 'true') setIsAllDataAlsoUploaded(true);
+      });
+      getDataFromLocalStorage('isAllDataDownloaded').then((res) => {
+         if (res === 'true') setIsAllDataAlsoDownloaded(true);
       });
    }, []);
 
@@ -116,7 +137,7 @@ export default function Welcome({ navigation }) {
                </TouchableOpacity>
             </View>
 
-            {isDataAlsoDownloaded && (
+            {(isAllDataAlsoUploaded || isAllDataAlsoDownloaded) && (
                <View style={styles.view_button_arrondi}>
                   <TouchableOpacity
                      style={styles.boutton_arrondi}

@@ -20,6 +20,9 @@ import {
    parseStructureDataForArticle,
    parseStructureDataForContenu,
    storeDataToLocalStorage,
+   getDataFromLocalStorage,
+   removeInLocalStorage,
+   getAllKeys,
    fetchTypesToApi,
    fetchArticlesToApi,
    fetchThematiquesToApi,
@@ -38,6 +41,10 @@ export default function DownloadData({ navigation }) {
    );
    const [isFetchData, setIsFetchData] = useState(false);
    const [isUploadData, setIsUploadData] = useState(false);
+   const [isAllDataAlsoUploaded, setIsAllDataAlsoUploaded] = useState(false);
+   const [isAllDataAlsoDownloaded, setIsAllDataAlsoDownloaded] =
+      useState(false);
+   const [buttonStartDisabled, setButtonStartDisabled] = useState(true);
 
    //all functions
    // functions selon disponibilité de connexion 1 pour démarrer tous les fonction fetch depuis API 2 pour importer les données depuis le fichier
@@ -46,7 +53,7 @@ export default function DownloadData({ navigation }) {
       fetchThematiquesToApi(dispatch);
       await fetchTypesToApi(dispatch);
       setIsFetchData(false);
-      storeDataToLocalStorage('isDataDownloaded', 'true');
+      storeDataToLocalStorage('isAllDataDownloaded', 'true');
    };
 
    const showData = () => {
@@ -87,7 +94,7 @@ export default function DownloadData({ navigation }) {
                parseStructureDataForContenu(contenu)
             );
             setIsUploadData(false);
-            storeDataToLocalStorage('isDataDownloaded', 'true');
+            storeDataToLocalStorage('isAllDataImported', 'true');
          } else {
             setIsUploadData(false);
          }
@@ -106,6 +113,26 @@ export default function DownloadData({ navigation }) {
 
       return unsubscribe;
    }, []);
+
+   useEffect(() => {
+      getDataFromLocalStorage('isAllDataImported').then((res) => {
+         if (res === 'true') setIsAllDataAlsoUploaded(true);
+      });
+      getDataFromLocalStorage('isAllDataDownloaded').then((res) => {
+         if (res === 'true') setIsAllDataAlsoDownloaded(true);
+      });
+   }, [isUploadData, isFetchData]);
+
+   useEffect(() => {
+      if (isAllDataAlsoDownloaded || isAllDataAlsoUploaded) {
+         return setButtonStartDisabled(false);
+      }
+   }, [
+      isAllDataAlsoDownloaded,
+      isAllDataAlsoUploaded,
+      isUploadData,
+      isFetchData,
+   ]);
 
    return (
       <View style={styles.view_container_download}>
@@ -245,6 +272,7 @@ export default function DownloadData({ navigation }) {
                onPress={() => {
                   dispatch(getStarted());
                }}
+               disabled={buttonStartDisabled}
             />
          </View>
       </View>
