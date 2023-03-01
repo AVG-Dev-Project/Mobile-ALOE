@@ -5,12 +5,12 @@ const styles = StyleSheet.create({
    view_container_download: {
       flex: 1,
       backgroundColor: Colors.white,
-      marginVertical: 30,
+      marginVertical: 20,
       paddingHorizontal: 20,
       alignItems: 'center',
    },
    images_welcome: {
-      height: Dimensions.get('window').height < 700 ? 250 : 300,
+      height: Dimensions.get('window').height < 700 ? 250 : 250,
       width: 300,
    },
    view_status_connexion: {

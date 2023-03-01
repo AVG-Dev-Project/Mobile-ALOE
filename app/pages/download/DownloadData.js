@@ -104,11 +104,10 @@ export default function DownloadData({ navigation }) {
       });
    };
 
-   const optionsQuery = {
-      columns: '*',
-   };
    const showData = () => {
-      return ArticleSchema.query(optionsQuery).then((res) => console.log(res));
+      return ArticleSchema.query({ columns: '*' }).then((res) =>
+         console.log(res)
+      );
    };
 
    const handleFileSelectionAndImportData = async () => {
