@@ -25,7 +25,7 @@
 //          <View style={styles.view_render} key={item.id}>
 //             <TouchableOpacity
 //                onPress={() => {
-//                   navigation.navigate(nameNav.listPage, {
+//                   navigation.navigate(nameNav.listArticle, {
 //                      titleScreen: `${
 //                         langueActual === 'fr' ? item.nom : item.nom_mg
 //                      }`,

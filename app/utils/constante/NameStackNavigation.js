@@ -1,7 +1,8 @@
 export const nameStackNavigation = {
    home: 'Accueil',
    welcome: 'Welcome',
-   listPage: 'Liste',
+   listArticle: 'ListeArticle',
+   listContenu: 'ListeContenu',
    listCategorie: 'Categories',
    listType: 'Types',
    detailPage: 'Details',

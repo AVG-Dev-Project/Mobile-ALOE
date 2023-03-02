@@ -4,20 +4,19 @@ import {
    StyleSheet,
    FlatList,
    Image,
-   Modal,
    SafeAreaView,
    TouchableOpacity,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { nameStackNavigation as nameNav } from '_utils/constante/NameStackNavigation';
 // import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { styles } from './styles';
+import { styles } from './stylesContenu';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
 import { addFavoris } from '_utils/redux/actions/action_creators';
 
-export default function Listing({ navigation, route }) {
+export default function ListingContenu({ navigation, route }) {
    //all data
    const dispatch = useDispatch();
    const langueActual = useSelector(
@@ -122,7 +121,7 @@ export default function Listing({ navigation, route }) {
                            display: 'flex',
                            flexDirection: 'row',
                            width: 108,
-                           justifyContent: 'space-evenly',
+                           justifyContent: 'flex-end',
                         }}
                      >
                         <TouchableOpacity
@@ -132,25 +131,8 @@ export default function Listing({ navigation, route }) {
                            }}
                         >
                            <Icon
-                              name={'picture-as-pdf'}
+                              name={'file-download'}
                               color={Colors.violet}
-                              size={28}
-                           />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                           activeOpacity={0.8}
-                           onPress={() => {
-                              dispatch(addFavoris(item));
-                              alert(
-                                 langueActual === 'fr'
-                                    ? 'Ajouté au favoris.'
-                                    : "Nampiana tao amin'ny ankafizina"
-                              );
-                           }}
-                        >
-                           <Icon
-                              name={'favorite-border'}
-                              color={Colors.orange}
                               size={28}
                            />
                         </TouchableOpacity>

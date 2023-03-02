@@ -17,6 +17,9 @@ import {
    ContenuSchema,
    TypeSchema,
    ThematiqueSchema,
+   fetchTypesToApi,
+   fetchArticlesToApi,
+   fetchThematiquesToApi,
 } from '_utils';
 
 export default function Welcome({ navigation }) {
@@ -35,14 +38,14 @@ export default function Welcome({ navigation }) {
 
    //functions
 
-   //deux functions selon disponibilité de connexion
+   //deux functions selon disponibilité de connexion (une pour fetcher 10 datas afin de peupler la base)
    /*const getSmallDatasOnLine = () => {
       fetchThematiquesToApi(dispatch),
       fetchArticlesToApi(dispatch),
       fetchTypesToApi(dispatch),
    };*/
 
-   const getAllDataFromLocalDataBase = () => {
+   const getAllDatasOffline = () => {
       //article
       ArticleSchema.query({ columns: '*' }).then((res) => console.log(res));
       //contenu
@@ -67,7 +70,7 @@ export default function Welcome({ navigation }) {
       if (connexion) {
          return getSmallDatasOnLine();
       }
-      getAllDataFromLocalDataBase()
+      getAllDatasOffline()
    }, [connexion]);*/
 
    useEffect(() => {

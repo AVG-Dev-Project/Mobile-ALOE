@@ -1,9 +1,18 @@
 {
    "type": [
       { "id": 1, "name_fr": "Loi", "name_mg": "Lalàna" },
-      { "id": 2, "name_fr": "Decret", "name_mg": "Decret" }
+      { "id": 2, "name_fr": "Decret", "name_mg": "Decret" },
+      { "id": 3, "name_fr": "Arrêté", "name_mg": "Fanajanona" },
+      { "id": 4, "name_fr": "Convention", "name_mg": "Fifanarahana" },
+      { "id": 5, "name_fr": "Ordonance", "name_mg": "Fandidiana" }
    ],
-   "thematique": [{ "id": 1, "name_fr": "Flore", "name_mg": "Zava-maniry" }],
+   "thematique": [
+      { "id": 1, "name_fr": "Flore", "name_mg": "Zava-maniry" },
+      { "id": 2, "name_fr": "Corruption", "name_mg": "kolikoly" },
+      { "id": 3, "name_fr": "Déontologie", "name_mg": "Deontolojia" },
+      { "id": 4, "name_fr": "Faune", "name_mg": "Bibidia" },
+      { "id": 5, "name_fr": "Répression", "name_mg": "Repression" }
+   ],
    "article": [
       {
          "id": 1,
@@ -17,12 +26,184 @@
          "chapitre": null,
          "fr": "dama fr",
          "mg": "dama mg"
+      },
+      {
+         "id": 2,
+         "numero": 2,
+         "titre": {
+            "id": 3,
+            "numero": 1,
+            "titre_fr": "DEUXIEME DEFINITION",
+            "titre_mg": "LOHATENA FAHAROA"
+         },
+         "chapitre": null,
+         "fr": "Deuxieme article",
+         "mg": "Article faharoa"
+      },
+      {
+         "id": 3,
+         "numero": 3,
+         "titre": {
+            "id": 1,
+            "numero": 2,
+            "titre_fr": "DEFINITION DE LA LUNE",
+            "titre_mg": "FAMARITANA NY VOLANA"
+         },
+         "chapitre": null,
+         "fr": "Troisième article",
+         "mg": "Article fahatelo"
+      },
+      {
+         "id": 4,
+         "numero": 4,
+         "titre": {
+            "id": 1,
+            "numero": 3,
+            "titre_fr": "DEFINITION DE LA QUATRIEME",
+            "titre_mg": "FAMARITANA NY FAHAEFATRA"
+         },
+         "chapitre": null,
+         "fr": "Quatrième article",
+         "mg": "Article fahaefatra"
+      },
+      {
+         "id": 5,
+         "numero": 5,
+         "titre": {
+            "id": 1,
+            "numero": 2,
+            "titre_fr": "DEFINITION DE LA CINQUIEME",
+            "titre_mg": "FAMARITANA NY FAHADIMY"
+         },
+         "chapitre": null,
+         "fr": "Cinquième article",
+         "mg": "Article fahadimy mg"
+      },
+      {
+         "id": 6,
+         "numero": 6,
+         "titre": {
+            "id": 1,
+            "numero": 5,
+            "titre_fr": "DEFINITION DE LA SIXIEME",
+            "titre_mg": "FAMARITANA NY FAHAENINA"
+         },
+         "chapitre": null,
+         "fr": "Sixième article fr",
+         "mg": "Article fahaenina mg"
+      },
+      {
+         "id": 7,
+         "numero": 7,
+         "titre": {
+            "id": 4,
+            "numero": 4,
+            "titre_fr": "DEFINITION DE LA SEPTIEME",
+            "titre_mg": "FAMARITANA NY FAHAFITO"
+         },
+         "chapitre": null,
+         "fr": "Septième article fr",
+         "mg": "Article faha fito mg"
       }
    ],
    "contenu": [
       {
          "id": 1,
          "type": { "id": 1, "name_fr": "Loi", "name_mg": "Lalàna" },
+         "thematique": {
+            "id": 1,
+            "name_fr": "Flore",
+            "name_mg": "Zava-maniry"
+         },
+         "objet": {
+            "id": 1,
+            "name_fr": "Portant révision de la Législation Forestière",
+            "name_mg": "Anavaozana ny lalàna fitantanana ny ala"
+         },
+         "en_tete": {
+            "id": 1,
+            "_mot_cle": "L’Assemblée Nationale a adopt",
+            "name_fr": "en_tete_fr",
+            "name_mg": "en_tete_mg"
+         },
+         "expose_des_motifs": null,
+         "etat": null,
+         "note": null,
+         "organisme": {
+            "id": 1,
+            "name_fr": "MINISTERE DES EAUX ET FORETS",
+            "name_mg": "MINISITERAN’NY RANO SY ALA"
+         },
+         "signature": "",
+         "attachement": "http://127.0.0.1:8000/file/attachements/VF-Loi_97-017_r%C3%A9vision_legislation_forestiere.pdf"
+      },
+      {
+         "id": 2,
+         "type": { "id": 2, "name_fr": "Decret", "name_mg": "Decret" },
+         "thematique": {
+            "id": 2,
+            "name_fr": "Corruption",
+            "name_mg": "Kolikoly"
+         },
+         "objet": {
+            "id": 1,
+            "name_fr": "Portant révision de la Législation de la corruption",
+            "name_mg": "Anavaozana ny lalàna fitantanana ny kolikoly"
+         },
+         "en_tete": {
+            "id": 1,
+            "_mot_cle": "L’Assemblée Nationale a adopt",
+            "name_fr": "en_tete_fr",
+            "name_mg": "en_tete_mg"
+         },
+         "expose_des_motifs": null,
+         "etat": null,
+         "note": null,
+         "organisme": {
+            "id": 1,
+            "name_fr": "MINISTERE DE LA CORRUPTION",
+            "name_mg": "MINISITERAN’NY KOLIKOLY"
+         },
+         "signature": "",
+         "attachement": "http://127.0.0.1:8000/file/attachements/VF-Loi_97-017_r%C3%A9vision_legislation_forestiere.pdf"
+      },
+      {
+         "id": 3,
+         "type": { "id": 3, "name_fr": "Arrêté", "name_mg": "Fanajanona" },
+         "thematique": {
+            "id": 3,
+            "name_fr": "Déontologie",
+            "name_mg": "Deontolojia"
+         },
+         "objet": {
+            "id": 1,
+            "name_fr": "Portant révision de la Législation arrêtement",
+            "name_mg": "Anavaozana ny lalàna fitantanana ny fanajanonana"
+         },
+         "en_tete": {
+            "id": 1,
+            "_mot_cle": "L’Assemblée Nationale a adopt",
+            "name_fr": "en_tete_fr",
+            "name_mg": "en_tete_mg"
+         },
+         "expose_des_motifs": null,
+         "etat": null,
+         "note": null,
+         "organisme": {
+            "id": 1,
+            "name_fr": "MINISTERE DE L'ARRESTATION",
+            "name_mg": "MINISITERAN’NY FANAJANONANA"
+         },
+         "signature": "",
+         "attachement": "http://127.0.0.1:8000/file/attachements/VF-Loi_97-017_r%C3%A9vision_legislation_forestiere.pdf"
+      },
+      {
+         "id": 4,
+         "type": {
+            "id": 4,
+            "name_fr": "Convention",
+            "name_mg": "Fifanarahana"
+         },
          "thematique": {
             "id": 1,
             "name_fr": "Flore",

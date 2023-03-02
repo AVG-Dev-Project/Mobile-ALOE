@@ -7,7 +7,8 @@ import BottomBarTabs from '_components/navigation/tabs/BottomBarTabs';
 import { Welcome, Doleance, DownloadData } from '_pages';
 import { configStack } from './configStack';
 import { useSelector, useDispatch } from 'react-redux';
-import Listing from '_components/listing/ListingScreen';
+import ListingArticle from '_components/listing/ListingArticleScreen';
+import ListingContenu from '_components/listing/ListingContenuScreen';
 import Detail from '_components/detail/DetailScreen';
 
 let Stack = createStackNavigator();
@@ -22,8 +23,16 @@ export default function StackNavigation() {
 
          <Stack.Group screenOptions={configStack.screenOptionsForHeaderShown}>
             <Stack.Screen
-               name={nameNav.listPage}
-               component={Listing}
+               name={nameNav.listArticle}
+               component={ListingArticle}
+               options={({ route }) => ({
+                  title: route.params.titleScreen,
+               })}
+            />
+
+            <Stack.Screen
+               name={nameNav.listContenu}
+               component={ListingContenu}
                options={({ route }) => ({
                   title: route.params.titleScreen,
                })}

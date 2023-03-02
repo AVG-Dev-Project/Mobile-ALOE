@@ -267,7 +267,7 @@ export default function Home({ navigation }) {
                      color={Colors.violet}
                      size={30}
                      onPress={() => {
-                        navigation.navigate(nameNav.listPage, {
+                        navigation.navigate(nameNav.listContenu, {
                            titleScreen:
                               langueActual === 'fr'
                                  ? 'Tous les contenus'
