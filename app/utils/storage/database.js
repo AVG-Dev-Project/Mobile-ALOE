@@ -16,15 +16,20 @@ export class ArticleSchema extends BaseModel {
 
    static get columnMapping() {
       return {
-         id: { type: types.INTEGER, primary_key: true }, // For while only supports id as primary key
+         id: { type: types.INTEGER, primary_key: true, not_null: true }, // For while only supports id as primary key
+         contenu: { type: types.INTEGER, not_null: true },
+         article_created_at: { type: types.TEXT },
          numero: { type: types.INTEGER, not_null: true },
          titre_id: { type: types.INTEGER, not_null: true },
          titre_numero: { type: types.INTEGER, not_null: true },
-         titre_fr: { type: types.TEXT, not_null: true },
-         titre_mg: { type: types.TEXT, not_null: true },
-         chapitre: { type: types.TEXT },
-         fr: { type: types.TEXT, not_null: true },
-         mg: { type: types.TEXT, not_null: true },
+         titre_fr: { type: types.TEXT },
+         titre_mg: { type: types.TEXT },
+         chapitre_id: { type: types.INTEGER },
+         chapitre_numero: { type: types.INTEGER },
+         chapitre_titre_fr: { type: types.TEXT },
+         chapitre_titre_mg: { type: types.TEXT },
+         contenu_fr: { type: types.TEXT },
+         contenu_mg: { type: types.TEXT },
       };
    }
 }
@@ -45,27 +50,36 @@ export class ContenuSchema extends BaseModel {
    static get columnMapping() {
       return {
          id: { type: types.INTEGER, primary_key: true }, // For while only supports id as primary key
+         numero: { type: types.TEXT },
+         contenu_created_at: { type: types.TEXT },
          type_id: { type: types.INTEGER, not_null: true },
-         type_name_fr: { type: types.TEXT, not_null: true },
-         type_name_mg: { type: types.TEXT, not_null: true },
+         type_nom_fr: { type: types.TEXT, not_null: true },
+         type_nom_mg: { type: types.TEXT },
          thematique_id: { type: types.INTEGER, not_null: true },
-         thematique_name_fr: { type: types.TEXT, not_null: true },
-         thematique_name_mg: { type: types.TEXT, not_null: true },
-         objet_id: { type: types.INTEGER, not_null: true },
-         objet_name_fr: { type: types.TEXT, not_null: true },
-         objet_name_mg: { type: types.TEXT, not_null: true },
-         en_tete_id: { type: types.INTEGER, not_null: true },
-         en_tete_mot_cle: { type: types.TEXT, not_null: true },
-         en_tete_name_fr: { type: types.TEXT, not_null: true },
-         en_tete_name_mg: { type: types.TEXT, not_null: true },
-         expose_des_motifs: { type: types.TEXT },
-         etat: { type: types.TEXT },
-         note: { type: types.TEXT },
-         organisme_id: { type: types.INTEGER, not_null: true },
-         organisme_name_fr: { type: types.TEXT, not_null: true },
-         organisme_name_mg: { type: types.TEXT, not_null: true },
+         thematique_nom_fr: { type: types.TEXT, not_null: true },
+         thematique_nom_mg: { type: types.TEXT },
+         objet_id: { type: types.INTEGER },
+         objet_contenu_fr: { type: types.TEXT },
+         objet_contenu_mg: { type: types.TEXT },
+         en_tete_id: { type: types.INTEGER },
+         en_tete_mot_cle: { type: types.TEXT },
+         en_tete_contenu_fr: { type: types.TEXT },
+         en_tete_contenu_mg: { type: types.TEXT },
+         expose_des_motifs_id: { type: types.INTEGER },
+         expose_des_motifs_mot_cle: { type: types.TEXT },
+         expose_des_motifs_contenu_fr: { type: types.TEXT },
+         expose_des_motifs_contenu_mg: { type: types.TEXT },
+         etat_id: { type: types.INTEGER },
+         etat_nom_fr: { type: types.TEXT },
+         etat_nom_mg: { type: types.TEXT },
+         note_id: { type: types.INTEGER },
+         note_contenu_fr: { type: types.TEXT },
+         note_contenu_mg: { type: types.TEXT },
+         organisme_id: { type: types.INTEGER },
+         organisme_nom_fr: { type: types.TEXT },
+         organisme_nom_mg: { type: types.TEXT },
          signature: { type: types.TEXT },
-         attachement: { type: types.TEXT, not_null: true },
+         attachement: { type: types.TEXT },
       };
    }
 }
@@ -87,7 +101,8 @@ export class TypeSchema extends BaseModel {
       return {
          id: { type: types.INTEGER, primary_key: true }, // For while only supports id as primary key
          name_fr: { type: types.TEXT, not_null: true },
-         name_mg: { type: types.TEXT, not_null: true },
+         name_mg: { type: types.TEXT },
+         created_at: { type: types.TEXT },
       };
    }
 }
@@ -109,7 +124,8 @@ export class ThematiqueSchema extends BaseModel {
       return {
          id: { type: types.INTEGER, primary_key: true }, // For while only supports id as primary key
          name_fr: { type: types.TEXT, not_null: true },
-         name_mg: { type: types.TEXT, not_null: true },
+         name_mg: { type: types.TEXT },
+         created_at: { type: types.TEXT },
       };
    }
 }

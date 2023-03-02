@@ -13,13 +13,10 @@ import {
 import {
    nameStackNavigation as nameNav,
    getDataFromLocalStorage,
-   ArticleSchema,
-   ContenuSchema,
-   TypeSchema,
-   ThematiqueSchema,
    fetchTypesToApi,
    fetchArticlesToApi,
    fetchThematiquesToApi,
+   fetchDataToLocalDatabase,
 } from '_utils';
 
 export default function Welcome({ navigation }) {
@@ -44,17 +41,6 @@ export default function Welcome({ navigation }) {
       fetchArticlesToApi(dispatch),
       fetchTypesToApi(dispatch),
    };*/
-
-   const getAllDatasOffline = () => {
-      //article
-      ArticleSchema.query({ columns: '*' }).then((res) => console.log(res));
-      //contenu
-      ContenuSchema.query({ columns: '*' }).then((res) => console.log(res));
-      //thematique
-      ThematiqueSchema.query({ columns: '*' }).then((res) => console.log(res));
-      //type
-      TypeSchema.query({ columns: '*' }).then((res) => console.log(res));
-   };
 
    //all effects
    /*effect pour ecouter quand l'user active sa connexion*/

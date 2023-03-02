@@ -26,6 +26,7 @@ import {
    fetchTypesToApi,
    fetchArticlesToApi,
    fetchThematiquesToApi,
+   fetchDataToLocalDatabase,
 } from '_utils';
 import styles from './styles';
 
@@ -57,7 +58,7 @@ export default function DownloadData({ navigation }) {
    };
 
    const showData = () => {
-      return ArticleSchema.query({ columns: '*' }).then((res) =>
+      return ThematiqueSchema.query({ columns: '*' }).then((res) =>
          console.log(res)
       );
    };
@@ -196,7 +197,7 @@ export default function DownloadData({ navigation }) {
                      }}
                      onPress={() => {
                         setIsFetchData(true);
-                        getOnlineDatas();
+                        fetchDataToLocalDatabase();
                      }}
                      loading={isFetchData}
                   />

@@ -30,6 +30,7 @@ import {
    fetchTypesToApi,
    fetchArticlesToApi,
    fetchThematiquesToApi,
+   fetchDataToLocalDatabase,
 } from './helper/functionFetching';
 
 export {
@@ -56,4 +57,5 @@ export {
    fetchTypesToApi,
    fetchArticlesToApi,
    fetchThematiquesToApi,
+   fetchDataToLocalDatabase,
 };
