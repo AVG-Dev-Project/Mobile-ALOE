@@ -33,7 +33,6 @@ export default function Home({ navigation }) {
       (selector) => selector.fonctionnality.langue
    );
 
-   console.log('allArticles : ', allArticles.l);
    //all functions
 
    //all efects

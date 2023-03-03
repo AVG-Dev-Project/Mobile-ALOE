@@ -8,6 +8,7 @@ import {
    ScrollView,
    TouchableOpacity,
    Dimensions,
+   useWindowDimensions,
 } from 'react-native';
 import {
    Menu,
@@ -17,6 +18,7 @@ import {
 } from 'react-native-popup-menu';
 import * as Speech from 'expo-speech';
 import React, { useState } from 'react';
+import RenderHtml from 'react-native-render-html';
 import { styles } from './styles';
 import { Icon } from '@rneui/themed';
 import bgImage from '_images/bg_loi.jpg';
@@ -28,10 +30,12 @@ export default function Detail({ navigation, route }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const { width } = useWindowDimensions();
    const dispatch = useDispatch();
    const [isSpeakPlay, setIsSpeakPlay] = useState(false);
    const oneArticle = route.params.articleToViewDetail;
 
+   //all functions
    /*function to speach article*/
    const playPauseSpeak = (txt_to_say) => {
       if (isSpeakPlay) {
@@ -39,6 +43,19 @@ export default function Detail({ navigation, route }) {
       } else {
          Speech.speak(txt_to_say);
       }
+   };
+
+   const sourceHTML = (data) => {
+      const source = {
+         html: data,
+      };
+      return source;
+   };
+
+   const tagsStyles = {
+      p: {
+         width: '90%',
+      },
    };
 
    return (
@@ -52,7 +69,7 @@ export default function Detail({ navigation, route }) {
             <ImageBackground
                source={bgImage}
                style={{
-                  height: Dimensions.get('window').height < 700 ? 340 : 420,
+                  height: Dimensions.get('window').height < 700 ? 240 : 320,
                }}
                imageStyle={{
                   resizeMode: 'cover',
@@ -71,8 +88,8 @@ export default function Detail({ navigation, route }) {
                      }}
                   >
                      {langueActual === 'fr'
-                        ? oneArticle.Titre.titre_fr
-                        : oneArticle.Titre.titre_mg}
+                        ? oneArticle.titre_fr
+                        : oneArticle.titre_mg}
                   </Text>
                   <Text
                      style={{
@@ -82,7 +99,7 @@ export default function Detail({ navigation, route }) {
                      }}
                   >
                      {langueActual === 'fr' ? 'Publié le ' : 'Nivoaka ny '} :{' '}
-                     {oneArticle.date_created?.substring(0, 10)}
+                     {oneArticle.article_created_at?.substring(0, 10)}
                   </Text>
                </View>
                <View style={styles.description_section}>
@@ -140,8 +157,8 @@ export default function Detail({ navigation, route }) {
                            <MenuOption>
                               <Text style={styles.label_info_article}>
                                  {langueActual === 'fr'
-                                    ? 'Thématiques '
-                                    : 'Lohahevitra'}{' '}
+                                    ? 'Chapitre '
+                                    : 'Lohateny'}{' '}
                               </Text>
                               <Text style={styles.value_info_article}>
                                  <Icon
@@ -150,15 +167,15 @@ export default function Detail({ navigation, route }) {
                                     size={16}
                                  />{' '}
                                  {langueActual === 'fr'
-                                    ? oneArticle.Thematique.nom_Thematique_fr
-                                    : oneArticle.Thematique.nom_Thematique_mg}
+                                    ? oneArticle.chapitre_titre_fr ?? ''
+                                    : oneArticle.chapitre_titre_mg ?? ''}
                               </Text>
                            </MenuOption>
                            <MenuOption>
                               <Text style={styles.label_info_article}>
                                  {langueActual === 'fr'
-                                    ? 'Types '
-                                    : 'Karazana '}{' '}
+                                    ? 'Contenu '
+                                    : 'Sokajy '}{' '}
                               </Text>
                               <Text style={styles.value_info_article}>
                                  <Icon
@@ -167,56 +184,8 @@ export default function Detail({ navigation, route }) {
                                     size={16}
                                  />{' '}
                                  {langueActual === 'fr'
-                                    ? oneArticle.Type.nom_Type_fr
-                                    : oneArticle.Type.nom_Type_mg}
-                              </Text>
-                           </MenuOption>
-                           <MenuOption>
-                              <Text style={styles.label_info_article}>
-                                 {langueActual === 'fr'
-                                    ? 'Section '
-                                    : 'Faritra'}{' '}
-                              </Text>
-                              <Text style={styles.value_info_article}>
-                                 <Icon
-                                    name={'star'}
-                                    color={Colors.violet}
-                                    size={16}
-                                 />{' '}
-                                 {langueActual === 'fr'
-                                    ? oneArticle.Section.nom_Section_fr
-                                    : oneArticle.Section.nom_Section_mg ??
-                                      '...'}
-                              </Text>
-                           </MenuOption>
-                           <MenuOption>
-                              <Text style={styles.label_info_article}>
-                                 {langueActual === 'fr'
-                                    ? 'Sous section '
-                                    : 'Fizarana anatiny '}{' '}
-                              </Text>
-                              <Text style={styles.value_info_article}>
-                                 <Icon
-                                    name={'star'}
-                                    color={Colors.violet}
-                                    size={16}
-                                 />{' '}
-                                 Sous section
-                              </Text>
-                           </MenuOption>
-                           <MenuOption>
-                              <Text style={styles.label_info_article}>
-                                 {langueActual === 'fr'
-                                    ? 'Intitulé '
-                                    : 'Mitondra ny lohateny hoe'}{' '}
-                              </Text>
-                              <Text style={styles.value_info_article}>
-                                 <Icon
-                                    name={'star'}
-                                    color={Colors.violet}
-                                    size={16}
-                                 />{' '}
-                                 {oneArticle.Intutile.contenu_intutile ?? '...'}
+                                    ? oneArticle.contenu
+                                    : oneArticle.contenu}
                               </Text>
                            </MenuOption>
                         </MenuOptions>
@@ -247,9 +216,19 @@ export default function Detail({ navigation, route }) {
                            textAlign: 'left',
                         }}
                      >
-                        {langueActual === 'fr'
-                           ? oneArticle.Article.contenu_Article_fr
-                           : oneArticle.Article.contenu_Article_mg}
+                        {langueActual === 'fr' ? (
+                           <RenderHtml
+                              contentWidth={width}
+                              source={sourceHTML(oneArticle.contenu_fr)}
+                              tagsStyles={tagsStyles}
+                           />
+                        ) : (
+                           <RenderHtml
+                              contentWidth={width}
+                              source={sourceHTML(oneArticle.contenu_mg)}
+                              tagsStyles={tagsStyles}
+                           />
+                        )}
                      </Text>
                   </ScrollView>
                   <View style={styles.all_button_in_detail_screen}>
@@ -272,17 +251,11 @@ export default function Detail({ navigation, route }) {
                            setIsSpeakPlay(!isSpeakPlay);
                            if (langueActual === 'fr') {
                               playPauseSpeak(
-                                 oneArticle.Article.contenu_Article_fr.substring(
-                                    0,
-                                    4000
-                                 )
+                                 oneArticle.contenu_fr.substring(0, 4000)
                               );
                            } else {
                               playPauseSpeak(
-                                 oneArticle.Article.contenu_Article_mg.substring(
-                                    0,
-                                    4000
-                                 )
+                                 oneArticle.contenu_mg.substring(0, 4000)
                               );
                            }
                         }}
