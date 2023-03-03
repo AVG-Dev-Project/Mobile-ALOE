@@ -14,23 +14,28 @@ import Carousel from 'react-native-snap-carousel';
 import { useSelector } from 'react-redux';
 
 import HeaderGlobal from '_components/header/HeaderGlobal';
-import { nameStackNavigation as nameNav } from '_utils';
+import {
+   nameStackNavigation as nameNav,
+   filterArticleToListByContenu,
+} from '_utils';
 import { styles } from './styles';
 import { Colors } from '_theme/Colors';
 
 export default function Home({ navigation }) {
    //all states
    const isCarousel = React.useRef(null);
-   const allArticles = useSelector((selector) => selector.article.articles);
+   const { t } = useTranslation();
+   const allArticles = useSelector((selector) => selector.loi.articles);
+   const allContenus = useSelector((selector) => selector.loi.contenus);
+   const getAllTypes = useSelector((selector) => selector.loi.types);
+   const allThematiques = useSelector((selector) => selector.loi.thematiques);
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   const allThematiques = useSelector(
-      (selector) => selector.article.thematiques
-   );
+
+   //all functions
 
    //all efects
-   const { t } = useTranslation();
 
    //all components
    const _renderItemContenu = ({ item }) => {
@@ -38,11 +43,14 @@ export default function Home({ navigation }) {
          <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => {
-               navigation.navigate(nameNav.detailPage, {
+               navigation.navigate(nameNav.listArticle, {
                   titleScreen: `${
-                     langueActual === 'fr' ? 'Article n° ' : 'Lahatsoratra '
-                  } ${item.Article.numero_Article}`,
-                  articleToViewDetail: item,
+                     langueActual === 'fr' ? 'Loi n° ' : 'Lalana faha '
+                  } ${item.numero}`,
+                  allArticleRelatedTothisContenu: filterArticleToListByContenu(
+                     item.id,
+                     allArticles
+                  ),
                });
             }}
          >
@@ -62,11 +70,12 @@ export default function Home({ navigation }) {
                   numberOfLines={1}
                >
                   {langueActual === 'fr'
-                     ? item.Titre?.titre_fr
-                     : item.Titre?.titre_mg}
+                     ? item.objet_contenu_fr
+                     : item.objet_contenu_mg}
                </Text>
                <Text style={{ fontSize: 12 }}>
-                  {t('mot_publie_home')}:{item.date_created?.substring(0, 10)}{' '}
+                  {t('mot_publie_home')}:
+                  {item.contenu_created_at?.substring(0, 10)}{' '}
                </Text>
             </View>
          </TouchableOpacity>
@@ -80,7 +89,7 @@ export default function Home({ navigation }) {
             onPress={() => {
                navigation.navigate('Recherche', {
                   screen: 'Recherche',
-                  type: item.Type.nom_Type_fr,
+                  type: item.name_fr,
                });
             }}
          >
@@ -99,10 +108,7 @@ export default function Home({ navigation }) {
                   ]}
                   numberOfLines={1}
                >
-                  {/*langueActual === 'fr'
-                     ? item.Titre?.titre_fr
-               : item.Titre?.titre_mg*/}
-                  {item.Type.nom_Type_fr}
+                  {langueActual === 'fr' ? item.name_fr : item.name_mg}
                </Text>
             </View>
          </TouchableOpacity>
@@ -116,7 +122,7 @@ export default function Home({ navigation }) {
             onPress={() => {
                navigation.navigate('Recherche', {
                   screen: 'Recherche',
-                  thematique: item.Thematique.nom_Thematique_fr,
+                  thematique: item.name_mg,
                });
             }}
          >
@@ -135,10 +141,7 @@ export default function Home({ navigation }) {
                   ]}
                   numberOfLines={2}
                >
-                  {/*langueActual === 'fr'
-                     ? item.Titre?.titre_fr
-               : item.Titre?.titre_mg*/}
-                  {item.Thematique.nom_Thematique_fr}
+                  {langueActual === 'fr' ? item.name_fr : item.name_mg}
                </Text>
             </View>
          </TouchableOpacity>
@@ -197,7 +200,7 @@ export default function Home({ navigation }) {
                         <Carousel
                            layout="default"
                            ref={isCarousel}
-                           data={allArticles}
+                           data={allThematiques}
                            loop={true}
                            loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
                            //fin des props spéficifique au section annonce
@@ -233,7 +236,7 @@ export default function Home({ navigation }) {
                         <Carousel
                            layout="default"
                            ref={isCarousel}
-                           data={allArticles}
+                           data={getAllTypes}
                            loop={true}
                            loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
                            //fin des props spéficifique au section annonce
@@ -272,7 +275,7 @@ export default function Home({ navigation }) {
                               langueActual === 'fr'
                                  ? 'Tous les contenus'
                                  : 'Ireo kaontenu',
-                           dataToList: allArticles,
+                           dataToList: allContenus,
                         });
                      }}
                   />
@@ -283,7 +286,7 @@ export default function Home({ navigation }) {
                         <Carousel
                            layout="default"
                            ref={isCarousel}
-                           data={allArticles}
+                           data={allContenus}
                            loop={true}
                            loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
                            //fin des props spéficifique au section annonce

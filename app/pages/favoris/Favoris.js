@@ -16,7 +16,7 @@ import { Colors } from '_theme/Colors';
 import { addFavoris } from '_utils/redux/actions/action_creators';
 
 export default function Favoris({ navigation, route }) {
-   const dataForFlatList = useSelector((selector) => selector.article.favoris);
+   const dataForFlatList = useSelector((selector) => selector.loi.favoris);
    const dispatch = useDispatch();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue

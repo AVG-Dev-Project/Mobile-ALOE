@@ -57,10 +57,13 @@ export default function DownloadData({ navigation }) {
       storeDataToLocalStorage('isAllDataDownloaded', 'true');
    };
 
+   const getOfflineDatas = () => {
+      fetchDataToLocalDatabase(dispatch);
+      setIsFetchData(false);
+   };
+
    const showData = () => {
-      return ThematiqueSchema.query({ columns: '*' }).then((res) =>
-         console.log(res)
-      );
+      return console.log(allArticle);
    };
 
    const handleFileSelectionAndImportData = async () => {
@@ -197,7 +200,7 @@ export default function DownloadData({ navigation }) {
                      }}
                      onPress={() => {
                         setIsFetchData(true);
-                        fetchDataToLocalDatabase();
+                        getOfflineDatas();
                      }}
                      loading={isFetchData}
                   />

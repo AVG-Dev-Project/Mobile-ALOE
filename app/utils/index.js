@@ -24,12 +24,14 @@ import { insertOrUpdateToDBFunc } from './storage/querySqlite';
 import {
    parseStructureDataForArticle,
    parseStructureDataForContenu,
+   filterArticleToListByContenu,
 } from './helper/functionHelpler';
 
 import {
    fetchTypesToApi,
    fetchArticlesToApi,
    fetchThematiquesToApi,
+   fetchContenusToApi,
    fetchDataToLocalDatabase,
 } from './helper/functionFetching';
 
@@ -55,7 +57,9 @@ export {
    parseStructureDataForArticle,
    parseStructureDataForContenu,
    fetchTypesToApi,
+   fetchContenusToApi,
    fetchArticlesToApi,
    fetchThematiquesToApi,
    fetchDataToLocalDatabase,
+   filterArticleToListByContenu,
 };

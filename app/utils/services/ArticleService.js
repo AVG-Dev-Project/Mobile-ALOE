@@ -11,6 +11,16 @@ function getArticlesFromServ() {
       });
 }
 
+function getContenusFromServ() {
+   return RouteAxios.get('/contenu')
+      .then((response) => {
+         return response.data;
+      })
+      .catch((error) => {
+         return error.message;
+      });
+}
+
 function getThematiqueFromServ() {
    return RouteAxios.get('/thematique')
       .then((response) => {
@@ -35,4 +45,5 @@ export const ArticleService = {
    getArticlesFromServ,
    getThematiqueFromServ,
    getTypeFromServ,
+   getContenusFromServ,
 };

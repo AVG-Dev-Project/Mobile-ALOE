@@ -8,13 +8,15 @@ import {
    TouchableOpacity,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
-import { nameStackNavigation as nameNav } from '_utils/constante/NameStackNavigation';
+import {
+   nameStackNavigation as nameNav,
+   filterArticleToListByContenu,
+} from '_utils';
 // import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { styles } from './stylesContenu';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
-import { addFavoris } from '_utils/redux/actions/action_creators';
 
 export default function ListingContenu({ navigation, route }) {
    //all data
@@ -22,22 +24,8 @@ export default function ListingContenu({ navigation, route }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   let allArticle = useSelector((selector) => selector.article.articles);
-   let dataPerThemeAndType = [];
-   if (langueActual === 'fr') {
-      dataPerThemeAndType = allArticle.filter(
-         (article) =>
-            article.Thematique.nom_Thematique_fr === route.params.theme &&
-            article.Type.nom_Type_fr === route.params.type
-      );
-   } else {
-      dataPerThemeAndType = allArticle.filter(
-         (article) =>
-            article.Thematique.nom_Thematique_mg === route.params.theme &&
-            article.Type.nom_Type_mg === route.params.type
-      );
-   }
-   const dataForFlatList = route.params.dataToList ?? dataPerThemeAndType;
+   const allArticles = useSelector((selector) => selector.loi.articles);
+   const dataForFlatList = route.params.dataToList;
 
    //all logics
    const _renderItem = useCallback(({ item }) => {
@@ -45,98 +33,97 @@ export default function ListingContenu({ navigation, route }) {
          <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => {
-               navigation.navigate(nameNav.detailPage, {
+               navigation.navigate(nameNav.listArticle, {
                   titleScreen: `${
-                     langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '
-                  } ${item.Article.numero_Article}`,
-                  articleToViewDetail: item,
+                     langueActual === 'fr' ? 'Loi n°' : 'Lalana faha '
+                  } ${item.numero}`,
+                  allArticleRelatedTotheContenu: filterArticleToListByContenu(
+                     item.id,
+                     allArticles
+                  ),
                });
             }}
          >
             <View style={styles.view_render}>
-               <Image
-                  source={item.photo ?? require('_images/book_loi.jpg')}
-                  style={{ width: 130, height: 150, borderRadius: 16 }}
-               />
-               <View
-                  style={{
-                     marginLeft: 12,
-                     display: 'flex',
-                     flexDirection: 'column',
-                     justifyContent: 'space-between',
-                  }}
-               >
-                  <View>
-                     <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
-                        {langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '}{' '}
-                        {item.Article.numero_Article}
-                     </Text>
-                     <Text style={{ fontSize: 12, marginBottom: 8 }}>
-                        {langueActual === 'fr' ? 'Publié le ' : 'Nivoaka ny '}:{' '}
-                        {item.date_created?.substring(0, 10)}
-                     </Text>
-                  </View>
+               <View>
                   <Text
-                     style={{ fontSize: 16, flex: 2, width: 210 }}
-                     numberOfLines={4}
+                     style={{
+                        fontWeight: 'bold',
+                        fontSize: 18,
+                     }}
+                  >
+                     {langueActual === 'fr' ? 'Loi n°' : 'Lalana faha '}{' '}
+                     {item.numero}
+                  </Text>
+                  <Text
+                     style={{
+                        fontSize: 12,
+                        marginBottom: 8,
+                     }}
                   >
                      {langueActual === 'fr'
-                        ? item.Article.contenu_Article_fr
-                        : item.Article.contenu_Article_mg}{' '}
+                        ? item.organisme_nom_fr
+                        : item.organisme_nom_mg}
                   </Text>
+               </View>
+               <Text
+                  style={{ fontSize: 16, flex: 2, textTransform: 'capitalize' }}
+                  numberOfLines={3}
+               >
+                  {langueActual === 'fr'
+                     ? item.objet_contenu_fr
+                     : item.objet_contenu_mg}{' '}
+               </Text>
+               <View
+                  style={{
+                     display: 'flex',
+                     flexDirection: 'row',
+                     justifyContent: 'space-between',
+                     alignItems: 'flex-end',
+                  }}
+               >
                   <View
                      style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        width: 140,
-                        justifyContent: 'space-between',
-                        alignItems: 'flex-end',
+                        alignItems: 'center',
                      }}
                   >
-                     <View
+                     <Text
                         style={{
-                           display: 'flex',
-                           flexDirection: 'row',
-                           alignItems: 'center',
+                           fontSize: 14,
+                           marginLeft: 2,
+                        }}
+                     >
+                        {langueActual === 'fr'
+                           ? item.thematique_nom_fr
+                           : item.thematique_nom_mg}{' '}
+                        {' / '}
+                        {langueActual === 'fr'
+                           ? item.type_nom_fr
+                           : item.type_nom_mg}
+                     </Text>
+                  </View>
+                  <View
+                     style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        width: 108,
+                        justifyContent: 'flex-end',
+                     }}
+                  >
+                     <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => {
+                           alert('PDF');
                         }}
                      >
                         <Icon
-                           name={'sentiment-very-dissatisfied'}
-                           color={Colors.orange}
-                           size={18}
+                           name={'file-download'}
+                           color={Colors.violet}
+                           size={28}
                         />
-                        <Text
-                           style={{
-                              fontSize: 14,
-                              marginLeft: 2,
-                           }}
-                        >
-                           {langueActual === 'fr'
-                              ? 'Pas encore lu'
-                              : 'Tsy voavaky'}
-                        </Text>
-                     </View>
-                     <View
-                        style={{
-                           display: 'flex',
-                           flexDirection: 'row',
-                           width: 108,
-                           justifyContent: 'flex-end',
-                        }}
-                     >
-                        <TouchableOpacity
-                           activeOpacity={0.8}
-                           onPress={() => {
-                              alert('PDF');
-                           }}
-                        >
-                           <Icon
-                              name={'file-download'}
-                              color={Colors.violet}
-                              size={28}
-                           />
-                        </TouchableOpacity>
-                     </View>
+                     </TouchableOpacity>
                   </View>
                </View>
             </View>
@@ -150,37 +137,21 @@ export default function ListingContenu({ navigation, route }) {
    return (
       <View style={styles.view_container}>
          <SafeAreaView style={styles.container_safe}>
-            {dataForFlatList.length > 0 ? (
-               <FlatList
-                  data={dataForFlatList}
-                  key={'_'}
-                  keyExtractor={_idKeyExtractor}
-                  renderItem={_renderItem}
-                  removeClippedSubviews={true}
-                  getItemLayout={(data, index) => ({
-                     length: data.length,
-                     offset: data.length * index,
-                     index,
-                  })}
-                  initialNumToRender={5}
-                  maxToRenderPerBatch={3}
-               />
-            ) : (
-               <View
-                  style={{
-                     display: 'flex',
-                     borderWidth: 1,
-                     padding: 18,
-                     marginVertical: 28,
-                  }}
-               >
-                  <Text style={{ textAlign: 'center', fontSize: 32 }}>
-                     {langueActual === 'fr'
-                        ? 'Pas de données'
-                        : 'Tsy misy tahirin-kevitra'}
-                  </Text>
-               </View>
-            )}
+            <FlatList
+               data={dataForFlatList}
+               key={'_'}
+               keyExtractor={_idKeyExtractor}
+               renderItem={_renderItem}
+               removeClippedSubviews={true}
+               getItemLayout={(data, index) => ({
+                  length: data.length,
+                  offset: data.length * index,
+                  index,
+               })}
+               initialNumToRender={5}
+               maxToRenderPerBatch={3}
+               contentContainerStyle={{ paddingBottom: 10 }}
+            />
          </SafeAreaView>
       </View>
    );

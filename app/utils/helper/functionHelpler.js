@@ -51,3 +51,10 @@ export const parseStructureDataForContenu = (data) => {
       attachement: d.attachement,
    }));
 };
+
+export const filterArticleToListByContenu = (idContenu, articles) => {
+   let res = articles.filter(
+      (article) => parseInt(article.contenu) === parseInt(idContenu)
+   );
+   return res;
+};

@@ -132,19 +132,18 @@
          "created_at": "2022-01-01T00:00:00Z",
          "type": {
             "id": 1,
-
-            "nom_fr": "Loi",
-            "nom_mg": "Lalàna"
+            "nom_fr": "Décret",
+            "nom_mg": "Decret"
          },
          "thematique": {
             "id": 1,
-            "nom_fr": "Flore",
-            "nom_mg": "Zava-maniry"
+            "nom_fr": "Faune",
+            "nom_mg": "Zavamanana Aina"
          },
          "objet": {
             "id": 1,
-            "contenu_fr": "Portant révision de la Législation Forestière",
-            "contenu_mg": "Anavaozana ny lalàna fitantanana ny ala"
+            "contenu_fr": "Portant réorganisation du “Centre Nationa de Formation de Techniciens Forestiers” au sein du MEDD",
+            "contenu_mg": "Fandaminana indray ny “Ivontoerana fanofanana nasionaly ho an'ny teknisianina momba ny ala” ao anatin'ny MEDD"
          },
          "en_tete": {
             "id": 1,
@@ -179,8 +178,8 @@
          },
          "objet": {
             "id": 1,
-            "contenu_fr": "Portant révision de la Législation Forestière",
-            "contenu_mg": "Anavaozana ny lalàna fitantanana ny ala"
+            "contenu_fr": "Portant création d'un Comité Scientifique et Technique en biosécurité chargé d'appuyer l'Autorité Nationale Compétente",
+            "contenu_mg": "Fananganana komity siantifika sy teknika momba ny biosafety tompon'andraikitra amin'ny fanohanana ny fahefana nasionaly mahefa"
          },
          "en_tete": {
             "id": 1,
@@ -205,18 +204,18 @@
          "created_at": "2022-01-01T00:00:00Z",
          "type": {
             "id": 1,
-            "nom_fr": "Loi",
-            "nom_mg": "Lalàna"
+            "nom_fr": "Ordonnace",
+            "nom_mg": "Fandidiana"
          },
          "thematique": {
             "id": 1,
-            "nom_fr": "Flore",
-            "nom_mg": "Zava-maniry"
+            "nom_fr": "Répression",
+            "nom_mg": "repression"
          },
          "objet": {
             "id": 1,
-            "contenu_fr": "Portant révision de la Législation Forestière",
-            "contenu_mg": "Anavaozana ny lalàna fitantanana ny ala"
+            "contenu_fr": "Portant révision de la Législation des eaux",
+            "contenu_mg": "Anavaozana ny lalàna fitantanana ny rano"
          },
          "en_tete": {
             "id": 1,
@@ -246,13 +245,13 @@
          },
          "thematique": {
             "id": 1,
-            "nom_fr": "Flore",
-            "nom_mg": "Zava-maniry"
+            "nom_fr": "Déontologie",
+            "nom_mg": "Deontoljia"
          },
          "objet": {
             "id": 1,
-            "contenu_fr": "Portant révision de la Législation Forestière",
-            "contenu_mg": "Anavaozana ny lalàna fitantanana ny ala"
+            "contenu_fr": "CHARTE DE L'ENVIRONNEMENT ET SES MODIFICATIFS",
+            "contenu_mg": "SARITA Tontolo iainana SY NY FANITSIANA"
          },
          "en_tete": {
             "id": 1,

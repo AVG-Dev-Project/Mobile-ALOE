@@ -66,15 +66,13 @@ export default function Recherche({ navigation, route }) {
    //all data
    const dispatch = useDispatch();
    const [valueForSearch, setValueForSearch] = useState('');
-   const allArticles = useSelector((selector) => selector.article.articles);
+   const allArticles = useSelector((selector) => selector.loi.articles);
    const [allArticlesFilter, setAllArticlesFilter] = useState([]);
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   const allTypes = useSelector((selector) => selector.article.types);
-   const allThematiques = useSelector(
-      (selector) => selector.article.thematiques
-   );
+   const allTypes = useSelector((selector) => selector.loi.types);
+   const allThematiques = useSelector((selector) => selector.loi.thematiques);
    //data from navigation
    let typeFromParams = route.params ? route.params.type : null;
    let thematiqueFromParams = route.params ? route.params.thematique : null;

@@ -16,7 +16,7 @@
 // import { Colors } from '_theme/Colors';
 
 // export default function ListingTypes({ navigation, route }) {
-//    const dataForFlatList = useSelector((selector) => selector.article.types);
+//    const dataForFlatList = useSelector((selector) => selector.loi.types);
 //    const langueActual = useSelector(
 //       (selector) => selector.fonctionnality.langue
 //    );
