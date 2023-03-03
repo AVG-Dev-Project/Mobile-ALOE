@@ -25,6 +25,7 @@ import {
    parseStructureDataForArticle,
    parseStructureDataForContenu,
    filterArticleToListByContenu,
+   cutTextWithBalise,
 } from './helper/functionHelpler';
 
 import {
@@ -56,6 +57,7 @@ export {
    insertOrUpdateToDBFunc,
    parseStructureDataForArticle,
    parseStructureDataForContenu,
+   cutTextWithBalise,
    fetchTypesToApi,
    fetchContenusToApi,
    fetchArticlesToApi,

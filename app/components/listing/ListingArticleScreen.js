@@ -16,6 +16,7 @@ import { styles } from './stylesArticle';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
+import { cutTextWithBalise } from '_utils';
 import { addFavoris } from '_utils/redux/actions/action_creators';
 
 export default function ListingArticle({ navigation, route }) {
@@ -103,7 +104,7 @@ export default function ListingArticle({ navigation, route }) {
                         <RenderHtml
                            contentWidth={width}
                            source={sourceHTML(
-                              item.contenu_fr.substring(0, 700) + '</p>'
+                              cutTextWithBalise(item.contenu_fr, 700)
                            )}
                            tagsStyles={tagsStyles}
                         />
@@ -111,7 +112,7 @@ export default function ListingArticle({ navigation, route }) {
                         <RenderHtml
                            contentWidth={width}
                            source={sourceHTML(
-                              item.contenu_mg.substring(0, 700) + '</p>'
+                              cutTextWithBalise(item.contenu_mg, 700)
                            )}
                            tagsStyles={tagsStyles}
                         />

@@ -33,6 +33,7 @@ export default function Home({ navigation }) {
       (selector) => selector.fonctionnality.langue
    );
 
+   console.log('allArticles : ', allArticles.l);
    //all functions
 
    //all efects
@@ -47,7 +48,7 @@ export default function Home({ navigation }) {
                   titleScreen: `${
                      langueActual === 'fr' ? 'Loi n° ' : 'Lalana faha '
                   } ${item.numero}`,
-                  allArticleRelatedTothisContenu: filterArticleToListByContenu(
+                  allArticleRelatedTotheContenu: filterArticleToListByContenu(
                      item.id,
                      allArticles
                   ),
@@ -67,15 +68,14 @@ export default function Home({ navigation }) {
                      fontWeight: 'bold',
                      fontSize: 17,
                   }}
-                  numberOfLines={1}
                >
+                  {langueActual === 'fr' ? 'Loi n° ' : 'Lalana faha '}
+                  {langueActual === 'fr' ? item.numero : item.numero}
+               </Text>
+               <Text style={{ fontSize: 12 }} numberOfLines={1}>
                   {langueActual === 'fr'
                      ? item.objet_contenu_fr
                      : item.objet_contenu_mg}
-               </Text>
-               <Text style={{ fontSize: 12 }}>
-                  {t('mot_publie_home')}:
-                  {item.contenu_created_at?.substring(0, 10)}{' '}
                </Text>
             </View>
          </TouchableOpacity>
