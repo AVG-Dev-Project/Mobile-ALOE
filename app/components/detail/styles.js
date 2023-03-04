@@ -57,7 +57,7 @@ export const styles = StyleSheet.create({
    },
    all_button_in_detail_screen: {
       marginTop: heightDevice < 700 ? 10 : 12,
-      marginBottom: heightDevice < 700 ? 14 : 46,
+      marginBottom: heightDevice < 700 ? 0 : 26,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-around',
