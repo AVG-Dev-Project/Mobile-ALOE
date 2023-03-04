@@ -63,7 +63,9 @@ export default function DownloadData({ navigation }) {
    };
 
    const showData = () => {
-      return console.log(allArticle);
+      return ArticleSchema.query({ columns: '*' }).then((res) => {
+         console.log(res);
+      });
    };
 
    const handleFileSelectionAndImportData = async () => {

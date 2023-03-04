@@ -11,26 +11,29 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
    },
    info_in_landing_detail: {
-      marginTop: Dimensions.get('window').height < 700 ? 180 : 250,
+      marginTop: Dimensions.get('window').height < 700 ? 90 : 120,
       marginLeft: 28,
    },
-   maskImageCatg: {
+   maskImageDetailArticle: {
       backgroundColor: 'rgba(0, 0, 0, 0.3)',
-      borderRadius: 18,
    },
    description_section: {
-      paddingHorizontal: 26,
-      marginTop: 28,
-      borderTopLeftRadius: 50,
-      borderTopRightRadius: 50,
-      height: Dimensions.get('window').height < 700 ? '100%' : 480,
+      paddingHorizontal: 24,
+      height: Dimensions.get('window').height < 700 ? 440 : 630,
       backgroundColor: Colors.white,
    },
-   boutton_add_favorite: {
+   view_round_button_detail_article: {
       position: 'absolute',
-      right: 75,
-      top: -25,
+      top: -28,
+      right: 24,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+   },
+   boutton_add_favorite: {
       backgroundColor: Colors.whiteRose,
+      marginRight: 8,
       width: 50,
       height: 50,
       padding: 10,
@@ -45,9 +48,6 @@ export const styles = StyleSheet.create({
       fontSize: 16,
    },
    boutton_info_article: {
-      position: 'absolute',
-      right: 15,
-      top: -25,
       backgroundColor: Colors.whiteRose,
       width: 50,
       height: 50,

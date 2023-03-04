@@ -54,29 +54,29 @@ export default function Detail({ navigation, route }) {
 
    const tagsStyles = {
       p: {
-         width: '90%',
+         width: '100%',
+         fontSize: 19,
       },
    };
 
    return (
       <View style={styles.view_container}>
-         <StatusBar
-            backgroundColor={'transparent'}
-            animated={true}
-            translucent={true}
-         />
+         <StatusBar backgroundColor={Colors.violet} />
          <SafeAreaView style={styles.container_safe}>
             <ImageBackground
                source={bgImage}
                style={{
-                  height: Dimensions.get('window').height < 700 ? 240 : 320,
+                  height: 250,
                }}
                imageStyle={{
                   resizeMode: 'cover',
                }}
             >
                <View
-                  style={[StyleSheet.absoluteFillObject, styles.maskImageCatg]}
+                  style={[
+                     StyleSheet.absoluteFillObject,
+                     styles.maskImageDetailArticle,
+                  ]}
                ></View>
                <View style={styles.info_in_landing_detail}>
                   <Text
@@ -94,7 +94,7 @@ export default function Detail({ navigation, route }) {
                   <Text
                      style={{
                         fontSize: 12,
-                        marginTop: 8,
+                        marginVertical: 8,
                         color: Colors.white,
                      }}
                   >
@@ -103,101 +103,102 @@ export default function Detail({ navigation, route }) {
                   </Text>
                </View>
                <View style={styles.description_section}>
-                  <TouchableOpacity
-                     onPress={() => {
-                        dispatch(addFavoris(oneArticle));
-                        alert(
-                           langueActual === 'fr'
-                              ? 'Ajouté au favoris'
-                              : "Niampy ao amin'ny ankafizina"
-                        );
-                     }}
-                  >
-                     <Text style={styles.boutton_add_favorite}>
-                        <Icon
-                           name={'favorite'}
-                           color={Colors.violet}
-                           size={32}
-                        />{' '}
-                     </Text>
-                  </TouchableOpacity>
+                  <View style={styles.view_round_button_detail_article}>
+                     <TouchableOpacity
+                        onPress={() => {
+                           dispatch(addFavoris(oneArticle));
+                           alert(
+                              langueActual === 'fr'
+                                 ? 'Ajouté au favoris'
+                                 : "Niampy ao amin'ny ankafizina"
+                           );
+                        }}
+                     >
+                        <Text style={styles.boutton_add_favorite}>
+                           <Icon
+                              name={'favorite'}
+                              color={Colors.violet}
+                              size={32}
+                           />{' '}
+                        </Text>
+                     </TouchableOpacity>
 
-                  <TouchableOpacity activeOpacity={0.7}>
-                     <Menu>
-                        {/* <MenuTrigger text="Select" /> */}
-                        <MenuTrigger customStyles={{}}>
-                           <Text style={styles.boutton_info_article}>
-                              <Icon
-                                 name={'info-outline'}
-                                 color={Colors.violet}
-                                 size={32}
-                              />{' '}
-                           </Text>
-                        </MenuTrigger>
-                        <MenuOptions
-                           customStyles={{
-                              optionsContainer: {
-                                 padding: 8,
-                                 width: 340,
-                                 height: 370,
-                              },
-                              optionText: {
-                                 fontSize: 22,
-                              },
-                           }}
-                        >
-                           <MenuOption>
-                              <Text style={{ fontSize: 22 }}>
-                                 {langueActual === 'fr'
-                                    ? 'Plus de détails :'
-                                    : 'Fanampiny misimisy :'}{' '}
-                                 :{' '}
-                              </Text>
-                           </MenuOption>
-                           <MenuOption>
-                              <Text style={styles.label_info_article}>
-                                 {langueActual === 'fr'
-                                    ? 'Chapitre '
-                                    : 'Lohateny'}{' '}
-                              </Text>
-                              <Text style={styles.value_info_article}>
+                     <TouchableOpacity activeOpacity={0.7}>
+                        <Menu>
+                           {/* <MenuTrigger text="Select" /> */}
+                           <MenuTrigger customStyles={{}}>
+                              <Text style={styles.boutton_info_article}>
                                  <Icon
-                                    name={'star'}
+                                    name={'info-outline'}
                                     color={Colors.violet}
-                                    size={16}
+                                    size={32}
                                  />{' '}
-                                 {langueActual === 'fr'
-                                    ? oneArticle.chapitre_titre_fr ?? ''
-                                    : oneArticle.chapitre_titre_mg ?? ''}
                               </Text>
-                           </MenuOption>
-                           <MenuOption>
-                              <Text style={styles.label_info_article}>
-                                 {langueActual === 'fr'
-                                    ? 'Contenu '
-                                    : 'Sokajy '}{' '}
-                              </Text>
-                              <Text style={styles.value_info_article}>
-                                 <Icon
-                                    name={'star'}
-                                    color={Colors.violet}
-                                    size={16}
-                                 />{' '}
-                                 {langueActual === 'fr'
-                                    ? oneArticle.contenu
-                                    : oneArticle.contenu}
-                              </Text>
-                           </MenuOption>
-                        </MenuOptions>
-                     </Menu>
-                  </TouchableOpacity>
+                           </MenuTrigger>
+                           <MenuOptions
+                              customStyles={{
+                                 optionsContainer: {
+                                    padding: 8,
+                                    width: 340,
+                                    height: 370,
+                                 },
+                                 optionText: {
+                                    fontSize: 22,
+                                 },
+                              }}
+                           >
+                              <MenuOption>
+                                 <Text style={{ fontSize: 22 }}>
+                                    {langueActual === 'fr'
+                                       ? 'Plus de détails :'
+                                       : 'Fanampiny misimisy :'}{' '}
+                                    :{' '}
+                                 </Text>
+                              </MenuOption>
+                              <MenuOption>
+                                 <Text style={styles.label_info_article}>
+                                    {langueActual === 'fr'
+                                       ? 'Chapitre '
+                                       : 'Lohateny'}{' '}
+                                 </Text>
+                                 <Text style={styles.value_info_article}>
+                                    <Icon
+                                       name={'star'}
+                                       color={Colors.violet}
+                                       size={16}
+                                    />{' '}
+                                    {langueActual === 'fr'
+                                       ? oneArticle.chapitre_titre_fr ?? ''
+                                       : oneArticle.chapitre_titre_mg ?? ''}
+                                 </Text>
+                              </MenuOption>
+                              <MenuOption>
+                                 <Text style={styles.label_info_article}>
+                                    {langueActual === 'fr'
+                                       ? 'Contenu '
+                                       : 'Sokajy '}{' '}
+                                 </Text>
+                                 <Text style={styles.value_info_article}>
+                                    <Icon
+                                       name={'star'}
+                                       color={Colors.violet}
+                                       size={16}
+                                    />{' '}
+                                    {langueActual === 'fr'
+                                       ? oneArticle.contenu
+                                       : oneArticle.contenu}
+                                 </Text>
+                              </MenuOption>
+                           </MenuOptions>
+                        </Menu>
+                     </TouchableOpacity>
+                  </View>
 
                   <Text
                      style={{
                         fontSize: 22,
                         fontWeight: 'bold',
-                        marginTop: 22,
-                        marginBottom: 14,
+                        marginTop: 18,
                      }}
                   >
                      {langueActual === 'fr'
@@ -209,27 +210,19 @@ export default function Detail({ navigation, route }) {
                         paddingRight: 4,
                      }}
                   >
-                     <Text
-                        style={{
-                           fontSize:
-                              Dimensions.get('window').height < 700 ? 15 : 18,
-                           textAlign: 'left',
-                        }}
-                     >
-                        {langueActual === 'fr' ? (
-                           <RenderHtml
-                              contentWidth={width}
-                              source={sourceHTML(oneArticle.contenu_fr)}
-                              tagsStyles={tagsStyles}
-                           />
-                        ) : (
-                           <RenderHtml
-                              contentWidth={width}
-                              source={sourceHTML(oneArticle.contenu_mg)}
-                              tagsStyles={tagsStyles}
-                           />
-                        )}
-                     </Text>
+                     {langueActual === 'fr' ? (
+                        <RenderHtml
+                           contentWidth={width}
+                           source={sourceHTML(oneArticle.contenu_fr)}
+                           tagsStyles={tagsStyles}
+                        />
+                     ) : (
+                        <RenderHtml
+                           contentWidth={width}
+                           source={sourceHTML(oneArticle.contenu_mg)}
+                           tagsStyles={tagsStyles}
+                        />
+                     )}
                   </ScrollView>
                   <View style={styles.all_button_in_detail_screen}>
                      <TouchableOpacity

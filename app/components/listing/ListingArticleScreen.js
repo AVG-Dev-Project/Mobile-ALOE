@@ -87,6 +87,15 @@ export default function ListingArticle({ navigation, route }) {
                         {langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '}{' '}
                         {item.numero}
                      </Text>
+                     <Text
+                        style={{
+                           fontSize: 14,
+                           textDecorationLine: 'underline',
+                        }}
+                        numberOfLines={1}
+                     >
+                        {langueActual === 'fr' ? item.titre_fr : item.titre_mg}
+                     </Text>
                      {item.chapitre_id && (
                         <Text style={{ fontSize: 12 }}>
                            {langueActual === 'fr'
