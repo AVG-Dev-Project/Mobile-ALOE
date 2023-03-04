@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
    },
    images_welcome: {
-      height: Dimensions.get('window').height < 700 ? 250 : 350,
+      height: Dimensions.get('window').height < 700 ? 180 : 350,
       width: 300,
    },
    view_button_arrondi: {

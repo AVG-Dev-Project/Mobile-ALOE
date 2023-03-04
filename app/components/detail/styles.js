@@ -2,6 +2,7 @@ import { Colors } from '_theme/Colors';
 import { StyleSheet, Dimensions } from 'react-native';
 
 let widthDevice = Dimensions.get('window').width;
+let heightDevice = Dimensions.get('window').height;
 export const styles = StyleSheet.create({
    view_container: {
       flex: 1,
@@ -11,7 +12,7 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
    },
    info_in_landing_detail: {
-      marginTop: Dimensions.get('window').height < 700 ? 90 : 120,
+      marginTop: heightDevice < 700 ? 80 : 100,
       marginLeft: 28,
    },
    maskImageDetailArticle: {
@@ -19,7 +20,7 @@ export const styles = StyleSheet.create({
    },
    description_section: {
       paddingHorizontal: 24,
-      height: Dimensions.get('window').height < 700 ? 440 : 630,
+      height: heightDevice < 700 ? 440 : 630,
       backgroundColor: Colors.white,
    },
    view_round_button_detail_article: {
@@ -55,8 +56,8 @@ export const styles = StyleSheet.create({
       borderRadius: 50,
    },
    all_button_in_detail_screen: {
-      marginTop: Dimensions.get('window').height < 700 ? 10 : 12,
-      marginBottom: Dimensions.get('window').height < 700 ? 14 : 46,
+      marginTop: heightDevice < 700 ? 10 : 12,
+      marginBottom: heightDevice < 700 ? 14 : 46,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-around',

@@ -4,6 +4,7 @@ import {
    StyleSheet,
    FlatList,
    Image,
+   Dimensions,
    SafeAreaView,
    TouchableOpacity,
    useWindowDimensions,
@@ -39,6 +40,7 @@ export default function ListingArticle({ navigation, route }) {
    const tagsStyles = {
       p: {
          width: '40%',
+         fontSize: Dimensions.get('window').width < 370 ? 12 : 18,
       },
    };
 
@@ -58,7 +60,11 @@ export default function ListingArticle({ navigation, route }) {
             <View style={styles.view_render}>
                <Image
                   source={require('_images/book_loi.jpg')}
-                  style={{ width: 130, height: 160, borderRadius: 16 }}
+                  style={{
+                     width: Dimensions.get('window').width < 380 ? 100 : 140,
+                     height: 160,
+                     borderRadius: 16,
+                  }}
                />
                <View
                   style={[
@@ -106,7 +112,11 @@ export default function ListingArticle({ navigation, route }) {
                      )}
                   </View>
                   <Text
-                     style={{ fontSize: 16, flex: 2, width: 210 }}
+                     style={{
+                        fontSize: Dimensions.get('window').width < 380 ? 8 : 16,
+                        flex: 2,
+                        width: 210,
+                     }}
                      numberOfLines={4}
                   >
                      {langueActual === 'fr' ? (

@@ -5,9 +5,9 @@ let widthDevice = Dimensions.get('window').width;
 export const styles = StyleSheet.create({
    view_container: {
       flex: 1,
-      marginTop: 30,
+      marginTop: 8,
       marginBottom: 80,
-      paddingHorizontal: 15,
+      paddingHorizontal: 5,
       backgroundColor: Colors.background,
    },
    head_content: {

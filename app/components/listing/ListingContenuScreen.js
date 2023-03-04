@@ -4,6 +4,7 @@ import {
    StyleSheet,
    FlatList,
    Image,
+   Dimensions,
    SafeAreaView,
    TouchableOpacity,
 } from 'react-native';
@@ -57,8 +58,11 @@ export default function ListingContenu({ navigation, route }) {
                   </Text>
                   <Text
                      style={{
-                        fontSize: 12,
+                        fontSize:
+                           Dimensions.get('window').height < 700 ? 10 : 12,
                         marginBottom: 8,
+                        textDecorationLine: 'underline',
+                        textTransform: 'uppercase',
                      }}
                   >
                      {langueActual === 'fr'
@@ -67,7 +71,11 @@ export default function ListingContenu({ navigation, route }) {
                   </Text>
                </View>
                <Text
-                  style={{ fontSize: 16, flex: 2, textTransform: 'capitalize' }}
+                  style={{
+                     fontSize: Dimensions.get('window').height < 700 ? 14 : 16,
+                     flex: 2,
+                     textTransform: 'capitalize',
+                  }}
                   numberOfLines={3}
                >
                   {langueActual === 'fr'
