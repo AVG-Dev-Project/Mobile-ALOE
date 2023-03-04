@@ -88,7 +88,7 @@ export default function Home({ navigation }) {
             onPress={() => {
                navigation.navigate('Recherche', {
                   screen: 'Recherche',
-                  type: item.name_fr,
+                  type: langueActual === 'fr' ? item.name_fr : item.name_mg,
                });
             }}
          >
@@ -121,7 +121,8 @@ export default function Home({ navigation }) {
             onPress={() => {
                navigation.navigate('Recherche', {
                   screen: 'Recherche',
-                  thematique: item.name_mg,
+                  thematique:
+                     langueActual === 'fr' ? item.name_fr : item.name_mg,
                });
             }}
          >
