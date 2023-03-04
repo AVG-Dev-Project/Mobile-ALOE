@@ -2,7 +2,6 @@ import {
    View,
    Text,
    FlatList,
-   Image,
    SafeAreaView,
    Dimensions,
    TextInput,
@@ -69,6 +68,7 @@ export default function Recherche({ navigation, route }) {
    //all data
    const dispatch = useDispatch();
    const [valueForSearch, setValueForSearch] = useState('');
+   const widthDevice = Dimensions.get('window').width;
    const allArticles = useSelector((selector) => selector.loi.articles);
    const allContenus = useSelector((selector) => selector.loi.contenus);
    const [allContenusFilter, setAllContenusFilter] = useState([]);
@@ -198,8 +198,9 @@ export default function Recherche({ navigation, route }) {
                   </Text>
                   <Text
                      style={{
-                        fontSize: 12,
+                        fontSize: widthDevice < 370 ? 9 : 12,
                         marginBottom: 8,
+                        textDecorationLine: 'underline',
                      }}
                   >
                      {langueActual === 'fr'
@@ -208,8 +209,12 @@ export default function Recherche({ navigation, route }) {
                   </Text>
                </View>
                <Text
-                  style={{ fontSize: 16, flex: 2, textTransform: 'capitalize' }}
-                  numberOfLines={3}
+                  style={{
+                     fontSize: widthDevice < 370 ? 12 : 16,
+                     flex: 2,
+                     textTransform: 'capitalize',
+                  }}
+                  numberOfLines={widthDevice < 370 ? 2 : 3}
                >
                   {langueActual === 'fr'
                      ? item.objet_contenu_fr
