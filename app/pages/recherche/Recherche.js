@@ -190,7 +190,7 @@ export default function Recherche({ navigation, route }) {
                   <Text
                      style={{
                         fontWeight: 'bold',
-                        fontSize: 18,
+                        fontSize: widthDevice < 370 ? 15 : 18,
                      }}
                   >
                      {langueActual === 'fr' ? 'Loi n°' : 'Lalana faha '}{' '}
