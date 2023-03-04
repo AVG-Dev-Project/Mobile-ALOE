@@ -4,16 +4,18 @@ import {
    getAllArticles,
    getAllThematiques,
    getAllTypes,
+   getAllContenus,
 } from '../actions/action_creators';
 
 const initialState = {
    articles: [],
    thematiques: [],
    types: [],
+   contenus: [],
    favoris: [],
 };
 
-export const articleReducer = (state = initialState, action) => {
+export const loiReducer = (state = initialState, action) => {
    switch (action.type) {
       case getAllArticles().type:
          return produce(state, (draft) => {
@@ -26,6 +28,10 @@ export const articleReducer = (state = initialState, action) => {
       case getAllTypes().type:
          return produce(state, (draft) => {
             draft.types = action.payload;
+         });
+      case getAllContenus().type:
+         return produce(state, (draft) => {
+            draft.contenus = action.payload;
          });
       case addFavoris().type:
          return produce(state, (draft) => {

@@ -4,43 +4,44 @@ import {
    StyleSheet,
    FlatList,
    Image,
-   Modal,
    SafeAreaView,
    TouchableOpacity,
+   useWindowDimensions,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
+import RenderHtml from 'react-native-render-html';
 import { nameStackNavigation as nameNav } from '_utils/constante/NameStackNavigation';
 // import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { styles } from './styles';
+import { styles } from './stylesArticle';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
+import { cutTextWithBalise } from '_utils';
 import { addFavoris } from '_utils/redux/actions/action_creators';
 
-export default function Listing({ navigation, route }) {
+export default function ListingArticle({ navigation, route }) {
    //all data
    const dispatch = useDispatch();
+   const { width } = useWindowDimensions();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   let allArticle = useSelector((selector) => selector.article.articles);
-   let dataPerThemeAndType = [];
-   if (langueActual === 'fr') {
-      dataPerThemeAndType = allArticle.filter(
-         (article) =>
-            article.Thematique.nom_Thematique_fr === route.params.theme &&
-            article.Type.nom_Type_fr === route.params.type
-      );
-   } else {
-      dataPerThemeAndType = allArticle.filter(
-         (article) =>
-            article.Thematique.nom_Thematique_mg === route.params.theme &&
-            article.Type.nom_Type_mg === route.params.type
-      );
-   }
-   const dataForFlatList = route.params.dataToList ?? dataPerThemeAndType;
+   const dataForFlatList = route.params.allArticleRelatedTotheContenu;
 
-   //all logics
+   //all function
+   const sourceHTML = (data) => {
+      const source = {
+         html: data,
+      };
+      return source;
+   };
+
+   const tagsStyles = {
+      p: {
+         width: '40%',
+      },
+   };
+
    const _renderItem = useCallback(({ item }) => {
       return (
          <TouchableOpacity
@@ -49,16 +50,30 @@ export default function Listing({ navigation, route }) {
                navigation.navigate(nameNav.detailPage, {
                   titleScreen: `${
                      langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '
-                  } ${item.Article.numero_Article}`,
+                  } ${item.numero}`,
                   articleToViewDetail: item,
                });
             }}
          >
             <View style={styles.view_render}>
                <Image
-                  source={item.photo ?? require('_images/book_loi.jpg')}
-                  style={{ width: 130, height: 150, borderRadius: 16 }}
+                  source={require('_images/book_loi.jpg')}
+                  style={{ width: 130, height: 160, borderRadius: 16 }}
                />
+               <View
+                  style={[
+                     StyleSheet.absoluteFillObject,
+                     styles.maskImageArticle,
+                  ]}
+               ></View>
+               <Text
+                  style={[
+                     StyleSheet.absoluteFillObject,
+                     styles.number_of_article,
+                  ]}
+               >
+                  {item.numero}
+               </Text>
                <View
                   style={{
                      marginLeft: 12,
@@ -70,28 +85,54 @@ export default function Listing({ navigation, route }) {
                   <View>
                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
                         {langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '}{' '}
-                        {item.Article.numero_Article}
+                        {item.numero}
                      </Text>
-                     <Text style={{ fontSize: 12, marginBottom: 8 }}>
-                        {langueActual === 'fr' ? 'Publié le ' : 'Nivoaka ny '}:{' '}
-                        {item.date_created?.substring(0, 10)}
+                     <Text
+                        style={{
+                           fontSize: 14,
+                           textDecorationLine: 'underline',
+                        }}
+                        numberOfLines={1}
+                     >
+                        {langueActual === 'fr' ? item.titre_fr : item.titre_mg}
                      </Text>
+                     {item.chapitre_id && (
+                        <Text style={{ fontSize: 12 }}>
+                           {langueActual === 'fr'
+                              ? `Chapitre ${item.chapitre_numero ?? ''}`
+                              : `Lohateny ${item.chapitre_numero ?? ''}`}
+                           : {item.chapitre_titre_fr ?? ''}
+                        </Text>
+                     )}
                   </View>
                   <Text
                      style={{ fontSize: 16, flex: 2, width: 210 }}
                      numberOfLines={4}
                   >
-                     {langueActual === 'fr'
-                        ? item.Article.contenu_Article_fr
-                        : item.Article.contenu_Article_mg}{' '}
+                     {langueActual === 'fr' ? (
+                        <RenderHtml
+                           contentWidth={width}
+                           source={sourceHTML(
+                              cutTextWithBalise(item.contenu_fr, 700)
+                           )}
+                           tagsStyles={tagsStyles}
+                        />
+                     ) : (
+                        <RenderHtml
+                           contentWidth={width}
+                           source={sourceHTML(
+                              cutTextWithBalise(item.contenu_mg, 700)
+                           )}
+                           tagsStyles={tagsStyles}
+                        />
+                     )}
+                     {' ...'}
                   </Text>
                   <View
                      style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        width: 140,
                         justifyContent: 'space-between',
-                        alignItems: 'flex-end',
                      }}
                   >
                      <View
@@ -113,48 +154,27 @@ export default function Listing({ navigation, route }) {
                            }}
                         >
                            {langueActual === 'fr'
-                              ? 'Pas encore lu'
-                              : 'Tsy voavaky'}
+                              ? 'Pas dans favoris'
+                              : 'Tsy mbola anaty safidiana'}
                         </Text>
                      </View>
-                     <View
-                        style={{
-                           display: 'flex',
-                           flexDirection: 'row',
-                           width: 108,
-                           justifyContent: 'space-evenly',
+                     <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => {
+                           dispatch(addFavoris(item));
+                           alert(
+                              langueActual === 'fr'
+                                 ? 'Ajouté au favoris.'
+                                 : "Nampiana tao amin'ny ankafizina"
+                           );
                         }}
                      >
-                        <TouchableOpacity
-                           activeOpacity={0.8}
-                           onPress={() => {
-                              alert('PDF');
-                           }}
-                        >
-                           <Icon
-                              name={'picture-as-pdf'}
-                              color={Colors.violet}
-                              size={28}
-                           />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                           activeOpacity={0.8}
-                           onPress={() => {
-                              dispatch(addFavoris(item));
-                              alert(
-                                 langueActual === 'fr'
-                                    ? 'Ajouté au favoris.'
-                                    : "Nampiana tao amin'ny ankafizina"
-                              );
-                           }}
-                        >
-                           <Icon
-                              name={'favorite-border'}
-                              color={Colors.orange}
-                              size={28}
-                           />
-                        </TouchableOpacity>
-                     </View>
+                        <Icon
+                           name={'favorite-border'}
+                           color={Colors.orange}
+                           size={28}
+                        />
+                     </TouchableOpacity>
                   </View>
                </View>
             </View>

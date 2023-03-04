@@ -13,7 +13,28 @@ import {
    getDataFromLocalStorage,
    removeInLocalStorage,
    getAllKeys,
-} from './helper/functionHelper';
+} from './storage/asyncStorage';
+import {
+   ArticleSchema,
+   ContenuSchema,
+   TypeSchema,
+   ThematiqueSchema,
+} from './storage/database';
+import { insertOrUpdateToDBFunc } from './storage/querySqlite';
+import {
+   parseStructureDataForArticle,
+   parseStructureDataForContenu,
+   filterArticleToListByContenu,
+   cutTextWithBalise,
+} from './helper/functionHelpler';
+
+import {
+   fetchTypesToApi,
+   fetchArticlesToApi,
+   fetchThematiquesToApi,
+   fetchContenusToApi,
+   fetchDataToLocalDatabase,
+} from './helper/functionFetching';
 
 export {
    nameStackNavigation,
@@ -29,4 +50,18 @@ export {
    getDataFromLocalStorage,
    removeInLocalStorage,
    getAllKeys,
+   ArticleSchema,
+   ContenuSchema,
+   TypeSchema,
+   ThematiqueSchema,
+   insertOrUpdateToDBFunc,
+   parseStructureDataForArticle,
+   parseStructureDataForContenu,
+   cutTextWithBalise,
+   fetchTypesToApi,
+   fetchContenusToApi,
+   fetchArticlesToApi,
+   fetchThematiquesToApi,
+   fetchDataToLocalDatabase,
+   filterArticleToListByContenu,
 };

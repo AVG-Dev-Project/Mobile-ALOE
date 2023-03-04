@@ -16,7 +16,7 @@
 // import { Colors } from '_theme/Colors';
 
 // export default function ListingTypes({ navigation, route }) {
-//    const dataForFlatList = useSelector((selector) => selector.article.types);
+//    const dataForFlatList = useSelector((selector) => selector.loi.types);
 //    const langueActual = useSelector(
 //       (selector) => selector.fonctionnality.langue
 //    );
@@ -25,7 +25,7 @@
 //          <View style={styles.view_render} key={item.id}>
 //             <TouchableOpacity
 //                onPress={() => {
-//                   navigation.navigate(nameNav.listPage, {
+//                   navigation.navigate(nameNav.listArticle, {
 //                      titleScreen: `${
 //                         langueActual === 'fr' ? item.nom : item.nom_mg
 //                      }`,

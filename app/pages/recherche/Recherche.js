@@ -9,7 +9,6 @@ import {
    TouchableOpacity,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { filter } from 'lodash';
 import {
    Menu,
    MenuOptions,
@@ -18,7 +17,10 @@ import {
 } from 'react-native-popup-menu';
 import React, { useCallback, useEffect, useState } from 'react';
 import { styles } from './styles';
-import { nameStackNavigation as nameNav } from '_utils/constante/NameStackNavigation';
+import {
+   nameStackNavigation as nameNav,
+   filterArticleToListByContenu,
+} from '_utils';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
@@ -49,14 +51,14 @@ const filterGlobal = (array, theme, type, query) => {
    let res = theme === null && type === null && query === null ? [] : array;
 
    if (theme) {
-      res = res.filter((item) => item.Thematique.nom_Thematique_fr === theme);
+      res = res.filter((_contenu) => _contenu.thematique_nom_fr === theme);
    }
    if (type) {
-      res = res.filter((_article) => _article.Type.nom_Type_fr === type);
+      res = res.filter((_contenu) => _contenu.type_nom_fr === type);
    }
    if (query) {
       res = res.filter((_loi) =>
-         _loi.Titre.titre_fr.toLowerCase().includes(query.toLowerCase())
+         _loi.objet_contenu_fr.toLowerCase().includes(query.toLowerCase())
       );
    }
 
@@ -67,25 +69,19 @@ export default function Recherche({ navigation, route }) {
    //all data
    const dispatch = useDispatch();
    const [valueForSearch, setValueForSearch] = useState('');
-   const allArticles = useSelector((selector) => selector.article.articles);
-   const [allArticlesFilter, setAllArticlesFilter] = useState([]);
+   const allArticles = useSelector((selector) => selector.loi.articles);
+   const allContenus = useSelector((selector) => selector.loi.contenus);
+   const [allContenusFilter, setAllContenusFilter] = useState([]);
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   const allTypes = useSelector((selector) => selector.article.types);
-   const allThematiques = useSelector(
-      (selector) => selector.article.thematiques
-   );
+   const allTypes = useSelector((selector) => selector.loi.types);
+   const allThematiques = useSelector((selector) => selector.loi.thematiques);
    //data from navigation
    let typeFromParams = route.params ? route.params.type : null;
    let thematiqueFromParams = route.params ? route.params.thematique : null;
    const [typeChecked, setTypeChecked] = useState(null);
    const [thematiqueChecked, setThematiqueChecked] = useState(null);
-
-   console.log(
-      'filtre vao e : ',
-      typeFromParams + ' / ' + thematiqueFromParams
-   );
 
    //all effect
    useEffect(() => {
@@ -97,16 +93,16 @@ export default function Recherche({ navigation, route }) {
 
    useEffect(() => {
       if (typeChecked || thematiqueChecked || valueForSearch) {
-         setAllArticlesFilter(
+         setAllContenusFilter(
             filterGlobal(
-               allArticles,
+               allContenus,
                thematiqueChecked,
                typeChecked,
                valueForSearch
             )
          );
       } else {
-         setAllArticlesFilter([]);
+         setAllContenusFilter([]);
       }
    }, [typeChecked, thematiqueChecked, valueForSearch]);
 
@@ -116,7 +112,7 @@ export default function Recherche({ navigation, route }) {
          return () => {
             typeFromParams = null;
             thematiqueFromParams = null;
-            setAllArticlesFilter([]);
+            setAllContenusFilter([]);
             setTypeChecked(null);
             setThematiqueChecked(null);
          };
@@ -139,7 +135,7 @@ export default function Recherche({ navigation, route }) {
                      .toLowerCase()
                      .includes(word.toLowerCase())
             );
-            setAllArticlesFilter(resultSearch);
+            setAllContenusFilter(resultSearch);
          } else {
             let resultSearch = allArticles.filter(
                (item) =>
@@ -153,10 +149,10 @@ export default function Recherche({ navigation, route }) {
                      .toLowerCase()
                      .includes(word.toLowerCase())
             );
-            setAllArticlesFilter(resultSearch);
+            setAllContenusFilter(resultSearch);
          }
       } else {
-         setAllArticlesFilter([]);
+         setAllContenusFilter([]);
       }
    };*/
 
@@ -178,109 +174,97 @@ export default function Recherche({ navigation, route }) {
          <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => {
-               navigation.navigate(nameNav.detailPage, {
-                  titleScreen: `Article n° ${item.id}`,
-                  articleToViewDetail: item,
+               navigation.navigate(nameNav.listArticle, {
+                  titleScreen: `${
+                     langueActual === 'fr' ? 'Loi n°' : 'Lalana faha '
+                  } ${item.numero}`,
+                  allArticleRelatedTotheContenu: filterArticleToListByContenu(
+                     item.id,
+                     allArticles
+                  ),
                });
             }}
          >
             <View style={styles.view_render}>
-               <Image
-                  source={item.photo ?? require('_images/book_loi.jpg')}
-                  style={{ width: 130, height: 150, borderRadius: 16 }}
-               />
-               <View
-                  style={{
-                     marginLeft: 12,
-                     display: 'flex',
-                     flexDirection: 'column',
-                     justifyContent: 'space-between',
-                  }}
-               >
-                  <View>
-                     <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
-                        {langueActual === 'fr' ? 'Article' : 'Lahatsoratra'} n°{' '}
-                        {item.Article.numero_Article}
-                     </Text>
-                     <Text style={{ fontSize: 12, marginBottom: 8 }}>
-                        {langueActual === 'fr' ? 'Publié le ' : 'Navoaka ny '} :{' '}
-                        {item.date_created?.substring(0, 10)}
-                     </Text>
-                  </View>
+               <View>
                   <Text
-                     style={{ fontSize: 16, flex: 2, width: 210 }}
-                     numberOfLines={4}
+                     style={{
+                        fontWeight: 'bold',
+                        fontSize: 18,
+                     }}
+                  >
+                     {langueActual === 'fr' ? 'Loi n°' : 'Lalana faha '}{' '}
+                     {item.numero}
+                  </Text>
+                  <Text
+                     style={{
+                        fontSize: 12,
+                        marginBottom: 8,
+                     }}
                   >
                      {langueActual === 'fr'
-                        ? item.Article.contenu_Article_fr
-                        : item.Article.contenu_Article_mg}{' '}
+                        ? item.organisme_nom_fr
+                        : item.organisme_nom_mg}
                   </Text>
+               </View>
+               <Text
+                  style={{ fontSize: 16, flex: 2, textTransform: 'capitalize' }}
+                  numberOfLines={3}
+               >
+                  {langueActual === 'fr'
+                     ? item.objet_contenu_fr
+                     : item.objet_contenu_mg}{' '}
+               </Text>
+               <View
+                  style={{
+                     display: 'flex',
+                     flexDirection: 'row',
+                     justifyContent: 'space-between',
+                     alignItems: 'flex-end',
+                  }}
+               >
                   <View
                      style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        width: 140,
-                        justifyContent: 'space-between',
-                        alignItems: 'flex-end',
+                        alignItems: 'center',
                      }}
                   >
-                     <View
+                     <Text
                         style={{
-                           display: 'flex',
-                           flexDirection: 'row',
-                           alignItems: 'center',
+                           fontSize: 14,
+                           marginLeft: 2,
+                        }}
+                     >
+                        {langueActual === 'fr'
+                           ? item.thematique_nom_fr
+                           : item.thematique_nom_mg}{' '}
+                        {' / '}
+                        {langueActual === 'fr'
+                           ? item.type_nom_fr
+                           : item.type_nom_mg}
+                     </Text>
+                  </View>
+                  <View
+                     style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        width: 108,
+                        justifyContent: 'flex-end',
+                     }}
+                  >
+                     <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => {
+                           alert('PDF');
                         }}
                      >
                         <Icon
-                           name={'sentiment-very-dissatisfied'}
-                           color={Colors.orange}
-                           size={18}
+                           name={'file-download'}
+                           color={Colors.violet}
+                           size={28}
                         />
-                        <Text
-                           style={{
-                              fontSize: 14,
-                              marginLeft: 2,
-                           }}
-                        >
-                           {langueActual === 'fr'
-                              ? 'Pas encore lu'
-                              : 'Tsy voavaky'}
-                        </Text>
-                     </View>
-                     <View
-                        style={{
-                           display: 'flex',
-                           flexDirection: 'row',
-                           width:
-                              Dimensions.get('window').height < 700 ? 90 : 108,
-                           justifyContent: 'space-evenly',
-                        }}
-                     >
-                        <TouchableOpacity
-                           activeOpacity={0.8}
-                           onPress={() => {
-                              alert('PDF');
-                           }}
-                        >
-                           <Icon
-                              name={'picture-as-pdf'}
-                              color={Colors.violet}
-                              size={28}
-                           />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                           activeOpacity={0.8}
-                           onPress={() => {
-                              dispatch(addFavoris(item));
-                           }}
-                        >
-                           <Icon
-                              name={'favorite-border'}
-                              color={Colors.orange}
-                              size={28}
-                           />
-                        </TouchableOpacity>
-                     </View>
+                     </TouchableOpacity>
                   </View>
                </View>
             </View>
@@ -371,22 +355,22 @@ export default function Recherche({ navigation, route }) {
                               },
                            }}
                         >
-                           {allThematiques.map((type) => (
+                           {allThematiques.map((thematique) => (
                               <MenuOption
                                  onSelect={() =>
                                     filterByThematique(
                                        langueActual === 'fr'
-                                          ? type.nom?.substring(0, 5)
-                                          : type.nom_mg?.substring(0, 5)
+                                          ? thematique.name_fr?.substring(0, 5)
+                                          : thematique.name_mg?.substring(0, 5)
                                     )
                                  }
-                                 key={type.id}
+                                 key={thematique.id}
                               >
                                  <MenuOptionCustom
                                     text={
                                        langueActual === 'fr'
-                                          ? type.nom
-                                          : type.nom_mg
+                                          ? thematique.name_fr
+                                          : thematique.name_mg
                                     }
                                  />
                               </MenuOption>
@@ -421,8 +405,8 @@ export default function Recherche({ navigation, route }) {
                                  onSelect={() =>
                                     filterByType(
                                        langueActual === 'fr'
-                                          ? type.nom
-                                          : type.nom_mg
+                                          ? type.name_fr
+                                          : type.name_mg
                                     )
                                  }
                                  key={type.id}
@@ -430,8 +414,8 @@ export default function Recherche({ navigation, route }) {
                                  <MenuOptionCustom
                                     text={
                                        langueActual === 'fr'
-                                          ? type.nom
-                                          : type.nom_mg
+                                          ? type.name_fr
+                                          : type.name_mg
                                     }
                                  />
                               </MenuOption>
@@ -457,9 +441,9 @@ export default function Recherche({ navigation, route }) {
             </View>
          </View>
          <View style={styles.view_for_result}>
-            {allArticlesFilter?.length > 0 && (
+            {allContenusFilter?.length > 0 && (
                <Text style={{ textAlign: 'center' }}>
-                  {allArticlesFilter.length}{' '}
+                  {allContenusFilter.length}{' '}
                   {langueActual === 'fr'
                      ? ' résultats trouvés'
                      : ' ny valiny hita'}
@@ -467,7 +451,7 @@ export default function Recherche({ navigation, route }) {
             )}
             <SafeAreaView style={styles.container_safe}>
                <FlatList
-                  data={allArticlesFilter}
+                  data={allContenusFilter}
                   key={'_'}
                   keyExtractor={_idKeyExtractor}
                   renderItem={_renderItem}

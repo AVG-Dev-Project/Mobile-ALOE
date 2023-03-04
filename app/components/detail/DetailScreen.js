@@ -8,6 +8,7 @@ import {
    ScrollView,
    TouchableOpacity,
    Dimensions,
+   useWindowDimensions,
 } from 'react-native';
 import {
    Menu,
@@ -17,6 +18,7 @@ import {
 } from 'react-native-popup-menu';
 import * as Speech from 'expo-speech';
 import React, { useState } from 'react';
+import RenderHtml from 'react-native-render-html';
 import { styles } from './styles';
 import { Icon } from '@rneui/themed';
 import bgImage from '_images/bg_loi.jpg';
@@ -28,10 +30,12 @@ export default function Detail({ navigation, route }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const { width } = useWindowDimensions();
    const dispatch = useDispatch();
    const [isSpeakPlay, setIsSpeakPlay] = useState(false);
    const oneArticle = route.params.articleToViewDetail;
 
+   //all functions
    /*function to speach article*/
    const playPauseSpeak = (txt_to_say) => {
       if (isSpeakPlay) {
@@ -41,25 +45,38 @@ export default function Detail({ navigation, route }) {
       }
    };
 
+   const sourceHTML = (data) => {
+      const source = {
+         html: data,
+      };
+      return source;
+   };
+
+   const tagsStyles = {
+      p: {
+         width: '100%',
+         fontSize: 19,
+      },
+   };
+
    return (
       <View style={styles.view_container}>
-         <StatusBar
-            backgroundColor={'transparent'}
-            animated={true}
-            translucent={true}
-         />
+         <StatusBar backgroundColor={Colors.violet} />
          <SafeAreaView style={styles.container_safe}>
             <ImageBackground
                source={bgImage}
                style={{
-                  height: Dimensions.get('window').height < 700 ? 340 : 420,
+                  height: 250,
                }}
                imageStyle={{
                   resizeMode: 'cover',
                }}
             >
                <View
-                  style={[StyleSheet.absoluteFillObject, styles.maskImageCatg]}
+                  style={[
+                     StyleSheet.absoluteFillObject,
+                     styles.maskImageDetailArticle,
+                  ]}
                ></View>
                <View style={styles.info_in_landing_detail}>
                   <Text
@@ -71,164 +88,117 @@ export default function Detail({ navigation, route }) {
                      }}
                   >
                      {langueActual === 'fr'
-                        ? oneArticle.Titre.titre_fr
-                        : oneArticle.Titre.titre_mg}
+                        ? oneArticle.titre_fr
+                        : oneArticle.titre_mg}
                   </Text>
                   <Text
                      style={{
                         fontSize: 12,
-                        marginTop: 8,
+                        marginVertical: 8,
                         color: Colors.white,
                      }}
                   >
                      {langueActual === 'fr' ? 'Publié le ' : 'Nivoaka ny '} :{' '}
-                     {oneArticle.date_created?.substring(0, 10)}
+                     {oneArticle.article_created_at?.substring(0, 10)}
                   </Text>
                </View>
                <View style={styles.description_section}>
-                  <TouchableOpacity
-                     onPress={() => {
-                        dispatch(addFavoris(oneArticle));
-                        alert(
-                           langueActual === 'fr'
-                              ? 'Ajouté au favoris'
-                              : "Niampy ao amin'ny ankafizina"
-                        );
-                     }}
-                  >
-                     <Text style={styles.boutton_add_favorite}>
-                        <Icon
-                           name={'favorite'}
-                           color={Colors.violet}
-                           size={32}
-                        />{' '}
-                     </Text>
-                  </TouchableOpacity>
+                  <View style={styles.view_round_button_detail_article}>
+                     <TouchableOpacity
+                        onPress={() => {
+                           dispatch(addFavoris(oneArticle));
+                           alert(
+                              langueActual === 'fr'
+                                 ? 'Ajouté au favoris'
+                                 : "Niampy ao amin'ny ankafizina"
+                           );
+                        }}
+                     >
+                        <Text style={styles.boutton_add_favorite}>
+                           <Icon
+                              name={'favorite'}
+                              color={Colors.violet}
+                              size={32}
+                           />{' '}
+                        </Text>
+                     </TouchableOpacity>
 
-                  <TouchableOpacity activeOpacity={0.7}>
-                     <Menu>
-                        {/* <MenuTrigger text="Select" /> */}
-                        <MenuTrigger customStyles={{}}>
-                           <Text style={styles.boutton_info_article}>
-                              <Icon
-                                 name={'info-outline'}
-                                 color={Colors.violet}
-                                 size={32}
-                              />{' '}
-                           </Text>
-                        </MenuTrigger>
-                        <MenuOptions
-                           customStyles={{
-                              optionsContainer: {
-                                 padding: 8,
-                                 width: 340,
-                                 height: 370,
-                              },
-                              optionText: {
-                                 fontSize: 22,
-                              },
-                           }}
-                        >
-                           <MenuOption>
-                              <Text style={{ fontSize: 22 }}>
-                                 {langueActual === 'fr'
-                                    ? 'Plus de détails :'
-                                    : 'Fanampiny misimisy :'}{' '}
-                                 :{' '}
-                              </Text>
-                           </MenuOption>
-                           <MenuOption>
-                              <Text style={styles.label_info_article}>
-                                 {langueActual === 'fr'
-                                    ? 'Thématiques '
-                                    : 'Lohahevitra'}{' '}
-                              </Text>
-                              <Text style={styles.value_info_article}>
+                     <TouchableOpacity activeOpacity={0.7}>
+                        <Menu>
+                           {/* <MenuTrigger text="Select" /> */}
+                           <MenuTrigger customStyles={{}}>
+                              <Text style={styles.boutton_info_article}>
                                  <Icon
-                                    name={'star'}
+                                    name={'info-outline'}
                                     color={Colors.violet}
-                                    size={16}
+                                    size={32}
                                  />{' '}
-                                 {langueActual === 'fr'
-                                    ? oneArticle.Thematique.nom_Thematique_fr
-                                    : oneArticle.Thematique.nom_Thematique_mg}
                               </Text>
-                           </MenuOption>
-                           <MenuOption>
-                              <Text style={styles.label_info_article}>
-                                 {langueActual === 'fr'
-                                    ? 'Types '
-                                    : 'Karazana '}{' '}
-                              </Text>
-                              <Text style={styles.value_info_article}>
-                                 <Icon
-                                    name={'star'}
-                                    color={Colors.violet}
-                                    size={16}
-                                 />{' '}
-                                 {langueActual === 'fr'
-                                    ? oneArticle.Type.nom_Type_fr
-                                    : oneArticle.Type.nom_Type_mg}
-                              </Text>
-                           </MenuOption>
-                           <MenuOption>
-                              <Text style={styles.label_info_article}>
-                                 {langueActual === 'fr'
-                                    ? 'Section '
-                                    : 'Faritra'}{' '}
-                              </Text>
-                              <Text style={styles.value_info_article}>
-                                 <Icon
-                                    name={'star'}
-                                    color={Colors.violet}
-                                    size={16}
-                                 />{' '}
-                                 {langueActual === 'fr'
-                                    ? oneArticle.Section.nom_Section_fr
-                                    : oneArticle.Section.nom_Section_mg ??
-                                      '...'}
-                              </Text>
-                           </MenuOption>
-                           <MenuOption>
-                              <Text style={styles.label_info_article}>
-                                 {langueActual === 'fr'
-                                    ? 'Sous section '
-                                    : 'Fizarana anatiny '}{' '}
-                              </Text>
-                              <Text style={styles.value_info_article}>
-                                 <Icon
-                                    name={'star'}
-                                    color={Colors.violet}
-                                    size={16}
-                                 />{' '}
-                                 Sous section
-                              </Text>
-                           </MenuOption>
-                           <MenuOption>
-                              <Text style={styles.label_info_article}>
-                                 {langueActual === 'fr'
-                                    ? 'Intitulé '
-                                    : 'Mitondra ny lohateny hoe'}{' '}
-                              </Text>
-                              <Text style={styles.value_info_article}>
-                                 <Icon
-                                    name={'star'}
-                                    color={Colors.violet}
-                                    size={16}
-                                 />{' '}
-                                 {oneArticle.Intutile.contenu_intutile ?? '...'}
-                              </Text>
-                           </MenuOption>
-                        </MenuOptions>
-                     </Menu>
-                  </TouchableOpacity>
+                           </MenuTrigger>
+                           <MenuOptions
+                              customStyles={{
+                                 optionsContainer: {
+                                    padding: 8,
+                                    width: 340,
+                                    height: 370,
+                                 },
+                                 optionText: {
+                                    fontSize: 22,
+                                 },
+                              }}
+                           >
+                              <MenuOption>
+                                 <Text style={{ fontSize: 22 }}>
+                                    {langueActual === 'fr'
+                                       ? 'Plus de détails :'
+                                       : 'Fanampiny misimisy :'}{' '}
+                                    :{' '}
+                                 </Text>
+                              </MenuOption>
+                              <MenuOption>
+                                 <Text style={styles.label_info_article}>
+                                    {langueActual === 'fr'
+                                       ? 'Chapitre '
+                                       : 'Lohateny'}{' '}
+                                 </Text>
+                                 <Text style={styles.value_info_article}>
+                                    <Icon
+                                       name={'star'}
+                                       color={Colors.violet}
+                                       size={16}
+                                    />{' '}
+                                    {langueActual === 'fr'
+                                       ? oneArticle.chapitre_titre_fr ?? ''
+                                       : oneArticle.chapitre_titre_mg ?? ''}
+                                 </Text>
+                              </MenuOption>
+                              <MenuOption>
+                                 <Text style={styles.label_info_article}>
+                                    {langueActual === 'fr'
+                                       ? 'Contenu '
+                                       : 'Sokajy '}{' '}
+                                 </Text>
+                                 <Text style={styles.value_info_article}>
+                                    <Icon
+                                       name={'star'}
+                                       color={Colors.violet}
+                                       size={16}
+                                    />{' '}
+                                    {langueActual === 'fr'
+                                       ? oneArticle.contenu
+                                       : oneArticle.contenu}
+                                 </Text>
+                              </MenuOption>
+                           </MenuOptions>
+                        </Menu>
+                     </TouchableOpacity>
+                  </View>
 
                   <Text
                      style={{
                         fontSize: 22,
                         fontWeight: 'bold',
-                        marginTop: 22,
-                        marginBottom: 14,
+                        marginTop: 18,
                      }}
                   >
                      {langueActual === 'fr'
@@ -240,17 +210,19 @@ export default function Detail({ navigation, route }) {
                         paddingRight: 4,
                      }}
                   >
-                     <Text
-                        style={{
-                           fontSize:
-                              Dimensions.get('window').height < 700 ? 15 : 18,
-                           textAlign: 'left',
-                        }}
-                     >
-                        {langueActual === 'fr'
-                           ? oneArticle.Article.contenu_Article_fr
-                           : oneArticle.Article.contenu_Article_mg}
-                     </Text>
+                     {langueActual === 'fr' ? (
+                        <RenderHtml
+                           contentWidth={width}
+                           source={sourceHTML(oneArticle.contenu_fr)}
+                           tagsStyles={tagsStyles}
+                        />
+                     ) : (
+                        <RenderHtml
+                           contentWidth={width}
+                           source={sourceHTML(oneArticle.contenu_mg)}
+                           tagsStyles={tagsStyles}
+                        />
+                     )}
                   </ScrollView>
                   <View style={styles.all_button_in_detail_screen}>
                      <TouchableOpacity
@@ -272,17 +244,11 @@ export default function Detail({ navigation, route }) {
                            setIsSpeakPlay(!isSpeakPlay);
                            if (langueActual === 'fr') {
                               playPauseSpeak(
-                                 oneArticle.Article.contenu_Article_fr.substring(
-                                    0,
-                                    4000
-                                 )
+                                 oneArticle.contenu_fr.substring(0, 4000)
                               );
                            } else {
                               playPauseSpeak(
-                                 oneArticle.Article.contenu_Article_mg.substring(
-                                    0,
-                                    4000
-                                 )
+                                 oneArticle.contenu_mg.substring(0, 4000)
                               );
                            }
                         }}

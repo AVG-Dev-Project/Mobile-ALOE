@@ -4,6 +4,7 @@ import {
    GET_STARTED,
    GET_ALL_THEMATIQUES,
    GET_ALL_TYPES,
+   GET_ALL_CONTENUS,
    CHANGE_LANGUAGE,
    IS_CONNECTED_INTERNET,
 } from './action_names';
@@ -30,6 +31,11 @@ export const getAllThematiques = (thematiques) => ({
 export const getAllTypes = (types) => ({
    type: GET_ALL_TYPES,
    payload: types,
+});
+
+export const getAllContenus = (contenus) => ({
+   type: GET_ALL_CONTENUS,
+   payload: contenus,
 });
 
 export const addFavoris = (article) => ({

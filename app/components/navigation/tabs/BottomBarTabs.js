@@ -20,6 +20,7 @@ export default function BottomBarTabs() {
             headerShown: false,
             tabBarInactiveTintColors: Colors.black,
             tabBarActiveTintColors: Colors.violet,
+            tabBarHideOnKeyboard: true,
             tabBarLabelStyle: {
                fontSize: 13,
                textTransform: 'capitalize',
