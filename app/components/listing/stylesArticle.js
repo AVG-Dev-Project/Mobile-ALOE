@@ -1,5 +1,5 @@
 import { Colors } from '_theme/Colors';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
 export const styles = StyleSheet.create({
    view_container: {
@@ -16,13 +16,13 @@ export const styles = StyleSheet.create({
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
       borderRadius: 18,
       height: 160,
-      width: 130,
+      width: Dimensions.get('window').width < 380 ? 100 : 140,
    },
    number_of_article: {
       fontWeight: 'bold',
       color: Colors.white,
-      fontSize: 44,
+      fontSize: Dimensions.get('window').width < 380 ? 40 : 44,
       marginVertical: 50,
-      marginHorizontal: 50,
+      marginHorizontal: Dimensions.get('window').width < 380 ? 40 : 50,
    },
 });

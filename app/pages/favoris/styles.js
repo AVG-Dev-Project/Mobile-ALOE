@@ -1,11 +1,12 @@
 import { Colors } from '_theme/Colors';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
+const widthDevice = Dimensions.get('window').width;
 export const styles = StyleSheet.create({
    view_container: {
       flex: 1,
-      marginTop: 30,
-      marginBottom: 80,
+      paddingTop: 20,
+      marginBottom: 70,
       paddingHorizontal: 15,
       backgroundColor: Colors.background,
    },
@@ -16,11 +17,10 @@ export const styles = StyleSheet.create({
    },
    head_content: {
       height: 45,
-      marginVertical: 10,
    },
    landing_screen: {
-      marginTop: 20,
-      height: 200,
+      marginTop: 8,
+      height: widthDevice < 370 ? 160 : 200,
       borderRadius: 25,
       backgroundColor: Colors.violet,
       display: 'flex',
@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
    },
    text_landing_screen: {
-      fontSize: 22,
+      fontSize: widthDevice < 370 ? 18 : 22,
       color: Colors.white,
       fontWeight: 'bold',
    },
@@ -48,5 +48,12 @@ export const styles = StyleSheet.create({
       width: 42,
       height: 42,
       borderRadius: 62,
+   },
+   number_of_article: {
+      fontWeight: 'bold',
+      color: Colors.white,
+      fontSize: widthDevice < 380 ? 40 : 44,
+      marginVertical: 50,
+      marginHorizontal: widthDevice < 380 ? 40 : 50,
    },
 });

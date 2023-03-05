@@ -4,6 +4,7 @@ import {
    Text,
    Image,
    SafeAreaView,
+   Dimensions,
    StyleSheet,
    TouchableOpacity,
 } from 'react-native';
@@ -65,13 +66,16 @@ export default function Home({ navigation }) {
                      marginVertical: 8,
                      paddingRight: 8,
                      fontWeight: 'bold',
-                     fontSize: 17,
+                     fontSize: Dimensions.get('window').height < 700 ? 13 : 17,
                   }}
                >
                   {langueActual === 'fr' ? 'Loi n° ' : 'Lalana faha '}
                   {langueActual === 'fr' ? item.numero : item.numero}
                </Text>
-               <Text style={{ fontSize: 12 }} numberOfLines={1}>
+               <Text
+                  style={{ fontSize: 12, textTransform: 'capitalize' }}
+                  numberOfLines={1}
+               >
                   {langueActual === 'fr'
                      ? item.objet_contenu_fr
                      : item.objet_contenu_mg}
@@ -190,7 +194,13 @@ export default function Home({ navigation }) {
                      marginVertical: 25,
                   }}
                >
-                  <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
+                  <Text
+                     style={{
+                        fontSize:
+                           Dimensions.get('window').height < 700 ? 18 : 22,
+                        fontWeight: 'bold',
+                     }}
+                  >
                      {t('thematique')}
                   </Text>
                </View>
@@ -226,7 +236,13 @@ export default function Home({ navigation }) {
                      marginVertical: 25,
                   }}
                >
-                  <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+                  <Text
+                     style={{
+                        fontSize:
+                           Dimensions.get('window').height < 700 ? 18 : 22,
+                        fontWeight: 'bold',
+                     }}
+                  >
                      {t('les_types')}
                   </Text>
                </View>
@@ -262,7 +278,13 @@ export default function Home({ navigation }) {
                      marginVertical: 25,
                   }}
                >
-                  <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+                  <Text
+                     style={{
+                        fontSize:
+                           Dimensions.get('window').height < 700 ? 18 : 22,
+                        fontWeight: 'bold',
+                     }}
+                  >
                      {t('contenu')}
                   </Text>
                   <Icon

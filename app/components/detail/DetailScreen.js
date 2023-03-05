@@ -31,6 +31,7 @@ export default function Detail({ navigation, route }) {
       (selector) => selector.fonctionnality.langue
    );
    const { width } = useWindowDimensions();
+   let widthDevice = Dimensions.get('window').width;
    const dispatch = useDispatch();
    const [isSpeakPlay, setIsSpeakPlay] = useState(false);
    const oneArticle = route.params.articleToViewDetail;
@@ -55,7 +56,7 @@ export default function Detail({ navigation, route }) {
    const tagsStyles = {
       p: {
          width: '100%',
-         fontSize: 19,
+         fontSize: widthDevice < 380 ? 14 : 19,
       },
    };
 
@@ -82,7 +83,7 @@ export default function Detail({ navigation, route }) {
                   <Text
                      style={{
                         fontWeight: 'bold',
-                        fontSize: 22,
+                        fontSize: widthDevice < 370 ? 18 : 22,
                         width: '90%',
                         color: Colors.white,
                      }}
