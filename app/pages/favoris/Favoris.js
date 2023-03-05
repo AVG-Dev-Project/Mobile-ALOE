@@ -3,11 +3,15 @@ import {
    Text,
    FlatList,
    Image,
+   Dimensions,
+   useWindowDimensions,
+   StyleSheet,
    SafeAreaView,
    TouchableOpacity,
 } from 'react-native';
+import RenderHtml from 'react-native-render-html';
 import React, { useCallback, useEffect, useState } from 'react';
-import { nameStackNavigation as nameNav } from '_utils/constante/NameStackNavigation';
+import { nameStackNavigation as nameNav, cutTextWithBalise } from '_utils';
 import { styles } from './styles';
 import { Icon } from '@rneui/themed';
 import { useSelector, useDispatch } from 'react-redux';
@@ -18,6 +22,7 @@ import { addFavoris } from '_utils/redux/actions/action_creators';
 export default function Favoris({ navigation, route }) {
    const dataForFlatList = useSelector((selector) => selector.loi.favoris);
    const dispatch = useDispatch();
+   const { width } = useWindowDimensions();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
@@ -29,19 +34,35 @@ export default function Favoris({ navigation, route }) {
             onPress={() => {
                navigation.navigate(nameNav.detailPage, {
                   titleScreen: `${
-                     langueActual === 'fr'
-                        ? 'Article n° '
-                        : 'Lahatsoratra faha '
-                  } ${item.Article.numero_Article}`,
+                     langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '
+                  } ${item.numero}`,
                   articleToViewDetail: item,
                });
             }}
          >
             <View style={styles.view_render}>
                <Image
-                  source={item.photo ?? require('_images/book_loi.jpg')}
-                  style={{ width: 130, height: 150, borderRadius: 16 }}
+                  source={require('_images/book_loi.jpg')}
+                  style={{
+                     width: Dimensions.get('window').width < 380 ? 100 : 120,
+                     height: 160,
+                     borderRadius: 16,
+                  }}
                />
+               <View
+                  style={[
+                     StyleSheet.absoluteFillObject,
+                     styles.maskImageArticle,
+                  ]}
+               ></View>
+               <Text
+                  style={[
+                     StyleSheet.absoluteFillObject,
+                     styles.number_of_article,
+                  ]}
+               >
+                  {item.numero}
+               </Text>
                <View
                   style={{
                      marginLeft: 12,
@@ -53,28 +74,59 @@ export default function Favoris({ navigation, route }) {
                   <View>
                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
                         {langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '}{' '}
-                        {item.id}
+                        {item.numero}
                      </Text>
-                     <Text style={{ fontSize: 12, marginBottom: 8 }}>
-                        {langueActual === 'fr' ? 'Publié le ' : 'Nivoaka ny '} :{' '}
-                        {item.date_created?.substring(0, 10)}
+                     <Text
+                        style={{
+                           fontSize:
+                              Dimensions.get('window').width < 370 ? 10 : 14,
+                           textDecorationLine: 'underline',
+                        }}
+                        numberOfLines={1}
+                     >
+                        {langueActual === 'fr' ? item.titre_fr : item.titre_mg}
                      </Text>
+                     {item.chapitre_id && (
+                        <Text style={{ fontSize: 12 }}>
+                           {langueActual === 'fr'
+                              ? `Chapitre ${item.chapitre_numero ?? ''}`
+                              : `Lohateny ${item.chapitre_numero ?? ''}`}
+                           : {item.chapitre_titre_fr ?? ''}
+                        </Text>
+                     )}
                   </View>
                   <Text
-                     style={{ fontSize: 16, flex: 2, width: 210 }}
+                     style={{
+                        fontSize: Dimensions.get('window').width < 380 ? 8 : 16,
+                        flex: 2,
+                        width: 210,
+                     }}
                      numberOfLines={4}
                   >
-                     {langueActual === 'fr'
-                        ? item.Article.contenu_Article_fr
-                        : item.Article.contenu_Article_mg}{' '}
+                     {langueActual === 'fr' ? (
+                        <RenderHtml
+                           contentWidth={width}
+                           source={sourceHTML(
+                              cutTextWithBalise(item.contenu_fr, 700)
+                           )}
+                           tagsStyles={tagsStyles}
+                        />
+                     ) : (
+                        <RenderHtml
+                           contentWidth={width}
+                           source={sourceHTML(
+                              cutTextWithBalise(item.contenu_mg, 700)
+                           )}
+                           tagsStyles={tagsStyles}
+                        />
+                     )}
+                     {' ...'}
                   </Text>
                   <View
                      style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        width: 140,
                         justifyContent: 'space-between',
-                        alignItems: 'flex-end',
                      }}
                   >
                      <View
@@ -85,8 +137,8 @@ export default function Favoris({ navigation, route }) {
                         }}
                      >
                         <Icon
-                           name={'sentiment-satisfied-alt'}
-                           color="green"
+                           name={'sentiment-very-satisfied'}
+                           color={Colors.violet}
                            size={18}
                         />
                         <Text
@@ -95,42 +147,26 @@ export default function Favoris({ navigation, route }) {
                               marginLeft: 2,
                            }}
                         >
-                           {langueActual === 'fr' ? 'Déjà lu' : 'Efa voavaky'}
+                           {langueActual === 'fr' ? 'Favoris' : 'Ankafizina'}
                         </Text>
                      </View>
-                     <View
-                        style={{
-                           display: 'flex',
-                           flexDirection: 'row',
-                           width: 108,
-                           justifyContent: 'space-evenly',
+                     <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => {
+                           dispatch(addFavoris(item));
+                           alert(
+                              langueActual === 'fr'
+                                 ? 'Enlever au favoris.'
+                                 : "Esorina ato amin'ny ankafizina"
+                           );
                         }}
                      >
-                        <TouchableOpacity
-                           activeOpacity={0.8}
-                           onPress={() => {
-                              alert('PDF');
-                           }}
-                        >
-                           <Icon
-                              name={'picture-as-pdf'}
-                              color={Colors.violet}
-                              size={28}
-                           />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                           activeOpacity={0.8}
-                           onPress={() => {
-                              dispatch(addFavoris(item));
-                           }}
-                        >
-                           <Icon
-                              name={'favorite'}
-                              color={Colors.orange}
-                              size={28}
-                           />
-                        </TouchableOpacity>
-                     </View>
+                        <Icon
+                           name={'favorite'}
+                           color={Colors.orange}
+                           size={28}
+                        />
+                     </TouchableOpacity>
                   </View>
                </View>
             </View>
@@ -138,75 +174,29 @@ export default function Favoris({ navigation, route }) {
       );
    }, []);
 
+   //all function
+   const sourceHTML = (data) => {
+      const source = {
+         html: data,
+      };
+      return source;
+   };
+
+   const tagsStyles = {
+      p: {
+         width: '40%',
+         fontSize: Dimensions.get('window').width < 370 ? 12 : 18,
+      },
+   };
+
    const _idKeyExtractor = (item, index) =>
       item?.id == null ? index.toString() : item.id.toString();
 
    return (
       <View style={styles.view_container}>
          <SafeAreaView>
-            {dataForFlatList.length > 0 ? (
-               <FlatList
-                  ListHeaderComponent={
-                     <View>
-                        <View style={styles.head_content}>
-                           <HeaderGlobal navigation={navigation} />
-                        </View>
-
-                        <View style={styles.landing_screen}>
-                           <Text style={styles.text_landing_screen}>
-                              {langueActual === 'fr'
-                                 ? 'Vos favoris'
-                                 : 'Ireo ankafizinao'}
-                           </Text>
-                           <View style={styles.content_in_landing_screen}>
-                              <Image
-                                 style={styles.icon_in_content_landing}
-                                 source={require('_images/book_loi.jpg')}
-                              />
-                              <View
-                                 style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'flex-start',
-                                 }}
-                              >
-                                 <Text
-                                    style={{ fontSize: 16, fontWeight: 'bold' }}
-                                 >
-                                    {langueActual === 'fr'
-                                       ? 'Favoris'
-                                       : 'Ankafizina'}
-                                 </Text>
-                                 <Text>
-                                    {langueActual === 'fr'
-                                       ? 'Regardez-les encore'
-                                       : 'Jereo ihany izy ireo'}{' '}
-                                 </Text>
-                              </View>
-                              <Icon
-                                 name={'autorenew'}
-                                 color={Colors.white}
-                                 size={38}
-                              />
-                           </View>
-                        </View>
-                     </View>
-                  }
-                  data={dataForFlatList}
-                  key={'_'}
-                  keyExtractor={_idKeyExtractor}
-                  renderItem={_renderItem}
-                  removeClippedSubviews={true}
-                  getItemLayout={(data, index) => ({
-                     length: data.length,
-                     offset: data.length * index,
-                     index,
-                  })}
-                  initialNumToRender={5}
-                  maxToRenderPerBatch={3}
-               />
-            ) : (
-               <View>
+            <FlatList
+               ListHeaderComponent={
                   <View>
                      <View style={styles.head_content}>
                         <HeaderGlobal navigation={navigation} />
@@ -251,22 +241,44 @@ export default function Favoris({ navigation, route }) {
                         </View>
                      </View>
                   </View>
+               }
+               ListEmptyComponent={
                   <View
                      style={{
                         display: 'flex',
                         borderWidth: 1,
+                        borderRadius: 8,
+                        borderColor: Colors.orange,
                         padding: 18,
-                        marginVertical: 28,
+                        marginVertical: width < 370 ? 20 : 28,
                      }}
                   >
-                     <Text style={{ textAlign: 'center', fontSize: 32 }}>
+                     <Text
+                        style={{
+                           textAlign: 'center',
+                           color: Colors.orange,
+                           fontSize: width < 370 ? 18 : 30,
+                        }}
+                     >
                         {langueActual === 'fr'
-                           ? 'Pas de favoris'
-                           : 'Tsy misy ankafizina'}
+                           ? "Vous n'avez pas de favoris"
+                           : 'Tsy misy ny ankafizinao'}
                      </Text>
                   </View>
-               </View>
-            )}
+               }
+               data={dataForFlatList}
+               key={'_'}
+               keyExtractor={_idKeyExtractor}
+               renderItem={_renderItem}
+               removeClippedSubviews={true}
+               getItemLayout={(data, index) => ({
+                  length: data.length,
+                  offset: data.length * index,
+                  index,
+               })}
+               initialNumToRender={5}
+               maxToRenderPerBatch={3}
+            />
          </SafeAreaView>
       </View>
    );

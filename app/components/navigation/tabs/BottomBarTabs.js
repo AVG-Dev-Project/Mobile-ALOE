@@ -98,6 +98,6 @@ const styles = StyleSheet.create({
       backgroundColors: Colors.background,
       height: 60,
       padding: 5,
-      marginHorizontal: 30,
+      marginHorizontal: 14,
    },
 });

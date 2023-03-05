@@ -282,195 +282,245 @@ export default function Recherche({ navigation, route }) {
 
    return (
       <View style={styles.view_container_search}>
-         <View style={styles.head_content}>
-            <View
-               style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-               }}
-            >
-               <TouchableOpacity activeOpacity={0.7}>
-                  <Icon name={'mic'} color={Colors.violet} size={30} />
-                  <Text style={{ fontWeight: 'bold' }}>
-                     {langueActual === 'fr'
-                        ? 'Recherche vocale'
-                        : "Hitady amin'ny alalan'ny feo"}{' '}
-                  </Text>
-               </TouchableOpacity>
-            </View>
-
-            <View style={styles.view_for_input_search}>
-               <TextInput
-                  style={styles.input}
-                  keyboardType="email-address"
-                  placeholder={
-                     langueActual === 'fr'
-                        ? 'Entrer le mot de recherche ...'
-                        : 'Ampidiro ny teny hotadiavina...'
-                  }
-                  value={valueForSearch}
-                  onChangeText={(text) => onHandleChangeValueSearch(text)}
-               />
-               <TouchableOpacity
-                  activeOpacity={0.8}
-                  /*onPress={() => {
-                     findObjectContainValueSearch(valueForSearch);
-                  }}*/
-               >
-                  <Text style={styles.boutton_search}>
-                     <Icon name={'search'} color={Colors.black} size={40} />
-                  </Text>
-               </TouchableOpacity>
-            </View>
-
-            <View style={styles.view_for_filtre}>
-               <View style={styles.view_in_filtre}>
+         <SafeAreaView>
+            <FlatList
+               data={allContenusFilter}
+               ListHeaderComponent={
                   <View>
+                     <View style={styles.head_content}>
+                        <View
+                           style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                           }}
+                        >
+                           <TouchableOpacity activeOpacity={0.7}>
+                              <Icon
+                                 name={'mic'}
+                                 color={Colors.violet}
+                                 size={30}
+                              />
+                              <Text style={{ fontWeight: 'bold' }}>
+                                 {langueActual === 'fr'
+                                    ? 'Recherche vocale'
+                                    : "Hitady amin'ny alalan'ny feo"}{' '}
+                              </Text>
+                           </TouchableOpacity>
+                        </View>
+
+                        <View style={styles.view_for_input_search}>
+                           <TextInput
+                              style={styles.input}
+                              keyboardType="email-address"
+                              placeholder={
+                                 langueActual === 'fr'
+                                    ? 'Entrer le mot de recherche ...'
+                                    : 'Ampidiro ny teny hotadiavina...'
+                              }
+                              value={valueForSearch}
+                              onChangeText={(text) =>
+                                 onHandleChangeValueSearch(text)
+                              }
+                           />
+                           <TouchableOpacity
+                              activeOpacity={0.8}
+                              /*onPress={() => {
+                        findObjectContainValueSearch(valueForSearch);
+                     }}*/
+                           >
+                              <Text style={styles.boutton_search}>
+                                 <Icon
+                                    name={'search'}
+                                    color={Colors.black}
+                                    size={40}
+                                 />
+                              </Text>
+                           </TouchableOpacity>
+                        </View>
+
+                        <View style={styles.view_for_filtre}>
+                           <View style={styles.view_in_filtre}>
+                              <View>
+                                 <Text
+                                    style={{
+                                       textAlign: 'center',
+                                       fontWeight: 'bold',
+                                       fontSize: 18,
+                                       marginTop: 10,
+                                    }}
+                                 >
+                                    {langueActual === 'fr'
+                                       ? 'Thématique'
+                                       : 'Lohahevitra'}
+                                 </Text>
+                                 {thematiqueChecked !== null && (
+                                    <Text>{thematiqueChecked}</Text>
+                                 )}
+                              </View>
+                              <TouchableOpacity activeOpacity={0.8}>
+                                 <Menu>
+                                    <MenuTrigger customStyles={{}}>
+                                       <Icon
+                                          name={'filter-list'}
+                                          color={Colors.violet}
+                                          size={34}
+                                       />
+                                    </MenuTrigger>
+                                    <MenuOptions
+                                       customStyles={{
+                                          optionsContainer: {
+                                             padding: 8,
+                                          },
+                                          optionText: {
+                                             fontSize: 22,
+                                          },
+                                       }}
+                                    >
+                                       {allThematiques.map((thematique) => (
+                                          <MenuOption
+                                             onSelect={() =>
+                                                filterByThematique(
+                                                   langueActual === 'fr'
+                                                      ? thematique.name_fr?.substring(
+                                                           0,
+                                                           5
+                                                        )
+                                                      : thematique.name_mg?.substring(
+                                                           0,
+                                                           5
+                                                        )
+                                                )
+                                             }
+                                             key={thematique.id}
+                                          >
+                                             <MenuOptionCustom
+                                                text={
+                                                   langueActual === 'fr'
+                                                      ? thematique.name_fr
+                                                      : thematique.name_mg
+                                                }
+                                             />
+                                          </MenuOption>
+                                       ))}
+                                    </MenuOptions>
+                                 </Menu>
+                              </TouchableOpacity>
+                           </View>
+
+                           <View style={styles.view_in_filtre}>
+                              <TouchableOpacity activeOpacity={0.8}>
+                                 <Menu>
+                                    <MenuTrigger customStyles={{}}>
+                                       <Icon
+                                          name={'filter-list'}
+                                          color={Colors.violet}
+                                          size={34}
+                                       />
+                                    </MenuTrigger>
+                                    <MenuOptions
+                                       customStyles={{
+                                          optionsContainer: {
+                                             padding: 8,
+                                          },
+                                          optionText: {
+                                             fontSize: 22,
+                                          },
+                                       }}
+                                    >
+                                       {allTypes.map((type) => (
+                                          <MenuOption
+                                             onSelect={() =>
+                                                filterByType(
+                                                   langueActual === 'fr'
+                                                      ? type.name_fr
+                                                      : type.name_mg
+                                                )
+                                             }
+                                             key={type.id}
+                                          >
+                                             <MenuOptionCustom
+                                                text={
+                                                   langueActual === 'fr'
+                                                      ? type.name_fr
+                                                      : type.name_mg
+                                                }
+                                             />
+                                          </MenuOption>
+                                       ))}
+                                    </MenuOptions>
+                                 </Menu>
+                              </TouchableOpacity>
+
+                              <View>
+                                 <Text
+                                    style={{
+                                       textAlign: 'center',
+                                       fontWeight: 'bold',
+                                       fontSize: 18,
+                                       marginTop: 10,
+                                    }}
+                                 >
+                                    {langueActual === 'fr'
+                                       ? 'Type'
+                                       : 'Karazana'}
+                                 </Text>
+                                 {typeChecked !== null && (
+                                    <Text>{typeChecked}</Text>
+                                 )}
+                              </View>
+                           </View>
+                        </View>
+                     </View>
+                     <View style={styles.view_for_result}>
+                        {allContenusFilter?.length > 0 && (
+                           <Text style={{ textAlign: 'center' }}>
+                              {allContenusFilter.length}{' '}
+                              {langueActual === 'fr'
+                                 ? ' résultats trouvés'
+                                 : ' ny valiny hita'}
+                           </Text>
+                        )}
+                     </View>
+                  </View>
+               }
+               ListEmptyComponent={
+                  <View
+                     style={{
+                        display: 'flex',
+                        borderWidth: 1,
+                        borderColor: Colors.orange,
+                        borderRadius: 8,
+                        padding: widthDevice < 370 ? 8 : 12,
+                        marginVertical: widthDevice < 370 ? 8 : 12,
+                     }}
+                  >
                      <Text
                         style={{
                            textAlign: 'center',
-                           fontWeight: 'bold',
-                           fontSize: 18,
-                           marginTop: 10,
+                           color: Colors.orange,
+                           fontSize: widthDevice < 370 ? 16 : 22,
                         }}
                      >
-                        {langueActual === 'fr' ? 'Thématique' : 'Lohahevitra'}
+                        {langueActual === 'fr'
+                           ? 'pas de résultat'
+                           : '0 ny valiny'}
                      </Text>
-                     {thematiqueChecked !== null && (
-                        <Text>{thematiqueChecked}</Text>
-                     )}
                   </View>
-                  <TouchableOpacity activeOpacity={0.8}>
-                     <Menu>
-                        <MenuTrigger customStyles={{}}>
-                           <Icon
-                              name={'filter-list'}
-                              color={Colors.violet}
-                              size={34}
-                           />
-                        </MenuTrigger>
-                        <MenuOptions
-                           customStyles={{
-                              optionsContainer: {
-                                 padding: 8,
-                              },
-                              optionText: {
-                                 fontSize: 22,
-                              },
-                           }}
-                        >
-                           {allThematiques.map((thematique) => (
-                              <MenuOption
-                                 onSelect={() =>
-                                    filterByThematique(
-                                       langueActual === 'fr'
-                                          ? thematique.name_fr?.substring(0, 5)
-                                          : thematique.name_mg?.substring(0, 5)
-                                    )
-                                 }
-                                 key={thematique.id}
-                              >
-                                 <MenuOptionCustom
-                                    text={
-                                       langueActual === 'fr'
-                                          ? thematique.name_fr
-                                          : thematique.name_mg
-                                    }
-                                 />
-                              </MenuOption>
-                           ))}
-                        </MenuOptions>
-                     </Menu>
-                  </TouchableOpacity>
-               </View>
-
-               <View style={styles.view_in_filtre}>
-                  <TouchableOpacity activeOpacity={0.8}>
-                     <Menu>
-                        <MenuTrigger customStyles={{}}>
-                           <Icon
-                              name={'filter-list'}
-                              color={Colors.violet}
-                              size={34}
-                           />
-                        </MenuTrigger>
-                        <MenuOptions
-                           customStyles={{
-                              optionsContainer: {
-                                 padding: 8,
-                              },
-                              optionText: {
-                                 fontSize: 22,
-                              },
-                           }}
-                        >
-                           {allTypes.map((type) => (
-                              <MenuOption
-                                 onSelect={() =>
-                                    filterByType(
-                                       langueActual === 'fr'
-                                          ? type.name_fr
-                                          : type.name_mg
-                                    )
-                                 }
-                                 key={type.id}
-                              >
-                                 <MenuOptionCustom
-                                    text={
-                                       langueActual === 'fr'
-                                          ? type.name_fr
-                                          : type.name_mg
-                                    }
-                                 />
-                              </MenuOption>
-                           ))}
-                        </MenuOptions>
-                     </Menu>
-                  </TouchableOpacity>
-
-                  <View>
-                     <Text
-                        style={{
-                           textAlign: 'center',
-                           fontWeight: 'bold',
-                           fontSize: 18,
-                           marginTop: 10,
-                        }}
-                     >
-                        {langueActual === 'fr' ? 'Type' : 'Karazana'}
-                     </Text>
-                     {typeChecked !== null && <Text>{typeChecked}</Text>}
-                  </View>
-               </View>
-            </View>
-         </View>
-         <View style={styles.view_for_result}>
-            {allContenusFilter?.length > 0 && (
-               <Text style={{ textAlign: 'center' }}>
-                  {allContenusFilter.length}{' '}
-                  {langueActual === 'fr'
-                     ? ' résultats trouvés'
-                     : ' ny valiny hita'}
-               </Text>
-            )}
-            <SafeAreaView style={styles.container_safe}>
-               <FlatList
-                  data={allContenusFilter}
-                  key={'_'}
-                  keyExtractor={_idKeyExtractor}
-                  renderItem={_renderItem}
-                  removeClippedSubviews={true}
-                  getItemLayout={(data, index) => ({
-                     length: data.length,
-                     offset: data.length * index,
-                     index,
-                  })}
-                  initialNumToRender={5}
-                  maxToRenderPerBatch={3}
-               />
-            </SafeAreaView>
-         </View>
+               }
+               key={'_'}
+               keyExtractor={_idKeyExtractor}
+               renderItem={_renderItem}
+               removeClippedSubviews={true}
+               getItemLayout={(data, index) => ({
+                  length: data.length,
+                  offset: data.length * index,
+                  index,
+               })}
+               initialNumToRender={5}
+               maxToRenderPerBatch={3}
+            />
+         </SafeAreaView>
       </View>
    );
 }
