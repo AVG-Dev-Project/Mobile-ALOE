@@ -1,5 +1,11 @@
 import { useRef, useEffect, useState } from 'react';
-import { Text, View, Image, TouchableOpacity } from 'react-native';
+import {
+   Text,
+   View,
+   Image,
+   TouchableOpacity,
+   useWindowDimensions,
+} from 'react-native';
 import styles from './styles';
 import { Colors } from '_theme/Colors';
 import NetInfo from '@react-native-community/netinfo';
@@ -22,6 +28,7 @@ import {
 export default function Welcome({ navigation }) {
    //all datas
    const animation = useRef(null);
+   const { width } = useWindowDimensions();
    const dispatch = useDispatch();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
@@ -78,7 +85,11 @@ export default function Welcome({ navigation }) {
          />
          <View>
             <Text
-               style={{ fontSize: 34, fontWeight: 'bold', textAlign: 'center' }}
+               style={{
+                  fontSize: width < 370 ? 28 : 34,
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+               }}
             >
                {langueActual === 'fr'
                   ? 'Bienvenue sur Aloe'

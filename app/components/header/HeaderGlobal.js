@@ -27,7 +27,7 @@ const MenuOptionCustom = ({ text, icone }) => {
    );
 };
 
-export default function HeaderGlobal({ navigation }) {
+export default function HeaderGlobal({ navigation, openBottomSheet }) {
    //all data
    const dispatch = useDispatch();
 
@@ -43,29 +43,11 @@ export default function HeaderGlobal({ navigation }) {
          <Text style={styles.titre_salutation}>
             {t('bienvenue_header_text')} !
          </Text>
-         <TouchableOpacity activeOpacity={0.7}>
-            <Menu>
-               <MenuTrigger customStyles={{}}>
-                  <Icon name={'widgets'} color={Colors.violet} size={34} />
-               </MenuTrigger>
-               <MenuOptions
-                  customStyles={{
-                     optionsContainer: {
-                        padding: 8,
-                     },
-                     optionText: {
-                        fontSize: 22,
-                     },
-                  }}
-               >
-                  <MenuOption onSelect={() => onHandleChangeLanguage('fr')}>
-                     <MenuOptionCustom text="Français" icone="flag" />
-                  </MenuOption>
-                  <MenuOption onSelect={() => onHandleChangeLanguage('mg')}>
-                     <MenuOptionCustom text="Malagasy" icone="flag" />
-                  </MenuOption>
-               </MenuOptions>
-            </Menu>
+         <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => openBottomSheet()}
+         >
+            <Icon name={'widgets'} color={Colors.violet} size={34} />
          </TouchableOpacity>
       </View>
    );

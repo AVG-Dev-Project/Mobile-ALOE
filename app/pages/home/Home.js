@@ -1,4 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+   useEffect,
+   useState,
+   useCallback,
+   useMemo,
+   useRef,
+} from 'react';
 import {
    View,
    Text,
@@ -6,15 +12,17 @@ import {
    SafeAreaView,
    Dimensions,
    StyleSheet,
+   useWindowDimensions,
    TouchableOpacity,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Icon } from '@rneui/themed';
 import Carousel from 'react-native-snap-carousel';
-import { useSelector } from 'react-redux';
-
+import BottomSheet from '@gorhom/bottom-sheet';
+import { useSelector, useDispatch } from 'react-redux';
 import HeaderGlobal from '_components/header/HeaderGlobal';
+import { changeLanguage } from '_utils/redux/actions/action_creators';
 import {
    nameStackNavigation as nameNav,
    filterArticleToListByContenu,
@@ -25,7 +33,8 @@ import { Colors } from '_theme/Colors';
 export default function Home({ navigation }) {
    //all states
    const isCarousel = React.useRef(null);
-   const { t } = useTranslation();
+   const dispatch = useDispatch();
+   const { t, i18n } = useTranslation();
    const allArticles = useSelector((selector) => selector.loi.articles);
    const allContenus = useSelector((selector) => selector.loi.contenus);
    const getAllTypes = useSelector((selector) => selector.loi.types);
@@ -33,10 +42,33 @@ export default function Home({ navigation }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const { height } = useWindowDimensions();
+   const snapPoints = useMemo(
+      () => (height < 700 ? ['0%', '60%'] : ['0%', '40%']),
+      []
+   );
+
+   //all refs
+   const bottomSheetRef = useRef(null);
 
    //all functions
+   const handleSheetChanges = useCallback((i) => {
+      console.log('chcange sh');
+   }, []);
+
+   const openBottomSheet = () => {
+      return bottomSheetRef.current.snapTo(1);
+   };
+
+   const onHandleChangeLanguage = (langue) => {
+      i18n.changeLanguage(langue);
+      dispatch(changeLanguage(langue));
+   };
 
    //all efects
+   useEffect(() => {
+      bottomSheetRef.current.close();
+   }, []);
 
    //all components
    const _renderItemContenu = ({ item }) => {
@@ -156,7 +188,10 @@ export default function Home({ navigation }) {
       <KeyboardAwareScrollView style={{ backgroundColor: Colors.background }}>
          <View style={styles.view_container}>
             <View style={styles.head_content}>
-               <HeaderGlobal navigation={navigation} />
+               <HeaderGlobal
+                  navigation={navigation}
+                  openBottomSheet={openBottomSheet}
+               />
             </View>
 
             <View style={styles.landing_screen}>
@@ -324,6 +359,39 @@ export default function Home({ navigation }) {
                </View>
             </View>
          </View>
+         <BottomSheet
+            ref={bottomSheetRef}
+            index={1}
+            snapPoints={snapPoints}
+            onChange={handleSheetChanges}
+            animateOnMount={false}
+            style={styles.view_bottom_sheet}
+         >
+            <View style={styles.view_in_bottomsheet}>
+               <TouchableOpacity
+                  activeOpacity={0.4}
+                  style={styles.view_one_item_in_bottomsheet}
+                  onPress={() => {
+                     onHandleChangeLanguage('fr');
+                     bottomSheetRef.current.close();
+                  }}
+               >
+                  <Icon name={'flag'} color={Colors.violet} size={38} />
+                  <Text style={styles.text_bottomsheet}>Français</Text>
+               </TouchableOpacity>
+               <TouchableOpacity
+                  activeOpacity={0.4}
+                  style={styles.view_one_item_in_bottomsheet}
+                  onPress={() => {
+                     onHandleChangeLanguage('mg');
+                     bottomSheetRef.current.close();
+                  }}
+               >
+                  <Icon name={'flag'} color={Colors.violet} size={38} />
+                  <Text style={styles.text_bottomsheet}>Malagasy</Text>
+               </TouchableOpacity>
+            </View>
+         </BottomSheet>
       </KeyboardAwareScrollView>
    );
 }

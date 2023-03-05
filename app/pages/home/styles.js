@@ -79,4 +79,28 @@ export const styles = StyleSheet.create({
       width: 230,
       borderRadius: 15,
    },
+   view_bottom_sheet: {
+      marginHorizontal: 6,
+   },
+   view_in_bottomsheet: {
+      paddingVertical: 10,
+      display: 'flex',
+      flex: 1,
+   },
+   view_one_item_in_bottomsheet: {
+      height: 70,
+      paddingHorizontal: 12,
+      width: '100%',
+      borderBottomWidth: 1,
+      borderBottomColor: Colors.violet,
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+   },
+   text_bottomsheet: {
+      fontSize: 26,
+      marginLeft: 13,
+      fontWeight: 'bold',
+   },
 });
