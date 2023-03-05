@@ -1,10 +1,4 @@
-import React, {
-   useEffect,
-   useState,
-   useCallback,
-   useMemo,
-   useRef,
-} from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import {
    View,
    Text,
@@ -44,7 +38,7 @@ export default function Home({ navigation }) {
    );
    const { height } = useWindowDimensions();
    const snapPoints = useMemo(
-      () => (height < 700 ? ['0%', '60%'] : ['0%', '40%']),
+      () => (height < 700 ? [-1, '60%'] : [-1, '40%']),
       []
    );
 
@@ -52,10 +46,6 @@ export default function Home({ navigation }) {
    const bottomSheetRef = useRef(null);
 
    //all functions
-   const handleSheetChanges = useCallback((i) => {
-      console.log('chcange sh');
-   }, []);
-
    const openBottomSheet = () => {
       return bottomSheetRef.current.snapTo(1);
    };
@@ -363,8 +353,6 @@ export default function Home({ navigation }) {
             ref={bottomSheetRef}
             index={1}
             snapPoints={snapPoints}
-            onChange={handleSheetChanges}
-            animateOnMount={false}
             style={styles.view_bottom_sheet}
          >
             <View style={styles.view_in_bottomsheet}>

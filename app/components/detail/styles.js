@@ -43,10 +43,10 @@ export const styles = StyleSheet.create({
    label_info_article: {
       fontWeight: 'bold',
       color: Colors.violet,
-      fontSize: 18,
+      fontSize: 22,
    },
    value_info_article: {
-      fontSize: 16,
+      fontSize: 20,
    },
    boutton_info_article: {
       backgroundColor: Colors.whiteRose,
@@ -72,5 +72,21 @@ export const styles = StyleSheet.create({
       borderRadius: 20,
       fontSize: 21,
       fontWeight: '800',
+   },
+   view_bottom_sheet: {
+      backgroundColor: '#f2f2f2',
+   },
+   view_in_bottomsheet: {
+      display: 'flex',
+      flexDirection: 'column',
+      flex: 1,
+      backgroundColor: '#f2f2f2',
+      marginHorizontal: 8,
+      paddingHorizontal: 18,
+   },
+   view_one_item_in_bottomsheet: {
+      display: 'flex',
+      flexDirection: 'column',
+      marginBottom: 18,
    },
 });

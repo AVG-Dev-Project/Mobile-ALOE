@@ -65,4 +65,15 @@ export const styles = StyleSheet.create({
       shadowRadius: 7.68,
       elevation: 7,
    },
+   view_bottom_sheet: {
+      backgroundColor: '#f2f2f2',
+   },
+   view_in_bottomsheet: {
+      display: 'flex',
+      flexDirection: 'column',
+      flex: 1,
+      backgroundColor: '#f2f2f2',
+      marginHorizontal: 8,
+      paddingHorizontal: 18,
+   },
 });

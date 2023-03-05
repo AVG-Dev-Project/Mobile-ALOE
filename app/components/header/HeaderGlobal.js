@@ -1,12 +1,6 @@
 import { Icon } from '@rneui/base';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors } from '_theme/Colors';
-import {
-   Menu,
-   MenuOptions,
-   MenuOption,
-   MenuTrigger,
-} from 'react-native-popup-menu';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { changeLanguage } from '_utils/redux/actions/action_creators';
