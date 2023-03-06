@@ -18,7 +18,7 @@ export default function BottomSheetCustom({ bottomSheetRef }) {
    const { i18n } = useTranslation();
    const { height } = useWindowDimensions();
    const snapPoints = useMemo(
-      () => (height < 700 ? [-1, '60%'] : [-1, '30%']),
+      () => (height < 700 ? [-1, '60%'] : [-1, '50%']),
       []
    );
 
