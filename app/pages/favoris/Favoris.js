@@ -10,12 +10,13 @@ import {
    TouchableOpacity,
 } from 'react-native';
 import RenderHtml from 'react-native-render-html';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { nameStackNavigation as nameNav, cutTextWithBalise } from '_utils';
 import { styles } from './styles';
 import { Icon } from '@rneui/themed';
 import { useSelector, useDispatch } from 'react-redux';
 import HeaderGlobal from '_components/header/HeaderGlobal';
+import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
 import { Colors } from '_theme/Colors';
 import { addFavoris } from '_utils/redux/actions/action_creators';
 
@@ -26,6 +27,10 @@ export default function Favoris({ navigation, route }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+
+   //all refs
+   const bottomSheetRef = useRef(null);
+
    //all logics
    const _renderItem = useCallback(({ item }) => {
       return (
@@ -138,7 +143,7 @@ export default function Favoris({ navigation, route }) {
                      >
                         <Icon
                            name={'sentiment-very-satisfied'}
-                           color={Colors.violet}
+                           color={Colors.greenAvg}
                            size={18}
                         />
                         <Text
@@ -163,7 +168,7 @@ export default function Favoris({ navigation, route }) {
                      >
                         <Icon
                            name={'favorite'}
-                           color={Colors.orange}
+                           color={Colors.redError}
                            size={28}
                         />
                      </TouchableOpacity>
@@ -199,7 +204,10 @@ export default function Favoris({ navigation, route }) {
                ListHeaderComponent={
                   <View>
                      <View style={styles.head_content}>
-                        <HeaderGlobal navigation={navigation} />
+                        <HeaderGlobal
+                           navigation={navigation}
+                           bottomSheetRef={bottomSheetRef}
+                        />
                      </View>
 
                      <View style={styles.landing_screen}>
@@ -248,7 +256,7 @@ export default function Favoris({ navigation, route }) {
                         display: 'flex',
                         borderWidth: 1,
                         borderRadius: 8,
-                        borderColor: Colors.orange,
+                        borderColor: Colors.redError,
                         padding: 18,
                         marginVertical: width < 370 ? 20 : 28,
                      }}
@@ -256,7 +264,7 @@ export default function Favoris({ navigation, route }) {
                      <Text
                         style={{
                            textAlign: 'center',
-                           color: Colors.orange,
+                           color: Colors.redError,
                            fontSize: width < 370 ? 18 : 30,
                         }}
                      >
@@ -280,6 +288,7 @@ export default function Favoris({ navigation, route }) {
                maxToRenderPerBatch={3}
             />
          </SafeAreaView>
+         <BottomSheetCustom bottomSheetRef={bottomSheetRef} />
       </View>
    );
 }

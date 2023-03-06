@@ -172,13 +172,13 @@ export default function DownloadData({ navigation }) {
                {connexion ? (
                   <Icon
                      name={'sentiment-satisfied-alt'}
-                     color={Colors.violet}
+                     color={Colors.greenAvg}
                      size={24}
                   />
                ) : (
                   <Icon
                      name={'sentiment-very-dissatisfied'}
-                     color={Colors.orange}
+                     color={Colors.redError}
                      size={24}
                   />
                )}
@@ -201,7 +201,7 @@ export default function DownloadData({ navigation }) {
                      titleStyle={{ fontSize: 16 }}
                      buttonStyle={{
                         borderRadius: 15,
-                        backgroundColor: Colors.violet,
+                        backgroundColor: Colors.greenAvg,
                      }}
                      containerStyle={{
                         width: 250,
@@ -233,7 +233,7 @@ export default function DownloadData({ navigation }) {
                   titleStyle={{ fontSize: 16 }}
                   buttonStyle={{
                      borderRadius: 15,
-                     backgroundColor: Colors.violet,
+                     backgroundColor: Colors.greenAvg,
                   }}
                   containerStyle={{
                      width: 250,
@@ -254,7 +254,7 @@ export default function DownloadData({ navigation }) {
                   titleStyle={{ fontSize: 16 }}
                   buttonStyle={{
                      borderRadius: 15,
-                     backgroundColor: Colors.violet,
+                     backgroundColor: Colors.greenAvg,
                   }}
                   containerStyle={{
                      width: 250,
@@ -276,7 +276,7 @@ export default function DownloadData({ navigation }) {
                titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
                buttonStyle={{
                   borderRadius: 30,
-                  backgroundColor: Colors.violet,
+                  backgroundColor: Colors.greenAvg,
                   paddingVertical: 24,
                   width: width < 370 ? 160 : 180,
                }}

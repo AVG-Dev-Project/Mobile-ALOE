@@ -153,7 +153,7 @@ export default function ListingArticle({ navigation, route }) {
                      >
                         <Icon
                            name={'sentiment-very-dissatisfied'}
-                           color={Colors.orange}
+                           color={Colors.redError}
                            size={18}
                         />
                         <Text
@@ -180,7 +180,7 @@ export default function ListingArticle({ navigation, route }) {
                      >
                         <Icon
                            name={'favorite-border'}
-                           color={Colors.orange}
+                           color={Colors.redError}
                            size={28}
                         />
                      </TouchableOpacity>

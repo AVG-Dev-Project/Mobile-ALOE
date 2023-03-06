@@ -287,7 +287,7 @@ export default function Recherche({ navigation, route }) {
                      >
                         <Icon
                            name={'file-download'}
-                           color={Colors.violet}
+                           color={Colors.greenAvg}
                            size={28}
                         />
                      </TouchableOpacity>
@@ -319,7 +319,7 @@ export default function Recherche({ navigation, route }) {
                            <TouchableOpacity activeOpacity={0.7}>
                               <Icon
                                  name={'mic'}
-                                 color={Colors.violet}
+                                 color={Colors.greenAvg}
                                  size={30}
                               />
                               <Text style={{ fontWeight: 'bold' }}>
@@ -387,7 +387,7 @@ export default function Recherche({ navigation, route }) {
                               >
                                  <Icon
                                     name={'filter-list'}
-                                    color={Colors.violet}
+                                    color={Colors.greenAvg}
                                     size={34}
                                  />
                               </TouchableOpacity>
@@ -402,7 +402,7 @@ export default function Recherche({ navigation, route }) {
                               >
                                  <Icon
                                     name={'filter-list'}
-                                    color={Colors.violet}
+                                    color={Colors.greenAvg}
                                     size={34}
                                  />
                               </TouchableOpacity>
@@ -444,7 +444,7 @@ export default function Recherche({ navigation, route }) {
                      style={{
                         display: 'flex',
                         borderWidth: 1,
-                        borderColor: Colors.orange,
+                        borderColor: Colors.redError,
                         borderRadius: 8,
                         padding: width < 370 ? 8 : 12,
                         marginVertical: width < 370 ? 8 : 12,
@@ -453,7 +453,7 @@ export default function Recherche({ navigation, route }) {
                      <Text
                         style={{
                            textAlign: 'center',
-                           color: Colors.orange,
+                           color: Colors.redError,
                            fontSize: width < 370 ? 16 : 22,
                         }}
                      >

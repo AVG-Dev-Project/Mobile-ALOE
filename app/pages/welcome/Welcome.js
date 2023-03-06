@@ -167,7 +167,7 @@ export default function Welcome({ navigation }) {
                      }}
                      titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
                      buttonStyle={{
-                        backgroundColor: Colors.violet,
+                        backgroundColor: Colors.greenAvg,
                         margin: 8,
                         minWidth: width < 370 ? 70 : 70,
                         minHeight: 70,

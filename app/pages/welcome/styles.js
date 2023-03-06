@@ -15,12 +15,12 @@ const styles = StyleSheet.create({
    },
    view_button_arrondi: {
       borderWidth: 2,
-      borderColor: Colors.violet,
+      borderColor: Colors.greenAvg,
       borderRadius: 60,
       marginVertical: 20,
    },
    boutton_arrondi: {
-      backgroundColor: Colors.violet,
+      backgroundColor: Colors.greenAvg,
       padding: 20,
       margin: 6,
       borderRadius: 60,

@@ -5,23 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { changeLanguage } from '_utils/redux/actions/action_creators';
 
-const MenuOptionCustom = ({ text, icone }) => {
-   return (
-      <View
-         style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-         }}
-      >
-         <Text style={{ fontSize: 22 }}>{text}</Text>
-         <Icon name={icone} color={Colors.violet} size={20} />
-      </View>
-   );
-};
-
-export default function HeaderGlobal({ navigation, openBottomSheet }) {
+export default function HeaderGlobal({ navigation, bottomSheetRef }) {
    //all data
    const dispatch = useDispatch();
 
@@ -30,6 +14,10 @@ export default function HeaderGlobal({ navigation, openBottomSheet }) {
    const onHandleChangeLanguage = (langue) => {
       i18n.changeLanguage(langue);
       dispatch(changeLanguage(langue));
+   };
+
+   const openBottomSheet = () => {
+      return bottomSheetRef.current.snapTo(1);
    };
 
    return (
@@ -41,7 +29,7 @@ export default function HeaderGlobal({ navigation, openBottomSheet }) {
             activeOpacity={0.7}
             onPress={() => openBottomSheet()}
          >
-            <Icon name={'widgets'} color={Colors.violet} size={34} />
+            <Icon name={'widgets'} color={Colors.greenAvg} size={34} />
          </TouchableOpacity>
       </View>
    );

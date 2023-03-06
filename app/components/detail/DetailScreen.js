@@ -72,7 +72,7 @@ export default function Detail({ navigation, route }) {
 
    return (
       <View style={styles.view_container}>
-         <StatusBar backgroundColor={Colors.violet} />
+         <StatusBar backgroundColor={Colors.greenAvg} />
          <SafeAreaView style={styles.container_safe}>
             <ImageBackground
                source={bgImage}
@@ -136,7 +136,7 @@ export default function Detail({ navigation, route }) {
                         <Text style={styles.boutton_add_favorite}>
                            <Icon
                               name={'favorite'}
-                              color={Colors.violet}
+                              color={Colors.greenAvg}
                               size={32}
                            />{' '}
                         </Text>
@@ -149,7 +149,7 @@ export default function Detail({ navigation, route }) {
                         <Text style={styles.boutton_info_article}>
                            <Icon
                               name={'info-outline'}
-                              color={Colors.violet}
+                              color={Colors.greenAvg}
                               size={32}
                            />{' '}
                         </Text>
@@ -197,7 +197,7 @@ export default function Detail({ navigation, route }) {
                            <Icon
                               name={'picture-as-pdf'}
                               size={34}
-                              color={Colors.violet}
+                              color={Colors.greenAvg}
                            />{' '}
                         </Text>
                      </TouchableOpacity>
@@ -222,7 +222,7 @@ export default function Detail({ navigation, route }) {
                                  isSpeakPlay ? 'stop' : 'play-circle-outline'
                               }
                               size={34}
-                              color={Colors.violet}
+                              color={Colors.greenAvg}
                            />{' '}
                         </Text>
                      </TouchableOpacity>
@@ -248,7 +248,7 @@ export default function Detail({ navigation, route }) {
                      {langueActual === 'fr' ? 'Chapitre ' : 'Lohateny'}{' '}
                   </Text>
                   <Text style={styles.value_info_article}>
-                     <Icon name={'star'} color={Colors.violet} size={16} />{' '}
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
                      {langueActual === 'fr'
                         ? oneArticle.chapitre_titre_fr ?? ''
                         : oneArticle.chapitre_titre_mg ?? ''}
@@ -259,7 +259,7 @@ export default function Detail({ navigation, route }) {
                      {langueActual === 'fr' ? 'Contenu ' : 'Sokajy '}{' '}
                   </Text>
                   <Text style={styles.value_info_article}>
-                     <Icon name={'star'} color={Colors.violet} size={16} />{' '}
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
                      {langueActual === 'fr'
                         ? oneArticle.contenu
                         : oneArticle.contenu}

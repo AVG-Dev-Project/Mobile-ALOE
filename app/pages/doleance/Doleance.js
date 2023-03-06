@@ -31,7 +31,7 @@ export default function Doleance({ navigation }) {
                   <Text
                      style={{
                         fontSize: 16,
-                        color: Colors.orange,
+                        color: Colors.redError,
                         marginVertical: 12,
                         textAlign: 'center',
                      }}
@@ -44,13 +44,13 @@ export default function Doleance({ navigation }) {
                   <Input
                      placeholder={'Votre adresse email : '}
                      leftIcon={
-                        <Icon name="email" size={24} color={Colors.violet} />
+                        <Icon name="email" size={24} color={Colors.greenAvg} />
                      }
                   />
                   <Input
                      placeholder={"Objet de l'email : "}
                      leftIcon={
-                        <Icon name="title" size={24} color={Colors.violet} />
+                        <Icon name="title" size={24} color={Colors.greenAvg} />
                      }
                   />
                   <TextInput
@@ -70,7 +70,7 @@ export default function Doleance({ navigation }) {
                      titleStyle={{ fontSize: 24 }}
                      buttonStyle={{
                         borderRadius: 26,
-                        backgroundColor: Colors.violet,
+                        backgroundColor: Colors.greenAvg,
                      }}
                      containerStyle={{
                         width: 160,

@@ -60,13 +60,13 @@ export default function ListingContenu({ navigation, route }) {
                         fontSize:
                            Dimensions.get('window').height < 700 ? 10 : 12,
                         marginBottom: 8,
-                        textTransform: 'capitalize',
+                        textTransform: 'lowercase',
                      }}
                   >
                      {langueActual === 'fr'
-                        ? 'Publié le '
-                        : "Nivoaka tamin'ny "}
-                     {item.date}
+                        ? 'Publié le : '
+                        : "Nivoaka tamin'ny : "}
+                     {item.date?.substring(0, 10)}
                   </Text>
                </View>
                <Text
@@ -127,7 +127,7 @@ export default function ListingContenu({ navigation, route }) {
                      >
                         <Icon
                            name={'file-download'}
-                           color={Colors.violet}
+                           color={Colors.greenAvg}
                            size={28}
                         />
                      </TouchableOpacity>

@@ -30,7 +30,7 @@ export default function About({ navigation }) {
                      fontSize: 38,
                      fontWeight: 'bold',
                      marginVertical: 8,
-                     color: Colors.violet,
+                     color: Colors.greenAvg,
                   }}
                >
                   Aloe

@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
    },
    boutton_add_favorite: {
-      backgroundColor: Colors.whiteRose,
+      backgroundColor: Colors.greenWhite,
       marginRight: 8,
       width: 50,
       height: 50,
@@ -42,14 +42,14 @@ export const styles = StyleSheet.create({
    },
    label_info_article: {
       fontWeight: 'bold',
-      color: Colors.violet,
+      color: Colors.greenAvg,
       fontSize: 22,
    },
    value_info_article: {
       fontSize: 20,
    },
    boutton_info_article: {
-      backgroundColor: Colors.whiteRose,
+      backgroundColor: Colors.greenWhite,
       width: 50,
       height: 50,
       padding: 10,
@@ -64,11 +64,11 @@ export const styles = StyleSheet.create({
    },
    button_in_detail: {
       textAlign: 'center',
-      backgroundColor: Colors.whiteRose,
+      backgroundColor: Colors.greenWhite,
       paddingVertical: 10,
       width: 140,
       paddingHorizontal: 24,
-      color: Colors.violet,
+      color: Colors.greenAvg,
       borderRadius: 20,
       fontSize: 21,
       fontWeight: '800',

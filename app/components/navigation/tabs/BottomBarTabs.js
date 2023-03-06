@@ -19,13 +19,13 @@ export default function BottomBarTabs() {
          screenOptions={{
             headerShown: false,
             tabBarInactiveTintColors: Colors.black,
-            tabBarActiveTintColors: Colors.violet,
+            tabBarActiveTintColors: Colors.greenAvg,
             tabBarHideOnKeyboard: true,
             tabBarLabelStyle: {
                fontSize: 13,
                textTransform: 'capitalize',
                fontWeight: 'bold',
-               color: Colors.violet,
+               color: Colors.greenAvg,
             },
             tabBarStyle: styles.tabBarStyles,
          }}
@@ -38,7 +38,7 @@ export default function BottomBarTabs() {
                tabBarIcon: ({ focused }) => (
                   <Icon
                      name={'home'}
-                     color={focused ? Colors.violet : Colors.grey}
+                     color={focused ? Colors.greenAvg : Colors.grey}
                      size={26}
                   />
                ),
@@ -52,7 +52,7 @@ export default function BottomBarTabs() {
                tabBarIcon: ({ focused }) => (
                   <Icon
                      name={'search'}
-                     color={focused ? Colors.violet : Colors.grey}
+                     color={focused ? Colors.greenAvg : Colors.grey}
                      size={26}
                   />
                ),
@@ -66,7 +66,7 @@ export default function BottomBarTabs() {
                tabBarIcon: ({ focused }) => (
                   <Icon
                      name={'favorite'}
-                     color={focused ? Colors.violet : Colors.grey}
+                     color={focused ? Colors.greenAvg : Colors.grey}
                      size={26}
                   />
                ),
@@ -80,7 +80,7 @@ export default function BottomBarTabs() {
                tabBarIcon: ({ focused }) => (
                   <Icon
                      name={'info'}
-                     color={focused ? Colors.violet : Colors.grey}
+                     color={focused ? Colors.greenAvg : Colors.grey}
                      size={26}
                   />
                ),
