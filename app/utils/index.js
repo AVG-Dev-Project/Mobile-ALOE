@@ -6,13 +6,14 @@ import {
    getDataFromLocalStorage,
    removeInLocalStorage,
    getAllKeys,
+   storeFavoriteIdToLocalStorage,
+   getFavoriteFromLocalStorage,
 } from './storage/asyncStorage';
 import {
    ArticleSchema,
    ContenuSchema,
    TypeSchema,
    ThematiqueSchema,
-   FavorisSchema,
 } from './storage/database';
 import { insertOrUpdateToDBFunc } from './storage/querySqlite';
 import {
@@ -28,7 +29,6 @@ import {
    fetchThematiquesToApi,
    fetchContenusToApi,
    fetchDataToLocalDatabase,
-   fetchFav,
 } from './helper/functionFetching';
 
 export {
@@ -40,11 +40,12 @@ export {
    getDataFromLocalStorage,
    removeInLocalStorage,
    getAllKeys,
+   storeFavoriteIdToLocalStorage,
+   getFavoriteFromLocalStorage,
    ArticleSchema,
    ContenuSchema,
    TypeSchema,
    ThematiqueSchema,
-   FavorisSchema,
    insertOrUpdateToDBFunc,
    parseStructureDataForArticle,
    parseStructureDataForContenu,
@@ -55,5 +56,4 @@ export {
    fetchThematiquesToApi,
    fetchDataToLocalDatabase,
    filterArticleToListByContenu,
-   fetchFav,
 };

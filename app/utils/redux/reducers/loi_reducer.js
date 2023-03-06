@@ -7,6 +7,8 @@ import {
    getAllContenus,
 } from '../actions/action_creators';
 
+import { storeFavoriteIdToLocalStorage } from '../../storage/asyncStorage';
+
 const initialState = {
    articles: [],
    thematiques: [],
@@ -34,18 +36,23 @@ export const loiReducer = (state = initialState, action) => {
             draft.contenus = action.payload;
          });
       case addFavoris().type:
-         return produce(state, (draft) => {
-            if (
-               state.favoris.filter((favori) => favori.id === action.payload.id)
-                  .length > 0
-            ) {
-               draft.favoris = draft.favoris.filter(
-                  (favori) => favori.id !== action.payload.id
-               );
-            } else {
-               draft.favoris.push(action.payload);
-            }
-         });
+         if (Array.isArray(action.payload)) {
+            return produce(state, (draft) => {
+               draft.favoris = action.payload;
+            });
+         } else {
+            return produce(state, (draft) => {
+               if (state.favoris.includes(action.payload)) {
+                  draft.favoris = draft.favoris.filter(
+                     (favoriId) => favoriId !== action.payload
+                  );
+               } else {
+                  draft.favoris.push(action.payload);
+               }
+               storeFavoriteIdToLocalStorage(draft.favoris);
+            });
+         }
+
       default:
          return state;
    }

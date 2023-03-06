@@ -15,7 +15,7 @@ import { styles } from './stylesArticle';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
-import { cutTextWithBalise, insertOrUpdateToDBFunc } from '_utils';
+import { cutTextWithBalise } from '_utils';
 import { addFavoris } from '_utils/redux/actions/action_creators';
 
 export default function ListingArticle({ navigation, route }) {
@@ -25,6 +25,7 @@ export default function ListingArticle({ navigation, route }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const allFavoriteId = useSelector((selector) => selector.loi.favoris);
    const dataForFlatList = route.params.allArticleRelatedTotheContenu;
 
    //all function
@@ -33,11 +34,6 @@ export default function ListingArticle({ navigation, route }) {
          html: data,
       };
       return source;
-   };
-
-   const addFavoriteToDBLocal = (article) => {
-      insertOrUpdateToDBFunc('database', 'favoris', article);
-      console.log('Favoris ajouté : ');
    };
 
    const tagsStyles = {
@@ -156,31 +152,52 @@ export default function ListingArticle({ navigation, route }) {
                         }}
                      >
                         <Icon
-                           name={'sentiment-very-dissatisfied'}
-                           color={Colors.redError}
+                           name={
+                              allFavoriteId.includes(item.id)
+                                 ? 'sentiment-very-satisfied'
+                                 : 'sentiment-very-dissatisfied'
+                           }
+                           color={
+                              allFavoriteId.includes(item.id)
+                                 ? Colors.greenAvg
+                                 : Colors.redError
+                           }
                            size={18}
                         />
-                        <Text
-                           style={{
-                              fontSize: 14,
-                              marginLeft: 2,
-                           }}
-                        >
-                           {langueActual === 'fr'
-                              ? 'Pas dans favoris'
-                              : 'Tsy mbola anaty safidiana'}
-                        </Text>
+                        {allFavoriteId.includes(item.id) ? (
+                           <Text
+                              style={{
+                                 fontSize: 14,
+                                 marginLeft: 2,
+                              }}
+                           >
+                              {langueActual === 'fr' ? 'Favoris' : 'Ankafizina'}
+                           </Text>
+                        ) : (
+                           <Text
+                              style={{
+                                 fontSize: 14,
+                                 marginLeft: 2,
+                              }}
+                           >
+                              {langueActual === 'fr'
+                                 ? 'Pas dans favoris'
+                                 : 'Tsy mbola anaty ankafizina'}
+                           </Text>
+                        )}
                      </View>
                      <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => {
-                           dispatch(addFavoris(item));
-
-                           addFavoriteToDBLocal(item);
+                           dispatch(addFavoris(item.id));
                         }}
                      >
                         <Icon
-                           name={'favorite-border'}
+                           name={
+                              allFavoriteId.includes(item.id)
+                                 ? 'favorite'
+                                 : 'favorite-border'
+                           }
                            color={Colors.redError}
                            size={28}
                         />

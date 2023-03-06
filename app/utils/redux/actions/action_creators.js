@@ -38,9 +38,9 @@ export const getAllContenus = (contenus) => ({
    payload: contenus,
 });
 
-export const addFavoris = (article) => ({
+export const addFavoris = (idArticle) => ({
    type: ADD_FAVORIS,
-   payload: article,
+   payload: idArticle,
 });
 
 export const isConnectedToInternet = (status) => ({

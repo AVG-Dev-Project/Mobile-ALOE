@@ -16,7 +16,6 @@ import {
    ContenuSchema,
    TypeSchema,
    ThematiqueSchema,
-   FavorisSchema,
 } from '_utils/storage/database';
 
 export const fetchThematiquesToApi = async () => {
@@ -63,12 +62,5 @@ export const fetchDataToLocalDatabase = (dispatcher) => {
    //type
    TypeSchema.query({ columns: '*' }).then((results) => {
       dispatcher(getAllTypes(results));
-   });
-};
-
-export const fetchFav = (dispatcher) => {
-   //favoris
-   FavorisSchema.query({ columns: '*' }).then((results) => {
-      dispatcher(addFavoris(results));
    });
 };

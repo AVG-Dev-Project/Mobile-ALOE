@@ -10,18 +10,19 @@ import * as FileSystem from 'expo-file-system';
 import {
    getStarted,
    isConnectedToInternet,
+   addFavoris,
 } from '_utils/redux/actions/action_creators';
 import {
    ArticleSchema,
    ContenuSchema,
    TypeSchema,
    ThematiqueSchema,
-   FavorisSchema,
    insertOrUpdateToDBFunc,
    parseStructureDataForArticle,
    parseStructureDataForContenu,
    storeDataToLocalStorage,
    getDataFromLocalStorage,
+   getFavoriteFromLocalStorage,
    removeInLocalStorage,
    getAllKeys,
    fetchTypesToApi,
@@ -63,6 +64,11 @@ export default function DownloadData({ navigation }) {
    };
 
    const getOfflineDatas = () => {
+      getFavoriteFromLocalStorage().then((res) => {
+         if (res !== null) {
+            dispatch(addFavoris(res));
+         }
+      });
       fetchDataToLocalDatabase(dispatch);
       setTimeout(() => {
          setIsDataLoaded(false);
@@ -71,7 +77,7 @@ export default function DownloadData({ navigation }) {
    };
 
    const showData = () => {
-      return FavorisSchema.query({ columns: '*' }).then((res) => {
+      return ArticleSchema.query({ columns: '*' }).then((res) => {
          console.log(res.length);
       });
    };

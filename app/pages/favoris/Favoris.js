@@ -20,11 +20,16 @@ import { Colors } from '_theme/Colors';
 import { addFavoris } from '_utils/redux/actions/action_creators';
 
 export default function Favoris({ navigation, route }) {
-   const dataForFlatList = useSelector((selector) => selector.loi.favoris);
+   const listOfIdFavorites = useSelector((selector) => selector.loi.favoris);
+   const allArticles = useSelector((selector) => selector.loi.articles);
    const dispatch = useDispatch();
    const { width } = useWindowDimensions();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
+   );
+
+   const dataForFlatList = allArticles.filter((article) =>
+      listOfIdFavorites.includes(article.id)
    );
 
    //all refs
@@ -156,7 +161,7 @@ export default function Favoris({ navigation, route }) {
                      <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => {
-                           dispatch(addFavoris(item));
+                           dispatch(addFavoris(item.id));
                            alert(
                               langueActual === 'fr'
                                  ? 'Enlever au favoris.'

@@ -14,6 +14,7 @@ import { Icon, Button } from '@rneui/themed';
 import { useSelector, useDispatch } from 'react-redux';
 import {
    getStarted,
+   addFavoris,
    isConnectedToInternet,
 } from '_utils/redux/actions/action_creators';
 import {
@@ -24,6 +25,7 @@ import {
    fetchArticlesToApi,
    fetchThematiquesToApi,
    fetchContenusToApi,
+   getFavoriteFromLocalStorage,
    fetchDataToLocalDatabase,
 } from '_utils';
 
@@ -55,6 +57,11 @@ export default function Welcome({ navigation }) {
 
    const getOfflineDatas = async () => {
       await getSmallDatasOnLine();
+      getFavoriteFromLocalStorage().then((res) => {
+         if (res !== null) {
+            dispatch(addFavoris(res));
+         }
+      });
       fetchDataToLocalDatabase(dispatch);
       setTimeout(() => {
          setIsDataLoaded(false);

@@ -125,7 +125,7 @@ export default function Detail({ navigation, route }) {
                   <View style={styles.view_round_button_detail_article}>
                      <TouchableOpacity
                         onPress={() => {
-                           dispatch(addFavoris(oneArticle));
+                           dispatch(addFavoris(oneArticle.id));
                            alert(
                               langueActual === 'fr'
                                  ? 'Ajouté au favoris'

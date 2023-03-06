@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Icon } from '@rneui/themed';
 import Carousel from 'react-native-snap-carousel';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import HeaderGlobal from '_components/header/HeaderGlobal';
 import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
 import {
@@ -21,10 +21,13 @@ import {
 } from '_utils';
 import { styles } from './styles';
 import { Colors } from '_theme/Colors';
+import { getFavoriteFromLocalStorage, removeInLocalStorage } from '_utils';
+import { addFavoris } from '_utils/redux/actions/action_creators';
 
 export default function Home({ navigation }) {
    //all states
    const isCarousel = React.useRef(null);
+   const dispatch = useDispatch();
    const { t } = useTranslation();
    const allArticles = useSelector((selector) => selector.loi.articles);
    const allFavoris = useSelector((selector) => selector.loi.favoris);
@@ -35,7 +38,7 @@ export default function Home({ navigation }) {
       (selector) => selector.fonctionnality.langue
    );
 
-   console.log('Favoris : ', allFavoris);
+   console.log('Favoris redux: ', allFavoris);
    //all refs
    const bottomSheetRef = useRef(null);
 
@@ -44,6 +47,7 @@ export default function Home({ navigation }) {
    //all efects
    useEffect(() => {
       bottomSheetRef.current.close();
+      //removeInLocalStorage('favorite');
    }, []);
 
    //all components
@@ -190,7 +194,16 @@ export default function Home({ navigation }) {
                      </Text>
                      <Text>{t('continue_de_lire')} </Text>
                   </View>
-                  <Icon name={'autorenew'} color={Colors.white} size={38} />
+                  <Icon
+                     name={'autorenew'}
+                     color={Colors.white}
+                     size={38}
+                     onPress={() =>
+                        getFavoriteFromLocalStorage().then((res) =>
+                           console.log('fav from async : ', res)
+                        )
+                     }
+                  />
                </View>
             </View>
 
