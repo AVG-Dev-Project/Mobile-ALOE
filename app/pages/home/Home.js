@@ -25,8 +25,9 @@ import { Colors } from '_theme/Colors';
 export default function Home({ navigation }) {
    //all states
    const isCarousel = React.useRef(null);
-   const { t, i18n } = useTranslation();
+   const { t } = useTranslation();
    const allArticles = useSelector((selector) => selector.loi.articles);
+   const allFavoris = useSelector((selector) => selector.loi.favoris);
    const allContenus = useSelector((selector) => selector.loi.contenus);
    const allTypes = useSelector((selector) => selector.loi.types);
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
@@ -34,6 +35,7 @@ export default function Home({ navigation }) {
       (selector) => selector.fonctionnality.langue
    );
 
+   console.log('Favoris : ', allFavoris);
    //all refs
    const bottomSheetRef = useRef(null);
 
@@ -219,7 +221,7 @@ export default function Home({ navigation }) {
                            layout="default"
                            ref={isCarousel}
                            data={allThematiques}
-                           loop={true}
+                           loop={false}
                            loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
                            //fin des props spéficifique au section annonce
                            renderItem={_renderItemThematique}
@@ -261,7 +263,7 @@ export default function Home({ navigation }) {
                            layout="default"
                            ref={isCarousel}
                            data={allTypes}
-                           loop={true}
+                           loop={false}
                            loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
                            //fin des props spéficifique au section annonce
                            renderItem={_renderItemType}

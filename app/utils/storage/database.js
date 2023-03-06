@@ -126,3 +126,35 @@ export class ThematiqueSchema extends BaseModel {
       };
    }
 }
+
+export class FavorisSchema extends BaseModel {
+   constructor(obj) {
+      super(obj);
+   }
+
+   static get database() {
+      return async () => SQLite.openDatabase('database.db');
+   }
+
+   static get tableName() {
+      return 'favoris';
+   }
+
+   static get columnMapping() {
+      return {
+         id: { type: types.INTEGER, primary_key: true, not_null: true }, // For while only supports id as primary key
+         contenu: { type: types.INTEGER, not_null: true },
+         numero: { type: types.INTEGER, not_null: true },
+         titre_id: { type: types.INTEGER, not_null: true },
+         titre_numero: { type: types.INTEGER, not_null: true },
+         titre_fr: { type: types.TEXT },
+         titre_mg: { type: types.TEXT },
+         chapitre_id: { type: types.INTEGER },
+         chapitre_numero: { type: types.INTEGER },
+         chapitre_titre_fr: { type: types.TEXT },
+         chapitre_titre_mg: { type: types.TEXT },
+         contenu_fr: { type: types.TEXT },
+         contenu_mg: { type: types.TEXT },
+      };
+   }
+}

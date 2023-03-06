@@ -16,6 +16,7 @@ import {
    ContenuSchema,
    TypeSchema,
    ThematiqueSchema,
+   FavorisSchema,
    insertOrUpdateToDBFunc,
    parseStructureDataForArticle,
    parseStructureDataForContenu,
@@ -69,11 +70,11 @@ export default function DownloadData({ navigation }) {
       }, 500);
    };
 
-   // const showData = () => {
-   //    return ContenuSchema.query({ columns: '*' }).then((res) => {
-   //       console.log(res.length);
-   //    });
-   // };
+   const showData = () => {
+      return FavorisSchema.query({ columns: '*' }).then((res) => {
+         console.log(res.length);
+      });
+   };
 
    const handleFileSelectionAndImportData = async () => {
       setIsUploadData(true);
@@ -243,7 +244,7 @@ export default function DownloadData({ navigation }) {
                   loading={isUploadData}
                />
 
-               {/* <Button
+               <Button
                   title="Show data"
                   icon={{
                      name: 'file-upload',
@@ -261,7 +262,7 @@ export default function DownloadData({ navigation }) {
                      marginVertical: 5,
                   }}
                   onPress={() => showData()}
-               /> */}
+               />
             </View>
          </View>
          <View>

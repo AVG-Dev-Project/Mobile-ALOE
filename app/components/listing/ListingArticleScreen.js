@@ -15,7 +15,7 @@ import { styles } from './stylesArticle';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
-import { cutTextWithBalise } from '_utils';
+import { cutTextWithBalise, insertOrUpdateToDBFunc } from '_utils';
 import { addFavoris } from '_utils/redux/actions/action_creators';
 
 export default function ListingArticle({ navigation, route }) {
@@ -33,6 +33,11 @@ export default function ListingArticle({ navigation, route }) {
          html: data,
       };
       return source;
+   };
+
+   const addFavoriteToDBLocal = (article) => {
+      insertOrUpdateToDBFunc('database', 'favoris', article);
+      console.log('Favoris ajouté : ');
    };
 
    const tagsStyles = {
@@ -170,11 +175,8 @@ export default function ListingArticle({ navigation, route }) {
                         activeOpacity={0.8}
                         onPress={() => {
                            dispatch(addFavoris(item));
-                           alert(
-                              langueActual === 'fr'
-                                 ? 'Ajouté au favoris.'
-                                 : "Nampiana tao amin'ny ankafizina"
-                           );
+
+                           addFavoriteToDBLocal(item);
                         }}
                      >
                         <Icon

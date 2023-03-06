@@ -48,8 +48,8 @@ export default function Favoris({ navigation, route }) {
                <Image
                   source={require('_images/book_loi.jpg')}
                   style={{
-                     width: width < 380 ? 100 : 120,
-                     height: 160,
+                     width: width < 380 ? 100 : 140,
+                     height: 170,
                      borderRadius: 16,
                   }}
                />
@@ -188,7 +188,7 @@ export default function Favoris({ navigation, route }) {
    const tagsStyles = {
       p: {
          width: '40%',
-         fontSize: width < 370 ? 12 : 18,
+         fontSize: width < 370 ? 12 : 14,
       },
    };
 

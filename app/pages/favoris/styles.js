@@ -49,11 +49,17 @@ export const styles = StyleSheet.create({
       height: 42,
       borderRadius: 62,
    },
+   maskImageArticle: {
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      borderRadius: 18,
+      height: 170,
+      width: Dimensions.get('window').width < 380 ? 100 : 140,
+   },
    number_of_article: {
       fontWeight: 'bold',
       color: Colors.white,
       fontSize: widthDevice < 380 ? 40 : 44,
       marginVertical: 50,
-      marginHorizontal: widthDevice < 380 ? 40 : 50,
+      marginHorizontal: widthDevice < 380 ? 40 : 56,
    },
 });
