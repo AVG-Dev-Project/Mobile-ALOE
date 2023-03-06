@@ -3,7 +3,6 @@ import {
    Text,
    FlatList,
    Image,
-   Dimensions,
    useWindowDimensions,
    StyleSheet,
    SafeAreaView,
@@ -49,7 +48,7 @@ export default function Favoris({ navigation, route }) {
                <Image
                   source={require('_images/book_loi.jpg')}
                   style={{
-                     width: Dimensions.get('window').width < 380 ? 100 : 120,
+                     width: width < 380 ? 100 : 120,
                      height: 160,
                      borderRadius: 16,
                   }}
@@ -83,8 +82,7 @@ export default function Favoris({ navigation, route }) {
                      </Text>
                      <Text
                         style={{
-                           fontSize:
-                              Dimensions.get('window').width < 370 ? 10 : 14,
+                           fontSize: width < 370 ? 10 : 14,
                            textDecorationLine: 'underline',
                         }}
                         numberOfLines={1}
@@ -102,7 +100,7 @@ export default function Favoris({ navigation, route }) {
                   </View>
                   <Text
                      style={{
-                        fontSize: Dimensions.get('window').width < 380 ? 8 : 16,
+                        fontSize: width < 380 ? 8 : 16,
                         flex: 2,
                         width: 210,
                      }}
@@ -190,7 +188,7 @@ export default function Favoris({ navigation, route }) {
    const tagsStyles = {
       p: {
          width: '40%',
-         fontSize: Dimensions.get('window').width < 370 ? 12 : 18,
+         fontSize: width < 370 ? 12 : 18,
       },
    };
 

@@ -39,7 +39,7 @@ export default function ListingArticle({ navigation, route }) {
    const tagsStyles = {
       p: {
          width: '40%',
-         fontSize: Dimensions.get('window').width < 370 ? 12 : 14,
+         fontSize: width < 370 ? 12 : 14,
       },
    };
 
@@ -60,7 +60,7 @@ export default function ListingArticle({ navigation, route }) {
                <Image
                   source={require('_images/book_loi.jpg')}
                   style={{
-                     width: Dimensions.get('window').width < 380 ? 100 : 140,
+                     width: width < 380 ? 100 : 140,
                      height: 160,
                      borderRadius: 16,
                   }}
@@ -112,7 +112,7 @@ export default function ListingArticle({ navigation, route }) {
                   </View>
                   <Text
                      style={{
-                        fontSize: Dimensions.get('window').width < 380 ? 8 : 16,
+                        fontSize: width < 380 ? 8 : 16,
                         flex: 2,
                         width: 210,
                      }}
