@@ -10,7 +10,7 @@ import styles from './styles';
 import { Colors } from '_theme/Colors';
 import NetInfo from '@react-native-community/netinfo';
 import Lottie from 'lottie-react-native';
-import { Icon } from '@rneui/base';
+import { Icon, Button } from '@rneui/themed';
 import { useSelector, useDispatch } from 'react-redux';
 import {
    getStarted,
@@ -23,6 +23,7 @@ import {
    fetchTypesToApi,
    fetchArticlesToApi,
    fetchThematiquesToApi,
+   fetchContenusToApi,
    fetchDataToLocalDatabase,
 } from '_utils';
 
@@ -40,10 +41,27 @@ export default function Welcome({ navigation }) {
    const [isAllDataAlsoUploaded, setIsAllDataAlsoUploaded] = useState(false);
    const [isAllDataAlsoDownloaded, setIsAllDataAlsoDownloaded] =
       useState(false);
+   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
    //functions
-
    //deux functions selon disponibilité de connexion (une pour fetcher 10 datas afin de peupler la base)
+
+   const getSmallDatasOnLine = async () => {
+      fetchArticlesToApi();
+      fetchContenusToApi();
+      fetchThematiquesToApi();
+      await fetchTypesToApi();
+   };
+
+   const getOfflineDatas = async () => {
+      await getSmallDatasOnLine();
+      fetchDataToLocalDatabase(dispatch);
+      setTimeout(() => {
+         setIsDataLoaded(false);
+         dispatch(getStarted());
+      }, 1000);
+   };
+
    /*const getSmallDatasOnLine = () => {
       fetchThematiquesToApi(dispatch),
       fetchArticlesToApi(dispatch),
@@ -140,19 +158,28 @@ export default function Welcome({ navigation }) {
 
             {(isAllDataAlsoUploaded || isAllDataAlsoDownloaded) && (
                <View style={styles.view_button_arrondi}>
-                  <TouchableOpacity
-                     style={styles.boutton_arrondi}
-                     activeOpacity={0.8}
-                     onPress={() => {
-                        dispatch(getStarted());
+                  <Button
+                     icon={{
+                        name: 'arrow-forward',
+                        type: 'material',
+                        size: 34,
+                        color: Colors.white,
                      }}
-                  >
-                     <Icon
-                        name={'arrow-forward'}
-                        color={Colors.white}
-                        size={34}
-                     />
-                  </TouchableOpacity>
+                     titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
+                     buttonStyle={{
+                        backgroundColor: Colors.violet,
+                        margin: 8,
+                        minWidth: width < 370 ? 70 : 70,
+                        minHeight: 70,
+                        borderRadius: 60,
+                     }}
+                     containerStyle={{}}
+                     onPress={() => {
+                        setIsDataLoaded(true);
+                        getOfflineDatas();
+                     }}
+                     loading={isDataLoaded}
+                  />
                </View>
             )}
          </View>

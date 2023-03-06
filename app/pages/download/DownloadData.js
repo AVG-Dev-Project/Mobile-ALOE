@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, useWindowDimensions } from 'react-native';
 import { Colors } from '_theme/Colors';
 import Lottie from 'lottie-react-native';
 import { Icon, Button } from '@rneui/themed';
@@ -34,6 +34,7 @@ import styles from './styles';
 export default function DownloadData({ navigation }) {
    //all datas
    const animation = useRef(null);
+   const { width } = useWindowDimensions();
    const dispatch = useDispatch();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
@@ -65,14 +66,14 @@ export default function DownloadData({ navigation }) {
       setTimeout(() => {
          setIsDataLoaded(false);
          dispatch(getStarted());
-      }, 1000);
+      }, 500);
    };
 
-   const showData = () => {
-      return ContenuSchema.query({ columns: '*' }).then((res) => {
-         console.log(res.length);
-      });
-   };
+   // const showData = () => {
+   //    return ContenuSchema.query({ columns: '*' }).then((res) => {
+   //       console.log(res.length);
+   //    });
+   // };
 
    const handleFileSelectionAndImportData = async () => {
       setIsUploadData(true);
@@ -242,7 +243,7 @@ export default function DownloadData({ navigation }) {
                   loading={isUploadData}
                />
 
-               <Button
+               {/* <Button
                   title="Show data"
                   icon={{
                      name: 'file-upload',
@@ -260,7 +261,7 @@ export default function DownloadData({ navigation }) {
                      marginVertical: 5,
                   }}
                   onPress={() => showData()}
-               />
+               /> */}
             </View>
          </View>
          <View>
@@ -277,6 +278,7 @@ export default function DownloadData({ navigation }) {
                   borderRadius: 30,
                   backgroundColor: Colors.violet,
                   paddingVertical: 24,
+                  width: width < 370 ? 160 : 180,
                }}
                containerStyle={{
                   marginVertical: 10,

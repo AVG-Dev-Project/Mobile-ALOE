@@ -49,21 +49,17 @@ export const fetchDataToLocalDatabase = (dispatcher) => {
    //article
    ArticleSchema.query({ columns: '*' }).then((results) => {
       dispatcher(getAllArticles(results));
-      // console.log('Article mis dans store');
    });
    //contenu
    ContenuSchema.query({ columns: '*' }).then((results) => {
       dispatcher(getAllContenus(results));
-      // console.log('Contenus mis dans store');
    });
    //thematique
    ThematiqueSchema.query({ columns: '*' }).then((results) => {
       dispatcher(getAllThematiques(results));
-      // console.log('Thematique mis dans store');
    });
    //type
    TypeSchema.query({ columns: '*' }).then((results) => {
       dispatcher(getAllTypes(results));
-      // console.log('Type mis dans store');
    });
 };
