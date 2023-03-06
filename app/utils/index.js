@@ -1,13 +1,6 @@
 import { nameStackNavigation } from './constante/NameStackNavigation';
 import { ContexteProvider, Contexte } from './contexte/Contexte';
-import { positionOfAllPolice } from './constante/CoordinatePolice';
-import {
-   AllArticles,
-   ArticleLastPublish,
-   Thematique,
-   Types,
-} from './constante/Data';
-import { ArticleService } from './services/ArticleService';
+import { LoiService } from './services/LoiService';
 import {
    storeDataToLocalStorage,
    getDataFromLocalStorage,
@@ -40,12 +33,7 @@ export {
    nameStackNavigation,
    ContexteProvider,
    Contexte,
-   positionOfAllPolice,
-   ArticleLastPublish,
-   AllArticles,
-   Types,
-   Thematique,
-   ArticleService,
+   LoiService,
    storeDataToLocalStorage,
    getDataFromLocalStorage,
    removeInLocalStorage,

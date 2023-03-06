@@ -18,7 +18,6 @@ export class ArticleSchema extends BaseModel {
       return {
          id: { type: types.INTEGER, primary_key: true, not_null: true }, // For while only supports id as primary key
          contenu: { type: types.INTEGER, not_null: true },
-         article_created_at: { type: types.TEXT },
          numero: { type: types.INTEGER, not_null: true },
          titre_id: { type: types.INTEGER, not_null: true },
          titre_numero: { type: types.INTEGER, not_null: true },
@@ -51,7 +50,7 @@ export class ContenuSchema extends BaseModel {
       return {
          id: { type: types.INTEGER, primary_key: true }, // For while only supports id as primary key
          numero: { type: types.TEXT },
-         contenu_created_at: { type: types.TEXT },
+         date: { type: types.TEXT },
          type_id: { type: types.INTEGER, not_null: true },
          type_nom_fr: { type: types.TEXT, not_null: true },
          type_nom_mg: { type: types.TEXT },
@@ -100,9 +99,8 @@ export class TypeSchema extends BaseModel {
    static get columnMapping() {
       return {
          id: { type: types.INTEGER, primary_key: true }, // For while only supports id as primary key
-         name_fr: { type: types.TEXT, not_null: true },
-         name_mg: { type: types.TEXT },
-         created_at: { type: types.TEXT },
+         nom_fr: { type: types.TEXT, not_null: true },
+         nom_mg: { type: types.TEXT },
       };
    }
 }
@@ -123,9 +121,8 @@ export class ThematiqueSchema extends BaseModel {
    static get columnMapping() {
       return {
          id: { type: types.INTEGER, primary_key: true }, // For while only supports id as primary key
-         name_fr: { type: types.TEXT, not_null: true },
-         name_mg: { type: types.TEXT },
-         created_at: { type: types.TEXT },
+         nom_fr: { type: types.TEXT, not_null: true },
+         nom_mg: { type: types.TEXT },
       };
    }
 }

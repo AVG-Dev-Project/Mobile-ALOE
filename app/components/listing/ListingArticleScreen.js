@@ -12,7 +12,6 @@ import {
 import React, { useCallback, useEffect, useState } from 'react';
 import RenderHtml from 'react-native-render-html';
 import { nameStackNavigation as nameNav } from '_utils/constante/NameStackNavigation';
-// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { styles } from './stylesArticle';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
@@ -40,7 +39,7 @@ export default function ListingArticle({ navigation, route }) {
    const tagsStyles = {
       p: {
          width: '40%',
-         fontSize: Dimensions.get('window').width < 370 ? 12 : 18,
+         fontSize: Dimensions.get('window').width < 370 ? 12 : 14,
       },
    };
 
@@ -95,7 +94,7 @@ export default function ListingArticle({ navigation, route }) {
                      </Text>
                      <Text
                         style={{
-                           fontSize: 14,
+                           fontSize: 12,
                            textDecorationLine: 'underline',
                         }}
                         numberOfLines={1}

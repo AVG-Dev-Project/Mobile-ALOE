@@ -1,10 +1,15 @@
+import { insertOrUpdateToDBFunc } from '../storage/querySqlite';
+import {
+   parseStructureDataForArticle,
+   parseStructureDataForContenu,
+} from './functionHelpler';
 import {
    getAllArticles,
    getAllThematiques,
    getAllTypes,
    getAllContenus,
 } from '_utils/redux/actions/action_creators';
-import { ArticleService } from '_utils/services/ArticleService';
+import { LoiService } from '_utils/services/LoiService';
 import {
    ArticleSchema,
    ContenuSchema,
@@ -12,24 +17,32 @@ import {
    ThematiqueSchema,
 } from '_utils/storage/database';
 
-export const fetchThematiquesToApi = async (dispatcher) => {
-   let results = await ArticleService.getThematiqueFromServ();
-   dispatcher(getAllThematiques(results));
+export const fetchThematiquesToApi = async () => {
+   let results = await LoiService.getThematiqueFromServ();
+   return insertOrUpdateToDBFunc('database', 'thematique', results);
 };
 
-export const fetchArticlesToApi = async (dispatcher) => {
-   let results = await ArticleService.getArticlesFromServ();
-   dispatcher(getAllArticles(results));
+export const fetchArticlesToApi = async () => {
+   let res = await LoiService.getArticlesFromServ();
+   return insertOrUpdateToDBFunc(
+      'database',
+      'article',
+      parseStructureDataForArticle(res.results)
+   );
 };
 
-export const fetchContenusToApi = async (dispatcher) => {
-   let results = await ArticleService.getContenusFromServ();
-   dispatcher(getAllContenus(results));
+export const fetchContenusToApi = async () => {
+   let res = await LoiService.getContenusFromServ();
+   return insertOrUpdateToDBFunc(
+      'database',
+      'contenu',
+      parseStructureDataForContenu(res.results)
+   );
 };
 
-export const fetchTypesToApi = async (dispatcher) => {
-   let results = await ArticleService.getTypeFromServ();
-   dispatcher(getAllTypes(results));
+export const fetchTypesToApi = async () => {
+   let results = await LoiService.getTypeFromServ();
+   return insertOrUpdateToDBFunc('database', 'type', results);
 };
 
 export const fetchDataToLocalDatabase = (dispatcher) => {

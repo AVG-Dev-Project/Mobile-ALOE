@@ -31,7 +31,7 @@ export default function Home({ navigation }) {
    const { t, i18n } = useTranslation();
    const allArticles = useSelector((selector) => selector.loi.articles);
    const allContenus = useSelector((selector) => selector.loi.contenus);
-   const getAllTypes = useSelector((selector) => selector.loi.types);
+   const allTypes = useSelector((selector) => selector.loi.types);
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
@@ -114,7 +114,7 @@ export default function Home({ navigation }) {
             onPress={() => {
                navigation.navigate('Recherche', {
                   screen: 'Recherche',
-                  type: langueActual === 'fr' ? item.name_fr : item.name_mg,
+                  type: langueActual === 'fr' ? item.nom_fr : item.nom_mg,
                });
             }}
          >
@@ -133,7 +133,7 @@ export default function Home({ navigation }) {
                   ]}
                   numberOfLines={1}
                >
-                  {langueActual === 'fr' ? item.name_fr : item.name_mg}
+                  {langueActual === 'fr' ? item.nom_fr : item.nom_mg}
                </Text>
             </View>
          </TouchableOpacity>
@@ -147,8 +147,7 @@ export default function Home({ navigation }) {
             onPress={() => {
                navigation.navigate('Recherche', {
                   screen: 'Recherche',
-                  thematique:
-                     langueActual === 'fr' ? item.name_fr : item.name_mg,
+                  thematique: langueActual === 'fr' ? item.nom_fr : item.nom_mg,
                });
             }}
          >
@@ -167,7 +166,7 @@ export default function Home({ navigation }) {
                   ]}
                   numberOfLines={2}
                >
-                  {langueActual === 'fr' ? item.name_fr : item.name_mg}
+                  {langueActual === 'fr' ? item.nom_fr : item.nom_mg}
                </Text>
             </View>
          </TouchableOpacity>
@@ -277,7 +276,7 @@ export default function Home({ navigation }) {
                         <Carousel
                            layout="default"
                            ref={isCarousel}
-                           data={getAllTypes}
+                           data={allTypes}
                            loop={true}
                            loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
                            //fin des props spéficifique au section annonce

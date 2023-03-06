@@ -489,7 +489,7 @@ export default function Recherche({ navigation, route }) {
                      reference={bottomSheetTypeRef}
                      filterBy={filterByType}
                      key={type.id}
-                     text={langueActual === 'fr' ? type.name_fr : type.name_mg}
+                     text={langueActual === 'fr' ? type.nom_fr : type.nom_mg}
                   />
                ))}
             </View>
@@ -509,8 +509,8 @@ export default function Recherche({ navigation, route }) {
                      key={thematique.id}
                      text={
                         langueActual === 'fr'
-                           ? thematique.name_fr
-                           : thematique.name_mg
+                           ? thematique.nom_fr
+                           : thematique.nom_mg
                      }
                   />
                ))}

@@ -19,6 +19,7 @@ import {
 import {
    nameStackNavigation as nameNav,
    getDataFromLocalStorage,
+   removeInLocalStorage,
    fetchTypesToApi,
    fetchArticlesToApi,
    fetchThematiquesToApi,

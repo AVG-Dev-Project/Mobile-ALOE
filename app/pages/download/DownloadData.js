@@ -25,6 +25,7 @@ import {
    getAllKeys,
    fetchTypesToApi,
    fetchArticlesToApi,
+   fetchContenusToApi,
    fetchThematiquesToApi,
    fetchDataToLocalDatabase,
 } from '_utils';
@@ -46,25 +47,30 @@ export default function DownloadData({ navigation }) {
    const [isAllDataAlsoDownloaded, setIsAllDataAlsoDownloaded] =
       useState(false);
    const [buttonStartDisabled, setButtonStartDisabled] = useState(true);
+   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
    //all functions
    // functions selon disponibilité de connexion 1 pour démarrer tous les fonction fetch depuis API 2 pour importer les données depuis le fichier
    const getOnlineDatas = async () => {
-      fetchArticlesToApi(dispatch);
-      fetchThematiquesToApi(dispatch);
-      await fetchTypesToApi(dispatch);
+      fetchArticlesToApi();
+      fetchContenusToApi();
+      fetchThematiquesToApi();
+      await fetchTypesToApi();
       setIsFetchData(false);
       storeDataToLocalStorage('isAllDataDownloaded', 'true');
    };
 
    const getOfflineDatas = () => {
       fetchDataToLocalDatabase(dispatch);
-      setIsFetchData(false);
+      setTimeout(() => {
+         setIsDataLoaded(false);
+         dispatch(getStarted());
+      }, 1000);
    };
 
    const showData = () => {
-      return ArticleSchema.query({ columns: '*' }).then((res) => {
-         console.log(res);
+      return ContenuSchema.query({ columns: '*' }).then((res) => {
+         console.log(res.length);
       });
    };
 
@@ -202,7 +208,7 @@ export default function DownloadData({ navigation }) {
                      }}
                      onPress={() => {
                         setIsFetchData(true);
-                        getOfflineDatas();
+                        getOnlineDatas();
                      }}
                      loading={isFetchData}
                   />
@@ -276,8 +282,10 @@ export default function DownloadData({ navigation }) {
                   marginVertical: 10,
                }}
                onPress={() => {
-                  dispatch(getStarted());
+                  setIsDataLoaded(true);
+                  getOfflineDatas();
                }}
+               loading={isDataLoaded}
                disabled={buttonStartDisabled}
             />
          </View>

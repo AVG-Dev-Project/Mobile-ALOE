@@ -1,5 +1,4 @@
 import { RouteAxios } from '_utils/services/urlAxios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function getArticlesFromServ() {
    return RouteAxios.get('/article')
@@ -24,7 +23,7 @@ function getContenusFromServ() {
 function getThematiqueFromServ() {
    return RouteAxios.get('/thematique')
       .then((response) => {
-         return response.data;
+         return response.data.results;
       })
       .catch((error) => {
          return error.message;
@@ -34,14 +33,14 @@ function getThematiqueFromServ() {
 function getTypeFromServ() {
    return RouteAxios.get('/type')
       .then((response) => {
-         return response.data;
+         return response.data.results;
       })
       .catch((error) => {
          return error.message;
       });
 }
 
-export const ArticleService = {
+export const LoiService = {
    getArticlesFromServ,
    getThematiqueFromServ,
    getTypeFromServ,

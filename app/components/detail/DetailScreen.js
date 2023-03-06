@@ -61,7 +61,7 @@ export default function Detail({ navigation, route }) {
    const tagsStyles = {
       p: {
          width: '100%',
-         fontSize: width < 380 ? 14 : 19,
+         fontSize: width < 380 ? 14 : 18,
       },
    };
 
@@ -93,7 +93,8 @@ export default function Detail({ navigation, route }) {
                   <Text
                      style={{
                         fontWeight: 'bold',
-                        fontSize: width < 370 ? 18 : 22,
+                        fontSize: width < 370 ? 18 : 20,
+                        marginBottom: 8,
                         width: '90%',
                         color: Colors.white,
                      }}
@@ -102,16 +103,23 @@ export default function Detail({ navigation, route }) {
                         ? oneArticle.titre_fr
                         : oneArticle.titre_mg}
                   </Text>
-                  <Text
-                     style={{
-                        fontSize: 12,
-                        marginVertical: 8,
-                        color: Colors.white,
-                     }}
-                  >
-                     {langueActual === 'fr' ? 'Publié le ' : 'Nivoaka ny '} :{' '}
-                     {oneArticle.article_created_at?.substring(0, 10)}
-                  </Text>
+                  {oneArticle.chapitre_id && (
+                     <Text
+                        style={{
+                           fontSize: 12,
+                           marginVertical: 8,
+                           color: Colors.white,
+                        }}
+                     >
+                        {langueActual === 'fr'
+                           ? `Chapitre n°${oneArticle.chapitre_numero}`
+                           : `Lohateny faha ${oneArticle.chapitre_numero}`}{' '}
+                        :{' '}
+                        {langueActual === 'fr'
+                           ? oneArticle.chapitre_titre_fr
+                           : oneArticle.chapitre_titre_mg}
+                     </Text>
+                  )}
                </View>
                <View style={styles.description_section}>
                   <View style={styles.view_round_button_detail_article}>

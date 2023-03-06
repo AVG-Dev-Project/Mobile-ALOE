@@ -13,7 +13,6 @@ import {
    nameStackNavigation as nameNav,
    filterArticleToListByContenu,
 } from '_utils';
-// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { styles } from './stylesContenu';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
@@ -61,13 +60,13 @@ export default function ListingContenu({ navigation, route }) {
                         fontSize:
                            Dimensions.get('window').height < 700 ? 10 : 12,
                         marginBottom: 8,
-                        textDecorationLine: 'underline',
-                        textTransform: 'uppercase',
+                        textTransform: 'capitalize',
                      }}
                   >
                      {langueActual === 'fr'
-                        ? item.organisme_nom_fr
-                        : item.organisme_nom_mg}
+                        ? 'Publié le '
+                        : "Nivoaka tamin'ny "}
+                     {item.date}
                   </Text>
                </View>
                <Text
