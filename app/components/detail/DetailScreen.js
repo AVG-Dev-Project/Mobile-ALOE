@@ -26,7 +26,7 @@ import bgImage from '_images/bg_loi.jpg';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
 // import { addFavoris } from '_utils/redux/actions/action_creators';
-import { captureRef } from 'react-native-view-shot';
+import ViewShot, { captureRef } from 'react-native-view-shot';
 import * as MediaLibrary from 'expo-media-library';
 
 export default function Detail({ navigation, route }) {
@@ -63,19 +63,16 @@ export default function Detail({ navigation, route }) {
    };
 
    const onSaveImageAsync = async () => {
-      try {
-         const localUri = await captureRef(viewToCaptureRef, {
-            height: 200,
-            quality: 1,
-         });
-
-         await MediaLibrary.saveToLibraryAsync(localUri);
-         if (localUri) {
-            alert('Saved!');
+      captureRef(viewToCaptureRef, {
+         height: 400,
+         quality: 1,
+         format: 'jpg',
+      }).then((uri) => {
+         MediaLibrary.saveToLibraryAsync(uri);
+         if (uri) {
+            alert('Saved');
          }
-      } catch (e) {
-         console.log(e);
-      }
+      });
    };
 
    const openBottomSheet = () => {
@@ -124,7 +121,7 @@ export default function Detail({ navigation, route }) {
                      styles.maskImageDetailArticle,
                   ]}
                ></View>
-               <View ref={viewToCaptureRef}>
+               <ViewShot collapsable={true} ref={viewToCaptureRef}>
                   <View style={styles.info_in_landing_detail}>
                      <Text
                         style={{
@@ -220,7 +217,7 @@ export default function Detail({ navigation, route }) {
                         )}
                      </ScrollView>
                   </View>
-               </View>
+               </ViewShot>
                <View style={styles.all_button_in_detail_screen}>
                   <TouchableOpacity
                      onPress={() => {
