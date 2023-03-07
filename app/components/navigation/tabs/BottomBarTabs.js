@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Colors } from '_theme/Colors';
 import { Icon } from '@rneui/themed';
@@ -34,7 +34,17 @@ export default function BottomBarTabs() {
             name="Home"
             component={Home}
             options={{
-               tabBarLabel: langueActual === 'fr' ? 'Accueil' : 'Fandraisana',
+               tabBarLabel: ({ focused }) => (
+                  <Text
+                     style={{
+                        fontSize: 14,
+                        fontWeight: 'bold',
+                        color: focused ? Colors.greenAvg : Colors.grey,
+                     }}
+                  >
+                     {langueActual === 'fr' ? 'Accueil' : 'Fandraisana'}
+                  </Text>
+               ),
                tabBarIcon: ({ focused }) => (
                   <Icon
                      name={'home'}
@@ -48,7 +58,17 @@ export default function BottomBarTabs() {
             name="Recherche"
             component={Recherche}
             options={{
-               tabBarLabel: langueActual === 'fr' ? 'Recherche' : 'Hitady',
+               tabBarLabel: ({ focused }) => (
+                  <Text
+                     style={{
+                        fontSize: 14,
+                        fontWeight: 'bold',
+                        color: focused ? Colors.greenAvg : Colors.grey,
+                     }}
+                  >
+                     {langueActual === 'fr' ? 'Recherche' : 'Hitady'}
+                  </Text>
+               ),
                tabBarIcon: ({ focused }) => (
                   <Icon
                      name={'search'}
@@ -62,7 +82,17 @@ export default function BottomBarTabs() {
             name="Favoris"
             component={Favoris}
             options={{
-               tabBarLabel: langueActual === 'fr' ? 'Favoris' : 'Ankafiziko',
+               tabBarLabel: ({ focused }) => (
+                  <Text
+                     style={{
+                        fontSize: 14,
+                        fontWeight: 'bold',
+                        color: focused ? Colors.greenAvg : Colors.grey,
+                     }}
+                  >
+                     {langueActual === 'fr' ? 'Favoris' : 'Ankafiziko'}
+                  </Text>
+               ),
                tabBarIcon: ({ focused }) => (
                   <Icon
                      name={'favorite'}
@@ -76,7 +106,17 @@ export default function BottomBarTabs() {
             name="A propos"
             component={About}
             options={{
-               tabBarLabel: langueActual === 'fr' ? 'A propos' : 'Mombamomba',
+               tabBarLabel: ({ focused }) => (
+                  <Text
+                     style={{
+                        fontSize: 14,
+                        fontWeight: 'bold',
+                        color: focused ? Colors.greenAvg : Colors.grey,
+                     }}
+                  >
+                     {langueActual === 'fr' ? 'A propos' : 'Mombamomba'}
+                  </Text>
+               ),
                tabBarIcon: ({ focused }) => (
                   <Icon
                      name={'info'}

@@ -41,7 +41,6 @@ export default function Home({ navigation }) {
       []
    );
 
-   console.log('Favoris redux: ', allFavoris);
    //all refs
    const bottomSheetRef = useRef(null);
 
