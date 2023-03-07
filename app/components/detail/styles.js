@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
    },
    info_in_landing_detail: {
-      marginTop: heightDevice < 700 ? 80 : 100,
+      marginTop: heightDevice < 700 ? 60 : 90,
       marginLeft: 28,
    },
    maskImageDetailArticle: {
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
    },
    description_section: {
       paddingHorizontal: 24,
-      height: heightDevice < 700 ? 440 : 630,
+      height: heightDevice < 700 ? heightDevice - 230 : heightDevice - 260,
       backgroundColor: Colors.white,
    },
    view_round_button_detail_article: {

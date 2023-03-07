@@ -11,7 +11,13 @@ import {
    useWindowDimensions,
 } from 'react-native';
 import * as Speech from 'expo-speech';
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, {
+   useState,
+   useEffect,
+   useMemo,
+   useCallback,
+   useRef,
+} from 'react';
 import RenderHtml from 'react-native-render-html';
 import { styles } from './styles';
 import { Icon } from '@rneui/themed';
@@ -19,9 +25,12 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import bgImage from '_images/bg_loi.jpg';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
-import { addFavoris } from '_utils/redux/actions/action_creators';
+// import { addFavoris } from '_utils/redux/actions/action_creators';
+import { captureRef } from 'react-native-view-shot';
+import * as MediaLibrary from 'expo-media-library';
 
 export default function Detail({ navigation, route }) {
+   const [status, requestPermission] = MediaLibrary.usePermissions();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
@@ -36,14 +45,36 @@ export default function Detail({ navigation, route }) {
 
    //all refs
    const bottomSheetRef = useRef(null);
+   const viewToCaptureRef = useRef();
 
    //all functions
+
+   if (status === null) {
+      requestPermission();
+   }
+
    /*function to speach article*/
    const playPauseSpeak = (txt_to_say) => {
       if (isSpeakPlay) {
          Speech.stop();
       } else {
          Speech.speak(txt_to_say);
+      }
+   };
+
+   const onSaveImageAsync = async () => {
+      try {
+         const localUri = await captureRef(viewToCaptureRef, {
+            height: 200,
+            quality: 1,
+         });
+
+         await MediaLibrary.saveToLibraryAsync(localUri);
+         if (localUri) {
+            alert('Saved!');
+         }
+      } catch (e) {
+         console.log(e);
       }
    };
 
@@ -81,7 +112,7 @@ export default function Detail({ navigation, route }) {
             <ImageBackground
                source={bgImage}
                style={{
-                  height: 250,
+                  height: 230,
                }}
                imageStyle={{
                   resizeMode: 'cover',
@@ -93,41 +124,42 @@ export default function Detail({ navigation, route }) {
                      styles.maskImageDetailArticle,
                   ]}
                ></View>
-               <View style={styles.info_in_landing_detail}>
-                  <Text
-                     style={{
-                        fontWeight: 'bold',
-                        fontSize: width < 370 ? 18 : 20,
-                        marginBottom: 8,
-                        width: '90%',
-                        color: Colors.white,
-                     }}
-                  >
-                     {langueActual === 'fr'
-                        ? oneArticle.titre_fr
-                        : oneArticle.titre_mg}
-                  </Text>
-                  {oneArticle.chapitre_id && (
+               <View ref={viewToCaptureRef}>
+                  <View style={styles.info_in_landing_detail}>
                      <Text
                         style={{
-                           fontSize: 12,
-                           marginVertical: 8,
+                           fontWeight: 'bold',
+                           fontSize: width < 370 ? 18 : 20,
+                           marginBottom: 8,
+                           width: '90%',
                            color: Colors.white,
                         }}
                      >
                         {langueActual === 'fr'
-                           ? `Chapitre n°${oneArticle.chapitre_numero}`
-                           : `Lohateny faha ${oneArticle.chapitre_numero}`}{' '}
-                        :{' '}
-                        {langueActual === 'fr'
-                           ? oneArticle.chapitre_titre_fr
-                           : oneArticle.chapitre_titre_mg}
+                           ? oneArticle.titre_fr
+                           : oneArticle.titre_mg}
                      </Text>
-                  )}
-               </View>
-               <View style={styles.description_section}>
-                  <View style={styles.view_round_button_detail_article}>
-                     {/* <TouchableOpacity
+                     {oneArticle.chapitre_id && (
+                        <Text
+                           style={{
+                              fontSize: 12,
+                              marginVertical: 4,
+                              color: Colors.white,
+                           }}
+                        >
+                           {langueActual === 'fr'
+                              ? `Chapitre n°${oneArticle.chapitre_numero}`
+                              : `Lohateny faha ${oneArticle.chapitre_numero}`}{' '}
+                           :{' '}
+                           {langueActual === 'fr'
+                              ? oneArticle.chapitre_titre_fr
+                              : oneArticle.chapitre_titre_mg}
+                        </Text>
+                     )}
+                  </View>
+                  <View style={styles.description_section}>
+                     <View style={styles.view_round_button_detail_article}>
+                        {/* <TouchableOpacity
                         onPress={() => {
                            dispatch(addFavoris(oneArticle.id));
                            showToastFavorite();
@@ -143,91 +175,91 @@ export default function Detail({ navigation, route }) {
                         </Text>
                      </TouchableOpacity> */}
 
-                     <TouchableOpacity
-                        activeOpacity={0.7}
-                        onPress={() => openBottomSheet()}
-                     >
-                        <Text style={styles.boutton_info_article}>
-                           <Icon
-                              name={'info-outline'}
-                              color={Colors.greenAvg}
-                              size={32}
-                           />{' '}
-                        </Text>
-                     </TouchableOpacity>
-                  </View>
+                        <TouchableOpacity
+                           activeOpacity={0.7}
+                           onPress={() => openBottomSheet()}
+                        >
+                           <Text style={styles.boutton_info_article}>
+                              <Icon
+                                 name={'info-outline'}
+                                 color={Colors.greenAvg}
+                                 size={32}
+                              />{' '}
+                           </Text>
+                        </TouchableOpacity>
+                     </View>
 
-                  <Text
-                     style={{
-                        fontSize: 22,
-                        fontWeight: 'bold',
-                        marginTop: 18,
-                     }}
-                  >
-                     {langueActual === 'fr'
-                        ? "Contenu de l'article "
-                        : "Votoatin'ny lahatsoratra"}
-                  </Text>
-                  <ScrollView
-                     style={{
-                        paddingRight: 4,
-                     }}
-                  >
-                     {langueActual === 'fr' ? (
-                        <RenderHtml
-                           contentWidth={width}
-                           source={sourceHTML(oneArticle.contenu_fr)}
-                           tagsStyles={tagsStyles}
-                        />
-                     ) : (
-                        <RenderHtml
-                           contentWidth={width}
-                           source={sourceHTML(oneArticle.contenu_mg)}
-                           tagsStyles={tagsStyles}
-                        />
-                     )}
-                  </ScrollView>
-                  <View style={styles.all_button_in_detail_screen}>
-                     <TouchableOpacity
-                        onPress={() => {
-                           alert('télechargés en PDF');
+                     <Text
+                        style={{
+                           fontSize: 22,
+                           fontWeight: 'bold',
+                           marginTop: 8,
                         }}
                      >
-                        <Text style={styles.button_in_detail}>
-                           {' '}
-                           <Icon
-                              name={'picture-as-pdf'}
-                              size={34}
-                              color={Colors.greenAvg}
-                           />{' '}
-                        </Text>
-                     </TouchableOpacity>
-                     <TouchableOpacity
-                        onPress={() => {
-                           setIsSpeakPlay(!isSpeakPlay);
-                           if (langueActual === 'fr') {
-                              playPauseSpeak(
-                                 oneArticle.contenu_fr.substring(0, 4000)
-                              );
-                           } else {
-                              playPauseSpeak(
-                                 oneArticle.contenu_mg.substring(0, 4000)
-                              );
-                           }
+                        {langueActual === 'fr'
+                           ? "Contenu de l'article "
+                           : "Votoatin'ny lahatsoratra"}
+                     </Text>
+                     <ScrollView
+                        style={{
+                           paddingRight: 4,
                         }}
                      >
-                        <Text style={[styles.button_in_detail]}>
-                           {' '}
-                           <Icon
-                              name={
-                                 isSpeakPlay ? 'stop' : 'play-circle-outline'
-                              }
-                              size={34}
-                              color={Colors.greenAvg}
-                           />{' '}
-                        </Text>
-                     </TouchableOpacity>
+                        {langueActual === 'fr' ? (
+                           <RenderHtml
+                              contentWidth={width}
+                              source={sourceHTML(oneArticle.contenu_fr)}
+                              tagsStyles={tagsStyles}
+                           />
+                        ) : (
+                           <RenderHtml
+                              contentWidth={width}
+                              source={sourceHTML(oneArticle.contenu_mg)}
+                              tagsStyles={tagsStyles}
+                           />
+                        )}
+                     </ScrollView>
                   </View>
+               </View>
+               <View style={styles.all_button_in_detail_screen}>
+                  <TouchableOpacity
+                     onPress={() => {
+                        //alert('télechargés en PDF');
+                        onSaveImageAsync();
+                     }}
+                  >
+                     <Text style={styles.button_in_detail}>
+                        {' '}
+                        <Icon
+                           name={'picture-as-pdf'}
+                           size={34}
+                           color={Colors.greenAvg}
+                        />{' '}
+                     </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                     onPress={() => {
+                        setIsSpeakPlay(!isSpeakPlay);
+                        if (langueActual === 'fr') {
+                           playPauseSpeak(
+                              oneArticle.contenu_fr.substring(0, 4000)
+                           );
+                        } else {
+                           playPauseSpeak(
+                              oneArticle.contenu_mg.substring(0, 4000)
+                           );
+                        }
+                     }}
+                  >
+                     <Text style={[styles.button_in_detail]}>
+                        {' '}
+                        <Icon
+                           name={isSpeakPlay ? 'stop' : 'play-circle-outline'}
+                           size={34}
+                           color={Colors.greenAvg}
+                        />{' '}
+                     </Text>
+                  </TouchableOpacity>
                </View>
             </ImageBackground>
          </SafeAreaView>
