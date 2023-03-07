@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
    view_round_button_detail_article: {
       position: 'absolute',
       top: -28,
-      right: 24,
+      right: 32,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
@@ -50,10 +50,10 @@ export const styles = StyleSheet.create({
    },
    boutton_info_article: {
       backgroundColor: Colors.greenWhite,
-      width: 50,
-      height: 50,
+      width: 52,
+      height: 52,
       padding: 10,
-      borderRadius: 50,
+      borderRadius: 52,
    },
    all_button_in_detail_screen: {
       marginTop: heightDevice < 700 ? 10 : 12,

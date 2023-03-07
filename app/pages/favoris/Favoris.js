@@ -6,6 +6,7 @@ import {
    useWindowDimensions,
    StyleSheet,
    SafeAreaView,
+   ToastAndroid,
    TouchableOpacity,
 } from 'react-native';
 import RenderHtml from 'react-native-render-html';
@@ -171,11 +172,7 @@ export default function Favoris({ navigation, route }) {
                         activeOpacity={0.8}
                         onPress={() => {
                            dispatch(addFavoris(item.id));
-                           alert(
-                              langueActual === 'fr'
-                                 ? 'Enlever au favoris.'
-                                 : "Esorina ato amin'ny ankafizina"
-                           );
+                           showToastFavorite(item.numero);
                         }}
                      >
                         <Icon
@@ -197,6 +194,13 @@ export default function Favoris({ navigation, route }) {
          html: data,
       };
       return source;
+   };
+
+   const showToastFavorite = (id) => {
+      ToastAndroid.show(
+         `Vous avez enlevé l'article n° ${id} dans votre favoris`,
+         ToastAndroid.SHORT
+      );
    };
 
    const tagsStyles = {

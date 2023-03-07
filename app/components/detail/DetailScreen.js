@@ -7,7 +7,7 @@ import {
    SafeAreaView,
    ScrollView,
    TouchableOpacity,
-   Dimensions,
+   ToastAndroid,
    useWindowDimensions,
 } from 'react-native';
 import * as Speech from 'expo-speech';
@@ -30,7 +30,7 @@ export default function Detail({ navigation, route }) {
    const [isSpeakPlay, setIsSpeakPlay] = useState(false);
    const oneArticle = route.params.articleToViewDetail;
    const snapPoints = useMemo(
-      () => (height < 700 ? [-1, '60%'] : [-1, '60%']),
+      () => (height < 700 ? [0, '60%'] : [0, '60%']),
       []
    );
 
@@ -50,6 +50,10 @@ export default function Detail({ navigation, route }) {
    const openBottomSheet = () => {
       return bottomSheetRef.current.snapTo(1);
    };
+
+   // const showToastFavorite = () => {
+   //    ToastAndroid.show('Vos favoris on été modifié', ToastAndroid.SHORT);
+   // };
 
    const sourceHTML = (data) => {
       const source = {
@@ -123,15 +127,12 @@ export default function Detail({ navigation, route }) {
                </View>
                <View style={styles.description_section}>
                   <View style={styles.view_round_button_detail_article}>
-                     <TouchableOpacity
+                     {/* <TouchableOpacity
                         onPress={() => {
                            dispatch(addFavoris(oneArticle.id));
-                           alert(
-                              langueActual === 'fr'
-                                 ? 'Ajouté au favoris'
-                                 : "Niampy ao amin'ny ankafizina"
-                           );
+                           showToastFavorite();
                         }}
+                        activeOpacity={0.7}
                      >
                         <Text style={styles.boutton_add_favorite}>
                            <Icon
@@ -140,7 +141,7 @@ export default function Detail({ navigation, route }) {
                               size={32}
                            />{' '}
                         </Text>
-                     </TouchableOpacity>
+                     </TouchableOpacity> */}
 
                      <TouchableOpacity
                         activeOpacity={0.7}

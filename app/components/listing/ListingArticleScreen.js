@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
 import { cutTextWithBalise } from '_utils';
 import { addFavoris } from '_utils/redux/actions/action_creators';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function ListingArticle({ navigation, route }) {
    //all data
@@ -37,6 +38,7 @@ export default function ListingArticle({ navigation, route }) {
          };
       })
    );
+
    const tagsStyles = {
       p: {
          width: '40%',
@@ -82,7 +84,7 @@ export default function ListingArticle({ navigation, route }) {
                <Image
                   source={require('_images/book_loi.jpg')}
                   style={{
-                     width: width < 380 ? 100 : 140,
+                     width: width < 380 ? 100 : 130,
                      height: 160,
                      borderRadius: 16,
                   }}
