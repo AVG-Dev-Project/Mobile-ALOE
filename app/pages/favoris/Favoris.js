@@ -34,7 +34,7 @@ export default function Favoris({ navigation, route }) {
       (selector) => selector.fonctionnality.langue
    );
    const snapPoints = useMemo(
-      () => (height < 700 ? [1, '50%'] : [1, '40%']),
+      () => (height < 700 ? [0, '40%'] : [0, '28%']),
       []
    );
    const dataForFlatList = allArticles.filter((article) =>

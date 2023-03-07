@@ -38,7 +38,7 @@ export default function Home({ navigation }) {
       (selector) => selector.fonctionnality.langue
    );
    const snapPoints = useMemo(
-      () => (height < 700 ? [-1, '60%'] : [-1, '50%']),
+      () => (height < 700 ? [0, '60%'] : [0, '50%']),
       []
    );
 
