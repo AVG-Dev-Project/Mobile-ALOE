@@ -25,8 +25,24 @@ export default function ListingArticle({ navigation, route }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   const allFavoriteId = useSelector((selector) => selector.loi.favoris);
-   const dataForFlatList = route.params.allArticleRelatedTotheContenu;
+   const allFavoriteIdFromStore = useSelector(
+      (selector) => selector.loi.favoris
+   );
+   const dataFromParams = route.params.allArticleRelatedTotheContenu;
+   const [articleList, setArticleList] = useState(
+      dataFromParams.map((item) => {
+         return {
+            ...item,
+            isFavorite: allFavoriteIdFromStore.includes(item.id),
+         };
+      })
+   );
+   const tagsStyles = {
+      p: {
+         width: '40%',
+         fontSize: width < 370 ? 12 : 14,
+      },
+   };
 
    //all function
    const sourceHTML = (data) => {
@@ -36,13 +52,19 @@ export default function ListingArticle({ navigation, route }) {
       return source;
    };
 
-   const tagsStyles = {
-      p: {
-         width: '40%',
-         fontSize: width < 370 ? 12 : 14,
-      },
+   const handleToogleIsFavorite = (id) => {
+      dispatch(addFavoris(id));
+      // Mettre à jour la propriété isFavorite de l'article avec l'ID donné
+      setArticleList((prevList) =>
+         prevList.map((item) =>
+            item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
+         )
+      );
    };
 
+   //all effects
+
+   //all components
    const _renderItem = useCallback(({ item }) => {
       return (
          <TouchableOpacity
@@ -153,18 +175,18 @@ export default function ListingArticle({ navigation, route }) {
                      >
                         <Icon
                            name={
-                              allFavoriteId.includes(item.id)
+                              item.isFavorite
                                  ? 'sentiment-very-satisfied'
                                  : 'sentiment-very-dissatisfied'
                            }
                            color={
-                              allFavoriteId.includes(item.id)
+                              item.isFavorite
                                  ? Colors.greenAvg
                                  : Colors.redError
                            }
                            size={18}
                         />
-                        {allFavoriteId.includes(item.id) ? (
+                        {item.isFavorite ? (
                            <Text
                               style={{
                                  fontSize: 14,
@@ -189,14 +211,12 @@ export default function ListingArticle({ navigation, route }) {
                      <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => {
-                           dispatch(addFavoris(item.id));
+                           handleToogleIsFavorite(item.id);
                         }}
                      >
                         <Icon
                            name={
-                              allFavoriteId.includes(item.id)
-                                 ? 'favorite'
-                                 : 'favorite-border'
+                              item.isFavorite ? 'favorite' : 'favorite-border'
                            }
                            color={Colors.redError}
                            size={28}
@@ -216,7 +236,7 @@ export default function ListingArticle({ navigation, route }) {
       <View style={styles.view_container}>
          <SafeAreaView style={styles.container_safe}>
             <FlatList
-               data={dataForFlatList}
+               data={articleList}
                key={'_'}
                keyExtractor={_idKeyExtractor}
                renderItem={_renderItem}
@@ -252,6 +272,7 @@ export default function ListingArticle({ navigation, route }) {
                      </Text>
                   </View>
                }
+               extraData={articleList}
             />
          </SafeAreaView>
       </View>

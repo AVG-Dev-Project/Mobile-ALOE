@@ -44,7 +44,7 @@ export default function Favoris({ navigation, route }) {
    //all refs
    const bottomSheetRef = useRef(null);
 
-   //all logics
+   //all components
    const _renderItem = useCallback(({ item }) => {
       return (
          <TouchableOpacity

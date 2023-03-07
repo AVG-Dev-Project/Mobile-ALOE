@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Icon } from '@rneui/themed';
 import Carousel from 'react-native-snap-carousel';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import HeaderGlobal from '_components/header/HeaderGlobal';
 import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
 import {
@@ -27,7 +27,6 @@ export default function Home({ navigation }) {
    //all states
    const isCarousel = React.useRef(null);
    const { width, height } = useWindowDimensions();
-   const dispatch = useDispatch();
    const { t } = useTranslation();
    const allArticles = useSelector((selector) => selector.loi.articles);
    const allFavoris = useSelector((selector) => selector.loi.favoris);
