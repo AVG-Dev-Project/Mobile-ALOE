@@ -15,7 +15,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
    getStarted,
    addFavoris,
-   isConnectedToInternet,
+   isNetworkActive,
 } from '_utils/redux/actions/action_creators';
 import {
    nameStackNavigation as nameNav,
@@ -37,7 +37,10 @@ export default function Welcome({ navigation }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   const connexion = useSelector(
+   const isUserNetworkActive = useSelector(
+      (selector) => selector.fonctionnality.isNetworkActive
+   );
+   const isUserConnectedToInternet = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
    const [isAllDataAlsoUploaded, setIsAllDataAlsoUploaded] = useState(false);
@@ -46,7 +49,7 @@ export default function Welcome({ navigation }) {
    const [isDataLoaded, setIsDataLoaded] = useState(false);
 
    //functions
-   //deux functions selon disponibilité de connexion (une pour fetcher 10 datas afin de peupler la base)
+   //deux functions selon disponibilité de isUserNetworkActive (une pour fetcher 10 datas afin de peupler la base)
 
    const getSmallDatasOnLine = async () => {
       fetchArticlesToApi();
@@ -56,7 +59,9 @@ export default function Welcome({ navigation }) {
    };
 
    const getOfflineDatas = async () => {
-      await getSmallDatasOnLine();
+      if (isUserNetworkActive && isUserConnectedToInternet) {
+         await getSmallDatasOnLine();
+      }
       getFavoriteFromLocalStorage().then((res) => {
          if (res !== null) {
             dispatch(addFavoris(res));
@@ -69,28 +74,15 @@ export default function Welcome({ navigation }) {
       }, 1000);
    };
 
-   /*const getSmallDatasOnLine = () => {
-      fetchThematiquesToApi(dispatch),
-      fetchArticlesToApi(dispatch),
-      fetchTypesToApi(dispatch),
-   };*/
-
    //all effects
-   /*effect pour ecouter quand l'user active sa connexion*/
+   /*effect pour ecouter quand l'user active sa isUserNetworkActive*/
    useEffect(() => {
       const unsubscribe = NetInfo.addEventListener((state) => {
-         dispatch(isConnectedToInternet(state.isConnected));
+         dispatch(isNetworkActive(state.isConnected));
       });
 
       return unsubscribe;
    }, []);
-
-   /*useEffect(() => {
-      if (connexion) {
-         return getSmallDatasOnLine();
-      }
-      getAllDatasOffline()
-   }, [connexion]);*/
 
    useEffect(() => {
       getDataFromLocalStorage('isAllDataImported').then((res) => {
@@ -127,7 +119,7 @@ export default function Welcome({ navigation }) {
                moment. Avec ou sans internet, vous pouvez la consulter avec
                toute tranquilité.
             </Text>
-            {connexion ? (
+            {isAllDataAlsoUploaded || isAllDataAlsoDownloaded ? (
                <Text style={{ textAlign: 'center' }}>
                   Vos données sont prêts, vous pouvez commencer à lire. Veuillez
                   cliquer la flèche droite...

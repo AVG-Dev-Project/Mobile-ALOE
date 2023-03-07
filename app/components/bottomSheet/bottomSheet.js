@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import React, { useEffect } from 'react';
 import {
    View,
    Text,
@@ -13,14 +13,10 @@ import { useDispatch } from 'react-redux';
 import { changeLanguage } from '_utils/redux/actions/action_creators';
 import { Colors } from '_theme/Colors';
 
-export default function BottomSheetCustom({ bottomSheetRef }) {
+export default function BottomSheetCustom({ bottomSheetRef, snapPoints }) {
    const dispatch = useDispatch();
    const { i18n } = useTranslation();
    const { height } = useWindowDimensions();
-   const snapPoints = useMemo(
-      () => (height < 700 ? [-1, '60%'] : [-1, '50%']),
-      []
-   );
 
    //all functions
    const onHandleChangeLanguage = (langue) => {

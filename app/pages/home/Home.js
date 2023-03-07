@@ -1,10 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import {
    View,
    Text,
    Image,
    SafeAreaView,
-   Dimensions,
+   useWindowDimensions,
    StyleSheet,
    TouchableOpacity,
 } from 'react-native';
@@ -22,11 +22,11 @@ import {
 import { styles } from './styles';
 import { Colors } from '_theme/Colors';
 import { getFavoriteFromLocalStorage, removeInLocalStorage } from '_utils';
-import { addFavoris } from '_utils/redux/actions/action_creators';
 
 export default function Home({ navigation }) {
    //all states
    const isCarousel = React.useRef(null);
+   const { width, height } = useWindowDimensions();
    const dispatch = useDispatch();
    const { t } = useTranslation();
    const allArticles = useSelector((selector) => selector.loi.articles);
@@ -36,6 +36,10 @@ export default function Home({ navigation }) {
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
+   );
+   const snapPoints = useMemo(
+      () => (height < 700 ? [-1, '60%'] : [-1, '50%']),
+      []
    );
 
    console.log('Favoris redux: ', allFavoris);
@@ -78,7 +82,7 @@ export default function Home({ navigation }) {
                      marginVertical: 8,
                      paddingRight: 8,
                      fontWeight: 'bold',
-                     fontSize: Dimensions.get('window').height < 700 ? 13 : 17,
+                     fontSize: height < 700 ? 13 : 17,
                   }}
                >
                   {langueActual === 'fr' ? 'Loi n° ' : 'Lalana faha '}
@@ -219,8 +223,7 @@ export default function Home({ navigation }) {
                >
                   <Text
                      style={{
-                        fontSize:
-                           Dimensions.get('window').height < 700 ? 18 : 22,
+                        fontSize: height < 700 ? 18 : 22,
                         fontWeight: 'bold',
                      }}
                   >
@@ -261,8 +264,7 @@ export default function Home({ navigation }) {
                >
                   <Text
                      style={{
-                        fontSize:
-                           Dimensions.get('window').height < 700 ? 18 : 22,
+                        fontSize: height < 700 ? 18 : 22,
                         fontWeight: 'bold',
                      }}
                   >
@@ -303,8 +305,7 @@ export default function Home({ navigation }) {
                >
                   <Text
                      style={{
-                        fontSize:
-                           Dimensions.get('window').height < 700 ? 18 : 22,
+                        fontSize: height < 700 ? 18 : 22,
                         fontWeight: 'bold',
                      }}
                   >
@@ -347,7 +348,10 @@ export default function Home({ navigation }) {
                </View>
             </View>
          </View>
-         <BottomSheetCustom bottomSheetRef={bottomSheetRef} />
+         <BottomSheetCustom
+            bottomSheetRef={bottomSheetRef}
+            snapPoints={snapPoints}
+         />
       </KeyboardAwareScrollView>
    );
 }

@@ -9,7 +9,13 @@ import {
    TouchableOpacity,
 } from 'react-native';
 import RenderHtml from 'react-native-render-html';
-import React, { useCallback, useEffect, useState, useRef } from 'react';
+import React, {
+   useCallback,
+   useEffect,
+   useState,
+   useMemo,
+   useRef,
+} from 'react';
 import { nameStackNavigation as nameNav, cutTextWithBalise } from '_utils';
 import { styles } from './styles';
 import { Icon } from '@rneui/themed';
@@ -23,11 +29,14 @@ export default function Favoris({ navigation, route }) {
    const listOfIdFavorites = useSelector((selector) => selector.loi.favoris);
    const allArticles = useSelector((selector) => selector.loi.articles);
    const dispatch = useDispatch();
-   const { width } = useWindowDimensions();
+   const { width, height } = useWindowDimensions();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-
+   const snapPoints = useMemo(
+      () => (height < 700 ? [1, '50%'] : [1, '40%']),
+      []
+   );
    const dataForFlatList = allArticles.filter((article) =>
       listOfIdFavorites.includes(article.id)
    );
@@ -291,7 +300,10 @@ export default function Favoris({ navigation, route }) {
                maxToRenderPerBatch={3}
             />
          </SafeAreaView>
-         <BottomSheetCustom bottomSheetRef={bottomSheetRef} />
+         <BottomSheetCustom
+            bottomSheetRef={bottomSheetRef}
+            snapPoints={snapPoints}
+         />
       </View>
    );
 }

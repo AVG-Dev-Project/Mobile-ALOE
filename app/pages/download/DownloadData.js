@@ -9,8 +9,9 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import {
    getStarted,
-   isConnectedToInternet,
+   isNetworkActive,
    addFavoris,
+   isConnectedToInternet,
 } from '_utils/redux/actions/action_creators';
 import {
    ArticleSchema,
@@ -41,7 +42,10 @@ export default function DownloadData({ navigation }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   const connexion = useSelector(
+   const isUserNetworkActive = useSelector(
+      (selector) => selector.fonctionnality.isNetworkActive
+   );
+   const isUserConnectedToInternet = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
    const [isFetchData, setIsFetchData] = useState(false);
@@ -51,9 +55,10 @@ export default function DownloadData({ navigation }) {
       useState(false);
    const [buttonStartDisabled, setButtonStartDisabled] = useState(true);
    const [isDataLoaded, setIsDataLoaded] = useState(false);
+   const [messageStatusInternet, setMessageStatusInternet] = useState('');
 
    //all functions
-   // functions selon disponibilité de connexion 1 pour démarrer tous les fonction fetch depuis API 2 pour importer les données depuis le fichier
+   // functions selon disponibilité de isUserNetworkActive 1 pour démarrer tous les fonction fetch depuis API 2 pour importer les données depuis le fichier
    const getOnlineDatas = async () => {
       fetchArticlesToApi();
       fetchContenusToApi();
@@ -76,11 +81,11 @@ export default function DownloadData({ navigation }) {
       }, 500);
    };
 
-   const showData = () => {
-      return ArticleSchema.query({ columns: '*' }).then((res) => {
-         console.log(res.length);
-      });
-   };
+   // const showData = () => {
+   //    return ArticleSchema.query({ columns: '*' }).then((res) => {
+   //       console.log(res.length);
+   //    });
+   // };
 
    const handleFileSelectionAndImportData = async () => {
       setIsUploadData(true);
@@ -125,14 +130,37 @@ export default function DownloadData({ navigation }) {
    };
 
    //all effects
-   /*effect pour ecouter quand l'user active sa connexion*/
+   /*effect pour ecouter quand l'user active sa isUserNetworkActive*/
    useEffect(() => {
       const unsubscribe = NetInfo.addEventListener((state) => {
-         dispatch(isConnectedToInternet(state.isConnected));
+         dispatch(isNetworkActive(state.isConnected));
+         dispatch(isConnectedToInternet(state.isInternetReachable));
       });
 
       return unsubscribe;
    }, []);
+
+   useEffect(() => {
+      if (isUserConnectedToInternet && isUserNetworkActive) {
+         setMessageStatusInternet(
+            'Comme vous êtes connecté à internet, vous pouvez soit télechargés les datas via votre connexion soit uploader le fichier datas'
+         );
+      }
+      if (
+         isUserNetworkActive &&
+         (isUserConnectedToInternet === false ||
+            isUserConnectedToInternet === null)
+      ) {
+         setMessageStatusInternet(
+            'Votre connexion ne peut pas accéder à internet. Vous pouvez quand même importer le fichier datas depuis votre appareil.'
+         );
+      }
+      if (isNetworkActive === false || isNetworkActive === null) {
+         setMessageStatusInternet(
+            "Vous n'êtes pas connecté à internet. Vous pouvez importer le fichier datas depuis votre appareil."
+         );
+      }
+   }, [isUserConnectedToInternet, isUserNetworkActive]);
 
    useEffect(() => {
       getDataFromLocalStorage('isAllDataImported').then((res) => {
@@ -172,11 +200,11 @@ export default function DownloadData({ navigation }) {
                   }}
                >
                   Status :{' '}
-                  {connexion
+                  {isUserNetworkActive && isUserConnectedToInternet
                      ? 'Vous êtes connectés à internet'
                      : "Vous n'êtes pas connectés"}
                </Text>
-               {connexion ? (
+               {isUserNetworkActive && isUserConnectedToInternet ? (
                   <Icon
                      name={'sentiment-satisfied-alt'}
                      color={Colors.greenAvg}
@@ -190,13 +218,9 @@ export default function DownloadData({ navigation }) {
                   />
                )}
             </View>
-            <Text style={{ textAlign: 'center' }}>
-               {connexion
-                  ? `Ici vous avez le choix entre télécharger les données via votre connexion ou préférez-vous importer vos données depuis votre appareil `
-                  : "Comme vous n'êtes pas connecté vous pouvez importé le fichier depuis votre appareil!"}
-            </Text>
+            <Text style={{ textAlign: 'center' }}>{messageStatusInternet}</Text>
             <View style={styles.view_for_button}>
-               {connexion && (
+               {isUserNetworkActive && isUserConnectedToInternet && (
                   <Button
                      title="Télecharger les datas"
                      icon={{
@@ -222,7 +246,7 @@ export default function DownloadData({ navigation }) {
                   />
                )}
 
-               {connexion && (
+               {isUserNetworkActive && isUserConnectedToInternet && (
                   <Text style={{ textAlign: 'center', fontSize: 18 }}>
                      {' '}
                      ou{' '}
@@ -250,7 +274,7 @@ export default function DownloadData({ navigation }) {
                   loading={isUploadData}
                />
 
-               <Button
+               {/* <Button
                   title="Show data"
                   icon={{
                      name: 'file-upload',
@@ -268,7 +292,7 @@ export default function DownloadData({ navigation }) {
                      marginVertical: 5,
                   }}
                   onPress={() => showData()}
-               />
+               /> */}
             </View>
          </View>
          <View>
