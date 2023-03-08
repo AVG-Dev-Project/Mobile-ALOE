@@ -14,8 +14,9 @@ import {
    ContenuSchema,
    TypeSchema,
    ThematiqueSchema,
+   DoleanceSchema,
 } from './storage/database';
-import { insertOrUpdateToDBFunc } from './storage/querySqlite';
+import { insertOrUpdateToDBFunc, removeDoleance } from './storage/querySqlite';
 import {
    parseStructureDataForArticle,
    parseStructureDataForContenu,
@@ -46,7 +47,9 @@ export {
    ContenuSchema,
    TypeSchema,
    ThematiqueSchema,
+   DoleanceSchema,
    insertOrUpdateToDBFunc,
+   removeDoleance,
    parseStructureDataForArticle,
    parseStructureDataForContenu,
    cutTextWithBalise,

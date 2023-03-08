@@ -1,5 +1,6 @@
 import DatabaseLayer from 'expo-sqlite-orm/src/DatabaseLayer';
 import * as SQLite from 'expo-sqlite';
+import { DoleanceSchema } from '_utils/storage/database';
 
 export const insertOrUpdateToDBFunc = async (
    db_name,
@@ -13,4 +14,8 @@ export const insertOrUpdateToDBFunc = async (
    const result = await databaseLayer.bulkInsertOrReplace(data_to_insert);
    console.log(`${db_table} inséré dans la base!`);
    return result;
+};
+
+export const removeDoleance = () => {
+   DoleanceSchema.destroyAll();
 };

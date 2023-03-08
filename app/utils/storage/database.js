@@ -126,3 +126,26 @@ export class ThematiqueSchema extends BaseModel {
       };
    }
 }
+
+export class DoleanceSchema extends BaseModel {
+   constructor(obj) {
+      super(obj);
+   }
+
+   static get database() {
+      return async () => SQLite.openDatabase('database.db');
+   }
+
+   static get tableName() {
+      return 'doleance';
+   }
+
+   static get columnMapping() {
+      return {
+         id: { type: types.INTEGER, primary_key: true, autoincrement: true }, // For while only supports id as primary key
+         email: { type: types.TEXT, not_null: true },
+         objet: { type: types.TEXT },
+         message: { type: types.TEXT },
+      };
+   }
+}

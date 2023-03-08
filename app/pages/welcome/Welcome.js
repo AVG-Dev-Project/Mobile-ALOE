@@ -16,6 +16,7 @@ import {
    getStarted,
    addFavoris,
    isNetworkActive,
+   isConnectedToInternet,
 } from '_utils/redux/actions/action_creators';
 import {
    nameStackNavigation as nameNav,
@@ -79,6 +80,7 @@ export default function Welcome({ navigation }) {
    useEffect(() => {
       const unsubscribe = NetInfo.addEventListener((state) => {
          dispatch(isNetworkActive(state.isConnected));
+         dispatch(isConnectedToInternet(state.isInternetReachable));
       });
 
       return unsubscribe;
