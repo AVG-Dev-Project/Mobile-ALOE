@@ -21,7 +21,11 @@ import {
 } from '_utils';
 import { styles } from './styles';
 import { Colors } from '_theme/Colors';
-import { getFavoriteFromLocalStorage, removeInLocalStorage } from '_utils';
+import {
+   getFavoriteFromLocalStorage,
+   removeInLocalStorage,
+   checkAndsendMailFromLocalDBToAPI,
+} from '_utils';
 
 export default function Home({ navigation }) {
    //all states
@@ -35,6 +39,12 @@ export default function Home({ navigation }) {
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
+   );
+   const isUserNetworkActive = useSelector(
+      (selector) => selector.fonctionnality.isNetworkActive
+   );
+   const isUserConnectedToInternet = useSelector(
+      (selector) => selector.fonctionnality.isConnectedToInternet
    );
    const snapPoints = useMemo(
       () => (height < 700 ? [0, '60%'] : [0, '50%']),
@@ -51,6 +61,12 @@ export default function Home({ navigation }) {
       bottomSheetRef.current.close();
       //removeInLocalStorage('favorite');
    }, []);
+
+   useEffect(() => {
+      if (isUserConnectedToInternet && isUserNetworkActive) {
+         checkAndsendMailFromLocalDBToAPI();
+      }
+   }, [isUserNetworkActive, isUserConnectedToInternet]);
 
    //all components
    const _renderItemContenu = ({ item }) => {

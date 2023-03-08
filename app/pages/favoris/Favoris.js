@@ -17,7 +17,11 @@ import React, {
    useMemo,
    useRef,
 } from 'react';
-import { nameStackNavigation as nameNav, cutTextWithBalise } from '_utils';
+import {
+   nameStackNavigation as nameNav,
+   cutTextWithBalise,
+   checkAndsendMailFromLocalDBToAPI,
+} from '_utils';
 import { styles } from './styles';
 import { Icon } from '@rneui/themed';
 import { useSelector, useDispatch } from 'react-redux';
@@ -33,6 +37,12 @@ export default function Favoris({ navigation, route }) {
    const { width, height } = useWindowDimensions();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
+   );
+   const isUserNetworkActive = useSelector(
+      (selector) => selector.fonctionnality.isNetworkActive
+   );
+   const isUserConnectedToInternet = useSelector(
+      (selector) => selector.fonctionnality.isConnectedToInternet
    );
    const snapPoints = useMemo(
       () => (height < 700 ? [0, '40%'] : [0, '28%']),
@@ -209,6 +219,13 @@ export default function Favoris({ navigation, route }) {
          fontSize: width < 370 ? 12 : 14,
       },
    };
+
+   //all effects
+   useEffect(() => {
+      if (isUserConnectedToInternet && isUserNetworkActive) {
+         checkAndsendMailFromLocalDBToAPI();
+      }
+   }, [isUserNetworkActive, isUserConnectedToInternet]);
 
    const _idKeyExtractor = (item, index) =>
       item?.id == null ? index.toString() : item.id.toString();

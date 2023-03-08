@@ -16,6 +16,7 @@ import {
    getStarted,
    addFavoris,
    isNetworkActive,
+   isConnectedToInternet,
 } from '_utils/redux/actions/action_creators';
 import {
    nameStackNavigation as nameNav,
@@ -27,6 +28,7 @@ import {
    fetchContenusToApi,
    getFavoriteFromLocalStorage,
    fetchDataToLocalDatabase,
+   checkAndsendMailFromLocalDBToAPI,
 } from '_utils';
 
 export default function Welcome({ navigation }) {
@@ -79,6 +81,7 @@ export default function Welcome({ navigation }) {
    useEffect(() => {
       const unsubscribe = NetInfo.addEventListener((state) => {
          dispatch(isNetworkActive(state.isConnected));
+         dispatch(isConnectedToInternet(state.isInternetReachable));
       });
 
       return unsubscribe;
@@ -92,6 +95,12 @@ export default function Welcome({ navigation }) {
          if (res === 'true') setIsAllDataAlsoDownloaded(true);
       });
    }, []);
+
+   useEffect(() => {
+      if (isUserConnectedToInternet && isUserNetworkActive) {
+         checkAndsendMailFromLocalDBToAPI();
+      }
+   }, [isUserNetworkActive, isUserConnectedToInternet]);
 
    return (
       <View style={styles.view_container_welcome}>

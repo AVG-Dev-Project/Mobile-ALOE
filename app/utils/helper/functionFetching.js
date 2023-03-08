@@ -8,7 +8,6 @@ import {
    getAllThematiques,
    getAllTypes,
    getAllContenus,
-   addFavoris,
 } from '_utils/redux/actions/action_creators';
 import { LoiService } from '_utils/services/LoiService';
 import {
