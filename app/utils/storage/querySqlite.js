@@ -15,7 +15,3 @@ export const insertOrUpdateToDBFunc = async (
    console.log(`${db_table} inséré dans la base!`);
    return result;
 };
-
-export const removeDoleance = () => {
-   DoleanceSchema.destroyAll();
-};

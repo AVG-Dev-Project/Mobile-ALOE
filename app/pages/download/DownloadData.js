@@ -31,6 +31,7 @@ import {
    fetchContenusToApi,
    fetchThematiquesToApi,
    fetchDataToLocalDatabase,
+   checkAndsendMailFromLocalDBToAPI,
 } from '_utils';
 import styles from './styles';
 
@@ -145,6 +146,7 @@ export default function DownloadData({ navigation }) {
          setMessageStatusInternet(
             'Comme vous êtes connecté à internet, vous pouvez soit télechargés les datas via votre connexion soit uploader le fichier datas'
          );
+         //checkAndsendMailFromLocalDBToAPI();
       }
       if (
          isUserNetworkActive &&

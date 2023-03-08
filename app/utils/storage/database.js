@@ -145,7 +145,7 @@ export class DoleanceSchema extends BaseModel {
          id: { type: types.INTEGER, primary_key: true, autoincrement: true }, // For while only supports id as primary key
          email: { type: types.TEXT, not_null: true },
          objet: { type: types.TEXT },
-         message: { type: types.TEXT },
+         contenu: { type: types.TEXT },
       };
    }
 }

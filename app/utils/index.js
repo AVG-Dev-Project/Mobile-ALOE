@@ -16,12 +16,13 @@ import {
    ThematiqueSchema,
    DoleanceSchema,
 } from './storage/database';
-import { insertOrUpdateToDBFunc, removeDoleance } from './storage/querySqlite';
+import { insertOrUpdateToDBFunc } from './storage/querySqlite';
 import {
    parseStructureDataForArticle,
    parseStructureDataForContenu,
    filterArticleToListByContenu,
    cutTextWithBalise,
+   checkAndsendMailFromLocalDBToAPI,
 } from './helper/functionHelpler';
 
 import {
@@ -49,10 +50,10 @@ export {
    ThematiqueSchema,
    DoleanceSchema,
    insertOrUpdateToDBFunc,
-   removeDoleance,
    parseStructureDataForArticle,
    parseStructureDataForContenu,
    cutTextWithBalise,
+   checkAndsendMailFromLocalDBToAPI,
    fetchTypesToApi,
    fetchContenusToApi,
    fetchArticlesToApi,

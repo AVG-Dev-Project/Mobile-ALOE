@@ -13,7 +13,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Icon, Input, Button } from '@rneui/themed';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { styles } from './styles';
-import { insertOrUpdateToDBFunc, LoiService } from '_utils';
+import {
+   insertOrUpdateToDBFunc,
+   LoiService,
+   checkAndsendMailFromLocalDBToAPI,
+} from '_utils';
 
 export default function Doleance({ navigation }) {
    //all datas
@@ -52,9 +56,9 @@ export default function Doleance({ navigation }) {
       let newMail = {
          email: email,
          objet: obj,
-         message: message,
+         contenu: message,
       };
-      await insertOrUpdateToDBFunc('database', 'doleance', newMail);
+      await insertOrUpdateToDBFunc('database', 'doleance', [newMail]);
       setIsLoadSendingMail(false);
       return showToastDoleance(
          "Comme vous n'avez pas de connexion, votre mail a été stocké et envoyer automatiquement plutard lorsque votre connexion est activé."
@@ -118,6 +122,12 @@ export default function Doleance({ navigation }) {
          setDisabledButtonSend(true);
       }
    }, [emailContent]);
+
+   useEffect(() => {
+      if (isUserConnectedToInternet && isUserNetworkActive) {
+         checkAndsendMailFromLocalDBToAPI();
+      }
+   }, [isUserNetworkActive, isUserConnectedToInternet]);
 
    return (
       <KeyboardAwareScrollView style={{ backgroundColor: Colors.background }}>
