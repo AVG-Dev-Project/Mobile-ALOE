@@ -3,6 +3,7 @@ import { Colors } from '_theme/Colors';
 import { useDispatch, useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { styles } from './styles';
+import { nameStackNavigation as nameNav } from '_utils';
 
 export default function About({ navigation }) {
    const dispatch = useDispatch();
@@ -29,10 +30,10 @@ export default function About({ navigation }) {
                      fontSize: 38,
                      fontWeight: 'bold',
                      marginVertical: 8,
-                     color: Colors.violet,
+                     color: Colors.greenAvg,
                   }}
                >
-                  LoIT
+                  Aloe
                </Text>
                <Text>
                   {langueActual === 'fr' ? 'Version' : 'Fanovana'} 1.0.0
@@ -75,11 +76,10 @@ export default function About({ navigation }) {
                <TouchableOpacity
                   activeOpacity={0.6}
                   onPress={() =>
-                     alert(
-                        langueActual === 'fr'
-                           ? 'Open Source Licences'
-                           : "Lisansa ho an'ny rehetra"
-                     )
+                     navigation.navigate(nameNav.doleance, {
+                        titleScreen:
+                           langueActual === 'fr' ? 'Doléance' : 'Fitarainana',
+                     })
                   }
                >
                   <Text
@@ -89,8 +89,8 @@ export default function About({ navigation }) {
                      ]}
                   >
                      {langueActual === 'fr'
-                        ? 'Open Source Licences'
-                        : "Lisansa ho an'ny rehetra"}
+                        ? 'Envoyer doléance'
+                        : 'Handefa fitarainana'}
                   </Text>
                </TouchableOpacity>
             </View>

@@ -2,6 +2,7 @@ import { Colors } from '_theme/Colors';
 import { StyleSheet, Dimensions } from 'react-native';
 
 let widthDevice = Dimensions.get('window').width;
+let heightDevice = Dimensions.get('window').height;
 export const styles = StyleSheet.create({
    view_container: {
       flex: 1,
@@ -11,26 +12,29 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
    },
    info_in_landing_detail: {
-      marginTop: Dimensions.get('window').height < 700 ? 180 : 250,
+      marginTop: heightDevice < 700 ? 80 : 100,
       marginLeft: 28,
    },
-   maskImageCatg: {
+   maskImageDetailArticle: {
       backgroundColor: 'rgba(0, 0, 0, 0.3)',
-      borderRadius: 18,
    },
    description_section: {
-      paddingHorizontal: 26,
-      marginTop: 28,
-      borderTopLeftRadius: 50,
-      borderTopRightRadius: 50,
-      height: Dimensions.get('window').height < 700 ? '100%' : 480,
+      paddingHorizontal: 24,
+      height: heightDevice < 700 ? 440 : 630,
       backgroundColor: Colors.white,
    },
-   boutton_add_favorite: {
+   view_round_button_detail_article: {
       position: 'absolute',
-      right: 75,
-      top: -25,
-      backgroundColor: Colors.whiteRose,
+      top: -28,
+      right: 32,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+   },
+   boutton_add_favorite: {
+      backgroundColor: Colors.greenWhite,
+      marginRight: 8,
       width: 50,
       height: 50,
       padding: 10,
@@ -38,38 +42,51 @@ export const styles = StyleSheet.create({
    },
    label_info_article: {
       fontWeight: 'bold',
-      color: Colors.violet,
-      fontSize: 18,
+      color: Colors.greenAvg,
+      fontSize: 22,
    },
    value_info_article: {
-      fontSize: 16,
+      fontSize: 20,
    },
    boutton_info_article: {
-      position: 'absolute',
-      right: 15,
-      top: -25,
-      backgroundColor: Colors.whiteRose,
-      width: 50,
-      height: 50,
+      backgroundColor: Colors.greenWhite,
+      width: 52,
+      height: 52,
       padding: 10,
-      borderRadius: 50,
+      borderRadius: 52,
    },
    all_button_in_detail_screen: {
-      marginTop: Dimensions.get('window').height < 700 ? 10 : 12,
-      marginBottom: Dimensions.get('window').height < 700 ? 14 : 46,
+      marginTop: heightDevice < 700 ? 10 : 12,
+      marginBottom: heightDevice < 700 ? 0 : 26,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-around',
    },
    button_in_detail: {
       textAlign: 'center',
-      backgroundColor: Colors.whiteRose,
+      backgroundColor: Colors.greenWhite,
       paddingVertical: 10,
       width: 140,
       paddingHorizontal: 24,
-      color: Colors.violet,
+      color: Colors.greenAvg,
       borderRadius: 20,
       fontSize: 21,
       fontWeight: '800',
+   },
+   view_bottom_sheet: {
+      backgroundColor: '#f2f2f2',
+   },
+   view_in_bottomsheet: {
+      display: 'flex',
+      flexDirection: 'column',
+      flex: 1,
+      backgroundColor: '#f2f2f2',
+      marginHorizontal: 8,
+      paddingHorizontal: 18,
+   },
+   view_one_item_in_bottomsheet: {
+      display: 'flex',
+      flexDirection: 'column',
+      marginBottom: 18,
    },
 });

@@ -1,12 +1,13 @@
 import { Colors } from '_theme/Colors';
 import { StyleSheet, Dimensions } from 'react-native';
 
+const heightDevice = Dimensions.get('window').height;
+const widthDevice = Dimensions.get('window').width;
 export const styles = StyleSheet.create({
    view_container: {
       flex: 1,
-      marginTop: 30,
       marginBottom: 50,
-      paddingTop: 20,
+      paddingTop: 18,
       paddingHorizontal: 15,
       backgroundColor: Colors.background,
    },
@@ -16,14 +17,14 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
    },
    banniere_image: {
-      width: Dimensions.get('window').width < 370 ? 300 : 350,
-      height: Dimensions.get('window').height < 700 ? 270 : 320,
+      width: widthDevice < 370 ? 280 : 350,
+      height: heightDevice < 700 ? 180 : 320,
    },
    view_content_about: {
-      marginVertical: 28,
+      marginVertical: 20,
    },
    button_link_about: {
-      paddingVertical: 22,
+      paddingVertical: 20,
       marginHorizontal: 8,
       borderTopWidth: 1,
       fontSize: 16,

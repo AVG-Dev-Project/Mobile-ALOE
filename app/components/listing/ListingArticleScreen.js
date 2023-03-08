@@ -1,59 +1,70 @@
 import {
    View,
    Text,
+   StyleSheet,
    FlatList,
    Image,
-   useWindowDimensions,
-   StyleSheet,
    SafeAreaView,
-   ToastAndroid,
    TouchableOpacity,
+   useWindowDimensions,
 } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
 import RenderHtml from 'react-native-render-html';
-import React, {
-   useCallback,
-   useEffect,
-   useState,
-   useMemo,
-   useRef,
-} from 'react';
-import {
-   nameStackNavigation as nameNav,
-   cutTextWithBalise,
-   checkAndsendMailFromLocalDBToAPI,
-} from '_utils';
-import { styles } from './styles';
+import { nameStackNavigation as nameNav } from '_utils/constante/NameStackNavigation';
+import { styles } from './stylesArticle';
 import { Icon } from '@rneui/themed';
-import { useSelector, useDispatch } from 'react-redux';
-import HeaderGlobal from '_components/header/HeaderGlobal';
-import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
+import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
+import { cutTextWithBalise } from '_utils';
 import { addFavoris } from '_utils/redux/actions/action_creators';
+import { useFocusEffect } from '@react-navigation/native';
 
-export default function Favoris({ navigation, route }) {
-   const listOfIdFavorites = useSelector((selector) => selector.loi.favoris);
-   const allArticles = useSelector((selector) => selector.loi.articles);
+export default function ListingArticle({ navigation, route }) {
+   //all data
    const dispatch = useDispatch();
-   const { width, height } = useWindowDimensions();
+   const { width } = useWindowDimensions();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   const isUserNetworkActive = useSelector(
-      (selector) => selector.fonctionnality.isNetworkActive
+   const allFavoriteIdFromStore = useSelector(
+      (selector) => selector.loi.favoris
    );
-   const isUserConnectedToInternet = useSelector(
-      (selector) => selector.fonctionnality.isConnectedToInternet
-   );
-   const snapPoints = useMemo(
-      () => (height < 700 ? [0, '40%'] : [0, '28%']),
-      []
-   );
-   const dataForFlatList = allArticles.filter((article) =>
-      listOfIdFavorites.includes(article.id)
+   const dataFromParams = route.params.allArticleRelatedTotheContenu;
+   const [articleList, setArticleList] = useState(
+      dataFromParams.map((item) => {
+         return {
+            ...item,
+            isFavorite: allFavoriteIdFromStore.includes(item.id),
+         };
+      })
    );
 
-   //all refs
-   const bottomSheetRef = useRef(null);
+   const tagsStyles = {
+      p: {
+         width: '40%',
+         fontSize: width < 370 ? 12 : 14,
+      },
+   };
+
+   //all function
+   const sourceHTML = (data) => {
+      const source = {
+         html: data,
+      };
+      return source;
+   };
+
+   const handleToogleIsFavorite = (id) => {
+      dispatch(addFavoris(id));
+      // Mettre à jour la propriété isFavorite de l'article avec l'ID donné
+      setArticleList((prevList) =>
+         prevList.map((item) =>
+            item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
+         )
+      );
+   };
+
+   //all effects
 
    //all components
    const _renderItem = useCallback(({ item }) => {
@@ -73,8 +84,8 @@ export default function Favoris({ navigation, route }) {
                <Image
                   source={require('_images/book_loi.jpg')}
                   style={{
-                     width: width < 380 ? 100 : 140,
-                     height: 170,
+                     width: width < 380 ? 100 : 130,
+                     height: 160,
                      borderRadius: 16,
                   }}
                />
@@ -107,7 +118,7 @@ export default function Favoris({ navigation, route }) {
                      </Text>
                      <Text
                         style={{
-                           fontSize: width < 370 ? 10 : 14,
+                           fontSize: 12,
                            textDecorationLine: 'underline',
                         }}
                         numberOfLines={1}
@@ -165,28 +176,50 @@ export default function Favoris({ navigation, route }) {
                         }}
                      >
                         <Icon
-                           name={'sentiment-very-satisfied'}
-                           color={Colors.greenAvg}
+                           name={
+                              item.isFavorite
+                                 ? 'sentiment-very-satisfied'
+                                 : 'sentiment-very-dissatisfied'
+                           }
+                           color={
+                              item.isFavorite
+                                 ? Colors.greenAvg
+                                 : Colors.redError
+                           }
                            size={18}
                         />
-                        <Text
-                           style={{
-                              fontSize: 14,
-                              marginLeft: 2,
-                           }}
-                        >
-                           {langueActual === 'fr' ? 'Favoris' : 'Ankafizina'}
-                        </Text>
+                        {item.isFavorite ? (
+                           <Text
+                              style={{
+                                 fontSize: 14,
+                                 marginLeft: 2,
+                              }}
+                           >
+                              {langueActual === 'fr' ? 'Favoris' : 'Ankafizina'}
+                           </Text>
+                        ) : (
+                           <Text
+                              style={{
+                                 fontSize: 14,
+                                 marginLeft: 2,
+                              }}
+                           >
+                              {langueActual === 'fr'
+                                 ? 'Pas dans favoris'
+                                 : 'Tsy mbola anaty ankafizina'}
+                           </Text>
+                        )}
                      </View>
                      <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => {
-                           dispatch(addFavoris(item.id));
-                           showToastFavorite(item.numero);
+                           handleToogleIsFavorite(item.id);
                         }}
                      >
                         <Icon
-                           name={'favorite'}
+                           name={
+                              item.isFavorite ? 'favorite' : 'favorite-border'
+                           }
                            color={Colors.redError}
                            size={28}
                         />
@@ -198,116 +231,14 @@ export default function Favoris({ navigation, route }) {
       );
    }, []);
 
-   //all function
-   const sourceHTML = (data) => {
-      const source = {
-         html: data,
-      };
-      return source;
-   };
-
-   const showToastFavorite = (id) => {
-      ToastAndroid.show(
-         `Vous avez enlevé l'article n° ${id} dans votre favoris`,
-         ToastAndroid.SHORT
-      );
-   };
-
-   const tagsStyles = {
-      p: {
-         width: '40%',
-         fontSize: width < 370 ? 12 : 14,
-      },
-   };
-
-   //all effects
-   useEffect(() => {
-      if (isUserConnectedToInternet && isUserNetworkActive) {
-         checkAndsendMailFromLocalDBToAPI();
-      }
-   }, [isUserNetworkActive, isUserConnectedToInternet]);
-
    const _idKeyExtractor = (item, index) =>
       item?.id == null ? index.toString() : item.id.toString();
 
    return (
       <View style={styles.view_container}>
-         <SafeAreaView>
+         <SafeAreaView style={styles.container_safe}>
             <FlatList
-               ListHeaderComponent={
-                  <View>
-                     <View style={styles.head_content}>
-                        <HeaderGlobal
-                           navigation={navigation}
-                           bottomSheetRef={bottomSheetRef}
-                        />
-                     </View>
-
-                     <View style={styles.landing_screen}>
-                        <Text style={styles.text_landing_screen}>
-                           {langueActual === 'fr'
-                              ? 'Vos favoris'
-                              : 'Ireo ankafizinao'}
-                        </Text>
-                        <View style={styles.content_in_landing_screen}>
-                           <Image
-                              style={styles.icon_in_content_landing}
-                              source={require('_images/book_loi.jpg')}
-                           />
-                           <View
-                              style={{
-                                 display: 'flex',
-                                 flexDirection: 'column',
-                                 alignItems: 'flex-start',
-                              }}
-                           >
-                              <Text
-                                 style={{ fontSize: 16, fontWeight: 'bold' }}
-                              >
-                                 {langueActual === 'fr'
-                                    ? 'Favoris'
-                                    : 'Ankafizina'}
-                              </Text>
-                              <Text>
-                                 {langueActual === 'fr'
-                                    ? 'Regardez-les encore'
-                                    : 'Jereo ihany izy ireo'}{' '}
-                              </Text>
-                           </View>
-                           <Icon
-                              name={'autorenew'}
-                              color={Colors.white}
-                              size={38}
-                           />
-                        </View>
-                     </View>
-                  </View>
-               }
-               ListEmptyComponent={
-                  <View
-                     style={{
-                        display: 'flex',
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        borderColor: Colors.redError,
-                        padding: 18,
-                        marginVertical: width < 370 ? 20 : 28,
-                     }}
-                  >
-                     <Text
-                        style={{
-                           textAlign: 'center',
-                           color: Colors.redError,
-                           fontSize: width < 370 ? 18 : 30,
-                        }}
-                     >
-                        {langueActual === 'fr'
-                           ? "Vous n'avez pas de favoris"
-                           : 'Tsy misy ny ankafizinao'}
-                     </Text>
-                  </View>
-               }
-               data={dataForFlatList}
+               data={articleList}
                key={'_'}
                keyExtractor={_idKeyExtractor}
                renderItem={_renderItem}
@@ -319,12 +250,33 @@ export default function Favoris({ navigation, route }) {
                })}
                initialNumToRender={5}
                maxToRenderPerBatch={3}
+               ListEmptyComponent={
+                  <View
+                     style={{
+                        display: 'flex',
+                        borderWidth: 1,
+                        padding: 16,
+                        marginVertical: 28,
+                        borderRadius: 19,
+                        borderColor: Colors.redError,
+                     }}
+                  >
+                     <Text
+                        style={{
+                           textAlign: 'center',
+                           fontSize: width < 370 ? 22 : 28,
+                           color: Colors.redError,
+                        }}
+                     >
+                        {langueActual === 'fr'
+                           ? "Pas d'articles"
+                           : 'Tsy misy lahatsoratra'}
+                     </Text>
+                  </View>
+               }
+               extraData={articleList}
             />
          </SafeAreaView>
-         <BottomSheetCustom
-            bottomSheetRef={bottomSheetRef}
-            snapPoints={snapPoints}
-         />
       </View>
    );
 }

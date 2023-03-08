@@ -2,17 +2,33 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const storeDataToLocalStorage = async (key, value) => {
    try {
-      const jsonValue = JSON.stringify(value);
-      await AsyncStorage.setItem(`@${key}`, jsonValue);
+      await AsyncStorage.setItem(`@${key}`, value);
    } catch (e) {
       console.log('error in function set async storage: ', e);
    }
 };
 
+export const storeFavoriteIdToLocalStorage = async (value) => {
+   try {
+      let valueString = JSON.stringify(value);
+      await AsyncStorage.setItem(`@favorite`, valueString);
+   } catch (e) {
+      console.log('error in function set async storage: ', e);
+   }
+};
+
+export const getFavoriteFromLocalStorage = async () => {
+   try {
+      const value = await AsyncStorage.getItem(`@favorite`);
+      return JSON.parse(value);
+   } catch (e) {
+      console.log('error in function get from async storage: ', e);
+   }
+};
+
 export const getDataFromLocalStorage = async (key) => {
    try {
-      const jsonValue = await AsyncStorage.getItem(`@${key}`);
-      let value = jsonValue != null ? JSON.parse(jsonValue) : null;
+      const value = await AsyncStorage.getItem(`@${key}`);
       return value;
    } catch (e) {
       console.log('error in function get from async storage: ', e);
@@ -22,7 +38,7 @@ export const getDataFromLocalStorage = async (key) => {
 export const removeInLocalStorage = async (key) => {
    //const keys = [key1, key2];
    try {
-      await AsyncStorage.removeItem(key);
+      await AsyncStorage.removeItem(`@${key}`);
       //await AsyncStorage.multiRemove(keys);
    } catch (e) {
       console.log('error in function remove from async storage');

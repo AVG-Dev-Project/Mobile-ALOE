@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
 
-import { articleReducer } from './article_reducer';
+import { loiReducer } from './loi_reducer';
 import { functionnalityReducer } from './functionnality_reducer';
 
 export const reducer = combineReducers({
-   article: articleReducer,
+   loi: loiReducer,
    fonctionnality: functionnalityReducer,
 });

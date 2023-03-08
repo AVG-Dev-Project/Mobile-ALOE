@@ -4,12 +4,11 @@ import { nameStackNavigation as nameNav } from '_utils';
 /*tab Navitation (top and bottom both)*/
 import BottomBarTabs from '_components/navigation/tabs/BottomBarTabs';
 /*screen normal |screen indépendant à afficher|*/
-import { Welcome } from '_pages';
+import { Welcome, Doleance, DownloadData } from '_pages';
 import { configStack } from './configStack';
 import { useSelector, useDispatch } from 'react-redux';
-import Listing from '_components/listing/ListingScreen';
-// import ListingCatg from '_components/allCategories/ListingCatg';
-// import ListingTypes from '_components/allTypes/ListingTypes';
+import ListingArticle from '_components/listing/ListingArticleScreen';
+import ListingContenu from '_components/listing/ListingContenuScreen';
 import Detail from '_components/detail/DetailScreen';
 
 let Stack = createStackNavigator();
@@ -24,28 +23,20 @@ export default function StackNavigation() {
 
          <Stack.Group screenOptions={configStack.screenOptionsForHeaderShown}>
             <Stack.Screen
-               name={nameNav.listPage}
-               component={Listing}
+               name={nameNav.listArticle}
+               component={ListingArticle}
                options={({ route }) => ({
                   title: route.params.titleScreen,
                })}
             />
 
-            {/* <Stack.Screen
-               name={nameNav.listCategorie}
-               component={ListingCatg}
+            <Stack.Screen
+               name={nameNav.listContenu}
+               component={ListingContenu}
                options={({ route }) => ({
                   title: route.params.titleScreen,
                })}
-            /> */}
-
-            {/* <Stack.Screen
-               name={nameNav.listType}
-               component={ListingTypes}
-               options={({ route }) => ({
-                  title: route.params.titleScreen,
-               })}
-            /> */}
+            />
          </Stack.Group>
 
          <Stack.Group
@@ -58,12 +49,24 @@ export default function StackNavigation() {
                   title: route.params.titleScreen,
                })}
             />
+
+            <Stack.Screen
+               name={nameNav.doleance}
+               component={Doleance}
+               options={({ route }) => ({
+                  title: route.params.titleScreen,
+               })}
+            />
          </Stack.Group>
       </Stack.Navigator>
    ) : (
-      <Stack.Navigator initialRouteName={nameNav.login}>
+      <Stack.Navigator initialRouteName={nameNav.welcome}>
          <Stack.Group screenOptions={configStack.screenOptionsForHeaderDisable}>
             <Stack.Screen name={nameNav.welcome} component={Welcome} />
+            <Stack.Screen
+               name={nameNav.downloadData}
+               component={DownloadData}
+            />
          </Stack.Group>
       </Stack.Navigator>
    );
