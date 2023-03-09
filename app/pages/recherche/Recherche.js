@@ -16,6 +16,8 @@ import React, {
    useRef,
 } from 'react';
 import { styles } from './styles';
+import * as FileSystem from 'expo-file-system';
+import { Audio } from 'expo-av';
 import {
    nameStackNavigation as nameNav,
    filterArticleToListByContenu,
@@ -85,12 +87,41 @@ export default function Recherche({ navigation, route }) {
    );
    const allTypes = useSelector((selector) => selector.loi.types);
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
+   //state record
+   const [recording, setRecording] = useState(null);
+   const [isFetching, setIsFetching] = useState(false);
+   const [isRecording, setIsRecording] = useState(false);
+   const [query, setQuery] = useState('');
 
    //data from navigation
    let typeFromParams = route.params ? route.params.type : null;
    let thematiqueFromParams = route.params ? route.params.thematique : null;
    const [typeChecked, setTypeChecked] = useState(null);
    const [thematiqueChecked, setThematiqueChecked] = useState(null);
+
+   //config record
+   const recordingOptions = {
+      // android not currently in use. Not getting results from speech to text with .m4a
+      // but parameters are required
+      android: {
+         extension: '.m4a',
+         outputFormat: Audio.RECORDING_OPTION_ANDROID_OUTPUT_FORMAT_MPEG_4,
+         audioEncoder: Audio.RECORDING_OPTION_ANDROID_AUDIO_ENCODER_AAC,
+         sampleRate: 44100,
+         numberOfChannels: 2,
+         bitRate: 128000,
+      },
+      ios: {
+         extension: '.wav',
+         audioQuality: Audio.RECORDING_OPTION_IOS_AUDIO_QUALITY_HIGH,
+         sampleRate: 44100,
+         numberOfChannels: 1,
+         bitRate: 128000,
+         linearPCMBitDepth: 16,
+         linearPCMIsBigEndian: false,
+         linearPCMIsFloat: false,
+      },
+   };
 
    //all refs
    const bottomSheetTypeRef = useRef(null);
@@ -187,6 +218,97 @@ export default function Recherche({ navigation, route }) {
    };
    const openBottomSheet = (ref) => {
       return ref.current.snapTo(1);
+   };
+
+   //recording functions
+   const resetRecording = () => {
+      deleteRecordingFile();
+      setRecording(null);
+   };
+
+   const deleteRecordingFile = async () => {
+      try {
+         const info = await FileSystem.getInfoAsync(recording.getURI());
+         await FileSystem.deleteAsync(info.uri);
+      } catch (error) {
+         console.log('There was an error deleting recording file', error);
+      }
+   };
+
+   const stopRecording = async () => {
+      setIsRecording(false);
+      try {
+         await recording.stopAndUnloadAsync();
+      } catch (error) {
+         // Do nothing -- we are already unloaded.
+         console.log('Error on stop');
+      }
+   };
+
+   const startRecording = async () => {
+      setIsRecording(true);
+      console.log('recording permissions ....');
+      await Audio.requestPermissionsAsync();
+      await Audio.setAudioModeAsync({
+         allowsRecordingIOS: true,
+         playsInSilentModeIOS: true,
+         shouldDuckAndroid: true,
+         playThroughEarpieceAndroid: true,
+      });
+      console.log('recording start ...........');
+      const recording = new Audio.Recording();
+
+      try {
+         await recording.prepareToRecordAsync(recordingOptions);
+         await recording.startAsync();
+      } catch (error) {
+         console.log('error on start record ', error);
+         stopRecording();
+      }
+
+      setRecording(recording);
+   };
+
+   const getTranscription = async () => {
+      setIsFetching(true);
+      try {
+         const info = await FileSystem.getInfoAsync(recording.getURI());
+         console.log(`FILE INFO: ${JSON.stringify(info)}`);
+         const resumable = FileSystem.createDownloadResumable(
+            info.uri,
+            FileSystem.documentDirectory + 'audio.m4a',
+            {},
+            (progr) => {
+               const progress =
+                  progr.totalBytesWritten / progr.totalBytesExpectedToWrite;
+               console.log('progres : ', progress);
+            }
+         );
+
+         await resumable.downloadAsync();
+         console.log('download finish');
+         /*const uri = info.uri;
+         const formData = new FormData();
+         formData.append('file', {
+            uri,
+            type: 'audio/x-wav',
+            name: 'speech2text',
+         });*/
+      } catch (error) {
+         console.log('There was an error reading file', error);
+         stopRecording();
+         resetRecording();
+      }
+      setIsFetching(false);
+   };
+
+   const handleOnPressIn = () => {
+      startRecording();
+   };
+
+   const handleOnPressOut = () => {
+      stopRecording();
+      getTranscription();
    };
 
    //all render
@@ -316,7 +438,11 @@ export default function Recherche({ navigation, route }) {
                               alignItems: 'center',
                            }}
                         >
-                           <TouchableOpacity activeOpacity={0.7}>
+                           <TouchableOpacity
+                              activeOpacity={0.7}
+                              onPressIn={handleOnPressIn}
+                              onPressOut={handleOnPressOut}
+                           >
                               <Icon
                                  name={'mic'}
                                  color={Colors.greenAvg}
