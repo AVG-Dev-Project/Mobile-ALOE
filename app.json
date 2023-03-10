@@ -25,7 +25,12 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "aloe.apk"
+      "package": "aloe.apk",
+      "config": {
+            "googleMaps": {
+               "apiKey": "AIzaSyCfeV-dI5JYOl39mJDqsyL8xtRykQHU29I"
+            }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

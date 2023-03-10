@@ -9,4 +9,5 @@ export const nameStackNavigation = {
    about: 'About',
    doleance: 'Doleance',
    downloadData: 'DownloadData',
+   information: 'Information',
 };
