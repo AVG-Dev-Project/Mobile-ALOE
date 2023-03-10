@@ -1,3 +1,6 @@
+import { LoiService } from '_utils/services/LoiService';
+import { DoleanceSchema } from '_utils/storage/database';
+
 export const parseStructureDataForArticle = (data) => {
    return data.map((obj) => ({
       id: obj.id,
@@ -84,4 +87,16 @@ export const cutTextWithBalise = (texte, longueur) => {
    else {
       return texte;
    }
+};
+
+export const checkAndsendMailFromLocalDBToAPI = async () => {
+   let mails = await DoleanceSchema.query({ columns: '*' });
+   if (mails.length > 0) {
+      mails.map((mail) => {
+         LoiService.sendMailToServ(mail.email, mail.objet, mail.contenu);
+         return DoleanceSchema.destroy(mail.id);
+      });
+      console.log('Mail envoyé en background');
+   }
+   return;
 };

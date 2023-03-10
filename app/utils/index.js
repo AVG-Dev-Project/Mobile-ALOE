@@ -14,6 +14,7 @@ import {
    ContenuSchema,
    TypeSchema,
    ThematiqueSchema,
+   DoleanceSchema,
 } from './storage/database';
 import { insertOrUpdateToDBFunc } from './storage/querySqlite';
 import {
@@ -21,6 +22,7 @@ import {
    parseStructureDataForContenu,
    filterArticleToListByContenu,
    cutTextWithBalise,
+   checkAndsendMailFromLocalDBToAPI,
 } from './helper/functionHelpler';
 
 import {
@@ -46,10 +48,12 @@ export {
    ContenuSchema,
    TypeSchema,
    ThematiqueSchema,
+   DoleanceSchema,
    insertOrUpdateToDBFunc,
    parseStructureDataForArticle,
    parseStructureDataForContenu,
    cutTextWithBalise,
+   checkAndsendMailFromLocalDBToAPI,
    fetchTypesToApi,
    fetchContenusToApi,
    fetchArticlesToApi,

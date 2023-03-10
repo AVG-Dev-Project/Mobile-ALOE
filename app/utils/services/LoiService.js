@@ -1,5 +1,21 @@
 import { RouteAxios } from '_utils/services/urlAxios';
 
+function sendMailToServ(mail, objet, contenu) {
+   return RouteAxios.post(
+      '/doleance',
+      {
+         mail,
+         objet,
+         contenu,
+      },
+      {
+         headers: {
+            'Content-Type': 'application/json',
+         },
+      }
+   );
+}
+
 function getArticlesFromServ() {
    return RouteAxios.get('/article')
       .then((response) => {
@@ -45,4 +61,5 @@ export const LoiService = {
    getThematiqueFromServ,
    getTypeFromServ,
    getContenusFromServ,
+   sendMailToServ,
 };
