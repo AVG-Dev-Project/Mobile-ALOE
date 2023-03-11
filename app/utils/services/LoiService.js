@@ -1,4 +1,15 @@
-import { RouteAxios } from '_utils/services/urlAxios';
+import { RouteAxios, transcriptAxios } from '_utils/services/urlAxios';
+
+function speechToText(audioURL) {
+   return transcriptAxios
+      .post('/api/transcript', {
+         audioURL,
+      })
+      .then((res) => {
+         console.log(res);
+      })
+      .catch((e) => console.log('error service : ', e));
+}
 
 function sendMailToServ(mail, objet, contenu) {
    return RouteAxios.post(
@@ -62,4 +73,5 @@ export const LoiService = {
    getTypeFromServ,
    getContenusFromServ,
    sendMailToServ,
+   speechToText,
 };

@@ -27,6 +27,7 @@
       "expo-av": "~13.0.3",
       "expo-document-picker": "~11.0.1",
       "expo-file-system": "~15.1.1",
+      "expo-sharing": "~11.0.1",
       "expo-speech": "~11.0.0",
       "expo-sqlite": "~11.0.0",
       "expo-sqlite-orm": "^1.6.0",

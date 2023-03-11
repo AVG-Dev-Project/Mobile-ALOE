@@ -5,9 +5,14 @@ import { Platform } from 'react-native';
 //https://fakoy.e-commerce-mg.com/api/article
 //const uRI = 'https://fakoy.e-commerce-mg.com/api';
 const uRI = 'https://avg.e-commerce-mg.com/api';
+const transcuRI = 'https://transcription.onrender.com';
 
 const RouteAxios = Axios.create({
    baseURL: uRI,
 });
 
-export { RouteAxios, uRI };
+const transcriptAxios = Axios.create({
+   baseURL: transcuRI,
+});
+
+export { RouteAxios, uRI, transcriptAxios, transcuRI };

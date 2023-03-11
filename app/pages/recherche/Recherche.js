@@ -18,6 +18,7 @@ import React, {
 import { styles } from './styles';
 import * as FileSystem from 'expo-file-system';
 import { Audio } from 'expo-av';
+import * as Sharing from 'expo-sharing';
 import {
    nameStackNavigation as nameNav,
    filterArticleToListByContenu,
@@ -26,6 +27,7 @@ import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Colors } from '_theme/Colors';
+import { LoiService } from '_utils';
 
 //component custom
 const LabelCustomBottomSheet = ({ text, filterBy, reference }) => {
@@ -272,9 +274,12 @@ export default function Recherche({ navigation, route }) {
    const getTranscription = async () => {
       setIsFetching(true);
       try {
-         const info = await FileSystem.getInfoAsync(recording.getURI());
-         console.log(`FILE INFO: ${JSON.stringify(info)}`);
-         const resumable = FileSystem.createDownloadResumable(
+         const info = recording.getURI();
+         //console.log(`FILE INFO: ${info}`);
+         await Sharing.shareAsync(info);
+         /*await LoiService.speechToText(info.uri);
+         console.log('transcription function passé.');*/
+         /*const resumable = FileSystem.createDownloadResumable(
             info.uri,
             FileSystem.documentDirectory + 'audio.m4a',
             {},
@@ -286,7 +291,7 @@ export default function Recherche({ navigation, route }) {
          );
 
          await resumable.downloadAsync();
-         console.log('download finish');
+         console.log('download finish');*/
          /*const uri = info.uri;
          const formData = new FormData();
          formData.append('file', {
