@@ -1,23 +1,34 @@
-import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+import {
+   View,
+   Text,
+   Image,
+   TouchableOpacity,
+   StyleSheet,
+   Linking,
+   ScrollView,
+   useWindowDimensions,
+} from 'react-native';
 import * as Location from 'expo-location';
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Colors } from '_theme/Colors';
 import { useDispatch, useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { styles } from './styles';
 import { nameStackNavigation as nameNav } from '_utils';
+import { Icon, Button } from '@rneui/base';
 
 export default function Information({ navigation }) {
-
    //all states
    const [position, setPosition] = useState({ longitude: 0.0, latitude: 0.0 });
+   const { width, height } = useWindowDimensions();
    const [errorMsgLocation, setErrorMsgLocation] = useState(null);
    const dispatch = useDispatch();
 
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   console.log(height);
 
    //all effects
    useEffect(() => {
@@ -40,27 +51,192 @@ export default function Information({ navigation }) {
    return (
       <ScrollView style={{ backgroundColor: Colors.background }}>
          <View style={styles.view_container}>
-            {/*
-                <MapView
-                    provider={PROVIDER_GOOGLE}
-                    style={[styles.map, StyleSheet.absoluteFillObject]}
-                    initialRegion={{
-                    latitude: position.latitude,
-                    longitude: position.longitude,
-                    latitudeDelta: 0.0222,
-                    longitudeDelta: 0.0021,
-                    }}
-                    showsUserLocation={true}
-                    userLocationAnnotationTitle="AVG est ici"
-                    followsUserLocation={true}
-                >
-                    <Marker
-                        key={'AVG'}
-                        coordinate={position}
-                        title={"Emplacement de l'AVG"}
-                    />
-                </MapView>
-            */}
+            <View style={styles.view_head_information}>
+               <Image
+                  source={require('_images/book_loi.jpg')}
+                  style={{
+                     width: 60,
+                     height: 60,
+                     borderRadius: 60,
+                  }}
+               />
+               <View
+                  style={{
+                     display: 'flex',
+                     flexDirection: 'column',
+                     marginLeft: 20,
+                     justifyContent: 'center',
+                     alignItems: 'flex-start',
+                  }}
+               >
+                  <Text
+                     style={{
+                        fontWeight: 'bold',
+                        fontSize: width < 370 ? 18 : 26,
+                        color: Colors.greenAvg,
+                     }}
+                  >
+                     Alliance Voahary Gasy
+                  </Text>
+                  <View style={{ display: 'flex', flexDirection: 'row' }}>
+                     <Icon name={'place'} color={Colors.black} size={20} />
+                     <Text>Madagascar</Text>
+                  </View>
+               </View>
+            </View>
+
+            <MapView
+               provider={PROVIDER_GOOGLE}
+               style={[styles.map]}
+               initialRegion={{
+                  latitude: position.latitude,
+                  longitude: position.longitude,
+                  latitudeDelta: 70.2,
+                  longitudeDelta: 1.15,
+               }}
+               showsUserLocation={true}
+               userLocationAnnotationTitle="Vous êtes ici"
+               followsUserLocation={true}
+            >
+               <Marker
+                  key={'AVG'}
+                  coordinate={{ latitude: -18.911, longitude: 47.54379 }}
+                  title={'AVG est ici'}
+               />
+            </MapView>
+
+            <View style={styles.view_adresse}>
+               <Text style={{ fontSize: 18, textDecorationLine: 'underline' }}>
+                  Adresses:
+               </Text>
+               <View>
+                  <Text style={styles.txt_label}>SIEGE ANTANANARIVO</Text>
+                  <Text style={styles.txt_value}>
+                     Lot II Andrianarivo-Antananarivo 101-Madagascar
+                  </Text>
+               </View>
+
+               <View>
+                  <Text style={styles.txt_label}>BUREAU REGIONAL BOENY</Text>
+                  <Text style={styles.txt_value}>
+                     Studio n°2, 1er étage de l'Immeuble NY HAVANA, Rue
+                     Paul-Mahajanga 401
+                  </Text>
+               </View>
+
+               <View>
+                  <Text style={styles.txt_label}>BUREAU MORONDAVA</Text>
+                  <Text style={styles.txt_value}>
+                     Andakabe-Immeuble NY HAVANA- Morondava 619
+                  </Text>
+               </View>
+
+               <View>
+                  <Text style={styles.txt_label}>BUREAU MAROANTSETRA</Text>
+                  <Text style={styles.txt_value}>
+                     Immeuble SAF FJKM Ankiakandrefana-Maroantsetra 512
+                  </Text>
+               </View>
+            </View>
+
+            <View style={styles.all_buttons_links}>
+               <Button
+                  title="Call (512)"
+                  icon={{
+                     name: 'call',
+                     type: 'material',
+                     size: 24,
+                     color: Colors.white,
+                  }}
+                  titleStyle={{ fontSize: 16 }}
+                  buttonStyle={{
+                     borderRadius: 15,
+                     backgroundColor: Colors.greenAvg,
+                  }}
+                  containerStyle={{
+                     width: 150,
+                     marginVertical: 5,
+                  }}
+                  onPress={() => {
+                     Linking.openURL('tel:512');
+                  }}
+               />
+               <Button
+                  title="Email"
+                  icon={{
+                     name: 'email',
+                     type: 'material',
+                     size: 24,
+                     color: Colors.white,
+                  }}
+                  titleStyle={{ fontSize: 16 }}
+                  buttonStyle={{
+                     borderRadius: 15,
+                     backgroundColor: Colors.greenAvg,
+                  }}
+                  containerStyle={{
+                     width: 150,
+                     marginVertical: 5,
+                  }}
+                  onPress={() => {
+                     Linking.openURL(
+                        'mailto:avg.communication@outlook.com?subject=Information'
+                     );
+                  }}
+               />
+            </View>
+
+            <View
+               style={[
+                  styles.all_buttons_links,
+                  { marginBottom: height < 700 ? 20 : 0 },
+               ]}
+            >
+               <Button
+                  title="Facebook"
+                  icon={{
+                     name: 'language',
+                     type: 'material',
+                     size: 24,
+                     color: Colors.white,
+                  }}
+                  titleStyle={{ fontSize: 16 }}
+                  buttonStyle={{
+                     borderRadius: 15,
+                     backgroundColor: Colors.greenAvg,
+                  }}
+                  containerStyle={{
+                     width: 150,
+                     marginVertical: 5,
+                  }}
+                  onPress={() => {
+                     Linking.openURL(
+                        'https://www.facebook.com/1968478726564976'
+                     );
+                  }}
+               />
+               <Button
+                  title="Twitter"
+                  icon={{
+                     name: 'language',
+                     type: 'material',
+                     size: 24,
+                     color: Colors.white,
+                  }}
+                  titleStyle={{ fontSize: 16 }}
+                  buttonStyle={{
+                     borderRadius: 15,
+                     backgroundColor: Colors.greenAvg,
+                  }}
+                  containerStyle={{
+                     width: 150,
+                     marginVertical: 5,
+                  }}
+                  onPress={() => {
+                     Linking.openURL('https://twitter.com/AllVoaharyGasy');
+                  }}
+               />
+            </View>
          </View>
       </ScrollView>
    );
