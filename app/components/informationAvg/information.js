@@ -28,7 +28,6 @@ export default function Information({ navigation }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   console.log(height);
 
    //all effects
    useEffect(() => {
