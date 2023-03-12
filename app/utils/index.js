@@ -30,7 +30,8 @@ import {
    fetchArticlesToApi,
    fetchThematiquesToApi,
    fetchContenusToApi,
-   fetchDataToLocalDatabase,
+   fetchArtiContenuToLocalDatabase,
+   fetchTypeThemToLocalDatabase,
 } from './helper/functionFetching';
 
 export {
@@ -58,6 +59,7 @@ export {
    fetchContenusToApi,
    fetchArticlesToApi,
    fetchThematiquesToApi,
-   fetchDataToLocalDatabase,
+   fetchArtiContenuToLocalDatabase,
+   fetchTypeThemToLocalDatabase,
    filterArticleToListByContenu,
 };

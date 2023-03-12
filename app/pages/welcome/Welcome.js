@@ -27,7 +27,8 @@ import {
    fetchThematiquesToApi,
    fetchContenusToApi,
    getFavoriteFromLocalStorage,
-   fetchDataToLocalDatabase,
+   fetchArtiContenuToLocalDatabase,
+   fetchTypeThemToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
 } from '_utils';
 
@@ -69,7 +70,8 @@ export default function Welcome({ navigation }) {
             dispatch(addFavoris(res));
          }
       });
-      fetchDataToLocalDatabase(dispatch);
+      fetchArtiContenuToLocalDatabase(dispatch);
+      fetchTypeThemToLocalDatabase(dispatch);
       setTimeout(() => {
          setIsDataLoaded(false);
          dispatch(getStarted());

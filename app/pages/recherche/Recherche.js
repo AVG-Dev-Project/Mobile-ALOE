@@ -88,6 +88,12 @@ export default function Recherche({ navigation, route }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const isUserNetworkActive = useSelector(
+      (selector) => selector.fonctionnality.isNetworkActive
+   );
+   const isUserConnectedToInternet = useSelector(
+      (selector) => selector.fonctionnality.isConnectedToInternet
+   );
    const allTypes = useSelector((selector) => selector.loi.types);
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
 
@@ -462,8 +468,11 @@ export default function Recherche({ navigation, route }) {
                   offset: data.length * index,
                   index,
                })}
-               initialNumToRender={5}
                maxToRenderPerBatch={3}
+               onEndReachedThreshold={1}
+               onEndReached={() => {
+                  console.log('on end reached');
+               }}
             />
             {activityIndicator()}
          </SafeAreaView>

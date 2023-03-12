@@ -45,7 +45,7 @@ export const fetchTypesToApi = async () => {
    return insertOrUpdateToDBFunc('database', 'type', results);
 };
 
-export const fetchDataToLocalDatabase = (dispatcher) => {
+export const fetchArtiContenuToLocalDatabase = (dispatcher) => {
    //article
    ArticleSchema.query({ columns: '*' }).then((results) => {
       dispatcher(getAllArticles(results));
@@ -54,6 +54,9 @@ export const fetchDataToLocalDatabase = (dispatcher) => {
    ContenuSchema.query({ columns: '*' }).then((results) => {
       dispatcher(getAllContenus(results));
    });
+};
+
+export const fetchTypeThemToLocalDatabase = (dispatcher) => {
    //thematique
    ThematiqueSchema.query({ columns: '*' }).then((results) => {
       dispatcher(getAllThematiques(results));

@@ -30,7 +30,8 @@ import {
    fetchArticlesToApi,
    fetchContenusToApi,
    fetchThematiquesToApi,
-   fetchDataToLocalDatabase,
+   fetchArtiContenuToLocalDatabase,
+   fetchTypeThemToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
 } from '_utils';
 import styles from './styles';
@@ -75,7 +76,8 @@ export default function DownloadData({ navigation }) {
             dispatch(addFavoris(res));
          }
       });
-      fetchDataToLocalDatabase(dispatch);
+      fetchArtiContenuToLocalDatabase(dispatch);
+      fetchTypeThemToLocalDatabase(dispatch);
       setTimeout(() => {
          setIsDataLoaded(false);
          dispatch(getStarted());
