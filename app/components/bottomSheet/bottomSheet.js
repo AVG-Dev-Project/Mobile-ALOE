@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import {
    View,
    Text,
@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '@rneui/themed';
-import BottomSheet from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { useDispatch } from 'react-redux';
 import { changeLanguage } from '_utils/redux/actions/action_creators';
 import { Colors } from '_theme/Colors';
@@ -29,9 +29,16 @@ export default function BottomSheetCustom({ bottomSheetRef, snapPoints }) {
       bottomSheetRef.current.close();
    }, []);
 
+   //components
+   const renderBackDrop = useCallback(
+      (props) => <BottomSheetBackdrop {...props} opacity={0.6} />,
+      []
+   );
+
    return (
       <BottomSheet
          ref={bottomSheetRef}
+         backdropComponent={renderBackDrop}
          index={1}
          snapPoints={snapPoints}
          style={styles.view_bottom_sheet}
