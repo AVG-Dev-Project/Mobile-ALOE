@@ -3,18 +3,19 @@ import {
    Text,
    FlatList,
    SafeAreaView,
-   Dimensions,
+   useWindowDimensions,
    TextInput,
+   ActivityIndicator,
    TouchableOpacity,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import {
-   Menu,
-   MenuOptions,
-   MenuOption,
-   MenuTrigger,
-} from 'react-native-popup-menu';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+   useCallback,
+   useEffect,
+   useState,
+   useMemo,
+   useRef,
+} from 'react';
 import { styles } from './styles';
 import {
    nameStackNavigation as nameNav,
@@ -22,26 +23,30 @@ import {
 } from '_utils';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { Colors } from '_theme/Colors';
-import { addFavoris } from '_utils/redux/actions/action_creators';
 
 //component custom
-const MenuOptionCustom = ({ text }) => {
+const LabelCustomBottomSheet = ({ text, filterBy, reference }) => {
    return (
-      <View
+      <TouchableOpacity
+         onPress={() => {
+            filterBy(text);
+            reference.current.close();
+         }}
          style={{
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'flex-start',
-            paddingVertical: 4,
+            paddingVertical: 12,
          }}
       >
          <Icon name={'category'} color={Colors.black} size={18} />
          <Text style={{ fontSize: 22, marginLeft: 8 }}>
             {text?.substring(0, 16)}
          </Text>
-      </View>
+      </TouchableOpacity>
    );
 };
 
@@ -49,10 +54,13 @@ const MenuOptionCustom = ({ text }) => {
 const filterGlobal = (array, theme, type, query) => {
    let res = theme === null && type === null && query === null ? [] : array;
 
-   if (theme) {
+   if (type === 'tout' || theme === 'tout') {
+      res = array;
+   }
+   if (theme && theme !== 'tout') {
       res = res.filter((_contenu) => _contenu.thematique_nom_fr === theme);
    }
-   if (type) {
+   if (type && type !== 'tout') {
       res = res.filter((_contenu) => _contenu.type_nom_fr === type);
    }
    if (query) {
@@ -68,20 +76,37 @@ export default function Recherche({ navigation, route }) {
    //all data
    const dispatch = useDispatch();
    const [valueForSearch, setValueForSearch] = useState('');
-   const widthDevice = Dimensions.get('window').width;
+   const [textFromInputSearch, setTextFromsetValueForSearch] = useState('');
+   const { width, height } = useWindowDimensions();
+   const snapPoints = useMemo(
+      () => (height < 700 ? [-1, '70%'] : [-1, '60%']),
+      []
+   );
    const allArticles = useSelector((selector) => selector.loi.articles);
    const allContenus = useSelector((selector) => selector.loi.contenus);
    const [allContenusFilter, setAllContenusFilter] = useState([]);
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const isUserNetworkActive = useSelector(
+      (selector) => selector.fonctionnality.isNetworkActive
+   );
+   const isUserConnectedToInternet = useSelector(
+      (selector) => selector.fonctionnality.isConnectedToInternet
+   );
    const allTypes = useSelector((selector) => selector.loi.types);
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
+
    //data from navigation
    let typeFromParams = route.params ? route.params.type : null;
    let thematiqueFromParams = route.params ? route.params.thematique : null;
    const [typeChecked, setTypeChecked] = useState(null);
    const [thematiqueChecked, setThematiqueChecked] = useState(null);
+   const [isSearch, setIsSearch] = useState(false);
+
+   //all refs
+   const bottomSheetTypeRef = useRef(null);
+   const bottomSheetThematiqueRef = useRef(null);
 
    //all effect
    useEffect(() => {
@@ -119,45 +144,15 @@ export default function Recherche({ navigation, route }) {
       }, [])
    );
 
-   //all function
-   /*const findObjectContainValueSearch = (word) => {
-      if (word !== '') {
-         if (langueActual === 'fr') {
-            let resultSearch = allArticles.filter(
-               (item) =>
-                  item.Titre.titre_fr
-                     .toLowerCase()
-                     .includes(word.toLowerCase()) ||
-                  item.Article.contenu_Article_fr
-                     .toLowerCase()
-                     .includes(word.toLowerCase()) ||
-                  item.Intutile.contenu_intutile
-                     .toLowerCase()
-                     .includes(word.toLowerCase())
-            );
-            setAllContenusFilter(resultSearch);
-         } else {
-            let resultSearch = allArticles.filter(
-               (item) =>
-                  item.Titre.titre_mg
-                     .toLowerCase()
-                     .includes(word.toLowerCase()) ||
-                  item.Article.contenu_Article_mg
-                     .toLowerCase()
-                     .includes(word.toLowerCase()) ||
-                  item.Intutile.contenu_intutile
-                     .toLowerCase()
-                     .includes(word.toLowerCase())
-            );
-            setAllContenusFilter(resultSearch);
-         }
-      } else {
-         setAllContenusFilter([]);
-      }
-   };*/
+   useEffect(() => {
+      bottomSheetTypeRef.current.close();
+      bottomSheetThematiqueRef.current.close();
+   }, []);
 
-   const onHandleChangeValueSearch = (text) => {
+   //all function
+   const onHandleSearchByValue = (text) => {
       setValueForSearch(text);
+      setIsSearch(false);
    };
 
    const filterByType = (text) => {
@@ -166,6 +161,9 @@ export default function Recherche({ navigation, route }) {
 
    const filterByThematique = (text) => {
       setThematiqueChecked(text);
+   };
+   const openBottomSheet = (ref) => {
+      return ref.current.snapTo(1);
    };
 
    //all render
@@ -190,7 +188,7 @@ export default function Recherche({ navigation, route }) {
                   <Text
                      style={{
                         fontWeight: 'bold',
-                        fontSize: widthDevice < 370 ? 15 : 18,
+                        fontSize: width < 370 ? 15 : 18,
                      }}
                   >
                      {langueActual === 'fr' ? 'Loi n°' : 'Lalana faha '}{' '}
@@ -198,7 +196,7 @@ export default function Recherche({ navigation, route }) {
                   </Text>
                   <Text
                      style={{
-                        fontSize: widthDevice < 370 ? 9 : 12,
+                        fontSize: width < 370 ? 9 : 12,
                         marginBottom: 8,
                         textDecorationLine: 'underline',
                      }}
@@ -210,11 +208,11 @@ export default function Recherche({ navigation, route }) {
                </View>
                <Text
                   style={{
-                     fontSize: widthDevice < 370 ? 12 : 16,
+                     fontSize: width < 370 ? 12 : 16,
                      flex: 2,
                      textTransform: 'capitalize',
                   }}
-                  numberOfLines={widthDevice < 370 ? 2 : 3}
+                  numberOfLines={width < 370 ? 2 : 3}
                >
                   {langueActual === 'fr'
                      ? item.objet_contenu_fr
@@ -266,7 +264,7 @@ export default function Recherche({ navigation, route }) {
                      >
                         <Icon
                            name={'file-download'}
-                           color={Colors.violet}
+                           color={Colors.greenAvg}
                            size={28}
                         />
                      </TouchableOpacity>
@@ -276,6 +274,21 @@ export default function Recherche({ navigation, route }) {
          </TouchableOpacity>
       );
    }, []);
+
+   const renderBackDrop = useCallback(
+      (props) => <BottomSheetBackdrop {...props} opacity={0.6} />,
+      []
+   );
+
+   const activityIndicator = () => {
+      if (isSearch) {
+         return (
+            <View style={{ display: 'flex', flex: 1 }}>
+               <ActivityIndicator size="large" />
+            </View>
+         );
+      }
+   };
 
    const _idKeyExtractor = (item, index) =>
       item?.id == null ? index.toString() : item.id.toString();
@@ -298,7 +311,7 @@ export default function Recherche({ navigation, route }) {
                            <TouchableOpacity activeOpacity={0.7}>
                               <Icon
                                  name={'mic'}
-                                 color={Colors.violet}
+                                 color={Colors.greenAvg}
                                  size={30}
                               />
                               <Text style={{ fontWeight: 'bold' }}>
@@ -312,22 +325,26 @@ export default function Recherche({ navigation, route }) {
                         <View style={styles.view_for_input_search}>
                            <TextInput
                               style={styles.input}
-                              keyboardType="email-address"
+                              keyboardType="default"
                               placeholder={
                                  langueActual === 'fr'
                                     ? 'Entrer le mot de recherche ...'
                                     : 'Ampidiro ny teny hotadiavina...'
                               }
-                              value={valueForSearch}
-                              onChangeText={(text) =>
-                                 onHandleChangeValueSearch(text)
-                              }
+                              value={textFromInputSearch}
+                              onChangeText={(text) => {
+                                 onHandleSearchByValue(text);
+                                 setTextFromsetValueForSearch(text);
+                              }}
                            />
                            <TouchableOpacity
                               activeOpacity={0.8}
-                              /*onPress={() => {
-                        findObjectContainValueSearch(valueForSearch);
-                     }}*/
+                              onPress={() => {
+                                 {
+                                    setIsSearch(true);
+                                    onHandleSearchByValue(textFromInputSearch);
+                                 }
+                              }}
                            >
                               <Text style={styles.boutton_search}>
                                  <Icon
@@ -358,98 +375,32 @@ export default function Recherche({ navigation, route }) {
                                     <Text>{thematiqueChecked}</Text>
                                  )}
                               </View>
-                              <TouchableOpacity activeOpacity={0.8}>
-                                 <Menu>
-                                    <MenuTrigger customStyles={{}}>
-                                       <Icon
-                                          name={'filter-list'}
-                                          color={Colors.violet}
-                                          size={34}
-                                       />
-                                    </MenuTrigger>
-                                    <MenuOptions
-                                       customStyles={{
-                                          optionsContainer: {
-                                             padding: 8,
-                                          },
-                                          optionText: {
-                                             fontSize: 22,
-                                          },
-                                       }}
-                                    >
-                                       {allThematiques.map((thematique) => (
-                                          <MenuOption
-                                             onSelect={() =>
-                                                filterByThematique(
-                                                   langueActual === 'fr'
-                                                      ? thematique.name_fr?.substring(
-                                                           0,
-                                                           5
-                                                        )
-                                                      : thematique.name_mg?.substring(
-                                                           0,
-                                                           5
-                                                        )
-                                                )
-                                             }
-                                             key={thematique.id}
-                                          >
-                                             <MenuOptionCustom
-                                                text={
-                                                   langueActual === 'fr'
-                                                      ? thematique.name_fr
-                                                      : thematique.name_mg
-                                                }
-                                             />
-                                          </MenuOption>
-                                       ))}
-                                    </MenuOptions>
-                                 </Menu>
+                              <TouchableOpacity
+                                 activeOpacity={0.8}
+                                 onPress={() =>
+                                    openBottomSheet(bottomSheetThematiqueRef)
+                                 }
+                              >
+                                 <Icon
+                                    name={'filter-list'}
+                                    color={Colors.greenAvg}
+                                    size={34}
+                                 />
                               </TouchableOpacity>
                            </View>
 
                            <View style={styles.view_in_filtre}>
-                              <TouchableOpacity activeOpacity={0.8}>
-                                 <Menu>
-                                    <MenuTrigger customStyles={{}}>
-                                       <Icon
-                                          name={'filter-list'}
-                                          color={Colors.violet}
-                                          size={34}
-                                       />
-                                    </MenuTrigger>
-                                    <MenuOptions
-                                       customStyles={{
-                                          optionsContainer: {
-                                             padding: 8,
-                                          },
-                                          optionText: {
-                                             fontSize: 22,
-                                          },
-                                       }}
-                                    >
-                                       {allTypes.map((type) => (
-                                          <MenuOption
-                                             onSelect={() =>
-                                                filterByType(
-                                                   langueActual === 'fr'
-                                                      ? type.name_fr
-                                                      : type.name_mg
-                                                )
-                                             }
-                                             key={type.id}
-                                          >
-                                             <MenuOptionCustom
-                                                text={
-                                                   langueActual === 'fr'
-                                                      ? type.name_fr
-                                                      : type.name_mg
-                                                }
-                                             />
-                                          </MenuOption>
-                                       ))}
-                                    </MenuOptions>
-                                 </Menu>
+                              <TouchableOpacity
+                                 activeOpacity={0.8}
+                                 onPress={() =>
+                                    openBottomSheet(bottomSheetTypeRef)
+                                 }
+                              >
+                                 <Icon
+                                    name={'filter-list'}
+                                    color={Colors.greenAvg}
+                                    size={34}
+                                 />
                               </TouchableOpacity>
 
                               <View>
@@ -489,17 +440,17 @@ export default function Recherche({ navigation, route }) {
                      style={{
                         display: 'flex',
                         borderWidth: 1,
-                        borderColor: Colors.orange,
+                        borderColor: Colors.redError,
                         borderRadius: 8,
-                        padding: widthDevice < 370 ? 8 : 12,
-                        marginVertical: widthDevice < 370 ? 8 : 12,
+                        padding: width < 370 ? 8 : 12,
+                        marginVertical: width < 370 ? 8 : 12,
                      }}
                   >
                      <Text
                         style={{
                            textAlign: 'center',
-                           color: Colors.orange,
-                           fontSize: widthDevice < 370 ? 16 : 22,
+                           color: Colors.redError,
+                           fontSize: width < 370 ? 16 : 22,
                         }}
                      >
                         {langueActual === 'fr'
@@ -517,10 +468,92 @@ export default function Recherche({ navigation, route }) {
                   offset: data.length * index,
                   index,
                })}
-               initialNumToRender={5}
                maxToRenderPerBatch={3}
+               onEndReachedThreshold={1}
+               onEndReached={() => {
+                  console.log('on end reached');
+               }}
             />
+            {activityIndicator()}
          </SafeAreaView>
+
+         <BottomSheet
+            ref={bottomSheetTypeRef}
+            backdropComponent={renderBackDrop}
+            index={1}
+            snapPoints={snapPoints}
+            style={styles.view_bottom_sheet}
+         >
+            <View style={styles.view_in_bottomsheet}>
+               {allTypes.map((type) => (
+                  <LabelCustomBottomSheet
+                     reference={bottomSheetTypeRef}
+                     filterBy={filterByType}
+                     key={type.id}
+                     text={langueActual === 'fr' ? type.nom_fr : type.nom_mg}
+                  />
+               ))}
+               <TouchableOpacity
+                  onPress={() => {
+                     filterByType('tout');
+                     bottomSheetTypeRef.current.close();
+                  }}
+                  style={{
+                     display: 'flex',
+                     flexDirection: 'row',
+                     alignItems: 'center',
+                     justifyContent: 'flex-start',
+                     paddingVertical: 12,
+                  }}
+               >
+                  <Icon name={'category'} color={Colors.black} size={18} />
+                  <Text style={{ fontSize: 22, marginLeft: 8 }}>
+                     Afficher tout
+                  </Text>
+               </TouchableOpacity>
+            </View>
+         </BottomSheet>
+
+         <BottomSheet
+            ref={bottomSheetThematiqueRef}
+            backdropComponent={renderBackDrop}
+            index={1}
+            snapPoints={snapPoints}
+            style={styles.view_bottom_sheet}
+         >
+            <View style={styles.view_in_bottomsheet}>
+               {allThematiques.map((thematique) => (
+                  <LabelCustomBottomSheet
+                     reference={bottomSheetThematiqueRef}
+                     filterBy={filterByThematique}
+                     key={thematique.id}
+                     text={
+                        langueActual === 'fr'
+                           ? thematique.nom_fr
+                           : thematique.nom_mg
+                     }
+                  />
+               ))}
+               <TouchableOpacity
+                  onPress={() => {
+                     filterByThematique('tout');
+                     bottomSheetThematiqueRef.current.close();
+                  }}
+                  style={{
+                     display: 'flex',
+                     flexDirection: 'row',
+                     alignItems: 'center',
+                     justifyContent: 'flex-start',
+                     paddingVertical: 12,
+                  }}
+               >
+                  <Icon name={'category'} color={Colors.black} size={18} />
+                  <Text style={{ fontSize: 22, marginLeft: 8 }}>
+                     Afficher tout
+                  </Text>
+               </TouchableOpacity>
+            </View>
+         </BottomSheet>
       </View>
    );
 }

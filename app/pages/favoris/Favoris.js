@@ -3,30 +3,59 @@ import {
    Text,
    FlatList,
    Image,
-   Dimensions,
    useWindowDimensions,
    StyleSheet,
    SafeAreaView,
+   ToastAndroid,
    TouchableOpacity,
 } from 'react-native';
 import RenderHtml from 'react-native-render-html';
-import React, { useCallback, useEffect, useState } from 'react';
-import { nameStackNavigation as nameNav, cutTextWithBalise } from '_utils';
+import React, {
+   useCallback,
+   useEffect,
+   useState,
+   useMemo,
+   useRef,
+} from 'react';
+import {
+   nameStackNavigation as nameNav,
+   cutTextWithBalise,
+   checkAndsendMailFromLocalDBToAPI,
+} from '_utils';
 import { styles } from './styles';
 import { Icon } from '@rneui/themed';
 import { useSelector, useDispatch } from 'react-redux';
 import HeaderGlobal from '_components/header/HeaderGlobal';
+import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
 import { Colors } from '_theme/Colors';
 import { addFavoris } from '_utils/redux/actions/action_creators';
 
 export default function Favoris({ navigation, route }) {
-   const dataForFlatList = useSelector((selector) => selector.loi.favoris);
+   const listOfIdFavorites = useSelector((selector) => selector.loi.favoris);
+   const allArticles = useSelector((selector) => selector.loi.articles);
    const dispatch = useDispatch();
-   const { width } = useWindowDimensions();
+   const { width, height } = useWindowDimensions();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   //all logics
+   const isUserNetworkActive = useSelector(
+      (selector) => selector.fonctionnality.isNetworkActive
+   );
+   const isUserConnectedToInternet = useSelector(
+      (selector) => selector.fonctionnality.isConnectedToInternet
+   );
+   const snapPoints = useMemo(
+      () => (height < 700 ? [0, '40%'] : [0, '28%']),
+      []
+   );
+   const dataForFlatList = allArticles.filter((article) =>
+      listOfIdFavorites.includes(article.id)
+   );
+
+   //all refs
+   const bottomSheetRef = useRef(null);
+
+   //all components
    const _renderItem = useCallback(({ item }) => {
       return (
          <TouchableOpacity
@@ -44,8 +73,8 @@ export default function Favoris({ navigation, route }) {
                <Image
                   source={require('_images/book_loi.jpg')}
                   style={{
-                     width: Dimensions.get('window').width < 380 ? 100 : 120,
-                     height: 160,
+                     width: width < 380 ? 100 : 140,
+                     height: 170,
                      borderRadius: 16,
                   }}
                />
@@ -78,8 +107,7 @@ export default function Favoris({ navigation, route }) {
                      </Text>
                      <Text
                         style={{
-                           fontSize:
-                              Dimensions.get('window').width < 370 ? 10 : 14,
+                           fontSize: width < 370 ? 10 : 14,
                            textDecorationLine: 'underline',
                         }}
                         numberOfLines={1}
@@ -97,7 +125,7 @@ export default function Favoris({ navigation, route }) {
                   </View>
                   <Text
                      style={{
-                        fontSize: Dimensions.get('window').width < 380 ? 8 : 16,
+                        fontSize: width < 380 ? 8 : 16,
                         flex: 2,
                         width: 210,
                      }}
@@ -138,7 +166,7 @@ export default function Favoris({ navigation, route }) {
                      >
                         <Icon
                            name={'sentiment-very-satisfied'}
-                           color={Colors.violet}
+                           color={Colors.greenAvg}
                            size={18}
                         />
                         <Text
@@ -153,17 +181,13 @@ export default function Favoris({ navigation, route }) {
                      <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => {
-                           dispatch(addFavoris(item));
-                           alert(
-                              langueActual === 'fr'
-                                 ? 'Enlever au favoris.'
-                                 : "Esorina ato amin'ny ankafizina"
-                           );
+                           dispatch(addFavoris(item.id));
+                           showToastFavorite(item.numero);
                         }}
                      >
                         <Icon
                            name={'favorite'}
-                           color={Colors.orange}
+                           color={Colors.redError}
                            size={28}
                         />
                      </TouchableOpacity>
@@ -182,12 +206,26 @@ export default function Favoris({ navigation, route }) {
       return source;
    };
 
+   const showToastFavorite = (id) => {
+      ToastAndroid.show(
+         `Vous avez enlevé l'article n° ${id} dans votre favoris`,
+         ToastAndroid.SHORT
+      );
+   };
+
    const tagsStyles = {
       p: {
          width: '40%',
-         fontSize: Dimensions.get('window').width < 370 ? 12 : 18,
+         fontSize: width < 370 ? 12 : 14,
       },
    };
+
+   //all effects
+   useEffect(() => {
+      if (isUserConnectedToInternet && isUserNetworkActive) {
+         checkAndsendMailFromLocalDBToAPI();
+      }
+   }, [isUserNetworkActive, isUserConnectedToInternet]);
 
    const _idKeyExtractor = (item, index) =>
       item?.id == null ? index.toString() : item.id.toString();
@@ -199,7 +237,10 @@ export default function Favoris({ navigation, route }) {
                ListHeaderComponent={
                   <View>
                      <View style={styles.head_content}>
-                        <HeaderGlobal navigation={navigation} />
+                        <HeaderGlobal
+                           navigation={navigation}
+                           bottomSheetRef={bottomSheetRef}
+                        />
                      </View>
 
                      <View style={styles.landing_screen}>
@@ -248,7 +289,7 @@ export default function Favoris({ navigation, route }) {
                         display: 'flex',
                         borderWidth: 1,
                         borderRadius: 8,
-                        borderColor: Colors.orange,
+                        borderColor: Colors.redError,
                         padding: 18,
                         marginVertical: width < 370 ? 20 : 28,
                      }}
@@ -256,7 +297,7 @@ export default function Favoris({ navigation, route }) {
                      <Text
                         style={{
                            textAlign: 'center',
-                           color: Colors.orange,
+                           color: Colors.redError,
                            fontSize: width < 370 ? 18 : 30,
                         }}
                      >
@@ -280,6 +321,10 @@ export default function Favoris({ navigation, route }) {
                maxToRenderPerBatch={3}
             />
          </SafeAreaView>
+         <BottomSheetCustom
+            bottomSheetRef={bottomSheetRef}
+            snapPoints={snapPoints}
+         />
       </View>
    );
 }

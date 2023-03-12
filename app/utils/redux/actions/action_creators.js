@@ -6,7 +6,8 @@ import {
    GET_ALL_TYPES,
    GET_ALL_CONTENUS,
    CHANGE_LANGUAGE,
-   IS_CONNECTED_INTERNET,
+   IS_NETWORK_ACTIVE,
+   IS_CONNECTED_TO_INTERNET,
 } from './action_names';
 
 export const getStarted = () => ({
@@ -38,12 +39,17 @@ export const getAllContenus = (contenus) => ({
    payload: contenus,
 });
 
-export const addFavoris = (article) => ({
+export const addFavoris = (idArticle) => ({
    type: ADD_FAVORIS,
-   payload: article,
+   payload: idArticle,
+});
+
+export const isNetworkActive = (status) => ({
+   type: IS_NETWORK_ACTIVE,
+   payload: status,
 });
 
 export const isConnectedToInternet = (status) => ({
-   type: IS_CONNECTED_INTERNET,
+   type: IS_CONNECTED_TO_INTERNET,
    payload: status,
 });

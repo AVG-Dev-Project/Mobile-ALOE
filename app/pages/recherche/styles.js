@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
       marginTop: 10,
    },
    view_for_filtre: {
-      backgroundColor: Colors.whiteRose,
+      backgroundColor: Colors.greenWhite,
       padding: 10,
       marginVertical: 4,
       display: 'flex',
@@ -48,10 +48,10 @@ export const styles = StyleSheet.create({
       height: widthDevice < 370 ? 130 : 160,
       borderWidth: 1,
       borderRadius: 10,
-      borderColor: Colors.whiteRose,
+      borderColor: Colors.greenWhite,
       marginVertical: 5,
       padding: 10,
-      backgroundColor: Colors.whiteRose,
+      backgroundColor: Colors.greenWhite,
       marginHorizontal: 8,
       display: 'flex',
       flexDirection: 'column',
@@ -64,5 +64,16 @@ export const styles = StyleSheet.create({
       shadowOpacity: 0.21,
       shadowRadius: 7.68,
       elevation: 7,
+   },
+   view_bottom_sheet: {
+      backgroundColor: '#f2f2f2',
+   },
+   view_in_bottomsheet: {
+      display: 'flex',
+      flexDirection: 'column',
+      flex: 1,
+      backgroundColor: '#f2f2f2',
+      marginHorizontal: 8,
+      paddingHorizontal: 18,
    },
 });

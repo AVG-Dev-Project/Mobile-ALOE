@@ -7,20 +7,15 @@ import {
    SafeAreaView,
    ScrollView,
    TouchableOpacity,
-   Dimensions,
+   ToastAndroid,
    useWindowDimensions,
 } from 'react-native';
-import {
-   Menu,
-   MenuOptions,
-   MenuOption,
-   MenuTrigger,
-} from 'react-native-popup-menu';
 import * as Speech from 'expo-speech';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import RenderHtml from 'react-native-render-html';
 import { styles } from './styles';
 import { Icon } from '@rneui/themed';
+import BottomSheet from '@gorhom/bottom-sheet';
 import bgImage from '_images/bg_loi.jpg';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
@@ -30,11 +25,17 @@ export default function Detail({ navigation, route }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   const { width } = useWindowDimensions();
-   let widthDevice = Dimensions.get('window').width;
+   const { width, height } = useWindowDimensions();
    const dispatch = useDispatch();
    const [isSpeakPlay, setIsSpeakPlay] = useState(false);
    const oneArticle = route.params.articleToViewDetail;
+   const snapPoints = useMemo(
+      () => (height < 700 ? [0, '60%'] : [0, '60%']),
+      []
+   );
+
+   //all refs
+   const bottomSheetRef = useRef(null);
 
    //all functions
    /*function to speach article*/
@@ -46,6 +47,14 @@ export default function Detail({ navigation, route }) {
       }
    };
 
+   const openBottomSheet = () => {
+      return bottomSheetRef.current.snapTo(1);
+   };
+
+   // const showToastFavorite = () => {
+   //    ToastAndroid.show('Vos favoris on été modifié', ToastAndroid.SHORT);
+   // };
+
    const sourceHTML = (data) => {
       const source = {
          html: data,
@@ -56,13 +65,18 @@ export default function Detail({ navigation, route }) {
    const tagsStyles = {
       p: {
          width: '100%',
-         fontSize: widthDevice < 380 ? 14 : 19,
+         fontSize: width < 380 ? 14 : 18,
       },
    };
 
+   //all efects
+   useEffect(() => {
+      bottomSheetRef.current.close();
+   }, []);
+
    return (
       <View style={styles.view_container}>
-         <StatusBar backgroundColor={Colors.violet} />
+         <StatusBar backgroundColor={Colors.greenAvg} />
          <SafeAreaView style={styles.container_safe}>
             <ImageBackground
                source={bgImage}
@@ -83,7 +97,8 @@ export default function Detail({ navigation, route }) {
                   <Text
                      style={{
                         fontWeight: 'bold',
-                        fontSize: widthDevice < 370 ? 18 : 22,
+                        fontSize: width < 370 ? 18 : 20,
+                        marginBottom: 8,
                         width: '90%',
                         color: Colors.white,
                      }}
@@ -92,106 +107,53 @@ export default function Detail({ navigation, route }) {
                         ? oneArticle.titre_fr
                         : oneArticle.titre_mg}
                   </Text>
-                  <Text
-                     style={{
-                        fontSize: 12,
-                        marginVertical: 8,
-                        color: Colors.white,
-                     }}
-                  >
-                     {langueActual === 'fr' ? 'Publié le ' : 'Nivoaka ny '} :{' '}
-                     {oneArticle.article_created_at?.substring(0, 10)}
-                  </Text>
+                  {oneArticle.chapitre_id && (
+                     <Text
+                        style={{
+                           fontSize: 12,
+                           marginVertical: 8,
+                           color: Colors.white,
+                        }}
+                     >
+                        {langueActual === 'fr'
+                           ? `Chapitre n°${oneArticle.chapitre_numero}`
+                           : `Lohateny faha ${oneArticle.chapitre_numero}`}{' '}
+                        :{' '}
+                        {langueActual === 'fr'
+                           ? oneArticle.chapitre_titre_fr
+                           : oneArticle.chapitre_titre_mg}
+                     </Text>
+                  )}
                </View>
                <View style={styles.description_section}>
                   <View style={styles.view_round_button_detail_article}>
-                     <TouchableOpacity
+                     {/* <TouchableOpacity
                         onPress={() => {
-                           dispatch(addFavoris(oneArticle));
-                           alert(
-                              langueActual === 'fr'
-                                 ? 'Ajouté au favoris'
-                                 : "Niampy ao amin'ny ankafizina"
-                           );
+                           dispatch(addFavoris(oneArticle.id));
+                           showToastFavorite();
                         }}
+                        activeOpacity={0.7}
                      >
                         <Text style={styles.boutton_add_favorite}>
                            <Icon
                               name={'favorite'}
-                              color={Colors.violet}
+                              color={Colors.greenAvg}
                               size={32}
                            />{' '}
                         </Text>
-                     </TouchableOpacity>
+                     </TouchableOpacity> */}
 
-                     <TouchableOpacity activeOpacity={0.7}>
-                        <Menu>
-                           {/* <MenuTrigger text="Select" /> */}
-                           <MenuTrigger customStyles={{}}>
-                              <Text style={styles.boutton_info_article}>
-                                 <Icon
-                                    name={'info-outline'}
-                                    color={Colors.violet}
-                                    size={32}
-                                 />{' '}
-                              </Text>
-                           </MenuTrigger>
-                           <MenuOptions
-                              customStyles={{
-                                 optionsContainer: {
-                                    padding: 8,
-                                    width: 340,
-                                    height: 370,
-                                 },
-                                 optionText: {
-                                    fontSize: 22,
-                                 },
-                              }}
-                           >
-                              <MenuOption>
-                                 <Text style={{ fontSize: 22 }}>
-                                    {langueActual === 'fr'
-                                       ? 'Plus de détails :'
-                                       : 'Fanampiny misimisy :'}{' '}
-                                    :{' '}
-                                 </Text>
-                              </MenuOption>
-                              <MenuOption>
-                                 <Text style={styles.label_info_article}>
-                                    {langueActual === 'fr'
-                                       ? 'Chapitre '
-                                       : 'Lohateny'}{' '}
-                                 </Text>
-                                 <Text style={styles.value_info_article}>
-                                    <Icon
-                                       name={'star'}
-                                       color={Colors.violet}
-                                       size={16}
-                                    />{' '}
-                                    {langueActual === 'fr'
-                                       ? oneArticle.chapitre_titre_fr ?? ''
-                                       : oneArticle.chapitre_titre_mg ?? ''}
-                                 </Text>
-                              </MenuOption>
-                              <MenuOption>
-                                 <Text style={styles.label_info_article}>
-                                    {langueActual === 'fr'
-                                       ? 'Contenu '
-                                       : 'Sokajy '}{' '}
-                                 </Text>
-                                 <Text style={styles.value_info_article}>
-                                    <Icon
-                                       name={'star'}
-                                       color={Colors.violet}
-                                       size={16}
-                                    />{' '}
-                                    {langueActual === 'fr'
-                                       ? oneArticle.contenu
-                                       : oneArticle.contenu}
-                                 </Text>
-                              </MenuOption>
-                           </MenuOptions>
-                        </Menu>
+                     <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={() => openBottomSheet()}
+                     >
+                        <Text style={styles.boutton_info_article}>
+                           <Icon
+                              name={'info-outline'}
+                              color={Colors.greenAvg}
+                              size={32}
+                           />{' '}
+                        </Text>
                      </TouchableOpacity>
                   </View>
 
@@ -236,7 +198,7 @@ export default function Detail({ navigation, route }) {
                            <Icon
                               name={'picture-as-pdf'}
                               size={34}
-                              color={Colors.violet}
+                              color={Colors.greenAvg}
                            />{' '}
                         </Text>
                      </TouchableOpacity>
@@ -261,7 +223,7 @@ export default function Detail({ navigation, route }) {
                                  isSpeakPlay ? 'stop' : 'play-circle-outline'
                               }
                               size={34}
-                              color={Colors.violet}
+                              color={Colors.greenAvg}
                            />{' '}
                         </Text>
                      </TouchableOpacity>
@@ -269,6 +231,43 @@ export default function Detail({ navigation, route }) {
                </View>
             </ImageBackground>
          </SafeAreaView>
+
+         <BottomSheet
+            ref={bottomSheetRef}
+            index={1}
+            snapPoints={snapPoints}
+            style={styles.view_bottom_sheet}
+         >
+            <View style={styles.view_in_bottomsheet}>
+               <Text style={{ fontSize: 28, fontWeight: 'bold' }}>
+                  {langueActual === 'fr'
+                     ? 'Plus de détails :'
+                     : 'Fanampiny misimisy :'}{' '}
+               </Text>
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Chapitre ' : 'Lohateny'}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? oneArticle.chapitre_titre_fr ?? ''
+                        : oneArticle.chapitre_titre_mg ?? ''}
+                  </Text>
+               </View>
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Contenu ' : 'Sokajy '}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? oneArticle.contenu
+                        : oneArticle.contenu}
+                  </Text>
+               </View>
+            </View>
+         </BottomSheet>
       </View>
    );
 }

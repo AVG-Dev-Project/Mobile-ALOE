@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, useWindowDimensions } from 'react-native';
 import { Colors } from '_theme/Colors';
 import Lottie from 'lottie-react-native';
 import { Icon, Button } from '@rneui/themed';
@@ -9,6 +9,8 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import {
    getStarted,
+   isNetworkActive,
+   addFavoris,
    isConnectedToInternet,
 } from '_utils/redux/actions/action_creators';
 import {
@@ -21,23 +23,31 @@ import {
    parseStructureDataForContenu,
    storeDataToLocalStorage,
    getDataFromLocalStorage,
+   getFavoriteFromLocalStorage,
    removeInLocalStorage,
    getAllKeys,
    fetchTypesToApi,
    fetchArticlesToApi,
+   fetchContenusToApi,
    fetchThematiquesToApi,
-   fetchDataToLocalDatabase,
+   fetchArtiContenuToLocalDatabase,
+   fetchTypeThemToLocalDatabase,
+   checkAndsendMailFromLocalDBToAPI,
 } from '_utils';
 import styles from './styles';
 
 export default function DownloadData({ navigation }) {
    //all datas
    const animation = useRef(null);
+   const { width } = useWindowDimensions();
    const dispatch = useDispatch();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   const connexion = useSelector(
+   const isUserNetworkActive = useSelector(
+      (selector) => selector.fonctionnality.isNetworkActive
+   );
+   const isUserConnectedToInternet = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
    const [isFetchData, setIsFetchData] = useState(false);
@@ -46,27 +56,39 @@ export default function DownloadData({ navigation }) {
    const [isAllDataAlsoDownloaded, setIsAllDataAlsoDownloaded] =
       useState(false);
    const [buttonStartDisabled, setButtonStartDisabled] = useState(true);
+   const [isDataLoaded, setIsDataLoaded] = useState(false);
+   const [messageStatusInternet, setMessageStatusInternet] = useState('');
 
    //all functions
-   // functions selon disponibilité de connexion 1 pour démarrer tous les fonction fetch depuis API 2 pour importer les données depuis le fichier
+   // functions selon disponibilité de isUserNetworkActive 1 pour démarrer tous les fonction fetch depuis API 2 pour importer les données depuis le fichier
    const getOnlineDatas = async () => {
-      fetchArticlesToApi(dispatch);
-      fetchThematiquesToApi(dispatch);
-      await fetchTypesToApi(dispatch);
+      fetchArticlesToApi();
+      fetchContenusToApi();
+      fetchThematiquesToApi();
+      await fetchTypesToApi();
       setIsFetchData(false);
       storeDataToLocalStorage('isAllDataDownloaded', 'true');
    };
 
    const getOfflineDatas = () => {
-      fetchDataToLocalDatabase(dispatch);
-      setIsFetchData(false);
+      getFavoriteFromLocalStorage().then((res) => {
+         if (res !== null) {
+            dispatch(addFavoris(res));
+         }
+      });
+      fetchArtiContenuToLocalDatabase(dispatch);
+      fetchTypeThemToLocalDatabase(dispatch);
+      setTimeout(() => {
+         setIsDataLoaded(false);
+         dispatch(getStarted());
+      }, 500);
    };
 
-   const showData = () => {
-      return ArticleSchema.query({ columns: '*' }).then((res) => {
-         console.log(res);
-      });
-   };
+   // const showData = () => {
+   //    return ArticleSchema.query({ columns: '*' }).then((res) => {
+   //       console.log(res.length);
+   //    });
+   // };
 
    const handleFileSelectionAndImportData = async () => {
       setIsUploadData(true);
@@ -111,14 +133,38 @@ export default function DownloadData({ navigation }) {
    };
 
    //all effects
-   /*effect pour ecouter quand l'user active sa connexion*/
+   /*effect pour ecouter quand l'user active sa isUserNetworkActive*/
    useEffect(() => {
       const unsubscribe = NetInfo.addEventListener((state) => {
-         dispatch(isConnectedToInternet(state.isConnected));
+         dispatch(isNetworkActive(state.isConnected));
+         dispatch(isConnectedToInternet(state.isInternetReachable));
       });
 
       return unsubscribe;
    }, []);
+
+   useEffect(() => {
+      if (isUserConnectedToInternet && isUserNetworkActive) {
+         setMessageStatusInternet(
+            'Comme vous êtes connecté à internet, vous pouvez soit télechargés les datas via votre connexion soit uploader le fichier datas'
+         );
+         //checkAndsendMailFromLocalDBToAPI();
+      }
+      if (
+         isUserNetworkActive &&
+         (isUserConnectedToInternet === false ||
+            isUserConnectedToInternet === null)
+      ) {
+         setMessageStatusInternet(
+            'Votre connexion ne peut pas accéder à internet. Vous pouvez quand même importer le fichier datas depuis votre appareil.'
+         );
+      }
+      if (isNetworkActive === false || isNetworkActive === null) {
+         setMessageStatusInternet(
+            "Vous n'êtes pas connecté à internet. Vous pouvez importer le fichier datas depuis votre appareil."
+         );
+      }
+   }, [isUserConnectedToInternet, isUserNetworkActive]);
 
    useEffect(() => {
       getDataFromLocalStorage('isAllDataImported').then((res) => {
@@ -158,31 +204,27 @@ export default function DownloadData({ navigation }) {
                   }}
                >
                   Status :{' '}
-                  {connexion
+                  {isUserNetworkActive && isUserConnectedToInternet
                      ? 'Vous êtes connectés à internet'
                      : "Vous n'êtes pas connectés"}
                </Text>
-               {connexion ? (
+               {isUserNetworkActive && isUserConnectedToInternet ? (
                   <Icon
                      name={'sentiment-satisfied-alt'}
-                     color={Colors.violet}
+                     color={Colors.greenAvg}
                      size={24}
                   />
                ) : (
                   <Icon
                      name={'sentiment-very-dissatisfied'}
-                     color={Colors.orange}
+                     color={Colors.redError}
                      size={24}
                   />
                )}
             </View>
-            <Text style={{ textAlign: 'center' }}>
-               {connexion
-                  ? `Ici vous avez le choix entre télécharger les données via votre connexion ou préférez-vous importer vos données depuis votre appareil `
-                  : "Comme vous n'êtes pas connecté vous pouvez importé le fichier depuis votre appareil!"}
-            </Text>
+            <Text style={{ textAlign: 'center' }}>{messageStatusInternet}</Text>
             <View style={styles.view_for_button}>
-               {connexion && (
+               {isUserNetworkActive && isUserConnectedToInternet && (
                   <Button
                      title="Télecharger les datas"
                      icon={{
@@ -194,7 +236,7 @@ export default function DownloadData({ navigation }) {
                      titleStyle={{ fontSize: 16 }}
                      buttonStyle={{
                         borderRadius: 15,
-                        backgroundColor: Colors.violet,
+                        backgroundColor: Colors.greenAvg,
                      }}
                      containerStyle={{
                         width: 250,
@@ -202,13 +244,13 @@ export default function DownloadData({ navigation }) {
                      }}
                      onPress={() => {
                         setIsFetchData(true);
-                        getOfflineDatas();
+                        getOnlineDatas();
                      }}
                      loading={isFetchData}
                   />
                )}
 
-               {connexion && (
+               {isUserNetworkActive && isUserConnectedToInternet && (
                   <Text style={{ textAlign: 'center', fontSize: 18 }}>
                      {' '}
                      ou{' '}
@@ -226,7 +268,7 @@ export default function DownloadData({ navigation }) {
                   titleStyle={{ fontSize: 16 }}
                   buttonStyle={{
                      borderRadius: 15,
-                     backgroundColor: Colors.violet,
+                     backgroundColor: Colors.greenAvg,
                   }}
                   containerStyle={{
                      width: 250,
@@ -236,7 +278,7 @@ export default function DownloadData({ navigation }) {
                   loading={isUploadData}
                />
 
-               <Button
+               {/* <Button
                   title="Show data"
                   icon={{
                      name: 'file-upload',
@@ -247,14 +289,14 @@ export default function DownloadData({ navigation }) {
                   titleStyle={{ fontSize: 16 }}
                   buttonStyle={{
                      borderRadius: 15,
-                     backgroundColor: Colors.violet,
+                     backgroundColor: Colors.greenAvg,
                   }}
                   containerStyle={{
                      width: 250,
                      marginVertical: 5,
                   }}
                   onPress={() => showData()}
-               />
+               /> */}
             </View>
          </View>
          <View>
@@ -269,15 +311,18 @@ export default function DownloadData({ navigation }) {
                titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
                buttonStyle={{
                   borderRadius: 30,
-                  backgroundColor: Colors.violet,
+                  backgroundColor: Colors.greenAvg,
                   paddingVertical: 24,
+                  width: width < 370 ? 160 : 180,
                }}
                containerStyle={{
                   marginVertical: 10,
                }}
                onPress={() => {
-                  dispatch(getStarted());
+                  setIsDataLoaded(true);
+                  getOfflineDatas();
                }}
+               loading={isDataLoaded}
                disabled={buttonStartDisabled}
             />
          </View>

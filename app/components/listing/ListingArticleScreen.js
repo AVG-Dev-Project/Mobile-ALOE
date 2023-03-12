@@ -4,7 +4,6 @@ import {
    StyleSheet,
    FlatList,
    Image,
-   Dimensions,
    SafeAreaView,
    TouchableOpacity,
    useWindowDimensions,
@@ -12,13 +11,13 @@ import {
 import React, { useCallback, useEffect, useState } from 'react';
 import RenderHtml from 'react-native-render-html';
 import { nameStackNavigation as nameNav } from '_utils/constante/NameStackNavigation';
-// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { styles } from './stylesArticle';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
 import { cutTextWithBalise } from '_utils';
 import { addFavoris } from '_utils/redux/actions/action_creators';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function ListingArticle({ navigation, route }) {
    //all data
@@ -27,7 +26,25 @@ export default function ListingArticle({ navigation, route }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   const dataForFlatList = route.params.allArticleRelatedTotheContenu;
+   const allFavoriteIdFromStore = useSelector(
+      (selector) => selector.loi.favoris
+   );
+   const dataFromParams = route.params.allArticleRelatedTotheContenu;
+   const [articleList, setArticleList] = useState(
+      dataFromParams.map((item) => {
+         return {
+            ...item,
+            isFavorite: allFavoriteIdFromStore.includes(item.id),
+         };
+      })
+   );
+
+   const tagsStyles = {
+      p: {
+         width: '40%',
+         fontSize: width < 370 ? 12 : 14,
+      },
+   };
 
    //all function
    const sourceHTML = (data) => {
@@ -37,13 +54,19 @@ export default function ListingArticle({ navigation, route }) {
       return source;
    };
 
-   const tagsStyles = {
-      p: {
-         width: '40%',
-         fontSize: Dimensions.get('window').width < 370 ? 12 : 18,
-      },
+   const handleToogleIsFavorite = (id) => {
+      dispatch(addFavoris(id));
+      // Mettre à jour la propriété isFavorite de l'article avec l'ID donné
+      setArticleList((prevList) =>
+         prevList.map((item) =>
+            item.id === id ? { ...item, isFavorite: !item.isFavorite } : item
+         )
+      );
    };
 
+   //all effects
+
+   //all components
    const _renderItem = useCallback(({ item }) => {
       return (
          <TouchableOpacity
@@ -61,7 +84,7 @@ export default function ListingArticle({ navigation, route }) {
                <Image
                   source={require('_images/book_loi.jpg')}
                   style={{
-                     width: Dimensions.get('window').width < 380 ? 100 : 140,
+                     width: width < 380 ? 100 : 130,
                      height: 160,
                      borderRadius: 16,
                   }}
@@ -95,7 +118,7 @@ export default function ListingArticle({ navigation, route }) {
                      </Text>
                      <Text
                         style={{
-                           fontSize: 14,
+                           fontSize: 12,
                            textDecorationLine: 'underline',
                         }}
                         numberOfLines={1}
@@ -113,7 +136,7 @@ export default function ListingArticle({ navigation, route }) {
                   </View>
                   <Text
                      style={{
-                        fontSize: Dimensions.get('window').width < 380 ? 8 : 16,
+                        fontSize: width < 380 ? 8 : 16,
                         flex: 2,
                         width: 210,
                      }}
@@ -153,35 +176,51 @@ export default function ListingArticle({ navigation, route }) {
                         }}
                      >
                         <Icon
-                           name={'sentiment-very-dissatisfied'}
-                           color={Colors.orange}
+                           name={
+                              item.isFavorite
+                                 ? 'sentiment-very-satisfied'
+                                 : 'sentiment-very-dissatisfied'
+                           }
+                           color={
+                              item.isFavorite
+                                 ? Colors.greenAvg
+                                 : Colors.redError
+                           }
                            size={18}
                         />
-                        <Text
-                           style={{
-                              fontSize: 14,
-                              marginLeft: 2,
-                           }}
-                        >
-                           {langueActual === 'fr'
-                              ? 'Pas dans favoris'
-                              : 'Tsy mbola anaty safidiana'}
-                        </Text>
+                        {item.isFavorite ? (
+                           <Text
+                              style={{
+                                 fontSize: 14,
+                                 marginLeft: 2,
+                              }}
+                           >
+                              {langueActual === 'fr' ? 'Favoris' : 'Ankafizina'}
+                           </Text>
+                        ) : (
+                           <Text
+                              style={{
+                                 fontSize: 14,
+                                 marginLeft: 2,
+                              }}
+                           >
+                              {langueActual === 'fr'
+                                 ? 'Pas dans favoris'
+                                 : 'Tsy mbola anaty ankafizina'}
+                           </Text>
+                        )}
                      </View>
                      <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => {
-                           dispatch(addFavoris(item));
-                           alert(
-                              langueActual === 'fr'
-                                 ? 'Ajouté au favoris.'
-                                 : "Nampiana tao amin'ny ankafizina"
-                           );
+                           handleToogleIsFavorite(item.id);
                         }}
                      >
                         <Icon
-                           name={'favorite-border'}
-                           color={Colors.orange}
+                           name={
+                              item.isFavorite ? 'favorite' : 'favorite-border'
+                           }
+                           color={Colors.redError}
                            size={28}
                         />
                      </TouchableOpacity>
@@ -198,37 +237,45 @@ export default function ListingArticle({ navigation, route }) {
    return (
       <View style={styles.view_container}>
          <SafeAreaView style={styles.container_safe}>
-            {dataForFlatList.length > 0 ? (
-               <FlatList
-                  data={dataForFlatList}
-                  key={'_'}
-                  keyExtractor={_idKeyExtractor}
-                  renderItem={_renderItem}
-                  removeClippedSubviews={true}
-                  getItemLayout={(data, index) => ({
-                     length: data.length,
-                     offset: data.length * index,
-                     index,
-                  })}
-                  initialNumToRender={5}
-                  maxToRenderPerBatch={3}
-               />
-            ) : (
-               <View
-                  style={{
-                     display: 'flex',
-                     borderWidth: 1,
-                     padding: 18,
-                     marginVertical: 28,
-                  }}
-               >
-                  <Text style={{ textAlign: 'center', fontSize: 32 }}>
-                     {langueActual === 'fr'
-                        ? 'Pas de données'
-                        : 'Tsy misy tahirin-kevitra'}
-                  </Text>
-               </View>
-            )}
+            <FlatList
+               data={articleList}
+               key={'_'}
+               keyExtractor={_idKeyExtractor}
+               renderItem={_renderItem}
+               removeClippedSubviews={true}
+               getItemLayout={(data, index) => ({
+                  length: data.length,
+                  offset: data.length * index,
+                  index,
+               })}
+               initialNumToRender={5}
+               maxToRenderPerBatch={3}
+               ListEmptyComponent={
+                  <View
+                     style={{
+                        display: 'flex',
+                        borderWidth: 1,
+                        padding: 16,
+                        marginVertical: 28,
+                        borderRadius: 19,
+                        borderColor: Colors.redError,
+                     }}
+                  >
+                     <Text
+                        style={{
+                           textAlign: 'center',
+                           fontSize: width < 370 ? 22 : 28,
+                           color: Colors.redError,
+                        }}
+                     >
+                        {langueActual === 'fr'
+                           ? "Pas d'articles"
+                           : 'Tsy misy lahatsoratra'}
+                     </Text>
+                  </View>
+               }
+               extraData={articleList}
+            />
          </SafeAreaView>
       </View>
    );

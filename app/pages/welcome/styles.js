@@ -10,17 +10,17 @@ const styles = StyleSheet.create({
       alignItems: 'center',
    },
    images_welcome: {
-      height: Dimensions.get('window').height < 700 ? 180 : 350,
+      height: Dimensions.get('window').height < 700 ? 220 : 350,
       width: 300,
    },
    view_button_arrondi: {
       borderWidth: 2,
-      borderColor: Colors.violet,
+      borderColor: Colors.greenAvg,
       borderRadius: 60,
       marginVertical: 20,
    },
    boutton_arrondi: {
-      backgroundColor: Colors.violet,
+      backgroundColor: Colors.greenAvg,
       padding: 20,
       margin: 6,
       borderRadius: 60,

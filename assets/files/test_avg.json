@@ -2,71 +2,60 @@
    "type": [
       {
          "id": 1,
-         "name_fr": "Loi",
-         "name_mg": "Lalàna",
-         "created_at": "2022-01-01T00:00:00Z"
+         "nom_fr": "Loi",
+         "nom_mg": "Lalàna"
       },
       {
          "id": 2,
-         "name_fr": "Decret",
-         "name_mg": "Decret",
-         "created_at": "2022-02-01T00:00:00Z"
+         "nom_fr": "Decret",
+         "nom_mg": "Decret"
       },
       {
          "id": 3,
-         "name_fr": "Arrêté",
-         "name_mg": "Fanajanona",
-         "created_at": "2022-03-01T00:00:00Z"
+         "nom_fr": "Arrêté",
+         "nom_mg": "Fanajanona"
       },
       {
          "id": 4,
-         "name_fr": "Convention",
-         "name_mg": "Fifanarahana",
-         "created_at": "2022-04-01T00:00:00Z"
+         "nom_fr": "Convention",
+         "nom_mg": "Fifanarahana"
       },
       {
          "id": 5,
-         "name_fr": "Ordonance",
-         "name_mg": "Fandidiana",
-         "created_at": "2022-08-01T00:00:00Z"
+         "nom_fr": "Ordonance",
+         "nom_mg": "Fandidiana"
       }
    ],
    "thematique": [
       {
          "id": 1,
-         "name_fr": "Flore",
-         "name_mg": "Zava-maniry",
-         "created_at": "2022-01-02T00:00:00Z"
+         "nom_fr": "Flore",
+         "nom_mg": "Zava-maniry"
       },
       {
          "id": 2,
-         "name_fr": "Corruption",
-         "name_mg": "kolikoly",
-         "created_at": "2022-01-03T00:00:00Z"
+         "nom_fr": "Corruption",
+         "nom_mg": "kolikoly"
       },
       {
          "id": 3,
-         "name_fr": "Déontologie",
-         "name_mg": "Deontolojia",
-         "created_at": "2022-01-05T00:00:00Z"
+         "nom_fr": "Déontologie",
+         "nom_mg": "Deontolojia"
       },
       {
          "id": 4,
-         "name_fr": "Faune",
-         "name_mg": "Bibidia",
-         "created_at": "2022-06-01T00:00:00Z"
+         "nom_fr": "Faune",
+         "nom_mg": "Bibidia"
       },
       {
          "id": 5,
-         "name_fr": "Répression",
-         "name_mg": "Repression",
-         "created_at": "2022-12-02T00:00:00Z"
+         "nom_fr": "Répression",
+         "nom_mg": "Repression"
       }
    ],
    "article": [
       {
          "id": 1,
-         "created_at": "2022-01-02T00:00:00Z",
          "contenu": 1,
          "numero": 1,
          "titre": {
@@ -81,7 +70,6 @@
       },
       {
          "id": 2,
-         "created_at": "2022-01-02T00:00:00Z",
          "contenu": 1,
          "numero": 2,
          "titre": {
@@ -96,7 +84,6 @@
       },
       {
          "id": 3,
-         "created_at": "2022-01-02T00:00:00Z",
          "contenu": 2,
          "numero": 1,
          "titre": {
@@ -111,7 +98,6 @@
       },
       {
          "id": 4,
-         "created_at": "2022-01-02T00:00:00Z",
          "contenu": 2,
          "numero": 2,
          "titre": {
@@ -129,7 +115,7 @@
       {
          "id": 1,
          "numero": "97-017",
-         "created_at": "2022-01-01T00:00:00Z",
+         "date": "2022-01-01T00:00:00Z",
          "type": {
             "id": 1,
             "nom_fr": "Décret",
@@ -164,7 +150,7 @@
       },
       {
          "id": 2,
-         "created_at": "2022-01-01T00:00:00Z",
+         "date": "2022-01-01T00:00:00Z",
          "numero": "98-017",
          "type": {
             "id": 1,
@@ -201,7 +187,7 @@
       {
          "id": 3,
          "numero": "97-019",
-         "created_at": "2022-01-01T00:00:00Z",
+         "date": "2022-01-01T00:00:00Z",
          "type": {
             "id": 1,
             "nom_fr": "Ordonnace",
@@ -237,7 +223,7 @@
       {
          "id": 4,
          "numero": "97-015",
-         "created_at": "2022-01-01T00:00:00Z",
+         "date": "2022-01-01T00:00:00Z",
          "type": {
             "id": 1,
             "nom_fr": "Loi",

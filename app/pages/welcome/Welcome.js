@@ -1,63 +1,93 @@
 import { useRef, useEffect, useState } from 'react';
-import { Text, View, Image, TouchableOpacity } from 'react-native';
+import {
+   Text,
+   View,
+   Image,
+   TouchableOpacity,
+   useWindowDimensions,
+} from 'react-native';
 import styles from './styles';
 import { Colors } from '_theme/Colors';
 import NetInfo from '@react-native-community/netinfo';
 import Lottie from 'lottie-react-native';
-import { Icon } from '@rneui/base';
+import { Icon, Button } from '@rneui/themed';
 import { useSelector, useDispatch } from 'react-redux';
 import {
    getStarted,
+   addFavoris,
+   isNetworkActive,
    isConnectedToInternet,
 } from '_utils/redux/actions/action_creators';
 import {
    nameStackNavigation as nameNav,
    getDataFromLocalStorage,
+   removeInLocalStorage,
    fetchTypesToApi,
    fetchArticlesToApi,
    fetchThematiquesToApi,
-   fetchDataToLocalDatabase,
+   fetchContenusToApi,
+   getFavoriteFromLocalStorage,
+   fetchArtiContenuToLocalDatabase,
+   fetchTypeThemToLocalDatabase,
+   checkAndsendMailFromLocalDBToAPI,
 } from '_utils';
 
 export default function Welcome({ navigation }) {
    //all datas
    const animation = useRef(null);
+   const { width } = useWindowDimensions();
    const dispatch = useDispatch();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   const connexion = useSelector(
+   const isUserNetworkActive = useSelector(
+      (selector) => selector.fonctionnality.isNetworkActive
+   );
+   const isUserConnectedToInternet = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
    const [isAllDataAlsoUploaded, setIsAllDataAlsoUploaded] = useState(false);
    const [isAllDataAlsoDownloaded, setIsAllDataAlsoDownloaded] =
       useState(false);
+   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
    //functions
+   //deux functions selon disponibilité de isUserNetworkActive (une pour fetcher 10 datas afin de peupler la base)
 
-   //deux functions selon disponibilité de connexion (une pour fetcher 10 datas afin de peupler la base)
-   /*const getSmallDatasOnLine = () => {
-      fetchThematiquesToApi(dispatch),
-      fetchArticlesToApi(dispatch),
-      fetchTypesToApi(dispatch),
-   };*/
+   const getSmallDatasOnLine = async () => {
+      fetchArticlesToApi();
+      fetchContenusToApi();
+      fetchThematiquesToApi();
+      await fetchTypesToApi();
+   };
+
+   const getOfflineDatas = async () => {
+      if (isUserNetworkActive && isUserConnectedToInternet) {
+         await getSmallDatasOnLine();
+      }
+      getFavoriteFromLocalStorage().then((res) => {
+         if (res !== null) {
+            dispatch(addFavoris(res));
+         }
+      });
+      fetchArtiContenuToLocalDatabase(dispatch);
+      fetchTypeThemToLocalDatabase(dispatch);
+      setTimeout(() => {
+         setIsDataLoaded(false);
+         dispatch(getStarted());
+      }, 1000);
+   };
 
    //all effects
-   /*effect pour ecouter quand l'user active sa connexion*/
+   /*effect pour ecouter quand l'user active sa isUserNetworkActive*/
    useEffect(() => {
       const unsubscribe = NetInfo.addEventListener((state) => {
-         dispatch(isConnectedToInternet(state.isConnected));
+         dispatch(isNetworkActive(state.isConnected));
+         dispatch(isConnectedToInternet(state.isInternetReachable));
       });
 
       return unsubscribe;
    }, []);
-
-   /*useEffect(() => {
-      if (connexion) {
-         return getSmallDatasOnLine();
-      }
-      getAllDatasOffline()
-   }, [connexion]);*/
 
    useEffect(() => {
       getDataFromLocalStorage('isAllDataImported').then((res) => {
@@ -67,6 +97,12 @@ export default function Welcome({ navigation }) {
          if (res === 'true') setIsAllDataAlsoDownloaded(true);
       });
    }, []);
+
+   useEffect(() => {
+      if (isUserConnectedToInternet && isUserNetworkActive) {
+         checkAndsendMailFromLocalDBToAPI();
+      }
+   }, [isUserNetworkActive, isUserConnectedToInternet]);
 
    return (
       <View style={styles.view_container_welcome}>
@@ -78,7 +114,11 @@ export default function Welcome({ navigation }) {
          />
          <View>
             <Text
-               style={{ fontSize: 34, fontWeight: 'bold', textAlign: 'center' }}
+               style={{
+                  fontSize: width < 370 ? 28 : 34,
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+               }}
             >
                {langueActual === 'fr'
                   ? 'Bienvenue sur Aloe'
@@ -90,7 +130,7 @@ export default function Welcome({ navigation }) {
                moment. Avec ou sans internet, vous pouvez la consulter avec
                toute tranquilité.
             </Text>
-            {connexion ? (
+            {isAllDataAlsoUploaded || isAllDataAlsoDownloaded ? (
                <Text style={{ textAlign: 'center' }}>
                   Vos données sont prêts, vous pouvez commencer à lire. Veuillez
                   cliquer la flèche droite...
@@ -128,19 +168,28 @@ export default function Welcome({ navigation }) {
 
             {(isAllDataAlsoUploaded || isAllDataAlsoDownloaded) && (
                <View style={styles.view_button_arrondi}>
-                  <TouchableOpacity
-                     style={styles.boutton_arrondi}
-                     activeOpacity={0.8}
-                     onPress={() => {
-                        dispatch(getStarted());
+                  <Button
+                     icon={{
+                        name: 'arrow-forward',
+                        type: 'material',
+                        size: 34,
+                        color: Colors.white,
                      }}
-                  >
-                     <Icon
-                        name={'arrow-forward'}
-                        color={Colors.white}
-                        size={34}
-                     />
-                  </TouchableOpacity>
+                     titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
+                     buttonStyle={{
+                        backgroundColor: Colors.greenAvg,
+                        margin: 8,
+                        minWidth: width < 370 ? 70 : 70,
+                        minHeight: 70,
+                        borderRadius: 60,
+                     }}
+                     containerStyle={{}}
+                     onPress={() => {
+                        setIsDataLoaded(true);
+                        getOfflineDatas();
+                     }}
+                     loading={isDataLoaded}
+                  />
                </View>
             )}
          </View>

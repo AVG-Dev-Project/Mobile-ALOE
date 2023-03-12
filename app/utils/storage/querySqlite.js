@@ -1,5 +1,6 @@
 import DatabaseLayer from 'expo-sqlite-orm/src/DatabaseLayer';
 import * as SQLite from 'expo-sqlite';
+import { DoleanceSchema } from '_utils/storage/database';
 
 export const insertOrUpdateToDBFunc = async (
    db_name,

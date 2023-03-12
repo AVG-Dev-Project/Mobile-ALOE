@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
       borderRadius: 18,
       height: 160,
-      width: Dimensions.get('window').width < 380 ? 100 : 140,
+      width: Dimensions.get('window').width < 380 ? 100 : 130,
    },
    number_of_article: {
       fontWeight: 'bold',

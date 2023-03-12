@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import {
    View,
    Text,
    Image,
    SafeAreaView,
-   Dimensions,
+   useWindowDimensions,
    StyleSheet,
    TouchableOpacity,
 } from 'react-native';
@@ -13,30 +13,60 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { Icon } from '@rneui/themed';
 import Carousel from 'react-native-snap-carousel';
 import { useSelector } from 'react-redux';
-
 import HeaderGlobal from '_components/header/HeaderGlobal';
+import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
 import {
    nameStackNavigation as nameNav,
    filterArticleToListByContenu,
 } from '_utils';
 import { styles } from './styles';
 import { Colors } from '_theme/Colors';
+import {
+   getFavoriteFromLocalStorage,
+   removeInLocalStorage,
+   checkAndsendMailFromLocalDBToAPI,
+} from '_utils';
 
 export default function Home({ navigation }) {
    //all states
    const isCarousel = React.useRef(null);
+   const { width, height } = useWindowDimensions();
    const { t } = useTranslation();
    const allArticles = useSelector((selector) => selector.loi.articles);
+   const allFavoris = useSelector((selector) => selector.loi.favoris);
    const allContenus = useSelector((selector) => selector.loi.contenus);
-   const getAllTypes = useSelector((selector) => selector.loi.types);
+   const allTypes = useSelector((selector) => selector.loi.types);
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const isUserNetworkActive = useSelector(
+      (selector) => selector.fonctionnality.isNetworkActive
+   );
+   const isUserConnectedToInternet = useSelector(
+      (selector) => selector.fonctionnality.isConnectedToInternet
+   );
+   const snapPoints = useMemo(
+      () => (height < 700 ? [0, '60%'] : [0, '50%']),
+      []
+   );
+
+   //all refs
+   const bottomSheetRef = useRef(null);
 
    //all functions
 
    //all efects
+   useEffect(() => {
+      bottomSheetRef.current.close();
+      //removeInLocalStorage('favorite');
+   }, []);
+
+   useEffect(() => {
+      if (isUserConnectedToInternet && isUserNetworkActive) {
+         checkAndsendMailFromLocalDBToAPI();
+      }
+   }, [isUserNetworkActive, isUserConnectedToInternet]);
 
    //all components
    const _renderItemContenu = ({ item }) => {
@@ -66,7 +96,7 @@ export default function Home({ navigation }) {
                      marginVertical: 8,
                      paddingRight: 8,
                      fontWeight: 'bold',
-                     fontSize: Dimensions.get('window').height < 700 ? 13 : 17,
+                     fontSize: height < 700 ? 13 : 17,
                   }}
                >
                   {langueActual === 'fr' ? 'Loi n° ' : 'Lalana faha '}
@@ -92,7 +122,7 @@ export default function Home({ navigation }) {
             onPress={() => {
                navigation.navigate('Recherche', {
                   screen: 'Recherche',
-                  type: langueActual === 'fr' ? item.name_fr : item.name_mg,
+                  type: langueActual === 'fr' ? item.nom_fr : item.nom_mg,
                });
             }}
          >
@@ -111,7 +141,7 @@ export default function Home({ navigation }) {
                   ]}
                   numberOfLines={1}
                >
-                  {langueActual === 'fr' ? item.name_fr : item.name_mg}
+                  {langueActual === 'fr' ? item.nom_fr : item.nom_mg}
                </Text>
             </View>
          </TouchableOpacity>
@@ -125,8 +155,7 @@ export default function Home({ navigation }) {
             onPress={() => {
                navigation.navigate('Recherche', {
                   screen: 'Recherche',
-                  thematique:
-                     langueActual === 'fr' ? item.name_fr : item.name_mg,
+                  thematique: langueActual === 'fr' ? item.nom_fr : item.nom_mg,
                });
             }}
          >
@@ -145,7 +174,7 @@ export default function Home({ navigation }) {
                   ]}
                   numberOfLines={2}
                >
-                  {langueActual === 'fr' ? item.name_fr : item.name_mg}
+                  {langueActual === 'fr' ? item.nom_fr : item.nom_mg}
                </Text>
             </View>
          </TouchableOpacity>
@@ -156,7 +185,10 @@ export default function Home({ navigation }) {
       <KeyboardAwareScrollView style={{ backgroundColor: Colors.background }}>
          <View style={styles.view_container}>
             <View style={styles.head_content}>
-               <HeaderGlobal navigation={navigation} />
+               <HeaderGlobal
+                  navigation={navigation}
+                  bottomSheetRef={bottomSheetRef}
+               />
             </View>
 
             <View style={styles.landing_screen}>
@@ -180,7 +212,16 @@ export default function Home({ navigation }) {
                      </Text>
                      <Text>{t('continue_de_lire')} </Text>
                   </View>
-                  <Icon name={'autorenew'} color={Colors.white} size={38} />
+                  <Icon
+                     name={'autorenew'}
+                     color={Colors.white}
+                     size={38}
+                     onPress={() =>
+                        getFavoriteFromLocalStorage().then((res) =>
+                           console.log('fav from async : ', res)
+                        )
+                     }
+                  />
                </View>
             </View>
 
@@ -196,8 +237,7 @@ export default function Home({ navigation }) {
                >
                   <Text
                      style={{
-                        fontSize:
-                           Dimensions.get('window').height < 700 ? 18 : 22,
+                        fontSize: height < 700 ? 18 : 22,
                         fontWeight: 'bold',
                      }}
                   >
@@ -211,7 +251,7 @@ export default function Home({ navigation }) {
                            layout="default"
                            ref={isCarousel}
                            data={allThematiques}
-                           loop={true}
+                           loop={false}
                            loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
                            //fin des props spéficifique au section annonce
                            renderItem={_renderItemThematique}
@@ -238,8 +278,7 @@ export default function Home({ navigation }) {
                >
                   <Text
                      style={{
-                        fontSize:
-                           Dimensions.get('window').height < 700 ? 18 : 22,
+                        fontSize: height < 700 ? 18 : 22,
                         fontWeight: 'bold',
                      }}
                   >
@@ -252,8 +291,8 @@ export default function Home({ navigation }) {
                         <Carousel
                            layout="default"
                            ref={isCarousel}
-                           data={getAllTypes}
-                           loop={true}
+                           data={allTypes}
+                           loop={false}
                            loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
                            //fin des props spéficifique au section annonce
                            renderItem={_renderItemType}
@@ -280,8 +319,7 @@ export default function Home({ navigation }) {
                >
                   <Text
                      style={{
-                        fontSize:
-                           Dimensions.get('window').height < 700 ? 18 : 22,
+                        fontSize: height < 700 ? 18 : 22,
                         fontWeight: 'bold',
                      }}
                   >
@@ -289,7 +327,7 @@ export default function Home({ navigation }) {
                   </Text>
                   <Icon
                      name={'arrow-forward'}
-                     color={Colors.violet}
+                     color={Colors.greenAvg}
                      size={30}
                      onPress={() => {
                         navigation.navigate(nameNav.listContenu, {
@@ -324,6 +362,10 @@ export default function Home({ navigation }) {
                </View>
             </View>
          </View>
+         <BottomSheetCustom
+            bottomSheetRef={bottomSheetRef}
+            snapPoints={snapPoints}
+         />
       </KeyboardAwareScrollView>
    );
 }
