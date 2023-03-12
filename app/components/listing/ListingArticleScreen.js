@@ -248,8 +248,6 @@ export default function ListingArticle({ navigation, route }) {
                   offset: data.length * index,
                   index,
                })}
-               initialNumToRender={5}
-               maxToRenderPerBatch={3}
                ListEmptyComponent={
                   <View
                      style={{

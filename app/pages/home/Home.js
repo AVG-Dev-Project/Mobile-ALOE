@@ -12,12 +12,13 @@ import { useTranslation } from 'react-i18next';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Icon } from '@rneui/themed';
 import Carousel from 'react-native-snap-carousel';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import HeaderGlobal from '_components/header/HeaderGlobal';
 import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
 import {
    nameStackNavigation as nameNav,
    filterArticleToListByContenu,
+   fetchArtiContenuToLocalDatabase,
 } from '_utils';
 import { styles } from './styles';
 import { Colors } from '_theme/Colors';
@@ -25,10 +26,13 @@ import {
    getFavoriteFromLocalStorage,
    removeInLocalStorage,
    checkAndsendMailFromLocalDBToAPI,
+   ArticleSchema,
+   ContenuSchema,
 } from '_utils';
 
 export default function Home({ navigation }) {
    //all states
+   const dispatch = useDispatch();
    const isCarousel = React.useRef(null);
    const { width, height } = useWindowDimensions();
    const { t } = useTranslation();
@@ -50,6 +54,16 @@ export default function Home({ navigation }) {
       () => (height < 700 ? [0, '60%'] : [0, '50%']),
       []
    );
+
+   const fetchData = () => {
+      fetchArtiContenuToLocalDatabase(dispatch, 2);
+   };
+
+   const showData = () => {
+      return ArticleSchema.query({ columns: '*' }).then((res) => {
+         console.log(res.length);
+      });
+   };
 
    //all refs
    const bottomSheetRef = useRef(null);
@@ -216,11 +230,7 @@ export default function Home({ navigation }) {
                      name={'autorenew'}
                      color={Colors.white}
                      size={38}
-                     onPress={() =>
-                        getFavoriteFromLocalStorage().then((res) =>
-                           console.log('fav from async : ', res)
-                        )
-                     }
+                     onPress={() => fetchData()}
                   />
                </View>
             </View>

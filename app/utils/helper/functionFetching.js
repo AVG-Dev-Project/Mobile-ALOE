@@ -8,6 +8,8 @@ import {
    getAllThematiques,
    getAllTypes,
    getAllContenus,
+   getCurrentPageForLocal,
+   getCurrentPageForApi,
 } from '_utils/redux/actions/action_creators';
 import { LoiService } from '_utils/services/LoiService';
 import {
@@ -16,27 +18,30 @@ import {
    TypeSchema,
    ThematiqueSchema,
 } from '_utils/storage/database';
+import { storeDataToLocalStorage } from '_utils/storage/asyncStorage';
 
 export const fetchThematiquesToApi = async () => {
    let results = await LoiService.getThematiqueFromServ();
    return insertOrUpdateToDBFunc('database', 'thematique', results);
 };
 
-export const fetchArticlesToApi = async () => {
-   let res = await LoiService.getArticlesFromServ();
-   return insertOrUpdateToDBFunc(
-      'database',
-      'article',
-      parseStructureDataForArticle(res.results)
-   );
-};
-
-export const fetchContenusToApi = async () => {
-   let res = await LoiService.getContenusFromServ();
+export const fetchContenusToApi = async (currentPage) => {
+   let res = await LoiService.getContenusFromServ(currentPage);
    return insertOrUpdateToDBFunc(
       'database',
       'contenu',
       parseStructureDataForContenu(res.results)
+   );
+};
+
+export const fetchArticlesToApi = async (currentPage, dispatcher) => {
+   let res = await LoiService.getArticlesFromServ(currentPage);
+   dispatcher(getCurrentPageForApi(currentPage + 1));
+   //storeDataToLocalStorage('currentPageApi', (currentPage + 1).toString());
+   return insertOrUpdateToDBFunc(
+      'database',
+      'article',
+      parseStructureDataForArticle(res.results)
    );
 };
 
@@ -45,15 +50,20 @@ export const fetchTypesToApi = async () => {
    return insertOrUpdateToDBFunc('database', 'type', results);
 };
 
-export const fetchArtiContenuToLocalDatabase = (dispatcher) => {
+export const fetchArtiContenuToLocalDatabase = (dispatcher, page) => {
    //article
-   ArticleSchema.query({ columns: '*' }).then((results) => {
-      dispatcher(getAllArticles(results));
-   });
+   ArticleSchema.query({ columns: '*', page: page, limit: 50 }).then(
+      (results) => {
+         dispatcher(getAllArticles(results));
+      }
+   );
    //contenu
-   ContenuSchema.query({ columns: '*' }).then((results) => {
-      dispatcher(getAllContenus(results));
-   });
+   ContenuSchema.query({ columns: '*', page: page, limit: 10 }).then(
+      (results) => {
+         dispatcher(getAllContenus(results));
+         dispatcher(getCurrentPageForLocal(page + 1));
+      }
+   );
 };
 
 export const fetchTypeThemToLocalDatabase = (dispatcher) => {

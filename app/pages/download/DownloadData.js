@@ -12,6 +12,7 @@ import {
    isNetworkActive,
    addFavoris,
    isConnectedToInternet,
+   getCurrentPageForApi,
 } from '_utils/redux/actions/action_creators';
 import {
    ArticleSchema,
@@ -47,6 +48,10 @@ export default function DownloadData({ navigation }) {
    const isUserNetworkActive = useSelector(
       (selector) => selector.fonctionnality.isNetworkActive
    );
+   const currentPageApi = useSelector((selector) => selector.loi.currentPage);
+   const currentPageLocal = useSelector(
+      (selector) => selector.loi.currentPageLocal
+   );
    const isUserConnectedToInternet = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
@@ -62,8 +67,8 @@ export default function DownloadData({ navigation }) {
    //all functions
    // functions selon disponibilité de isUserNetworkActive 1 pour démarrer tous les fonction fetch depuis API 2 pour importer les données depuis le fichier
    const getOnlineDatas = async () => {
-      fetchArticlesToApi();
-      fetchContenusToApi();
+      fetchContenusToApi(currentPageApi);
+      fetchArticlesToApi(currentPageApi, dispatch);
       fetchThematiquesToApi();
       await fetchTypesToApi();
       setIsFetchData(false);
@@ -76,7 +81,7 @@ export default function DownloadData({ navigation }) {
             dispatch(addFavoris(res));
          }
       });
-      fetchArtiContenuToLocalDatabase(dispatch);
+      fetchArtiContenuToLocalDatabase(dispatch, currentPageLocal);
       fetchTypeThemToLocalDatabase(dispatch);
       setTimeout(() => {
          setIsDataLoaded(false);
@@ -84,11 +89,11 @@ export default function DownloadData({ navigation }) {
       }, 500);
    };
 
-   // const showData = () => {
-   //    return ArticleSchema.query({ columns: '*' }).then((res) => {
-   //       console.log(res.length);
-   //    });
-   // };
+   const showData = () => {
+      return ArticleSchema.query({ columns: '*' }).then((res) => {
+         console.log(res.length);
+      });
+   };
 
    const handleFileSelectionAndImportData = async () => {
       setIsUploadData(true);
@@ -186,6 +191,13 @@ export default function DownloadData({ navigation }) {
       isFetchData,
    ]);
 
+   //on doit s'assurer de démarrer le compteur de page
+   useEffect(() => {
+      getDataFromLocalStorage('currentPageApi').then((res) => {
+         dispatch(getCurrentPageForApi(parseInt(res)));
+      });
+   }, []);
+
    return (
       <View style={styles.view_container_download}>
          <Lottie
@@ -278,7 +290,7 @@ export default function DownloadData({ navigation }) {
                   loading={isUploadData}
                />
 
-               {/* <Button
+               <Button
                   title="Show data"
                   icon={{
                      name: 'file-upload',
@@ -295,8 +307,10 @@ export default function DownloadData({ navigation }) {
                      width: 250,
                      marginVertical: 5,
                   }}
-                  onPress={() => showData()}
-               /> */}
+                  onPress={() => {
+                     showData();
+                  }}
+               />
             </View>
          </View>
          <View>

@@ -16,6 +16,7 @@ import {
    getStarted,
    addFavoris,
    isNetworkActive,
+   getCurrentPageForApi,
    isConnectedToInternet,
 } from '_utils/redux/actions/action_creators';
 import {
@@ -43,6 +44,7 @@ export default function Welcome({ navigation }) {
    const isUserNetworkActive = useSelector(
       (selector) => selector.fonctionnality.isNetworkActive
    );
+   const currentPageApi = useSelector((selector) => selector.loi.currentPage);
    const isUserConnectedToInternet = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
@@ -55,8 +57,8 @@ export default function Welcome({ navigation }) {
    //deux functions selon disponibilité de isUserNetworkActive (une pour fetcher 10 datas afin de peupler la base)
 
    const getSmallDatasOnLine = async () => {
-      fetchArticlesToApi();
-      fetchContenusToApi();
+      fetchContenusToApi(currentPageApi);
+      fetchArticlesToApi(currentPageApi, dispatch);
       fetchThematiquesToApi();
       await fetchTypesToApi();
    };
@@ -70,7 +72,7 @@ export default function Welcome({ navigation }) {
             dispatch(addFavoris(res));
          }
       });
-      fetchArtiContenuToLocalDatabase(dispatch);
+      fetchArtiContenuToLocalDatabase(dispatch, 1);
       fetchTypeThemToLocalDatabase(dispatch);
       setTimeout(() => {
          setIsDataLoaded(false);
@@ -95,6 +97,9 @@ export default function Welcome({ navigation }) {
       });
       getDataFromLocalStorage('isAllDataDownloaded').then((res) => {
          if (res === 'true') setIsAllDataAlsoDownloaded(true);
+      });
+      getDataFromLocalStorage('currentPageApi').then((res) => {
+         dispatch(getCurrentPageForApi(parseInt(res)));
       });
    }, []);
 

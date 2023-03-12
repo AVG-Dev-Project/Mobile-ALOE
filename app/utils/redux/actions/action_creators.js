@@ -7,7 +7,9 @@ import {
    GET_ALL_CONTENUS,
    CHANGE_LANGUAGE,
    IS_NETWORK_ACTIVE,
+   CURRENT_PAGE_FOR_API,
    IS_CONNECTED_TO_INTERNET,
+   CURRENT_PAGE_FOR_LOCAL,
 } from './action_names';
 
 export const getStarted = () => ({
@@ -52,4 +54,14 @@ export const isNetworkActive = (status) => ({
 export const isConnectedToInternet = (status) => ({
    type: IS_CONNECTED_TO_INTERNET,
    payload: status,
+});
+
+export const getCurrentPageForApi = (numberPage) => ({
+   type: CURRENT_PAGE_FOR_API,
+   payload: numberPage,
+});
+
+export const getCurrentPageForLocal = (numberPage) => ({
+   type: CURRENT_PAGE_FOR_LOCAL,
+   payload: numberPage,
 });

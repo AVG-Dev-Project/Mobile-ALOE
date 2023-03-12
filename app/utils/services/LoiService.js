@@ -16,8 +16,8 @@ function sendMailToServ(mail, objet, contenu) {
    );
 }
 
-function getArticlesFromServ() {
-   return RouteAxios.get('/article')
+function getArticlesFromServ(page) {
+   return RouteAxios.get(`/article?page=${page}`)
       .then((response) => {
          return response.data;
       })
@@ -26,8 +26,8 @@ function getArticlesFromServ() {
       });
 }
 
-function getContenusFromServ() {
-   return RouteAxios.get('/contenu')
+function getContenusFromServ(page) {
+   return RouteAxios.get(`/contenu?page=${page}`)
       .then((response) => {
          return response.data;
       })

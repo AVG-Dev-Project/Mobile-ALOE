@@ -5,6 +5,8 @@ import {
    getAllThematiques,
    getAllTypes,
    getAllContenus,
+   getCurrentPageForLocal,
+   getCurrentPageForApi,
 } from '../actions/action_creators';
 
 import { storeFavoriteIdToLocalStorage } from '../../storage/asyncStorage';
@@ -15,6 +17,8 @@ const initialState = {
    types: [],
    contenus: [],
    favoris: [],
+   currentPage: null,
+   currentPageLocal: 1,
 };
 
 export const loiReducer = (state = initialState, action) => {
@@ -31,9 +35,23 @@ export const loiReducer = (state = initialState, action) => {
          return produce(state, (draft) => {
             draft.types = action.payload;
          });
+      case getCurrentPageForApi().type:
+         return produce(state, (draft) => {
+            draft.currentPage = action.payload;
+         });
+      case getCurrentPageForLocal().type:
+         return produce(state, (draft) => {
+            draft.currentPageLocal = action.payload;
+         });
       case getAllContenus().type:
          return produce(state, (draft) => {
-            draft.contenus = action.payload;
+            action.payload.forEach((payload) => {
+               if (
+                  !draft.contenus.find((contenu) => contenu.id === payload.id)
+               ) {
+                  draft.contenus.push(payload);
+               }
+            });
          });
       case addFavoris().type:
          if (Array.isArray(action.payload)) {
