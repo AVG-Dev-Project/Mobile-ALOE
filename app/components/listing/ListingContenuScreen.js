@@ -41,6 +41,7 @@ export default function ListingContenu({ navigation, route }) {
                      item.id,
                      allArticles
                   ),
+                  idOfThisContenu: item.id
                });
             }}
          >

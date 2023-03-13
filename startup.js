@@ -16,8 +16,14 @@ ContenuSchema.createTable();
 DoleanceSchema.createTable();
 
 /*removeInLocalStorage('currentPageApi')*/
-getDataFromLocalStorage('currentPageApi').then((res) => {
+getDataFromLocalStorage('currentPageContenuApi').then((res) => {
    if (res === null || res === undefined) {
-      storeDataToLocalStorage('currentPageApi', '1');
+      storeDataToLocalStorage('currentPageContenuApi', '1');
+   }
+});
+
+getDataFromLocalStorage('currentPageArticleApi').then((res) => {
+   if (res === null || res === undefined) {
+      storeDataToLocalStorage('currentPageArticleApi', '1');
    }
 });

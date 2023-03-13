@@ -5,8 +5,9 @@ import {
    getAllThematiques,
    getAllTypes,
    getAllContenus,
-   getCurrentPageForLocal,
-   getCurrentPageForApi,
+   getCurrentPageArticleForApi,
+   getCurrentPageContenuForApi,
+   getTotalPageApi
 } from '../actions/action_creators';
 
 import { storeFavoriteIdToLocalStorage } from '../../storage/asyncStorage';
@@ -17,15 +18,25 @@ const initialState = {
    types: [],
    contenus: [],
    favoris: [],
-   currentPage: null,
-   currentPageLocal: 1,
+   currentPageContenu: null,
+   currentPageArticle: 1,
+   totalPage: {
+      article: 0,
+      contenu: 0
+   }
 };
 
 export const loiReducer = (state = initialState, action) => {
    switch (action.type) {
       case getAllArticles().type:
          return produce(state, (draft) => {
-            draft.articles = action.payload;
+            action.payload.forEach((payload) => {
+               if (
+                  !draft.articles.find((article) => article.id === payload.id)
+               ) {
+                  draft.articles.push(payload);
+               }
+            });
          });
       case getAllThematiques().type:
          return produce(state, (draft) => {
@@ -35,13 +46,22 @@ export const loiReducer = (state = initialState, action) => {
          return produce(state, (draft) => {
             draft.types = action.payload;
          });
-      case getCurrentPageForApi().type:
+      case getCurrentPageContenuForApi().type:
          return produce(state, (draft) => {
-            draft.currentPage = action.payload;
+            draft.currentPageContenu = action.payload;
          });
-      case getCurrentPageForLocal().type:
+      case getCurrentPageArticleForApi().type:
          return produce(state, (draft) => {
-            draft.currentPageLocal = action.payload;
+            draft.currentPageArticle = action.payload;
+         });
+      case getTotalPageApi().type:
+         return produce(state, (draft) => {
+            if(action.payload[0] === 'contenu'){
+               draft.totalPage.contenu = action.payload[1]
+            }
+            if(action.payload[0] === 'article'){
+               draft.totalPage.article = action.payload[1];
+            }
          });
       case getAllContenus().type:
          return produce(state, (draft) => {

@@ -18,7 +18,7 @@ import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
 import {
    nameStackNavigation as nameNav,
    filterArticleToListByContenu,
-   fetchArtiContenuToLocalDatabase,
+   fetchAllDataToLocalDatabase,
 } from '_utils';
 import { styles } from './styles';
 import { Colors } from '_theme/Colors';
@@ -56,7 +56,7 @@ export default function Home({ navigation }) {
    );
 
    const fetchData = () => {
-      fetchArtiContenuToLocalDatabase(dispatch, 2);
+      fetchAllDataToLocalDatabase(dispatch);
    };
 
    const showData = () => {
@@ -230,7 +230,7 @@ export default function Home({ navigation }) {
                      name={'autorenew'}
                      color={Colors.white}
                      size={38}
-                     onPress={() => fetchData()}
+                     onPress={() => showData()}
                   />
                </View>
             </View>

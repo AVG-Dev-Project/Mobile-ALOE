@@ -8,5 +8,6 @@ export const CHANGE_LANGUAGE = 'fonctionnality/change_language';
 export const IS_NETWORK_ACTIVE = 'fonctionnality/is_network_active';
 export const IS_CONNECTED_TO_INTERNET =
    'fonctionnality/is_connected_to_internet';
-export const CURRENT_PAGE_FOR_API = 'loi/current_page_for_api';
-export const CURRENT_PAGE_FOR_LOCAL = 'loi/current_page_for_local';
+export const CURRENT_PAGE_CONTENU_FOR_API = 'loi/current_page_contenu_for_api';
+export const CURRENT_PAGE_ARTICLE_FOR_API = 'loi/current_page_article_for_api';
+export const TOTAL_PAGE_API = 'loi/total_page_api';

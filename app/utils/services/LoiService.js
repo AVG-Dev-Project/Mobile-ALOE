@@ -26,6 +26,16 @@ function getArticlesFromServ(page) {
       });
 }
 
+function getArticlesByContenuFromServ(contenuId,page) {
+   return RouteAxios.get(`/article?contenu__id=${contenuId}&page=${page}`)
+      .then((response) => {
+         return response.data;
+      })
+      .catch((error) => {
+         return error.message;
+      });
+}
+
 function getContenusFromServ(page) {
    return RouteAxios.get(`/contenu?page=${page}`)
       .then((response) => {
@@ -58,6 +68,7 @@ function getTypeFromServ() {
 
 export const LoiService = {
    getArticlesFromServ,
+   getArticlesByContenuFromServ,
    getThematiqueFromServ,
    getTypeFromServ,
    getContenusFromServ,

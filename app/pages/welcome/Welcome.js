@@ -16,7 +16,8 @@ import {
    getStarted,
    addFavoris,
    isNetworkActive,
-   getCurrentPageForApi,
+   getCurrentPageContenuForApi,
+   getCurrentPageArticleForApi,
    isConnectedToInternet,
 } from '_utils/redux/actions/action_creators';
 import {
@@ -28,8 +29,7 @@ import {
    fetchThematiquesToApi,
    fetchContenusToApi,
    getFavoriteFromLocalStorage,
-   fetchArtiContenuToLocalDatabase,
-   fetchTypeThemToLocalDatabase,
+   fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
 } from '_utils';
 
@@ -44,7 +44,10 @@ export default function Welcome({ navigation }) {
    const isUserNetworkActive = useSelector(
       (selector) => selector.fonctionnality.isNetworkActive
    );
-   const currentPageApi = useSelector((selector) => selector.loi.currentPage);
+   const currentPageContenuApi = useSelector((selector) => selector.loi.currentPageContenu);
+   const currentPageArticleApi = useSelector(
+      (selector) => selector.loi.currentPageArticle
+   );
    const isUserConnectedToInternet = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
@@ -57,9 +60,9 @@ export default function Welcome({ navigation }) {
    //deux functions selon disponibilité de isUserNetworkActive (une pour fetcher 10 datas afin de peupler la base)
 
    const getSmallDatasOnLine = async () => {
-      fetchContenusToApi(currentPageApi);
-      fetchArticlesToApi(currentPageApi, dispatch);
-      fetchThematiquesToApi();
+      await fetchContenusToApi(currentPageContenuApi, dispatch);
+      await fetchArticlesToApi(currentPageArticleApi, dispatch);
+      await fetchThematiquesToApi();
       await fetchTypesToApi();
    };
 
@@ -72,12 +75,11 @@ export default function Welcome({ navigation }) {
             dispatch(addFavoris(res));
          }
       });
-      fetchArtiContenuToLocalDatabase(dispatch, 1);
-      fetchTypeThemToLocalDatabase(dispatch);
+      fetchAllDataToLocalDatabase(dispatch);
       setTimeout(() => {
          setIsDataLoaded(false);
          dispatch(getStarted());
-      }, 1000);
+      }, 2000);
    };
 
    //all effects
@@ -98,8 +100,11 @@ export default function Welcome({ navigation }) {
       getDataFromLocalStorage('isAllDataDownloaded').then((res) => {
          if (res === 'true') setIsAllDataAlsoDownloaded(true);
       });
-      getDataFromLocalStorage('currentPageApi').then((res) => {
-         dispatch(getCurrentPageForApi(parseInt(res)));
+      getDataFromLocalStorage('currentPageArticleApi').then((res) => {
+         dispatch(getCurrentPageArticleForApi(parseInt(res)));
+      });
+      getDataFromLocalStorage('currentPageContenuApi').then((res) => {
+         dispatch(getCurrentPageContenuForApi(parseInt(res)));
       });
    }, []);
 
@@ -190,8 +195,8 @@ export default function Welcome({ navigation }) {
                      }}
                      containerStyle={{}}
                      onPress={() => {
-                        setIsDataLoaded(true);
                         getOfflineDatas();
+                        setIsDataLoaded(true);
                      }}
                      loading={isDataLoaded}
                   />
