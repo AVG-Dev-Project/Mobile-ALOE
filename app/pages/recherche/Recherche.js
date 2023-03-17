@@ -7,6 +7,7 @@ import {
    TextInput,
    ActivityIndicator,
    TouchableOpacity,
+   Button
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import React, {
@@ -25,6 +26,7 @@ import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { Colors } from '_theme/Colors';
+import Voice from '@react-native-voice/voice';
 
 //component custom
 const LabelCustomBottomSheet = ({ text, filterBy, reference }) => {
@@ -107,6 +109,39 @@ export default function Recherche({ navigation, route }) {
    //all refs
    const bottomSheetTypeRef = useRef(null);
    const bottomSheetThematiqueRef = useRef(null);
+
+
+
+  let [started, setStarted] = useState(false);
+  let [results, setResults] = useState([]);
+
+  useEffect(() => {
+    Voice.onSpeechError = onSpeechError;
+    Voice.onSpeechResults = onSpeechResults;
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    }
+  }, []);
+
+  const startSpeechToText = async () => {
+    await Voice.start("en-NZ");
+    setStarted(true);
+  };
+
+  const stopSpeechToText = async () => {
+    await Voice.stop();
+    setStarted(false);
+  };
+
+  const onSpeechResults = (result) => {
+   console.log("mis resut : ", result);
+    setResults(result.value);
+  };
+
+  const onSpeechError = (error) => {
+    console.log(error);
+  };
 
    //all effect
    useEffect(() => {
@@ -308,7 +343,7 @@ export default function Recherche({ navigation, route }) {
                               alignItems: 'center',
                            }}
                         >
-                           <TouchableOpacity activeOpacity={0.7}>
+                           {/* <TouchableOpacity activeOpacity={0.7}>
                               <Icon
                                  name={'mic'}
                                  color={Colors.greenAvg}
@@ -319,10 +354,15 @@ export default function Recherche({ navigation, route }) {
                                     ? 'Recherche vocale'
                                     : "Hitady amin'ny alalan'ny feo"}{' '}
                               </Text>
-                           </TouchableOpacity>
+                           </TouchableOpacity> */}
+
+                           {!started ? <Button title='Start Speech to Text' onPress={startSpeechToText} /> : undefined}
+                           {started ? <Button title='Stop Speech to Text' onPress={stopSpeechToText} /> : undefined}
+                           <Text>result : </Text>
+                           {results.map((result, index) => <Text key={index}>{result}</Text>)}
                         </View>
 
-                        <View style={styles.view_for_input_search}>
+                        {/* <View style={styles.view_for_input_search}>
                            <TextInput
                               style={styles.input}
                               keyboardType="default"
@@ -354,9 +394,9 @@ export default function Recherche({ navigation, route }) {
                                  />
                               </Text>
                            </TouchableOpacity>
-                        </View>
+                        </View> */}
 
-                        <View style={styles.view_for_filtre}>
+                        {/* <View style={styles.view_for_filtre}>
                            <View style={styles.view_in_filtre}>
                               <View>
                                  <Text
@@ -421,9 +461,9 @@ export default function Recherche({ navigation, route }) {
                                  )}
                               </View>
                            </View>
-                        </View>
+                        </View> */}
                      </View>
-                     <View style={styles.view_for_result}>
+                     {/* <View style={styles.view_for_result}>
                         {allContenusFilter?.length > 0 && (
                            <Text style={{ textAlign: 'center' }}>
                               {allContenusFilter.length}{' '}
@@ -432,7 +472,7 @@ export default function Recherche({ navigation, route }) {
                                  : ' ny valiny hita'}
                            </Text>
                         )}
-                     </View>
+                     </View> */}
                   </View>
                }
                ListEmptyComponent={
