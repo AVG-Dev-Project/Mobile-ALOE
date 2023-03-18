@@ -7,7 +7,8 @@ import {
    TextInput,
    ActivityIndicator,
    TouchableOpacity,
-   Button
+   ToastAndroid,
+   Button,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import React, {
@@ -22,6 +23,7 @@ import {
    nameStackNavigation as nameNav,
    filterArticleToListByContenu,
 } from '_utils';
+import Lottie from 'lottie-react-native';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
@@ -77,6 +79,7 @@ const filterGlobal = (array, theme, type, query) => {
 export default function Recherche({ navigation, route }) {
    //all data
    const dispatch = useDispatch();
+   const animation = useRef(null);
    const [valueForSearch, setValueForSearch] = useState('');
    const [textFromInputSearch, setTextFromsetValueForSearch] = useState('');
    const { width, height } = useWindowDimensions();
@@ -105,43 +108,11 @@ export default function Recherche({ navigation, route }) {
    const [typeChecked, setTypeChecked] = useState(null);
    const [thematiqueChecked, setThematiqueChecked] = useState(null);
    const [isSearch, setIsSearch] = useState(false);
+   let [startedSpeech, setStartedSpeech] = useState(false);
 
    //all refs
    const bottomSheetTypeRef = useRef(null);
    const bottomSheetThematiqueRef = useRef(null);
-
-
-
-  let [started, setStarted] = useState(false);
-  let [results, setResults] = useState([]);
-
-  useEffect(() => {
-    Voice.onSpeechError = onSpeechError;
-    Voice.onSpeechResults = onSpeechResults;
-
-    return () => {
-      Voice.destroy().then(Voice.removeAllListeners);
-    }
-  }, []);
-
-  const startSpeechToText = async () => {
-    await Voice.start("en-NZ");
-    setStarted(true);
-  };
-
-  const stopSpeechToText = async () => {
-    await Voice.stop();
-    setStarted(false);
-  };
-
-  const onSpeechResults = (result) => {
-   console.log("mis resut : ", result);
-    setResults(result.value);
-  };
-
-  const onSpeechError = (error) => {
-    console.log(error);
-  };
 
    //all effect
    useEffect(() => {
@@ -179,9 +150,20 @@ export default function Recherche({ navigation, route }) {
       }, [])
    );
 
+   //pour le bottom sheet
    useEffect(() => {
       bottomSheetTypeRef.current.close();
       bottomSheetThematiqueRef.current.close();
+   }, []);
+
+   //Effect pour declancher la translation
+   useEffect(() => {
+      Voice.onSpeechError = onSpeechError;
+      Voice.onSpeechResults = onSpeechResults;
+
+      return () => {
+         Voice.destroy().then(Voice.removeAllListeners);
+      };
    }, []);
 
    //all function
@@ -201,6 +183,33 @@ export default function Recherche({ navigation, route }) {
       return ref.current.snapTo(1);
    };
 
+   //fontcion utilie pour la translation du vocal en texte
+   const startSpeechToText = async () => {
+      await Voice.start('fr-FR');
+      setStartedSpeech(true);
+   };
+
+   const stopSpeechToText = async () => {
+      await Voice.stop();
+      setStartedSpeech(false);
+   };
+
+   const onSpeechResults = (result) => {
+      setValueForSearch(result.value[0]);
+      ToastAndroid.show(
+         `Recherche de : ${result.value[0]} .........`,
+         ToastAndroid.LONG
+      );
+   };
+
+   const onSpeechError = (error) => {
+      console.log(error);
+      ToastAndroid.show(
+         `Erreur !!! Veuillez bien prononcé votre mot en français.`,
+         ToastAndroid.LONG
+      );
+   };
+
    //all render
    const _renderItem = useCallback(({ item }) => {
       return (
@@ -215,6 +224,7 @@ export default function Recherche({ navigation, route }) {
                      item.id,
                      allArticles
                   ),
+                  idOfThisContenu: item.id,
                });
             }}
          >
@@ -343,26 +353,55 @@ export default function Recherche({ navigation, route }) {
                               alignItems: 'center',
                            }}
                         >
-                           {/* <TouchableOpacity activeOpacity={0.7}>
-                              <Icon
-                                 name={'mic'}
-                                 color={Colors.greenAvg}
-                                 size={30}
-                              />
-                              <Text style={{ fontWeight: 'bold' }}>
-                                 {langueActual === 'fr'
-                                    ? 'Recherche vocale'
-                                    : "Hitady amin'ny alalan'ny feo"}{' '}
-                              </Text>
-                           </TouchableOpacity> */}
-
-                           {!started ? <Button title='Start Speech to Text' onPress={startSpeechToText} /> : undefined}
-                           {started ? <Button title='Stop Speech to Text' onPress={stopSpeechToText} /> : undefined}
-                           <Text>result : </Text>
-                           {results.map((result, index) => <Text key={index}>{result}</Text>)}
+                           {!startedSpeech ? (
+                              <TouchableOpacity
+                                 activeOpacity={0.7}
+                                 onPress={() => {
+                                    if (
+                                       isUserNetworkActive &&
+                                       isUserConnectedToInternet
+                                    ) {
+                                       setStartedSpeech(true);
+                                       startSpeechToText();
+                                    } else {
+                                       ToastAndroid.show(
+                                          `La recherche a besoin d'une connexion internet stable !!!`,
+                                          ToastAndroid.LONG
+                                       );
+                                    }
+                                 }}
+                              >
+                                 <Icon
+                                    name={'mic'}
+                                    color={Colors.greenAvg}
+                                    size={30}
+                                 />
+                                 <Text style={{ fontWeight: 'bold' }}>
+                                    {langueActual === 'fr'
+                                       ? 'Recherche vocale'
+                                       : "Hitady amin'ny alalan'ny feo"}{' '}
+                                 </Text>
+                              </TouchableOpacity>
+                           ) : undefined}
+                           {startedSpeech ? (
+                              <TouchableOpacity
+                                 activeOpacity={0.7}
+                                 onPress={() => {
+                                    setStartedSpeech(false);
+                                    stopSpeechToText();
+                                 }}
+                              >
+                                 <Lottie
+                                    autoPlay
+                                    ref={animation}
+                                    style={styles.vocal_off}
+                                    source={require('_images/vocal_on.json')}
+                                 />
+                              </TouchableOpacity>
+                           ) : undefined}
                         </View>
 
-                        {/* <View style={styles.view_for_input_search}>
+                        <View style={styles.view_for_input_search}>
                            <TextInput
                               style={styles.input}
                               keyboardType="default"
@@ -394,9 +433,9 @@ export default function Recherche({ navigation, route }) {
                                  />
                               </Text>
                            </TouchableOpacity>
-                        </View> */}
+                        </View>
 
-                        {/* <View style={styles.view_for_filtre}>
+                        <View style={styles.view_for_filtre}>
                            <View style={styles.view_in_filtre}>
                               <View>
                                  <Text
@@ -461,9 +500,9 @@ export default function Recherche({ navigation, route }) {
                                  )}
                               </View>
                            </View>
-                        </View> */}
+                        </View>
                      </View>
-                     {/* <View style={styles.view_for_result}>
+                     <View style={styles.view_for_result}>
                         {allContenusFilter?.length > 0 && (
                            <Text style={{ textAlign: 'center' }}>
                               {allContenusFilter.length}{' '}
@@ -472,7 +511,7 @@ export default function Recherche({ navigation, route }) {
                                  : ' ny valiny hita'}
                            </Text>
                         )}
-                     </View> */}
+                     </View>
                   </View>
                }
                ListEmptyComponent={

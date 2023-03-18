@@ -90,12 +90,13 @@ export default function Home({ navigation }) {
             onPress={() => {
                navigation.navigate(nameNav.listArticle, {
                   titleScreen: `${
-                     langueActual === 'fr' ? 'Loi n° ' : 'Lalana faha '
+                     langueActual === 'fr' ? 'Loi n°' : 'Lalana faha '
                   } ${item.numero}`,
                   allArticleRelatedTotheContenu: filterArticleToListByContenu(
                      item.id,
                      allArticles
                   ),
+                  idOfThisContenu: item.id,
                });
             }}
          >

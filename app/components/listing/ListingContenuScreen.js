@@ -41,7 +41,7 @@ export default function ListingContenu({ navigation, route }) {
                      item.id,
                      allArticles
                   ),
-                  idOfThisContenu: item.id
+                  idOfThisContenu: item.id,
                });
             }}
          >
@@ -156,8 +156,6 @@ export default function ListingContenu({ navigation, route }) {
                   offset: data.length * index,
                   index,
                })}
-               initialNumToRender={5}
-               maxToRenderPerBatch={3}
                contentContainerStyle={{ paddingBottom: 10 }}
             />
          </SafeAreaView>
