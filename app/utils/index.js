@@ -28,10 +28,10 @@ import {
 import {
    fetchTypesToApi,
    fetchArticlesToApi,
+   fetchArticlesByContenuToApi,
    fetchThematiquesToApi,
    fetchContenusToApi,
-   fetchArtiContenuToLocalDatabase,
-   fetchTypeThemToLocalDatabase,
+   fetchAllDataToLocalDatabase,
 } from './helper/functionFetching';
 
 export {
@@ -58,8 +58,8 @@ export {
    fetchTypesToApi,
    fetchContenusToApi,
    fetchArticlesToApi,
+   fetchArticlesByContenuToApi,
    fetchThematiquesToApi,
-   fetchArtiContenuToLocalDatabase,
-   fetchTypeThemToLocalDatabase,
+   fetchAllDataToLocalDatabase,
    filterArticleToListByContenu,
 };

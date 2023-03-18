@@ -1,5 +1,7 @@
-import 'react-native-gesture-handler';
+// import 'react-native-gesture-handler';
+import './ignoreWarning';
 import './startup';
+import 'expo-dev-client';
 import './i18nextConf';
 import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';

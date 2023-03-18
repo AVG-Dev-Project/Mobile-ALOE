@@ -12,6 +12,8 @@ import {
    isNetworkActive,
    addFavoris,
    isConnectedToInternet,
+   getCurrentPageContenuForApi,
+   getCurrentPageArticleForApi
 } from '_utils/redux/actions/action_creators';
 import {
    ArticleSchema,
@@ -30,8 +32,7 @@ import {
    fetchArticlesToApi,
    fetchContenusToApi,
    fetchThematiquesToApi,
-   fetchArtiContenuToLocalDatabase,
-   fetchTypeThemToLocalDatabase,
+   fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
 } from '_utils';
 import styles from './styles';
@@ -46,6 +47,10 @@ export default function DownloadData({ navigation }) {
    );
    const isUserNetworkActive = useSelector(
       (selector) => selector.fonctionnality.isNetworkActive
+   );
+   const currentPageContenuApi = useSelector((selector) => selector.loi.currentPageContenu);
+   const currentPageArticleApi = useSelector(
+      (selector) => selector.loi.currentPageArticle
    );
    const isUserConnectedToInternet = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
@@ -62,9 +67,9 @@ export default function DownloadData({ navigation }) {
    //all functions
    // functions selon disponibilité de isUserNetworkActive 1 pour démarrer tous les fonction fetch depuis API 2 pour importer les données depuis le fichier
    const getOnlineDatas = async () => {
-      fetchArticlesToApi();
-      fetchContenusToApi();
-      fetchThematiquesToApi();
+      await fetchContenusToApi(currentPageContenuApi, dispatch);
+      await fetchArticlesToApi(currentPageArticleApi, dispatch);
+      await fetchThematiquesToApi();
       await fetchTypesToApi();
       setIsFetchData(false);
       storeDataToLocalStorage('isAllDataDownloaded', 'true');
@@ -76,19 +81,18 @@ export default function DownloadData({ navigation }) {
             dispatch(addFavoris(res));
          }
       });
-      fetchArtiContenuToLocalDatabase(dispatch);
-      fetchTypeThemToLocalDatabase(dispatch);
+      fetchAllDataToLocalDatabase(dispatch);
       setTimeout(() => {
          setIsDataLoaded(false);
          dispatch(getStarted());
       }, 500);
    };
 
-   // const showData = () => {
-   //    return ArticleSchema.query({ columns: '*' }).then((res) => {
-   //       console.log(res.length);
-   //    });
-   // };
+   const showData = () => {
+      return ArticleSchema.query({ columns: '*' }).then((res) => {
+         console.log(res.length);
+      });
+   };
 
    const handleFileSelectionAndImportData = async () => {
       setIsUploadData(true);
@@ -148,7 +152,7 @@ export default function DownloadData({ navigation }) {
          setMessageStatusInternet(
             'Comme vous êtes connecté à internet, vous pouvez soit télechargés les datas via votre connexion soit uploader le fichier datas'
          );
-         //checkAndsendMailFromLocalDBToAPI();
+         checkAndsendMailFromLocalDBToAPI();
       }
       if (
          isUserNetworkActive &&
@@ -185,6 +189,16 @@ export default function DownloadData({ navigation }) {
       isUploadData,
       isFetchData,
    ]);
+
+   //on doit s'assurer de démarrer le compteur de page
+   useEffect(() => {
+      getDataFromLocalStorage('currentPageArticleApi').then((res) => {
+         dispatch(getCurrentPageArticleForApi(parseInt(res)));
+      });
+      getDataFromLocalStorage('currentPageContenuApi').then((res) => {
+         dispatch(getCurrentPageContenuForApi(parseInt(res)));
+      });
+   }, []);
 
    return (
       <View style={styles.view_container_download}>
@@ -278,7 +292,7 @@ export default function DownloadData({ navigation }) {
                   loading={isUploadData}
                />
 
-               {/* <Button
+               <Button
                   title="Show data"
                   icon={{
                      name: 'file-upload',
@@ -295,8 +309,10 @@ export default function DownloadData({ navigation }) {
                      width: 250,
                      marginVertical: 5,
                   }}
-                  onPress={() => showData()}
-               /> */}
+                  onPress={() => {
+                     showData();
+                  }}
+               />
             </View>
          </View>
          <View>
