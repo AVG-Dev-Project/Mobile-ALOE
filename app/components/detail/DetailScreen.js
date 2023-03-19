@@ -58,7 +58,7 @@ export default function Detail({ navigation, route }) {
       if (isSpeakPlay) {
          Speech.stop();
       } else {
-         Speech.speak(txt_to_say);
+         Speech.speak(txt_to_say, { language: 'fr-FR' });
       }
    };
 
@@ -190,7 +190,7 @@ export default function Detail({ navigation, route }) {
                         style={{
                            fontSize: 22,
                            fontWeight: 'bold',
-                           marginTop: 8,
+                           marginTop: 18,
                         }}
                      >
                         {langueActual === 'fr'
@@ -205,13 +205,21 @@ export default function Detail({ navigation, route }) {
                         {langueActual === 'fr' ? (
                            <RenderHtml
                               contentWidth={width}
-                              source={sourceHTML(oneArticle.contenu_fr)}
+                              source={sourceHTML(
+                                 oneArticle.contenu_fr?.split(
+                                    '________________'
+                                 )[1]
+                              )}
                               tagsStyles={tagsStyles}
                            />
                         ) : (
                            <RenderHtml
                               contentWidth={width}
-                              source={sourceHTML(oneArticle.contenu_mg)}
+                              source={sourceHTML(
+                                 oneArticle.contenu_mg?.split(
+                                    '________________'
+                                 )[1]
+                              )}
                               tagsStyles={tagsStyles}
                            />
                         )}
@@ -239,11 +247,15 @@ export default function Detail({ navigation, route }) {
                         setIsSpeakPlay(!isSpeakPlay);
                         if (langueActual === 'fr') {
                            playPauseSpeak(
-                              oneArticle.contenu_fr.substring(0, 4000)
+                              oneArticle.contenu_fr
+                                 ?.split('________________')[0]
+                                 .substring(0, 4000)
                            );
                         } else {
                            playPauseSpeak(
-                              oneArticle.contenu_mg.substring(0, 4000)
+                              oneArticle.contenu_mg
+                                 ?.split('________________')[0]
+                                 .substring(0, 4000)
                            );
                         }
                      }}

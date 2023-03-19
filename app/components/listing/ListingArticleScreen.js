@@ -15,12 +15,13 @@ import { styles } from './stylesArticle';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
-import { cutTextWithBalise } from '_utils';
-import { addFavoris } from '_utils/redux/actions/action_creators';
-import { useFocusEffect } from '@react-navigation/native';
+import { cutTextWithBalise, LoiService } from '_utils';
+import { addFavoris, getAllArticles } from '_utils/redux/actions/action_creators';
 
 export default function ListingArticle({ navigation, route }) {
    //all data
+   let currentPage = 0;
+   let totalPage = 1;
    const dispatch = useDispatch();
    const { width } = useWindowDimensions();
    const langueActual = useSelector(
@@ -30,6 +31,7 @@ export default function ListingArticle({ navigation, route }) {
       (selector) => selector.loi.favoris
    );
    const dataFromParams = route.params.allArticleRelatedTotheContenu;
+   const idOfTheContenuMother = route.params.idOfThisContenu;
    const [articleList, setArticleList] = useState(
       dataFromParams.map((item) => {
          return {
@@ -38,6 +40,9 @@ export default function ListingArticle({ navigation, route }) {
          };
       })
    );
+
+    console.log("totalPage on mount: ", totalPage);
+
 
    const tagsStyles = {
       p: {
@@ -63,6 +68,23 @@ export default function ListingArticle({ navigation, route }) {
          )
       );
    };
+
+   const getNextPageArticlesFromApi = async () => {
+      let res = await LoiService.getArticlesByContenuFromServ(idOfTheContenuMother, currentPage + 1);
+      currentPage += 1;
+      totalPage = 1;
+      let oldAllArticles = [...articleList];
+      res.results.map((result) => {
+            if (
+               !oldAllArticles.find((article) => article.id === result.id)
+            ) {
+               console.log("tsy find e :" , result.id);
+               oldAllArticles.push(result);
+            }
+         })
+      setArticleList(oldAllArticles);
+      dispatch(getAllArticles(oldAllArticles));
+   }
 
    //all effects
 
@@ -248,8 +270,6 @@ export default function ListingArticle({ navigation, route }) {
                   offset: data.length * index,
                   index,
                })}
-               initialNumToRender={5}
-               maxToRenderPerBatch={3}
                ListEmptyComponent={
                   <View
                      style={{
@@ -275,6 +295,17 @@ export default function ListingArticle({ navigation, route }) {
                   </View>
                }
                extraData={articleList}
+               onEndReachedThreshold={0.5}
+               onEndReached={async () => {
+                  console.log("starting fetch next page .......")
+                  console.log("totalPage on reach: ", totalPage);
+                  if(currentPage < totalPage){
+                     console.log("mbola tsy page farany +++++++")
+                     await getNextPageArticlesFromApi();
+                  }
+                  console.log("totalPage after fetchuind reach:******** ", totalPage);
+                  console.log("current page : ", currentPage);
+               }}
             />
          </SafeAreaView>
       </View>

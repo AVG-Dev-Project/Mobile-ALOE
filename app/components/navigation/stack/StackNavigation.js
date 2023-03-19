@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import ListingArticle from '_components/listing/ListingArticleScreen';
 import ListingContenu from '_components/listing/ListingContenuScreen';
 import Detail from '_components/detail/DetailScreen';
+import Information from '_components/informationAvg/information';
 
 let Stack = createStackNavigator();
 export default function StackNavigation() {
@@ -53,6 +54,14 @@ export default function StackNavigation() {
             <Stack.Screen
                name={nameNav.doleance}
                component={Doleance}
+               options={({ route }) => ({
+                  title: route.params.titleScreen,
+               })}
+            />
+
+            <Stack.Screen
+               name={nameNav.information}
+               component={Information}
                options={({ route }) => ({
                   title: route.params.titleScreen,
                })}
