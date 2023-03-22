@@ -1,70 +1,129 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import {
    View,
    Text,
    Image,
    SafeAreaView,
+   useWindowDimensions,
+   StyleSheet,
    TouchableOpacity,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Icon } from '@rneui/themed';
 import Carousel from 'react-native-snap-carousel';
-import { useSelector } from 'react-redux';
-
+import { useSelector, useDispatch } from 'react-redux';
 import HeaderGlobal from '_components/header/HeaderGlobal';
-import { nameStackNavigation as nameNav } from '_utils';
+import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
+import {
+   nameStackNavigation as nameNav,
+   filterArticleToListByContenu,
+   fetchAllDataToLocalDatabase,
+} from '_utils';
 import { styles } from './styles';
 import { Colors } from '_theme/Colors';
+import {
+   getFavoriteFromLocalStorage,
+   removeInLocalStorage,
+   checkAndsendMailFromLocalDBToAPI,
+   ArticleSchema,
+   ContenuSchema,
+} from '_utils';
 
 export default function Home({ navigation }) {
    //all states
+   const dispatch = useDispatch();
    const isCarousel = React.useRef(null);
-   const allArticles = useSelector((selector) => selector.article.articles);
+   const { width, height } = useWindowDimensions();
+   const { t } = useTranslation();
+   const allArticles = useSelector((selector) => selector.loi.articles);
+   const allFavoris = useSelector((selector) => selector.loi.favoris);
+   const allContenus = useSelector((selector) => selector.loi.contenus);
+   const allTypes = useSelector((selector) => selector.loi.types);
+   const allThematiques = useSelector((selector) => selector.loi.thematiques);
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   const allThematiques = useSelector(
-      (selector) => selector.article.thematiques
+   const isUserNetworkActive = useSelector(
+      (selector) => selector.fonctionnality.isNetworkActive
+   );
+   const isUserConnectedToInternet = useSelector(
+      (selector) => selector.fonctionnality.isConnectedToInternet
+   );
+   const snapPoints = useMemo(
+      () => (height < 700 ? [0, '60%'] : [0, '50%']),
+      []
    );
 
+   const fetchData = () => {
+      fetchAllDataToLocalDatabase(dispatch);
+   };
+
+   const showData = () => {
+      return ArticleSchema.query({ columns: '*' }).then((res) => {
+         console.log(res.length);
+      });
+   };
+
+   //all refs
+   const bottomSheetRef = useRef(null);
+
+   //all functions
+
    //all efects
-   const { t } = useTranslation();
+   useEffect(() => {
+      bottomSheetRef.current.close();
+      //removeInLocalStorage('favorite');
+   }, []);
+
+   useEffect(() => {
+      if (isUserConnectedToInternet && isUserNetworkActive) {
+         checkAndsendMailFromLocalDBToAPI();
+      }
+   }, [isUserNetworkActive, isUserConnectedToInternet]);
 
    //all components
-   const _renderItemArticle = ({ item }) => {
+   const _renderItemContenu = ({ item }) => {
       return (
          <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => {
-               navigation.navigate(nameNav.detailPage, {
+               navigation.navigate(nameNav.listArticle, {
                   titleScreen: `${
-                     langueActual === 'fr' ? 'Article n° ' : 'Lahatsoratra '
-                  } ${item.Article.numero_Article}`,
-                  articleToViewDetail: item,
+                     langueActual === 'fr' ? 'Loi n°' : 'Lalana faha '
+                  } ${item.numero}`,
+                  allArticleRelatedTotheContenu: filterArticleToListByContenu(
+                     item.id,
+                     allArticles
+                  ),
+                  idOfThisContenu: item.id,
                });
             }}
          >
             <View key={item.id} style={styles.view_container_renderItemArticle}>
                <Image
-                  style={styles.image_poster_style}
-                  source={item.photo ?? require('_images/book_loi.jpg')}
+                  style={styles.image_poster_style_article}
+                  source={require('_images/book_loi.jpg')}
                />
+
                <Text
                   style={{
                      marginVertical: 8,
                      paddingRight: 8,
                      fontWeight: 'bold',
-                     fontSize: 17,
+                     fontSize: height < 700 ? 13 : 17,
                   }}
+               >
+                  {langueActual === 'fr' ? 'Loi n° ' : 'Lalana faha '}
+                  {langueActual === 'fr' ? item.numero : item.numero}
+               </Text>
+               <Text
+                  style={{ fontSize: 12, textTransform: 'capitalize' }}
                   numberOfLines={1}
                >
                   {langueActual === 'fr'
-                     ? item.Titre?.titre_fr
-                     : item.Titre?.titre_mg}
-               </Text>
-               <Text style={{ fontSize: 12 }}>
-                  {t('mot_publie_home')}:{item.date_created?.substring(0, 10)}{' '}
+                     ? item.objet_contenu_fr
+                     : item.objet_contenu_mg}
                </Text>
             </View>
          </TouchableOpacity>
@@ -78,26 +137,26 @@ export default function Home({ navigation }) {
             onPress={() => {
                navigation.navigate('Recherche', {
                   screen: 'Recherche',
-                  type: item.Type.nom_Type_fr,
+                  type: langueActual === 'fr' ? item.nom_fr : item.nom_mg,
                });
             }}
          >
             <View key={item.id} style={styles.view_container_renderItemType}>
                <Image
                   style={styles.image_poster_style_type}
-                  source={item.photo ?? require('_images/book_loi.jpg')}
+                  source={require('_images/book_loi.jpg')}
                />
+               <View
+                  style={[StyleSheet.absoluteFillObject, styles.maskImageCatg]}
+               ></View>
                <Text
-                  style={{
-                     marginVertical: 8,
-                     fontSize: 16,
-                  }}
-                  numberOfLines={2}
+                  style={[
+                     StyleSheet.absoluteFillObject,
+                     styles.text_descriptif_for_carousel,
+                  ]}
+                  numberOfLines={1}
                >
-                  {/*langueActual === 'fr'
-                     ? item.Titre?.titre_fr
-               : item.Titre?.titre_mg*/}
-                  {item.Type.nom_Type_fr}
+                  {langueActual === 'fr' ? item.nom_fr : item.nom_mg}
                </Text>
             </View>
          </TouchableOpacity>
@@ -111,26 +170,26 @@ export default function Home({ navigation }) {
             onPress={() => {
                navigation.navigate('Recherche', {
                   screen: 'Recherche',
-                  thematique: item.Thematique.nom_Thematique_fr,
+                  thematique: langueActual === 'fr' ? item.nom_fr : item.nom_mg,
                });
             }}
          >
             <View key={item.id} style={styles.view_container_renderItemType}>
                <Image
                   style={styles.image_poster_style_type}
-                  source={item.photo ?? require('_images/book_loi.jpg')}
+                  source={require('_images/book_loi.jpg')}
                />
+               <View
+                  style={[StyleSheet.absoluteFillObject, styles.maskImageCatg]}
+               ></View>
                <Text
-                  style={{
-                     marginVertical: 8,
-                     fontSize: 16,
-                  }}
+                  style={[
+                     StyleSheet.absoluteFillObject,
+                     styles.text_descriptif_for_carousel,
+                  ]}
                   numberOfLines={2}
                >
-                  {/*langueActual === 'fr'
-                     ? item.Titre?.titre_fr
-               : item.Titre?.titre_mg*/}
-                  {item.Thematique.nom_Thematique_fr}
+                  {langueActual === 'fr' ? item.nom_fr : item.nom_mg}
                </Text>
             </View>
          </TouchableOpacity>
@@ -141,7 +200,10 @@ export default function Home({ navigation }) {
       <KeyboardAwareScrollView style={{ backgroundColor: Colors.background }}>
          <View style={styles.view_container}>
             <View style={styles.head_content}>
-               <HeaderGlobal navigation={navigation} />
+               <HeaderGlobal
+                  navigation={navigation}
+                  bottomSheetRef={bottomSheetRef}
+               />
             </View>
 
             <View style={styles.landing_screen}>
@@ -165,7 +227,12 @@ export default function Home({ navigation }) {
                      </Text>
                      <Text>{t('continue_de_lire')} </Text>
                   </View>
-                  <Icon name={'autorenew'} color={Colors.white} size={38} />
+                  <Icon
+                     name={'autorenew'}
+                     color={Colors.white}
+                     size={38}
+                     onPress={() => showData()}
+                  />
                </View>
             </View>
 
@@ -179,7 +246,12 @@ export default function Home({ navigation }) {
                      marginVertical: 25,
                   }}
                >
-                  <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
+                  <Text
+                     style={{
+                        fontSize: height < 700 ? 18 : 22,
+                        fontWeight: 'bold',
+                     }}
+                  >
                      {t('thematique')}
                   </Text>
                </View>
@@ -189,8 +261,8 @@ export default function Home({ navigation }) {
                         <Carousel
                            layout="default"
                            ref={isCarousel}
-                           data={allArticles}
-                           loop={true}
+                           data={allThematiques}
+                           loop={false}
                            loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
                            //fin des props spéficifique au section annonce
                            renderItem={_renderItemThematique}
@@ -215,7 +287,12 @@ export default function Home({ navigation }) {
                      marginVertical: 25,
                   }}
                >
-                  <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+                  <Text
+                     style={{
+                        fontSize: height < 700 ? 18 : 22,
+                        fontWeight: 'bold',
+                     }}
+                  >
                      {t('les_types')}
                   </Text>
                </View>
@@ -225,8 +302,8 @@ export default function Home({ navigation }) {
                         <Carousel
                            layout="default"
                            ref={isCarousel}
-                           data={allArticles}
-                           loop={true}
+                           data={allTypes}
+                           loop={false}
                            loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
                            //fin des props spéficifique au section annonce
                            renderItem={_renderItemType}
@@ -251,20 +328,25 @@ export default function Home({ navigation }) {
                      marginVertical: 25,
                   }}
                >
-                  <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-                     {t('publie_recemment')}
+                  <Text
+                     style={{
+                        fontSize: height < 700 ? 18 : 22,
+                        fontWeight: 'bold',
+                     }}
+                  >
+                     {t('contenu')}
                   </Text>
                   <Icon
                      name={'arrow-forward'}
-                     color={Colors.violet}
+                     color={Colors.greenAvg}
                      size={30}
                      onPress={() => {
-                        navigation.navigate(nameNav.listPage, {
+                        navigation.navigate(nameNav.listContenu, {
                            titleScreen:
                               langueActual === 'fr'
-                                 ? 'Tous les articles'
-                                 : 'Ireo lahatsoratra',
-                           dataToList: allArticles,
+                                 ? 'Tous les contenus'
+                                 : 'Ireo kaontenu',
+                           dataToList: allContenus,
                         });
                      }}
                   />
@@ -275,11 +357,11 @@ export default function Home({ navigation }) {
                         <Carousel
                            layout="default"
                            ref={isCarousel}
-                           data={allArticles}
+                           data={allContenus}
                            loop={true}
                            loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
                            //fin des props spéficifique au section annonce
-                           renderItem={_renderItemArticle}
+                           renderItem={_renderItemContenu}
                            sliderWidth={150}
                            itemWidth={240}
                            inactiveSlideOpacity={0.9} //on uniformise tous les opacity
@@ -291,6 +373,10 @@ export default function Home({ navigation }) {
                </View>
             </View>
          </View>
+         <BottomSheetCustom
+            bottomSheetRef={bottomSheetRef}
+            snapPoints={snapPoints}
+         />
       </KeyboardAwareScrollView>
    );
 }

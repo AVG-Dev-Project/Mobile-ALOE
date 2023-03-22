@@ -4,8 +4,13 @@ import {
    GET_STARTED,
    GET_ALL_THEMATIQUES,
    GET_ALL_TYPES,
+   GET_ALL_CONTENUS,
    CHANGE_LANGUAGE,
-   IS_CONNECTED_INTERNET,
+   IS_NETWORK_ACTIVE,
+   IS_CONNECTED_TO_INTERNET,
+   CURRENT_PAGE_CONTENU_FOR_API,
+   CURRENT_PAGE_ARTICLE_FOR_API,
+   TOTAL_PAGE_API
 } from './action_names';
 
 export const getStarted = () => ({
@@ -32,12 +37,37 @@ export const getAllTypes = (types) => ({
    payload: types,
 });
 
-export const addFavoris = (article) => ({
+export const getAllContenus = (contenus) => ({
+   type: GET_ALL_CONTENUS,
+   payload: contenus,
+});
+
+export const addFavoris = (idArticle) => ({
    type: ADD_FAVORIS,
-   payload: article,
+   payload: idArticle,
+});
+
+export const isNetworkActive = (status) => ({
+   type: IS_NETWORK_ACTIVE,
+   payload: status,
 });
 
 export const isConnectedToInternet = (status) => ({
-   type: IS_CONNECTED_INTERNET,
+   type: IS_CONNECTED_TO_INTERNET,
    payload: status,
+});
+
+export const getCurrentPageContenuForApi = (numberPage) => ({
+   type: CURRENT_PAGE_CONTENU_FOR_API,
+   payload: numberPage,
+});
+
+export const getCurrentPageArticleForApi = (numberPage) => ({
+   type: CURRENT_PAGE_ARTICLE_FOR_API,
+   payload: numberPage,
+});
+
+export const getTotalPageApi = (array) => ({
+   type: TOTAL_PAGE_API,
+   payload: array,
 });

@@ -1,33 +1,11 @@
 import { Icon } from '@rneui/base';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors } from '_theme/Colors';
-import {
-   Menu,
-   MenuOptions,
-   MenuOption,
-   MenuTrigger,
-} from 'react-native-popup-menu';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { changeLanguage } from '_utils/redux/actions/action_creators';
 
-const MenuOptionCustom = ({ text, icone }) => {
-   return (
-      <View
-         style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-         }}
-      >
-         <Text style={{ fontSize: 22 }}>{text}</Text>
-         <Icon name={icone} color={Colors.violet} size={20} />
-      </View>
-   );
-};
-
-export default function HeaderGlobal({ navigation }) {
+export default function HeaderGlobal({ navigation, bottomSheetRef }) {
    //all data
    const dispatch = useDispatch();
 
@@ -38,34 +16,20 @@ export default function HeaderGlobal({ navigation }) {
       dispatch(changeLanguage(langue));
    };
 
+   const openBottomSheet = () => {
+      return bottomSheetRef.current.snapTo(1);
+   };
+
    return (
       <View style={styles.container}>
          <Text style={styles.titre_salutation}>
             {t('bienvenue_header_text')} !
          </Text>
-         <TouchableOpacity activeOpacity={0.7}>
-            <Menu>
-               <MenuTrigger customStyles={{}}>
-                  <Icon name={'widgets'} color={Colors.violet} size={34} />
-               </MenuTrigger>
-               <MenuOptions
-                  customStyles={{
-                     optionsContainer: {
-                        padding: 8,
-                     },
-                     optionText: {
-                        fontSize: 22,
-                     },
-                  }}
-               >
-                  <MenuOption onSelect={() => onHandleChangeLanguage('fr')}>
-                     <MenuOptionCustom text="Français" icone="flag" />
-                  </MenuOption>
-                  <MenuOption onSelect={() => onHandleChangeLanguage('mg')}>
-                     <MenuOptionCustom text="Malagasy" icone="flag" />
-                  </MenuOption>
-               </MenuOptions>
-            </Menu>
+         <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => openBottomSheet()}
+         >
+            <Icon name={'widgets'} color={Colors.greenAvg} size={34} />
          </TouchableOpacity>
       </View>
    );

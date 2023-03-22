@@ -66,7 +66,7 @@ export const configStack = {
       headerTintColor: Colors.white,
       headerTitleAlign: 'center',
       headerStyle: {
-         backgroundColor: Colors.violet,
+         backgroundColor: Colors.greenAvg,
       },
       headerTitleStyle: {
          fontWeight: 'bold',

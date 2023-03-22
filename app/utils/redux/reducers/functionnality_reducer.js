@@ -2,12 +2,14 @@ import { produce } from 'immer';
 import {
    getStarted,
    changeLanguage,
+   isNetworkActive,
    isConnectedToInternet,
 } from '../actions/action_creators';
 
 const initialState = {
    started: false,
    langue: 'fr',
+   isNetworkActive: null,
    isConnectedToInternet: null,
 };
 
@@ -20,6 +22,10 @@ export const functionnalityReducer = (state = initialState, action) => {
       case changeLanguage().type:
          return produce(state, (draft) => {
             draft.langue = action.payload;
+         });
+      case isNetworkActive().type:
+         return produce(state, (draft) => {
+            draft.isNetworkActive = action.payload;
          });
       case isConnectedToInternet().type:
          return produce(state, (draft) => {

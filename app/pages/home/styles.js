@@ -1,12 +1,13 @@
 import { Colors } from '_theme/Colors';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
+let widthDevice = Dimensions.get('window').width;
 export const styles = StyleSheet.create({
    view_container: {
       flex: 1,
-      marginTop: 30,
+      marginTop: 8,
       marginBottom: 80,
-      paddingHorizontal: 15,
+      paddingHorizontal: 5,
       backgroundColor: Colors.background,
    },
    head_content: {
@@ -17,7 +18,7 @@ export const styles = StyleSheet.create({
       marginTop: 20,
       height: 200,
       borderRadius: 25,
-      backgroundColor: Colors.violet,
+      backgroundColor: Colors.greenAvg,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-evenly',
@@ -33,7 +34,7 @@ export const styles = StyleSheet.create({
       flexDirection: 'row',
       alignContent: 'center',
       justifyContent: 'space-around',
-      backgroundColor: Colors.whiteRose,
+      backgroundColor: Colors.greenWhite,
       width: '90%',
       paddingHorizontal: 0,
       paddingVertical: 20,
@@ -44,46 +45,62 @@ export const styles = StyleSheet.create({
       height: 42,
       borderRadius: 62,
    },
+   /*article*/
+   image_poster_style_article: {
+      height: 130,
+      width: 230,
+      borderRadius: 15,
+   },
    /*Thematique*/
-   one_item_categorie: {
-      width: 60,
-      height: 90,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-   },
-   image_for_categorie: {
-      width: 60,
-      height: 60,
-      borderRadius: 60,
-   },
    /*Types*/
-   one_item_type: {
-      width: 60,
-      height: 90,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-   },
-   image_for_types: {
-      width: 80,
-      height: 70,
-      borderRadius: 20,
+   maskImageCatg: {
+      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+      borderRadius: 18,
+      height: 80,
+      width: 230,
    },
    view_carousel: {
       width: '100%',
       flexDirection: 'row',
    },
-   image_poster_style: {
-      height: 130,
+
+   text_descriptif_for_carousel: {
+      fontWeight: 'bold',
+      opacity: 0.9,
+      color: Colors.white,
+      marginHorizontal: 2,
+      fontSize: 20,
+      flexWrap: 'wrap',
+      textAlign: 'center',
+      top: 28,
+   },
+   image_poster_style_type: {
+      height: 80,
       width: 230,
       borderRadius: 15,
    },
-   image_poster_style_type: {
-      height: 130,
-      width: 230,
-      borderRadius: 15,
+   view_bottom_sheet: {
+      marginHorizontal: 6,
+   },
+   view_in_bottomsheet: {
+      paddingVertical: 10,
+      display: 'flex',
+      flex: 1,
+   },
+   view_one_item_in_bottomsheet: {
+      height: 70,
+      paddingHorizontal: 12,
+      width: '100%',
+      borderBottomWidth: 1,
+      borderBottomColor: Colors.greenAvg,
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+   },
+   text_bottomsheet: {
+      fontSize: 26,
+      marginLeft: 13,
+      fontWeight: 'bold',
    },
 });
