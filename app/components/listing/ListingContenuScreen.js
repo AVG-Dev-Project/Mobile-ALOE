@@ -6,6 +6,7 @@ import {
    Image,
    Dimensions,
    SafeAreaView,
+   ToastAndroid,
    TouchableOpacity,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -16,6 +17,8 @@ import {
 import { styles } from './stylesContenu';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
+import * as MediaLibrary from 'expo-media-library';
+import * as FileSystem from 'expo-file-system';
 import { Colors } from '_theme/Colors';
 
 export default function ListingContenu({ navigation, route }) {
@@ -26,6 +29,60 @@ export default function ListingContenu({ navigation, route }) {
    );
    const allArticles = useSelector((selector) => selector.loi.articles);
    const dataForFlatList = route.params.dataToList;
+   const urlApiAttachement = 'https://avg.e-commerce-mg.com';
+   const [contenuList, setContenuList] = useState(
+      dataForFlatList.map((item) => {
+         return {
+            ...item,
+            isPdfDownloading: false,
+         };
+      })
+   );
+
+   //all functions
+   const downloadPdfFile = async (contenu, linkPdf) => {
+      const downloadResumable = FileSystem.createDownloadResumable(
+         urlApiAttachement + linkPdf,
+         FileSystem.documentDirectory + linkPdf?.slice(19)
+      );
+
+      try {
+         const { uri } = await downloadResumable.downloadAsync();
+         const asset = await MediaLibrary.createAssetAsync(uri);
+         const album = await MediaLibrary.getAlbumAsync('Download');
+         if (album === null) {
+            await MediaLibrary.createAlbumAsync('Download', asset, false);
+         } else {
+            await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+            ToastAndroid.show(
+               `${
+                  langueActual === 'fr'
+                     ? contenu.type_nom_fr
+                     : contenu.type_nom_mg
+               } n° ${contenu.numero} télecharger dans votre télephone!`,
+               ToastAndroid.SHORT
+            );
+            handleToogleIsDownloading(contenu.id);
+         }
+      } catch (e) {
+         ToastAndroid.show(
+            'Erreur durant le télechargement du pdf',
+            ToastAndroid.LONG
+         );
+         console.log(e);
+      }
+   };
+
+   const handleToogleIsDownloading = (id) => {
+      // Mettre à jour la propriété downloadingPdf du contenu avec l'ID donné
+      setContenuList((prevList) =>
+         prevList.map((item) =>
+            item.id === id
+               ? { ...item, isPdfDownloading: !item.isPdfDownloading }
+               : item
+         )
+      );
+   };
 
    //all logics
    const _renderItem = useCallback(({ item }) => {
@@ -35,7 +92,9 @@ export default function ListingContenu({ navigation, route }) {
             onPress={() => {
                navigation.navigate(nameNav.listArticle, {
                   titleScreen: `${
-                     langueActual === 'fr' ? 'Loi n°' : 'Lalana faha '
+                     langueActual === 'fr'
+                        ? item.type_nom_fr + ' n° '
+                        : item.type_nom_mg + ' faha '
                   } ${item.numero}`,
                   allArticleRelatedTotheContenu: filterArticleToListByContenu(
                      item.id,
@@ -53,7 +112,9 @@ export default function ListingContenu({ navigation, route }) {
                         fontSize: 18,
                      }}
                   >
-                     {langueActual === 'fr' ? 'Loi n°' : 'Lalana faha '}{' '}
+                     {langueActual === 'fr'
+                        ? item.type_nom_fr + ' n°'
+                        : item.type_nom_mg + ' faha '}{' '}
                      {item.numero}
                   </Text>
                   <Text
@@ -123,11 +184,16 @@ export default function ListingContenu({ navigation, route }) {
                      <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => {
-                           alert('PDF');
+                           downloadPdfFile(item, item.attachement?.slice(21));
+                           handleToogleIsDownloading(item.id);
                         }}
                      >
                         <Icon
-                           name={'file-download'}
+                           name={
+                              item.isPdfDownloading
+                                 ? 'hourglass-top'
+                                 : 'file-download'
+                           }
                            color={Colors.greenAvg}
                            size={28}
                         />
@@ -146,7 +212,8 @@ export default function ListingContenu({ navigation, route }) {
       <View style={styles.view_container}>
          <SafeAreaView style={styles.container_safe}>
             <FlatList
-               data={dataForFlatList}
+               data={contenuList}
+               extraData={contenuList}
                key={'_'}
                keyExtractor={_idKeyExtractor}
                renderItem={_renderItem}

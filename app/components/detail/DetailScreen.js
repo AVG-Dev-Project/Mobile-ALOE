@@ -25,7 +25,6 @@ import { styles } from './styles';
 import { Icon } from '@rneui/themed';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { printToFileAsync } from 'expo-print';
-import * as FileSystem from 'expo-file-system';
 import { captureRef } from 'react-native-view-shot';
 import bgImage from '_images/bg_loi.jpg';
 import { useDispatch, useSelector } from 'react-redux';
