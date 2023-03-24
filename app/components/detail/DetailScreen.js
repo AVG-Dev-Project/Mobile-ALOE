@@ -7,16 +7,24 @@ import {
    SafeAreaView,
    ScrollView,
    TouchableOpacity,
+   Platform,
    ToastAndroid,
    useWindowDimensions,
 } from 'react-native';
 import * as Speech from 'expo-speech';
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, {
+   useState,
+   useEffect,
+   useMemo,
+   useRef,
+   useCallback,
+} from 'react';
 import RenderHtml from 'react-native-render-html';
 import * as MediaLibrary from 'expo-media-library';
 import { styles } from './styles';
 import { Icon } from '@rneui/themed';
-import BottomSheet from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import { printToFileAsync } from 'expo-print';
 import { captureRef } from 'react-native-view-shot';
 import bgImage from '_images/bg_loi.jpg';
 import { useDispatch, useSelector } from 'react-redux';
@@ -81,6 +89,56 @@ export default function Detail({ navigation, route }) {
       }
    };
 
+   const downloadAsPdf = async () => {
+      const html = `
+         <html>
+            <body>
+               <h1 style="text-align: center; color: ${
+                  Colors.greenAvg
+               }">Article n° ${oneArticle.numero}</h1>
+               <h3 style="text-align: center;">Titre : ${
+                  langueActual === 'fr'
+                     ? oneArticle.titre_fr
+                     : oneArticle.titre_mg
+               }</h3>
+               <h3 style="text-decoration: underline">Contenu de l'article : </h3>
+               <p style="width: 90%">${
+                  langueActual === 'fr'
+                     ? oneArticle.contenu_fr?.split('________________')[0]
+                     : oneArticle.contenu_mg?.split('________________')[0]
+               }</p>
+            </body>
+         </html>
+      `;
+
+      const file = await printToFileAsync({
+         html: html,
+         base64: false,
+      });
+      await saveToDownloadDirectory(file.uri);
+   };
+
+   const saveToDownloadDirectory = async (uri) => {
+      try {
+         const asset = await MediaLibrary.createAssetAsync(uri);
+         const album = await MediaLibrary.getAlbumAsync('Download');
+         if (album === null) {
+            await MediaLibrary.createAlbumAsync('Download', asset, false);
+         } else {
+            await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+            ToastAndroid.show(
+               `Article n°${oneArticle.numero} télecharger dans votre télephone!`,
+               ToastAndroid.SHORT
+            );
+         }
+      } catch (e) {
+         ToastAndroid.show(
+            'Erreur durant le télechargement du pdf',
+            ToastAndroid.LONG
+         );
+      }
+   };
+
    // const showToastFavorite = () => {
    //    ToastAndroid.show('Vos favoris on été modifié', ToastAndroid.SHORT);
    // };
@@ -103,6 +161,12 @@ export default function Detail({ navigation, route }) {
    useEffect(() => {
       bottomSheetRef.current.close();
    }, []);
+
+   //all components
+   const renderBackDrop = useCallback(
+      (props) => <BottomSheetBackdrop {...props} opacity={0.6} />,
+      []
+   );
 
    return (
       <View style={styles.view_container}>
@@ -243,7 +307,7 @@ export default function Detail({ navigation, route }) {
                         </TouchableOpacity>
                         <TouchableOpacity
                            onPress={() => {
-                              onSaveImageAsync();
+                              downloadAsPdf();
                            }}
                         >
                            <Text style={styles.button_in_detail}>
@@ -291,6 +355,7 @@ export default function Detail({ navigation, route }) {
          </SafeAreaView>
 
          <BottomSheet
+            backdropComponent={renderBackDrop}
             ref={bottomSheetRef}
             index={1}
             snapPoints={snapPoints}
