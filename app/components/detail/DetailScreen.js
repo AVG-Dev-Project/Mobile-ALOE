@@ -46,7 +46,6 @@ export default function Detail({ navigation, route }) {
       () => (height < 700 ? [0, '60%'] : [0, '60%']),
       []
    );
-   const [status, requestPermission] = MediaLibrary.usePermissions();
 
    //permission
    if (status === null) {
@@ -70,19 +69,6 @@ export default function Detail({ navigation, route }) {
       } else {
          Speech.speak(txt_to_say, { language: 'fr-FR' });
       }
-   };
-
-   const onSaveImageAsync = async () => {
-      captureRef(viewToCaptureRef, {
-         height: 400,
-         quality: 1,
-         format: 'jpg',
-      }).then((uri) => {
-         MediaLibrary.saveToLibraryAsync(uri);
-         if (uri) {
-            alert('Saved');
-         }
-      });
    };
 
    const openBottomSheet = () => {
@@ -371,7 +357,7 @@ export default function Detail({ navigation, route }) {
                         </TouchableOpacity>
                      </View>
                   </View>
-               </ViewShot>
+               </View>
                <View style={styles.all_button_in_detail_screen}>
                   <TouchableOpacity
                      onPress={() => {
