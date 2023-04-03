@@ -76,4 +76,9 @@ export const styles = StyleSheet.create({
       marginHorizontal: 8,
       paddingHorizontal: 18,
    },
+   vocal_off: {
+      margin: 0,
+      padding: 0,
+      height: 46,
+   },
 });

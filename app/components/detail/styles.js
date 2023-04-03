@@ -66,7 +66,7 @@ export const styles = StyleSheet.create({
       textAlign: 'center',
       backgroundColor: Colors.greenWhite,
       paddingVertical: 10,
-      width: 140,
+      width: 90,
       paddingHorizontal: 24,
       color: Colors.greenAvg,
       borderRadius: 20,

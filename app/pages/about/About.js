@@ -44,17 +44,16 @@ export default function About({ navigation }) {
                <TouchableOpacity
                   activeOpacity={0.6}
                   onPress={() =>
-                     alert(
-                        langueActual === 'fr'
-                           ? 'Politique de confidentialité'
-                           : "Politika fiarovana fiainan'olona"
-                     )
+                     navigation.navigate(nameNav.information, {
+                        titleScreen:
+                           langueActual === 'fr' ? 'Information' : 'Mombamomba',
+                     })
                   }
                >
                   <Text style={styles.button_link_about}>
                      {langueActual === 'fr'
-                        ? 'Politique de confidentialité'
-                        : "Politika fiarovana fiainan'olona"}
+                        ? "A propos de l'AVG"
+                        : "Mombamomban'ny AVG"}
                   </Text>
                </TouchableOpacity>
                <TouchableOpacity activeOpacity={0.6}>

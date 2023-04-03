@@ -5,7 +5,10 @@ import {
    SafeAreaView,
    useWindowDimensions,
    TextInput,
+   ActivityIndicator,
    TouchableOpacity,
+   ToastAndroid,
+   Button,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import React, {
@@ -20,10 +23,12 @@ import {
    nameStackNavigation as nameNav,
    filterArticleToListByContenu,
 } from '_utils';
+import Lottie from 'lottie-react-native';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
-import BottomSheet from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { Colors } from '_theme/Colors';
+import Voice from '@react-native-voice/voice';
 
 //component custom
 const LabelCustomBottomSheet = ({ text, filterBy, reference }) => {
@@ -53,10 +58,13 @@ const LabelCustomBottomSheet = ({ text, filterBy, reference }) => {
 const filterGlobal = (array, theme, type, query) => {
    let res = theme === null && type === null && query === null ? [] : array;
 
-   if (theme) {
+   if (type === 'tout' || theme === 'tout') {
+      res = array;
+   }
+   if (theme && theme !== 'tout') {
       res = res.filter((_contenu) => _contenu.thematique_nom_fr === theme);
    }
-   if (type) {
+   if (type && type !== 'tout') {
       res = res.filter((_contenu) => _contenu.type_nom_fr === type);
    }
    if (query) {
@@ -71,7 +79,9 @@ const filterGlobal = (array, theme, type, query) => {
 export default function Recherche({ navigation, route }) {
    //all data
    const dispatch = useDispatch();
+   const animation = useRef(null);
    const [valueForSearch, setValueForSearch] = useState('');
+   const [textFromInputSearch, setTextFromsetValueForSearch] = useState('');
    const { width, height } = useWindowDimensions();
    const snapPoints = useMemo(
       () => (height < 700 ? [-1, '70%'] : [-1, '60%']),
@@ -83,6 +93,12 @@ export default function Recherche({ navigation, route }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const isUserNetworkActive = useSelector(
+      (selector) => selector.fonctionnality.isNetworkActive
+   );
+   const isUserConnectedToInternet = useSelector(
+      (selector) => selector.fonctionnality.isConnectedToInternet
+   );
    const allTypes = useSelector((selector) => selector.loi.types);
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
 
@@ -91,6 +107,8 @@ export default function Recherche({ navigation, route }) {
    let thematiqueFromParams = route.params ? route.params.thematique : null;
    const [typeChecked, setTypeChecked] = useState(null);
    const [thematiqueChecked, setThematiqueChecked] = useState(null);
+   const [isSearch, setIsSearch] = useState(false);
+   let [startedSpeech, setStartedSpeech] = useState(false);
 
    //all refs
    const bottomSheetTypeRef = useRef(null);
@@ -132,50 +150,26 @@ export default function Recherche({ navigation, route }) {
       }, [])
    );
 
+   //pour le bottom sheet
    useEffect(() => {
       bottomSheetTypeRef.current.close();
       bottomSheetThematiqueRef.current.close();
    }, []);
 
-   //all function
-   /*const findObjectContainValueSearch = (word) => {
-      if (word !== '') {
-         if (langueActual === 'fr') {
-            let resultSearch = allArticles.filter(
-               (item) =>
-                  item.Titre.titre_fr
-                     .toLowerCase()
-                     .includes(word.toLowerCase()) ||
-                  item.Article.contenu_Article_fr
-                     .toLowerCase()
-                     .includes(word.toLowerCase()) ||
-                  item.Intutile.contenu_intutile
-                     .toLowerCase()
-                     .includes(word.toLowerCase())
-            );
-            setAllContenusFilter(resultSearch);
-         } else {
-            let resultSearch = allArticles.filter(
-               (item) =>
-                  item.Titre.titre_mg
-                     .toLowerCase()
-                     .includes(word.toLowerCase()) ||
-                  item.Article.contenu_Article_mg
-                     .toLowerCase()
-                     .includes(word.toLowerCase()) ||
-                  item.Intutile.contenu_intutile
-                     .toLowerCase()
-                     .includes(word.toLowerCase())
-            );
-            setAllContenusFilter(resultSearch);
-         }
-      } else {
-         setAllContenusFilter([]);
-      }
-   };*/
+   //Effect pour declancher la translation
+   useEffect(() => {
+      Voice.onSpeechError = onSpeechError;
+      Voice.onSpeechResults = onSpeechResults;
 
-   const onHandleChangeValueSearch = (text) => {
+      return () => {
+         Voice.destroy().then(Voice.removeAllListeners);
+      };
+   }, []);
+
+   //all function
+   const onHandleSearchByValue = (text) => {
       setValueForSearch(text);
+      setIsSearch(false);
    };
 
    const filterByType = (text) => {
@@ -187,6 +181,33 @@ export default function Recherche({ navigation, route }) {
    };
    const openBottomSheet = (ref) => {
       return ref.current.snapTo(1);
+   };
+
+   //fontcion utilie pour la translation du vocal en texte
+   const startSpeechToText = async () => {
+      await Voice.start('fr-FR');
+      setStartedSpeech(true);
+   };
+
+   const stopSpeechToText = async () => {
+      await Voice.stop();
+      setStartedSpeech(false);
+   };
+
+   const onSpeechResults = (result) => {
+      setValueForSearch(result.value[0]);
+      ToastAndroid.show(
+         `Recherche de : ${result.value[0]} .........`,
+         ToastAndroid.LONG
+      );
+   };
+
+   const onSpeechError = (error) => {
+      console.log(error);
+      ToastAndroid.show(
+         `Erreur !!! Veuillez bien prononcé votre mot en français.`,
+         ToastAndroid.LONG
+      );
    };
 
    //all render
@@ -203,6 +224,7 @@ export default function Recherche({ navigation, route }) {
                      item.id,
                      allArticles
                   ),
+                  idOfThisContenu: item.id,
                });
             }}
          >
@@ -298,6 +320,21 @@ export default function Recherche({ navigation, route }) {
       );
    }, []);
 
+   const renderBackDrop = useCallback(
+      (props) => <BottomSheetBackdrop {...props} opacity={0.6} />,
+      []
+   );
+
+   const activityIndicator = () => {
+      if (isSearch) {
+         return (
+            <View style={{ display: 'flex', flex: 1 }}>
+               <ActivityIndicator size="large" />
+            </View>
+         );
+      }
+   };
+
    const _idKeyExtractor = (item, index) =>
       item?.id == null ? index.toString() : item.id.toString();
 
@@ -316,39 +353,77 @@ export default function Recherche({ navigation, route }) {
                               alignItems: 'center',
                            }}
                         >
-                           <TouchableOpacity activeOpacity={0.7}>
-                              <Icon
-                                 name={'mic'}
-                                 color={Colors.greenAvg}
-                                 size={30}
-                              />
-                              <Text style={{ fontWeight: 'bold' }}>
-                                 {langueActual === 'fr'
-                                    ? 'Recherche vocale'
-                                    : "Hitady amin'ny alalan'ny feo"}{' '}
-                              </Text>
-                           </TouchableOpacity>
+                           {!startedSpeech ? (
+                              <TouchableOpacity
+                                 activeOpacity={0.7}
+                                 onPress={() => {
+                                    if (
+                                       isUserNetworkActive &&
+                                       isUserConnectedToInternet
+                                    ) {
+                                       setStartedSpeech(true);
+                                       startSpeechToText();
+                                    } else {
+                                       ToastAndroid.show(
+                                          `La recherche a besoin d'une connexion internet stable !!!`,
+                                          ToastAndroid.LONG
+                                       );
+                                    }
+                                 }}
+                              >
+                                 <Icon
+                                    name={'mic'}
+                                    color={Colors.greenAvg}
+                                    size={30}
+                                 />
+                                 <Text style={{ fontWeight: 'bold' }}>
+                                    {langueActual === 'fr'
+                                       ? 'Recherche vocale'
+                                       : "Hitady amin'ny alalan'ny feo"}{' '}
+                                 </Text>
+                              </TouchableOpacity>
+                           ) : undefined}
+                           {startedSpeech ? (
+                              <TouchableOpacity
+                                 activeOpacity={0.7}
+                                 onPress={() => {
+                                    setStartedSpeech(false);
+                                    stopSpeechToText();
+                                 }}
+                              >
+                                 <Lottie
+                                    autoPlay
+                                    ref={animation}
+                                    style={styles.vocal_off}
+                                    source={require('_images/vocal_on.json')}
+                                 />
+                              </TouchableOpacity>
+                           ) : undefined}
                         </View>
 
                         <View style={styles.view_for_input_search}>
                            <TextInput
                               style={styles.input}
-                              keyboardType="email-address"
+                              keyboardType="default"
                               placeholder={
                                  langueActual === 'fr'
                                     ? 'Entrer le mot de recherche ...'
                                     : 'Ampidiro ny teny hotadiavina...'
                               }
-                              value={valueForSearch}
-                              onChangeText={(text) =>
-                                 onHandleChangeValueSearch(text)
-                              }
+                              value={textFromInputSearch}
+                              onChangeText={(text) => {
+                                 onHandleSearchByValue(text);
+                                 setTextFromsetValueForSearch(text);
+                              }}
                            />
                            <TouchableOpacity
                               activeOpacity={0.8}
-                              /*onPress={() => {
-                        findObjectContainValueSearch(valueForSearch);
-                     }}*/
+                              onPress={() => {
+                                 {
+                                    setIsSearch(true);
+                                    onHandleSearchByValue(textFromInputSearch);
+                                 }
+                              }}
                            >
                               <Text style={styles.boutton_search}>
                                  <Icon
@@ -472,13 +547,18 @@ export default function Recherche({ navigation, route }) {
                   offset: data.length * index,
                   index,
                })}
-               initialNumToRender={5}
                maxToRenderPerBatch={3}
+               onEndReachedThreshold={1}
+               onEndReached={() => {
+                  console.log('on end reached');
+               }}
             />
+            {activityIndicator()}
          </SafeAreaView>
 
          <BottomSheet
             ref={bottomSheetTypeRef}
+            backdropComponent={renderBackDrop}
             index={1}
             snapPoints={snapPoints}
             style={styles.view_bottom_sheet}
@@ -492,11 +572,30 @@ export default function Recherche({ navigation, route }) {
                      text={langueActual === 'fr' ? type.nom_fr : type.nom_mg}
                   />
                ))}
+               <TouchableOpacity
+                  onPress={() => {
+                     filterByType('tout');
+                     bottomSheetTypeRef.current.close();
+                  }}
+                  style={{
+                     display: 'flex',
+                     flexDirection: 'row',
+                     alignItems: 'center',
+                     justifyContent: 'flex-start',
+                     paddingVertical: 12,
+                  }}
+               >
+                  <Icon name={'category'} color={Colors.black} size={18} />
+                  <Text style={{ fontSize: 22, marginLeft: 8 }}>
+                     Afficher tout
+                  </Text>
+               </TouchableOpacity>
             </View>
          </BottomSheet>
 
          <BottomSheet
             ref={bottomSheetThematiqueRef}
+            backdropComponent={renderBackDrop}
             index={1}
             snapPoints={snapPoints}
             style={styles.view_bottom_sheet}
@@ -514,6 +613,24 @@ export default function Recherche({ navigation, route }) {
                      }
                   />
                ))}
+               <TouchableOpacity
+                  onPress={() => {
+                     filterByThematique('tout');
+                     bottomSheetThematiqueRef.current.close();
+                  }}
+                  style={{
+                     display: 'flex',
+                     flexDirection: 'row',
+                     alignItems: 'center',
+                     justifyContent: 'flex-start',
+                     paddingVertical: 12,
+                  }}
+               >
+                  <Icon name={'category'} color={Colors.black} size={18} />
+                  <Text style={{ fontSize: 22, marginLeft: 8 }}>
+                     Afficher tout
+                  </Text>
+               </TouchableOpacity>
             </View>
          </BottomSheet>
       </View>

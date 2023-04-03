@@ -23,7 +23,12 @@
             "foregroundImage": "./assets/adaptive-icon.png",
             "backgroundColor": "#FFFFFF"
          },
-         "package": "aloe.apk"
+         "package": "aloe.apk",
+         "config": {
+            "googleMaps": {
+               "apiKey": "AIzaSyCfeV-dI5JYOl39mJDqsyL8xtRykQHU29I"
+            }
+         }
       },
       "web": {
          "favicon": "./assets/favicon.png"
@@ -35,10 +40,17 @@
       },
       "plugins": [
          [
+            "@react-native-voice/voice",
+            {
+               "microphonePermission": "Allow Voice to Text Tutorial to access the microphone",
+               "speechRecognitionPermission": "Allow Voice to Text Tutorial to securely recognize user speech"
+            }
+         ],
+         [
             "expo-media-library",
             {
-               "photosPermission": "Allow Aloe to access your photos.",
-               "savePhotosPermission": "Allow Aloe to save photos.",
+               "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+               "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
                "isAccessMediaLocationEnabled": true
             }
          ]

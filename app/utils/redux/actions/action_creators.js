@@ -8,6 +8,9 @@ import {
    CHANGE_LANGUAGE,
    IS_NETWORK_ACTIVE,
    IS_CONNECTED_TO_INTERNET,
+   CURRENT_PAGE_CONTENU_FOR_API,
+   CURRENT_PAGE_ARTICLE_FOR_API,
+   TOTAL_PAGE_API
 } from './action_names';
 
 export const getStarted = () => ({
@@ -52,4 +55,19 @@ export const isNetworkActive = (status) => ({
 export const isConnectedToInternet = (status) => ({
    type: IS_CONNECTED_TO_INTERNET,
    payload: status,
+});
+
+export const getCurrentPageContenuForApi = (numberPage) => ({
+   type: CURRENT_PAGE_CONTENU_FOR_API,
+   payload: numberPage,
+});
+
+export const getCurrentPageArticleForApi = (numberPage) => ({
+   type: CURRENT_PAGE_ARTICLE_FOR_API,
+   payload: numberPage,
+});
+
+export const getTotalPageApi = (array) => ({
+   type: TOTAL_PAGE_API,
+   payload: array,
 });

@@ -7,6 +7,7 @@ import {
    SafeAreaView,
    ScrollView,
    TouchableOpacity,
+   Platform,
    ToastAndroid,
    useWindowDimensions,
 } from 'react-native';
@@ -15,13 +16,16 @@ import React, {
    useState,
    useEffect,
    useMemo,
-   useCallback,
    useRef,
+   useCallback,
 } from 'react';
 import RenderHtml from 'react-native-render-html';
+import * as MediaLibrary from 'expo-media-library';
 import { styles } from './styles';
 import { Icon } from '@rneui/themed';
-import BottomSheet from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import { printToFileAsync } from 'expo-print';
+import { captureRef } from 'react-native-view-shot';
 import bgImage from '_images/bg_loi.jpg';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
@@ -42,10 +46,16 @@ export default function Detail({ navigation, route }) {
       () => (height < 700 ? [0, '60%'] : [0, '60%']),
       []
    );
+   const [status, requestPermission] = MediaLibrary.usePermissions();
+
+   //permission
+   if (status === null) {
+      requestPermission();
+   }
 
    //all refs
    const bottomSheetRef = useRef(null);
-   const viewToCaptureRef = useRef();
+   const imageRef = useRef();
 
    //all functions
 
@@ -58,7 +68,7 @@ export default function Detail({ navigation, route }) {
       if (isSpeakPlay) {
          Speech.stop();
       } else {
-         Speech.speak(txt_to_say);
+         Speech.speak(txt_to_say, { language: 'fr-FR' });
       }
    };
 
@@ -77,6 +87,77 @@ export default function Detail({ navigation, route }) {
 
    const openBottomSheet = () => {
       return bottomSheetRef.current.snapTo(1);
+   };
+
+   const onSaveImageAsync = async () => {
+      try {
+         const localUri = await captureRef(imageRef, {
+            quality: 1,
+         });
+
+         await MediaLibrary.saveToLibraryAsync(localUri);
+         if (localUri) {
+            ToastAndroid.show(
+               `Article n°${oneArticle.numero} télecharger dans votre galérie.`,
+               ToastAndroid.SHORT
+            );
+         }
+      } catch (e) {
+         ToastAndroid.show(
+            `La capture a été intérompu. Veuillez réessayer!`,
+            ToastAndroid.SHORT
+         );
+      }
+   };
+
+   const downloadAsPdf = async () => {
+      const html = `
+         <html>
+            <body>
+               <h1 style="text-align: center; color: ${
+                  Colors.greenAvg
+               }">Article n° ${oneArticle.numero}</h1>
+               <h3 style="text-align: center;">Titre : ${
+                  langueActual === 'fr'
+                     ? oneArticle.titre_fr
+                     : oneArticle.titre_mg
+               }</h3>
+               <h3 style="text-decoration: underline">Contenu de l'article : </h3>
+               <p style="width: 90%">${
+                  langueActual === 'fr'
+                     ? oneArticle.contenu_fr?.split('________________')[0]
+                     : oneArticle.contenu_mg?.split('________________')[0]
+               }</p>
+            </body>
+         </html>
+      `;
+
+      const file = await printToFileAsync({
+         html: html,
+         base64: false,
+      });
+      await saveToDownloadDirectory(file.uri);
+   };
+
+   const saveToDownloadDirectory = async (uri) => {
+      try {
+         const asset = await MediaLibrary.createAssetAsync(uri);
+         const album = await MediaLibrary.getAlbumAsync('Download');
+         if (album === null) {
+            await MediaLibrary.createAlbumAsync('Download', asset, false);
+         } else {
+            await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+            ToastAndroid.show(
+               `Article n°${oneArticle.numero} télecharger dans votre télephone!`,
+               ToastAndroid.SHORT
+            );
+         }
+      } catch (e) {
+         ToastAndroid.show(
+            'Erreur durant le télechargement du pdf',
+            ToastAndroid.LONG
+         );
+      }
    };
 
    // const showToastFavorite = () => {
@@ -102,6 +183,12 @@ export default function Detail({ navigation, route }) {
       bottomSheetRef.current.close();
    }, []);
 
+   //all components
+   const renderBackDrop = useCallback(
+      (props) => <BottomSheetBackdrop {...props} opacity={0.6} />,
+      []
+   );
+
    return (
       <View style={styles.view_container}>
          <StatusBar backgroundColor={Colors.greenAvg} />
@@ -121,7 +208,7 @@ export default function Detail({ navigation, route }) {
                      styles.maskImageDetailArticle,
                   ]}
                ></View>
-               <ViewShot collapsable={true} ref={viewToCaptureRef}>
+               <View ref={imageRef} collapsable={false}>
                   <View style={styles.info_in_landing_detail}>
                      <Text
                         style={{
@@ -140,7 +227,7 @@ export default function Detail({ navigation, route }) {
                         <Text
                            style={{
                               fontSize: 12,
-                              marginVertical: 4,
+                              marginVertical: 8,
                               color: Colors.white,
                            }}
                         >
@@ -190,7 +277,7 @@ export default function Detail({ navigation, route }) {
                         style={{
                            fontSize: 22,
                            fontWeight: 'bold',
-                           marginTop: 8,
+                           marginTop: 18,
                         }}
                      >
                         {langueActual === 'fr'
@@ -205,17 +292,84 @@ export default function Detail({ navigation, route }) {
                         {langueActual === 'fr' ? (
                            <RenderHtml
                               contentWidth={width}
-                              source={sourceHTML(oneArticle.contenu_fr)}
+                              source={sourceHTML(
+                                 oneArticle.contenu_fr?.split(
+                                    '________________'
+                                 )[1]
+                              )}
                               tagsStyles={tagsStyles}
                            />
                         ) : (
                            <RenderHtml
                               contentWidth={width}
-                              source={sourceHTML(oneArticle.contenu_mg)}
+                              source={sourceHTML(
+                                 oneArticle.contenu_mg?.split(
+                                    '________________'
+                                 )[1]
+                              )}
                               tagsStyles={tagsStyles}
                            />
                         )}
                      </ScrollView>
+                     <View style={styles.all_button_in_detail_screen}>
+                        <TouchableOpacity
+                           onPress={() => {
+                              onSaveImageAsync();
+                           }}
+                        >
+                           <Text style={styles.button_in_detail}>
+                              {' '}
+                              <Icon
+                                 name={'image'}
+                                 size={34}
+                                 color={Colors.greenAvg}
+                              />{' '}
+                           </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                           onPress={() => {
+                              downloadAsPdf();
+                           }}
+                        >
+                           <Text style={styles.button_in_detail}>
+                              {' '}
+                              <Icon
+                                 name={'picture-as-pdf'}
+                                 size={34}
+                                 color={Colors.greenAvg}
+                              />{' '}
+                           </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                           onPress={() => {
+                              setIsSpeakPlay(!isSpeakPlay);
+                              if (langueActual === 'fr') {
+                                 playPauseSpeak(
+                                    oneArticle.contenu_fr
+                                       ?.split('________________')[0]
+                                       .substring(0, 4000)
+                                 );
+                              } else {
+                                 playPauseSpeak(
+                                    oneArticle.contenu_mg
+                                       ?.split('________________')[0]
+                                       .substring(0, 4000)
+                                 );
+                              }
+                           }}
+                        >
+                           <Text style={[styles.button_in_detail]}>
+                              {' '}
+                              <Icon
+                                 name={
+                                    isSpeakPlay ? 'stop' : 'play-circle-outline'
+                                 }
+                                 size={34}
+                                 color={Colors.greenAvg}
+                              />{' '}
+                           </Text>
+                        </TouchableOpacity>
+                     </View>
                   </View>
                </ViewShot>
                <View style={styles.all_button_in_detail_screen}>
@@ -262,6 +416,7 @@ export default function Detail({ navigation, route }) {
          </SafeAreaView>
 
          <BottomSheet
+            backdropComponent={renderBackDrop}
             ref={bottomSheetRef}
             index={1}
             snapPoints={snapPoints}
