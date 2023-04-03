@@ -29,9 +29,12 @@ import { captureRef } from 'react-native-view-shot';
 import bgImage from '_images/bg_loi.jpg';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
-import { addFavoris } from '_utils/redux/actions/action_creators';
+// import { addFavoris } from '_utils/redux/actions/action_creators';
+import ViewShot, { captureRef } from 'react-native-view-shot';
+import * as MediaLibrary from 'expo-media-library';
 
 export default function Detail({ navigation, route }) {
+   const [status, requestPermission] = MediaLibrary.usePermissions();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
@@ -55,6 +58,11 @@ export default function Detail({ navigation, route }) {
    const imageRef = useRef();
 
    //all functions
+
+   if (status === null) {
+      requestPermission();
+   }
+
    /*function to speach article*/
    const playPauseSpeak = (txt_to_say) => {
       if (isSpeakPlay) {
@@ -62,6 +70,19 @@ export default function Detail({ navigation, route }) {
       } else {
          Speech.speak(txt_to_say, { language: 'fr-FR' });
       }
+   };
+
+   const onSaveImageAsync = async () => {
+      captureRef(viewToCaptureRef, {
+         height: 400,
+         quality: 1,
+         format: 'jpg',
+      }).then((uri) => {
+         MediaLibrary.saveToLibraryAsync(uri);
+         if (uri) {
+            alert('Saved');
+         }
+      });
    };
 
    const openBottomSheet = () => {
@@ -175,7 +196,7 @@ export default function Detail({ navigation, route }) {
             <ImageBackground
                source={bgImage}
                style={{
-                  height: 250,
+                  height: 230,
                }}
                imageStyle={{
                   resizeMode: 'cover',
@@ -350,6 +371,46 @@ export default function Detail({ navigation, route }) {
                         </TouchableOpacity>
                      </View>
                   </View>
+               </ViewShot>
+               <View style={styles.all_button_in_detail_screen}>
+                  <TouchableOpacity
+                     onPress={() => {
+                        //alert('télechargés en PDF');
+                        onSaveImageAsync();
+                     }}
+                  >
+                     <Text style={styles.button_in_detail}>
+                        {' '}
+                        <Icon
+                           name={'picture-as-pdf'}
+                           size={34}
+                           color={Colors.greenAvg}
+                        />{' '}
+                     </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                     onPress={() => {
+                        setIsSpeakPlay(!isSpeakPlay);
+                        if (langueActual === 'fr') {
+                           playPauseSpeak(
+                              oneArticle.contenu_fr.substring(0, 4000)
+                           );
+                        } else {
+                           playPauseSpeak(
+                              oneArticle.contenu_mg.substring(0, 4000)
+                           );
+                        }
+                     }}
+                  >
+                     <Text style={[styles.button_in_detail]}>
+                        {' '}
+                        <Icon
+                           name={isSpeakPlay ? 'stop' : 'play-circle-outline'}
+                           size={34}
+                           color={Colors.greenAvg}
+                        />{' '}
+                     </Text>
+                  </TouchableOpacity>
                </View>
             </ImageBackground>
          </SafeAreaView>
