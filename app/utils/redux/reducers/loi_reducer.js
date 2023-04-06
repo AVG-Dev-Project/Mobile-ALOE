@@ -7,7 +7,7 @@ import {
    getAllContenus,
    getCurrentPageArticleForApi,
    getCurrentPageContenuForApi,
-   getTotalPageApi
+   getTotalPageApi,
 } from '../actions/action_creators';
 
 import { storeFavoriteIdToLocalStorage } from '../../storage/asyncStorage';
@@ -18,12 +18,12 @@ const initialState = {
    types: [],
    contenus: [],
    favoris: [],
-   currentPageContenu: null,
+   currentPageContenu: 1,
    currentPageArticle: 1,
    totalPage: {
       article: 0,
-      contenu: 0
-   }
+      contenu: 0,
+   },
 };
 
 export const loiReducer = (state = initialState, action) => {
@@ -56,10 +56,10 @@ export const loiReducer = (state = initialState, action) => {
          });
       case getTotalPageApi().type:
          return produce(state, (draft) => {
-            if(action.payload[0] === 'contenu'){
-               draft.totalPage.contenu = action.payload[1]
+            if (action.payload[0] === 'contenu') {
+               draft.totalPage.contenu = action.payload[1];
             }
-            if(action.payload[0] === 'article'){
+            if (action.payload[0] === 'article') {
                draft.totalPage.article = action.payload[1];
             }
          });

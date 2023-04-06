@@ -13,7 +13,7 @@ import {
    addFavoris,
    isConnectedToInternet,
    getCurrentPageContenuForApi,
-   getCurrentPageArticleForApi
+   getCurrentPageArticleForApi,
 } from '_utils/redux/actions/action_creators';
 import {
    ArticleSchema,
@@ -48,7 +48,9 @@ export default function DownloadData({ navigation }) {
    const isUserNetworkActive = useSelector(
       (selector) => selector.fonctionnality.isNetworkActive
    );
-   const currentPageContenuApi = useSelector((selector) => selector.loi.currentPageContenu);
+   const currentPageContenuApi = useSelector(
+      (selector) => selector.loi.currentPageContenu
+   );
    const currentPageArticleApi = useSelector(
       (selector) => selector.loi.currentPageArticle
    );
@@ -88,11 +90,11 @@ export default function DownloadData({ navigation }) {
       }, 500);
    };
 
-   const showData = () => {
+   /*const showData = () => {
       return ArticleSchema.query({ columns: '*' }).then((res) => {
          console.log(res.length);
       });
-   };
+   };*/
 
    const handleFileSelectionAndImportData = async () => {
       setIsUploadData(true);
@@ -190,16 +192,6 @@ export default function DownloadData({ navigation }) {
       isFetchData,
    ]);
 
-   //on doit s'assurer de démarrer le compteur de page
-   useEffect(() => {
-      getDataFromLocalStorage('currentPageArticleApi').then((res) => {
-         dispatch(getCurrentPageArticleForApi(parseInt(res)));
-      });
-      getDataFromLocalStorage('currentPageContenuApi').then((res) => {
-         dispatch(getCurrentPageContenuForApi(parseInt(res)));
-      });
-   }, []);
-
    return (
       <View style={styles.view_container_download}>
          <Lottie
@@ -292,7 +284,7 @@ export default function DownloadData({ navigation }) {
                   loading={isUploadData}
                />
 
-               <Button
+               {/*<Button
                   title="Show data"
                   icon={{
                      name: 'file-upload',
@@ -312,7 +304,7 @@ export default function DownloadData({ navigation }) {
                   onPress={() => {
                      showData();
                   }}
-               />
+               />*/}
             </View>
          </View>
          <View>

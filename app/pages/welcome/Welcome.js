@@ -44,7 +44,9 @@ export default function Welcome({ navigation }) {
    const isUserNetworkActive = useSelector(
       (selector) => selector.fonctionnality.isNetworkActive
    );
-   const currentPageContenuApi = useSelector((selector) => selector.loi.currentPageContenu);
+   const currentPageContenuApi = useSelector(
+      (selector) => selector.loi.currentPageContenu
+   );
    const currentPageArticleApi = useSelector(
       (selector) => selector.loi.currentPageArticle
    );
@@ -99,12 +101,6 @@ export default function Welcome({ navigation }) {
       });
       getDataFromLocalStorage('isAllDataDownloaded').then((res) => {
          if (res === 'true') setIsAllDataAlsoDownloaded(true);
-      });
-      getDataFromLocalStorage('currentPageArticleApi').then((res) => {
-         dispatch(getCurrentPageArticleForApi(parseInt(res)));
-      });
-      getDataFromLocalStorage('currentPageContenuApi').then((res) => {
-         dispatch(getCurrentPageContenuForApi(parseInt(res)));
       });
    }, []);
 

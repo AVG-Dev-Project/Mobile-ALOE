@@ -15,8 +15,11 @@ import { styles } from './stylesArticle';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
-import { cutTextWithBalise, LoiService } from '_utils';
-import { addFavoris, getAllArticles } from '_utils/redux/actions/action_creators';
+import { LoiService, parseStructureDataForArticle } from '_utils';
+import {
+   addFavoris,
+   getAllArticles,
+} from '_utils/redux/actions/action_creators';
 
 export default function ListingArticle({ navigation, route }) {
    //all data
@@ -40,9 +43,6 @@ export default function ListingArticle({ navigation, route }) {
          };
       })
    );
-
-    console.log("totalPage on mount: ", totalPage);
-
 
    const tagsStyles = {
       p: {
@@ -70,21 +70,22 @@ export default function ListingArticle({ navigation, route }) {
    };
 
    const getNextPageArticlesFromApi = async () => {
-      let res = await LoiService.getArticlesByContenuFromServ(idOfTheContenuMother, currentPage + 1);
+      let res = await LoiService.getArticlesByContenuFromServ(
+         idOfTheContenuMother,
+         currentPage + 1
+      );
       currentPage += 1;
-      totalPage = 1;
+      totalPage = res.pages_count;
       let oldAllArticles = [...articleList];
       res.results.map((result) => {
-            if (
-               !oldAllArticles.find((article) => article.id === result.id)
-            ) {
-               console.log("tsy find e :" , result.id);
-               oldAllArticles.push(result);
-            }
-         })
+         if (!oldAllArticles.find((article) => article.id === result.id)) {
+            console.log('tsy find e :', result.id);
+            oldAllArticles.push(result);
+         }
+      });
       setArticleList(oldAllArticles);
       dispatch(getAllArticles(oldAllArticles));
-   }
+   };
 
    //all effects
 
@@ -164,23 +165,9 @@ export default function ListingArticle({ navigation, route }) {
                      }}
                      numberOfLines={4}
                   >
-                     {langueActual === 'fr' ? (
-                        <RenderHtml
-                           contentWidth={width}
-                           source={sourceHTML(
-                              cutTextWithBalise(item.contenu_fr, 700)
-                           )}
-                           tagsStyles={tagsStyles}
-                        />
-                     ) : (
-                        <RenderHtml
-                           contentWidth={width}
-                           source={sourceHTML(
-                              cutTextWithBalise(item.contenu_mg, 700)
-                           )}
-                           tagsStyles={tagsStyles}
-                        />
-                     )}
+                     {langueActual === 'fr'
+                        ? item.contenu_fr?.split('________________')[0]
+                        : item.contenu_mg?.split('________________')[0]}
                      {' ...'}
                   </Text>
                   <View
@@ -297,14 +284,16 @@ export default function ListingArticle({ navigation, route }) {
                extraData={articleList}
                onEndReachedThreshold={0.5}
                onEndReached={async () => {
-                  console.log("starting fetch next page .......")
-                  console.log("totalPage on reach: ", totalPage);
-                  if(currentPage < totalPage){
-                     console.log("mbola tsy page farany +++++++")
+                  console.log('starting onreached  .......');
+                  console.log('totalPage on reach: ', totalPage);
+                  console.log('current page before: ', currentPage);
+                  if (currentPage < totalPage) {
+                     console.log('mbola tsy page farany +++++++');
+                     console.log('start fetch data next -----------');
                      await getNextPageArticlesFromApi();
                   }
-                  console.log("totalPage after fetchuind reach:******** ", totalPage);
-                  console.log("current page : ", currentPage);
+                  console.log('totalPage after fetching :******** ', totalPage);
+                  console.log('current page after: ', currentPage);
                }}
             />
          </SafeAreaView>
