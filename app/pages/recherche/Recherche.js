@@ -23,6 +23,8 @@ import {
    nameStackNavigation as nameNav,
    filterArticleToListByContenu,
 } from '_utils';
+import * as MediaLibrary from 'expo-media-library';
+import * as FileSystem from 'expo-file-system';
 import Lottie from 'lottie-react-native';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
@@ -48,7 +50,7 @@ const LabelCustomBottomSheet = ({ text, filterBy, reference }) => {
       >
          <Icon name={'category'} color={Colors.black} size={18} />
          <Text style={{ fontSize: 22, marginLeft: 8 }}>
-            {text?.substring(0, 16)}
+            {text.length > 20 ? text?.substring(0, 30) + '...' : text}
          </Text>
       </TouchableOpacity>
    );
@@ -81,7 +83,7 @@ export default function Recherche({ navigation, route }) {
    const dispatch = useDispatch();
    const animation = useRef(null);
    const [valueForSearch, setValueForSearch] = useState('');
-   const [textFromInputSearch, setTextFromsetValueForSearch] = useState('');
+   const [textFromInputSearch, setTextFromValueForSearch] = useState('');
    const { width, height } = useWindowDimensions();
    const snapPoints = useMemo(
       () => (height < 700 ? [-1, '70%'] : [-1, '60%']),
@@ -101,6 +103,7 @@ export default function Recherche({ navigation, route }) {
    );
    const allTypes = useSelector((selector) => selector.loi.types);
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
+   const urlApiAttachement = 'https://avg.e-commerce-mg.com';
 
    //data from navigation
    let typeFromParams = route.params ? route.params.type : null;
@@ -146,6 +149,8 @@ export default function Recherche({ navigation, route }) {
             setAllContenusFilter([]);
             setTypeChecked(null);
             setThematiqueChecked(null);
+            setValueForSearch('');
+            setTextFromValueForSearch('');
          };
       }, [])
    );
@@ -183,6 +188,38 @@ export default function Recherche({ navigation, route }) {
       return ref.current.snapTo(1);
    };
 
+   const downloadPdfFile = async (contenu, linkPdf) => {
+      const downloadResumable = FileSystem.createDownloadResumable(
+         urlApiAttachement + linkPdf,
+         FileSystem.documentDirectory + linkPdf?.slice(19)
+      );
+
+      try {
+         const { uri } = await downloadResumable.downloadAsync();
+         const asset = await MediaLibrary.createAssetAsync(uri);
+         const album = await MediaLibrary.getAlbumAsync('Download');
+         if (album === null) {
+            await MediaLibrary.createAlbumAsync('Download', asset, false);
+         } else {
+            await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+            ToastAndroid.show(
+               `${
+                  langueActual === 'fr'
+                     ? contenu.type_nom_fr
+                     : contenu.type_nom_mg
+               } n° ${contenu.numero} télecharger dans votre télephone!`,
+               ToastAndroid.SHORT
+            );
+         }
+      } catch (e) {
+         ToastAndroid.show(
+            'Erreur durant le télechargement du pdf',
+            ToastAndroid.LONG
+         );
+         console.log(e);
+      }
+   };
+
    //fontcion utilie pour la translation du vocal en texte
    const startSpeechToText = async () => {
       await Voice.start('fr-FR');
@@ -196,6 +233,7 @@ export default function Recherche({ navigation, route }) {
 
    const onSpeechResults = (result) => {
       setValueForSearch(result.value[0]);
+      setTextFromValueForSearch(result.value[0]);
       ToastAndroid.show(
          `Recherche de : ${result.value[0]} .........`,
          ToastAndroid.LONG
@@ -285,11 +323,19 @@ export default function Recherche({ navigation, route }) {
                         }}
                      >
                         {langueActual === 'fr'
-                           ? item.thematique_nom_fr
+                           ? item.thematique_nom_fr.length > 20
+                              ? item.thematique_nom_fr?.substring(0, 20) + '...'
+                              : item.thematique_nom_fr
+                           : item.thematique_nom_mg.length > 20
+                           ? item.thematique_nom_mg?.substring(0, 20) + '...'
                            : item.thematique_nom_mg}{' '}
                         {' / '}
                         {langueActual === 'fr'
-                           ? item.type_nom_fr
+                           ? item.type_nom_fr.length > 20
+                              ? item.type_nom_fr?.substring(0, 20) + '...'
+                              : item.type_nom_fr
+                           : item.type_nom_mg.length > 20
+                           ? item.type_nom_mg?.substring(0, 20) + '...'
                            : item.type_nom_mg}
                      </Text>
                   </View>
@@ -304,7 +350,7 @@ export default function Recherche({ navigation, route }) {
                      <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => {
-                           alert('PDF');
+                           downloadPdfFile(item, item.attachement?.slice(21));
                         }}
                      >
                         <Icon
@@ -413,7 +459,7 @@ export default function Recherche({ navigation, route }) {
                               value={textFromInputSearch}
                               onChangeText={(text) => {
                                  onHandleSearchByValue(text);
-                                 setTextFromsetValueForSearch(text);
+                                 setTextFromValueForSearch(text);
                               }}
                            />
                            <TouchableOpacity
@@ -451,7 +497,9 @@ export default function Recherche({ navigation, route }) {
                                        : 'Lohahevitra'}
                                  </Text>
                                  {thematiqueChecked !== null && (
-                                    <Text>{thematiqueChecked}</Text>
+                                    <Text>
+                                       {thematiqueChecked?.substring(0, 15)}
+                                    </Text>
                                  )}
                               </View>
                               <TouchableOpacity
@@ -496,7 +544,7 @@ export default function Recherche({ navigation, route }) {
                                        : 'Karazana'}
                                  </Text>
                                  {typeChecked !== null && (
-                                    <Text>{typeChecked}</Text>
+                                    <Text>{typeChecked?.substring(0, 15)}</Text>
                                  )}
                               </View>
                            </View>

@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
       marginVertical: 4,
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'space-around',
+      justifyContent: 'space-evenly',
       alignItems: 'center',
    },
    view_in_filtre: {
@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
    input: {
       borderWidth: 1,
       padding: widthDevice < 370 ? 12 : 16,
-      width: widthDevice < 370 ? 270 : '83%',
+      width: widthDevice < 370 ? 270 : '84%',
       borderRightWidth: 0,
    },
    boutton_search: {
