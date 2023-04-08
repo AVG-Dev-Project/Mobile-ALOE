@@ -37,6 +37,12 @@ export default function ListingContenu({ navigation, route }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const isConnectedToInternet = useSelector(
+      (selector) => selector.fonctionnality.isConnectedToInternet
+   );
+   const isNetworkActive = useSelector(
+      (selector) => selector.fonctionnality.isNetworkActive
+   );
    const allContenusFromStore = useSelector(
       (selector) => selector.loi.contenus
    );
@@ -251,9 +257,12 @@ export default function ListingContenu({ navigation, route }) {
                contentContainerStyle={{ paddingBottom: 10 }}
                onEndReachedThreshold={0.5}
                onEndReached={async () => {
-                  console.log('ato eeee');
-                  if (currentPage < totalPageContenu) {
-                     await getNextPageContenusFromApi();
+                  if (isConnectedToInternet && isNetworkActive) {
+                     if (currentPage < totalPageContenu) {
+                        await getNextPageContenusFromApi();
+                     }
+                  } else {
+                     return;
                   }
                }}
             />
