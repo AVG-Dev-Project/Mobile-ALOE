@@ -275,8 +275,8 @@ export default function Favoris({ navigation, route }) {
                               </Text>
                            </View>
                            <Icon
-                              name={'autorenew'}
-                              color={Colors.white}
+                              name={'favorite'}
+                              color={Colors.redError}
                               size={38}
                            />
                         </View>
