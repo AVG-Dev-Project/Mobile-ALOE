@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
    View,
    Text,
@@ -9,6 +9,7 @@ import {
    TouchableOpacity,
 } from 'react-native';
 import { Colors } from '_theme/Colors';
+import Lottie from 'lottie-react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Icon, Input, Button } from '@rneui/themed';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -21,6 +22,7 @@ import {
 
 export default function Doleance({ navigation }) {
    //all datas
+   const animation = useRef(null);
    const dispatch = useDispatch();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
@@ -136,9 +138,11 @@ export default function Doleance({ navigation }) {
          <SafeAreaView>
             <View style={styles.view_container}>
                <View style={styles.head_banniere}>
-                  <Image
+                  <Lottie
+                     autoPlay
+                     ref={animation}
                      style={styles.banniere_image}
-                     source={require('_images/bg_loi.jpg')}
+                     source={require('_images/mail.json')}
                   />
                   <Text
                      style={{
