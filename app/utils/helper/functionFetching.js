@@ -29,12 +29,13 @@ export const fetchThematiquesToApi = async () => {
 export const fetchContenusToApi = async (currentPage, dispatcher) => {
    let res = await LoiService.getContenusFromServ(currentPage);
    dispatcher(getCurrentPageContenuForApi(currentPage + 1));
-   dispatcher(getTotalPageApi(['contenu', res.pages_count]));
-   return insertOrUpdateToDBFunc(
+   dispatcher(getTotalPageApi(['contenu', res.pages_count ?? 0]));
+   insertOrUpdateToDBFunc(
       'database',
       'contenu',
       parseStructureDataForContenu(res.results)
    );
+   return res;
 };
 
 export const fetchArticlesByContenuToApi = async (contenuId, currentPage) => {

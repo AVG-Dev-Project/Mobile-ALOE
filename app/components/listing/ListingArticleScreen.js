@@ -15,7 +15,11 @@ import { styles } from './stylesArticle';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
-import { LoiService, parseStructureDataForArticle } from '_utils';
+import {
+   parseDataArticleLazyLoading,
+   filterArticleToListByContenu,
+   fetchArticlesByContenuToApi,
+} from '_utils';
 import {
    addFavoris,
    getAllArticles,
@@ -23,42 +27,31 @@ import {
 
 export default function ListingArticle({ navigation, route }) {
    //all data
-   let currentPage = 0;
-   let totalPage = 1;
    const dispatch = useDispatch();
    const { width } = useWindowDimensions();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const allArticles = useSelector((selector) => selector.loi.articles);
+
+   const [totalPage, setTotalPage] = useState(1);
+   const [currentPage, setCurrentPage] = useState(0);
    const allFavoriteIdFromStore = useSelector(
       (selector) => selector.loi.favoris
    );
-   const dataFromParams = route.params.allArticleRelatedTotheContenu;
    const idOfTheContenuMother = route.params.idOfThisContenu;
    const [articleList, setArticleList] = useState(
-      dataFromParams.map((item) => {
-         return {
-            ...item,
-            isFavorite: allFavoriteIdFromStore.includes(item.id),
-         };
-      })
+      filterArticleToListByContenu(idOfTheContenuMother, allArticles).map(
+         (item) => {
+            return {
+               ...item,
+               isFavorite: allFavoriteIdFromStore.includes(item.id),
+            };
+         }
+      )
    );
 
-   const tagsStyles = {
-      p: {
-         width: '40%',
-         fontSize: width < 370 ? 12 : 14,
-      },
-   };
-
-   //all function
-   const sourceHTML = (data) => {
-      const source = {
-         html: data,
-      };
-      return source;
-   };
-
+   console.log('articleList length : ', articleList.length);
    const handleToogleIsFavorite = (id) => {
       dispatch(addFavoris(id));
       // Mettre à jour la propriété isFavorite de l'article avec l'ID donné
@@ -70,21 +63,20 @@ export default function ListingArticle({ navigation, route }) {
    };
 
    const getNextPageArticlesFromApi = async () => {
-      let res = await LoiService.getArticlesByContenuFromServ(
+      let res = await fetchArticlesByContenuToApi(
          idOfTheContenuMother,
          currentPage + 1
       );
-      currentPage += 1;
-      totalPage = res.pages_count;
+      setCurrentPage(currentPage + 1);
+      setTotalPage(res.pages_count);
       let oldAllArticles = [...articleList];
       res.results.map((result) => {
          if (!oldAllArticles.find((article) => article.id === result.id)) {
-            console.log('tsy find e :', result.id);
-            oldAllArticles.push(result);
+            oldAllArticles.push(parseDataArticleLazyLoading(result));
          }
       });
-      setArticleList(oldAllArticles);
       dispatch(getAllArticles(oldAllArticles));
+      setArticleList(oldAllArticles);
    };
 
    //all effects
@@ -284,16 +276,9 @@ export default function ListingArticle({ navigation, route }) {
                extraData={articleList}
                onEndReachedThreshold={0.5}
                onEndReached={async () => {
-                  console.log('starting onreached  .......');
-                  console.log('totalPage on reach: ', totalPage);
-                  console.log('current page before: ', currentPage);
                   if (currentPage < totalPage) {
-                     console.log('mbola tsy page farany +++++++');
-                     console.log('start fetch data next -----------');
                      await getNextPageArticlesFromApi();
                   }
-                  console.log('totalPage after fetching :******** ', totalPage);
-                  console.log('current page after: ', currentPage);
                }}
             />
          </SafeAreaView>

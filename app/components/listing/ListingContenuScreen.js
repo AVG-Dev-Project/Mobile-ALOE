@@ -12,7 +12,8 @@ import {
 import React, { useCallback, useEffect, useState } from 'react';
 import {
    nameStackNavigation as nameNav,
-   filterArticleToListByContenu,
+   fetchContenusToApi,
+   parseDataContenuLazyLoading,
 } from '_utils';
 import { styles } from './stylesContenu';
 import { Icon } from '@rneui/themed';
@@ -20,6 +21,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 import { Colors } from '_theme/Colors';
+import {
+   getAllArticles,
+   getAllThematiques,
+   getAllTypes,
+   getAllContenus,
+   getCurrentPageContenuForApi,
+   getCurrentPageArticleForApi,
+   getTotalPageApi,
+} from '_utils/redux/actions/action_creators';
 
 export default function ListingContenu({ navigation, route }) {
    //all data
@@ -27,16 +37,23 @@ export default function ListingContenu({ navigation, route }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   const allArticles = useSelector((selector) => selector.loi.articles);
-   const dataForFlatList = route.params.dataToList;
+   const allContenusFromStore = useSelector(
+      (selector) => selector.loi.contenus
+   );
    const urlApiAttachement = 'https://avg.e-commerce-mg.com';
    const [contenuList, setContenuList] = useState(
-      dataForFlatList.map((item) => {
+      allContenusFromStore.map((item) => {
          return {
             ...item,
             isPdfDownloading: false,
          };
       })
+   );
+   const currentPage = useSelector(
+      (selector) => selector.loi.currentPageContenu
+   );
+   const totalPageContenu = useSelector(
+      (selector) => selector.loi.totalPage.contenu
    );
 
    //all functions
@@ -84,6 +101,18 @@ export default function ListingContenu({ navigation, route }) {
       );
    };
 
+   const getNextPageContenusFromApi = async () => {
+      let res = await fetchContenusToApi(currentPage, dispatch);
+      let oldAllContenus = [...contenuList];
+      res.results.map((result) => {
+         if (!oldAllContenus.find((contenu) => contenu.id === result.id)) {
+            oldAllContenus.push(parseDataContenuLazyLoading(result));
+         }
+      });
+      dispatch(getAllContenus(oldAllContenus));
+      setContenuList(oldAllContenus);
+   };
+
    //all logics
    const _renderItem = useCallback(({ item }) => {
       return (
@@ -96,10 +125,6 @@ export default function ListingContenu({ navigation, route }) {
                         ? item.type_nom_fr + ' n° '
                         : item.type_nom_mg + ' faha '
                   } ${item.numero}`,
-                  allArticleRelatedTotheContenu: filterArticleToListByContenu(
-                     item.id,
-                     allArticles
-                  ),
                   idOfThisContenu: item.id,
                });
             }}
@@ -165,12 +190,12 @@ export default function ListingContenu({ navigation, route }) {
                         }}
                      >
                         {langueActual === 'fr'
-                           ? item.thematique_nom_fr
-                           : item.thematique_nom_mg}{' '}
+                           ? item.thematique_nom_fr?.substring(0, 30)
+                           : item.thematique_nom_mg?.substring(0, 30)}{' '}
                         {' / '}
                         {langueActual === 'fr'
-                           ? item.type_nom_fr
-                           : item.type_nom_mg}
+                           ? item.type_nom_fr?.substring(0, 30)
+                           : item.type_nom_mg?.substring(0, 30)}
                      </Text>
                   </View>
                   <View
@@ -224,6 +249,13 @@ export default function ListingContenu({ navigation, route }) {
                   index,
                })}
                contentContainerStyle={{ paddingBottom: 10 }}
+               onEndReachedThreshold={0.5}
+               onEndReached={async () => {
+                  console.log('ato eeee');
+                  if (currentPage < totalPageContenu) {
+                     await getNextPageContenusFromApi();
+                  }
+               }}
             />
          </SafeAreaView>
       </View>

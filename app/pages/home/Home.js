@@ -92,10 +92,6 @@ export default function Home({ navigation }) {
                   titleScreen: `${
                      langueActual === 'fr' ? 'Loi n°' : 'Lalana faha '
                   } ${item.numero}`,
-                  allArticleRelatedTotheContenu: filterArticleToListByContenu(
-                     item.id,
-                     allArticles
-                  ),
                   idOfThisContenu: item.id,
                });
             }}
@@ -350,7 +346,6 @@ export default function Home({ navigation }) {
                               langueActual === 'fr'
                                  ? 'Tous les contenus'
                                  : 'Ireo kaontenu',
-                           dataToList: allContenus,
                         });
                      }}
                   />

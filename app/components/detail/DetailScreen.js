@@ -25,13 +25,11 @@ import { styles } from './styles';
 import { Icon } from '@rneui/themed';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { printToFileAsync } from 'expo-print';
-import { captureRef } from 'react-native-view-shot';
 import bgImage from '_images/bg_loi.jpg';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
 // import { addFavoris } from '_utils/redux/actions/action_creators';
-import ViewShot, { captureRef } from 'react-native-view-shot';
-import * as MediaLibrary from 'expo-media-library';
+import { captureRef } from 'react-native-view-shot';
 
 export default function Detail({ navigation, route }) {
    const [status, requestPermission] = MediaLibrary.usePermissions();
@@ -297,72 +295,26 @@ export default function Detail({ navigation, route }) {
                            />
                         )}
                      </ScrollView>
-                     <View style={styles.all_button_in_detail_screen}>
-                        <TouchableOpacity
-                           onPress={() => {
-                              onSaveImageAsync();
-                           }}
-                        >
-                           <Text style={styles.button_in_detail}>
-                              {' '}
-                              <Icon
-                                 name={'image'}
-                                 size={34}
-                                 color={Colors.greenAvg}
-                              />{' '}
-                           </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                           onPress={() => {
-                              downloadAsPdf();
-                           }}
-                        >
-                           <Text style={styles.button_in_detail}>
-                              {' '}
-                              <Icon
-                                 name={'picture-as-pdf'}
-                                 size={34}
-                                 color={Colors.greenAvg}
-                              />{' '}
-                           </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                           onPress={() => {
-                              setIsSpeakPlay(!isSpeakPlay);
-                              if (langueActual === 'fr') {
-                                 playPauseSpeak(
-                                    oneArticle.contenu_fr
-                                       ?.split('________________')[0]
-                                       .substring(0, 4000)
-                                 );
-                              } else {
-                                 playPauseSpeak(
-                                    oneArticle.contenu_mg
-                                       ?.split('________________')[0]
-                                       .substring(0, 4000)
-                                 );
-                              }
-                           }}
-                        >
-                           <Text style={[styles.button_in_detail]}>
-                              {' '}
-                              <Icon
-                                 name={
-                                    isSpeakPlay ? 'stop' : 'play-circle-outline'
-                                 }
-                                 size={34}
-                                 color={Colors.greenAvg}
-                              />{' '}
-                           </Text>
-                        </TouchableOpacity>
-                     </View>
                   </View>
                </View>
                <View style={styles.all_button_in_detail_screen}>
                   <TouchableOpacity
                      onPress={() => {
-                        //alert('télechargés en PDF');
                         onSaveImageAsync();
+                     }}
+                  >
+                     <Text style={styles.button_in_detail}>
+                        {' '}
+                        <Icon
+                           name={'image'}
+                           size={34}
+                           color={Colors.greenAvg}
+                        />{' '}
+                     </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                     onPress={() => {
+                        downloadAsPdf();
                      }}
                   >
                      <Text style={styles.button_in_detail}>
@@ -379,11 +331,15 @@ export default function Detail({ navigation, route }) {
                         setIsSpeakPlay(!isSpeakPlay);
                         if (langueActual === 'fr') {
                            playPauseSpeak(
-                              oneArticle.contenu_fr.substring(0, 4000)
+                              oneArticle.contenu_fr
+                                 ?.split('________________')[0]
+                                 .substring(0, 4000)
                            );
                         } else {
                            playPauseSpeak(
-                              oneArticle.contenu_mg.substring(0, 4000)
+                              oneArticle.contenu_mg
+                                 ?.split('________________')[0]
+                                 .substring(0, 4000)
                            );
                         }
                      }}
