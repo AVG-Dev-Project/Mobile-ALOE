@@ -9,7 +9,6 @@ import {
    useWindowDimensions,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
-import RenderHtml from 'react-native-render-html';
 import { nameStackNavigation as nameNav } from '_utils/constante/NameStackNavigation';
 import { styles } from './stylesArticle';
 import { Icon } from '@rneui/themed';
@@ -32,6 +31,12 @@ export default function ListingArticle({ navigation, route }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const isConnectedToInternet = useSelector(
+      (selector) => selector.fonctionnality.isConnectedToInternet
+   );
+   const isNetworkActive = useSelector(
+      (selector) => selector.fonctionnality.isNetworkActive
+   );
    const allArticles = useSelector((selector) => selector.loi.articles);
 
    const [totalPage, setTotalPage] = useState(1);
@@ -51,7 +56,6 @@ export default function ListingArticle({ navigation, route }) {
       )
    );
 
-   console.log('articleList length : ', articleList.length);
    const handleToogleIsFavorite = (id) => {
       dispatch(addFavoris(id));
       // Mettre à jour la propriété isFavorite de l'article avec l'ID donné
@@ -276,8 +280,12 @@ export default function ListingArticle({ navigation, route }) {
                extraData={articleList}
                onEndReachedThreshold={0.5}
                onEndReached={async () => {
-                  if (currentPage < totalPage) {
-                     await getNextPageArticlesFromApi();
+                  if (isConnectedToInternet && isNetworkActive) {
+                     if (currentPage < totalPage) {
+                        await getNextPageArticlesFromApi();
+                     }
+                  } else {
+                     return;
                   }
                }}
             />
