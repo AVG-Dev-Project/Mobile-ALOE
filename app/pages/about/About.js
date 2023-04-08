@@ -16,26 +16,14 @@ export default function About({ navigation }) {
       <KeyboardAwareScrollView style={{ backgroundColor: Colors.background }}>
          <View style={styles.view_container}>
             <View style={styles.head_banniere}>
-               <Text
-                  style={{ fontSize: 32, fontWeight: 'bold', marginBottom: 8 }}
-               >
+               <Text style={{ fontSize: 32, fontWeight: 'bold' }}>
                   {langueActual === 'fr' ? 'A propos' : 'Mombamomba'}
                </Text>
                <Image
                   style={styles.banniere_image}
-                  source={require('_images/bg_loi.jpg')}
+                  source={require('_images/aloe.png')}
                />
-               <Text
-                  style={{
-                     fontSize: 38,
-                     fontWeight: 'bold',
-                     marginVertical: 8,
-                     color: Colors.greenAvg,
-                  }}
-               >
-                  Aloe
-               </Text>
-               <Text>
+               <Text style={{ marginVertical: 6 }}>
                   {langueActual === 'fr' ? 'Version' : 'Fanovana'} 1.0.0
                </Text>
             </View>

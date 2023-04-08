@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
    },
    banniere_image: {
       width: widthDevice < 370 ? 280 : 350,
-      height: heightDevice < 700 ? 180 : 320,
+      height: heightDevice < 700 ? 180 : 370,
    },
    view_content_about: {
       marginVertical: 20,

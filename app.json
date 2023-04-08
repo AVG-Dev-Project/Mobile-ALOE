@@ -2,7 +2,7 @@
    "expo": {
       "name": "aloe",
       "slug": "aloe",
-      "version": "1.0.0",
+      "version": "1.0.2",
       "orientation": "portrait",
       "icon": "./assets/icon.png",
       "userInterfaceStyle": "light",
@@ -49,8 +49,8 @@
          [
             "expo-media-library",
             {
-               "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
-               "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
+               "photosPermission": "Allow $(ALOE) to access your photos.",
+               "savePhotosPermission": "Allow $(ALOE) to save photos.",
                "isAccessMediaLocationEnabled": true
             }
          ]
