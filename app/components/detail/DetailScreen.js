@@ -66,9 +66,10 @@ export default function Detail({ navigation, route }) {
          Speech.stop();
       } else {
          Speech.speak(
-            txt_to_say ?? langueActual === 'fr'
-               ? "Pas d'article à lire"
-               : 'Tsy misy dikan-teny malagasy ilay lahatsoratra.',
+            txt_to_say ??
+               (langueActual === 'fr'
+                  ? "Pas d'artcile à lire"
+                  : 'Tsy misy dikan-teny malagasy ilay lahatsoratra.'),
             { language: 'fr-FR' }
          );
       }
