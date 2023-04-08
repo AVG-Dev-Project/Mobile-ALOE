@@ -133,7 +133,9 @@ export default function ListingArticle({ navigation, route }) {
                >
                   <View>
                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
-                        {langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '}{' '}
+                        {langueActual === 'fr'
+                           ? 'Article n°'
+                           : 'Lahatsoratra faha'}{' '}
                         {item.numero}
                      </Text>
                      <Text
@@ -164,7 +166,8 @@ export default function ListingArticle({ navigation, route }) {
                   >
                      {langueActual === 'fr'
                         ? item.contenu_fr?.split('________________')[0]
-                        : item.contenu_mg?.split('________________')[0]}
+                        : item.contenu_mg?.split('________________')[0] ??
+                          'Tsy misy dikan-teny malagasy ito lahatsoratra iray ito.'}
                      {' ...'}
                   </Text>
                   <View

@@ -50,7 +50,7 @@ const LabelCustomBottomSheet = ({ text, filterBy, reference }) => {
       >
          <Icon name={'category'} color={Colors.black} size={18} />
          <Text style={{ fontSize: 22, marginLeft: 8 }}>
-            {text.length > 20 ? text?.substring(0, 30) + '...' : text}
+            {text?.length > 20 ? text?.substring(0, 30) + '...' : text}
          </Text>
       </TouchableOpacity>
    );

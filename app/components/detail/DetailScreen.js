@@ -65,7 +65,12 @@ export default function Detail({ navigation, route }) {
       if (isSpeakPlay) {
          Speech.stop();
       } else {
-         Speech.speak(txt_to_say, { language: 'fr-FR' });
+         Speech.speak(
+            txt_to_say ?? langueActual === 'fr'
+               ? "Pas d'article à lire"
+               : 'Tsy misy dikan-teny malagasy ilay lahatsoratra.',
+            { language: 'fr-FR' }
+         );
       }
    };
 
@@ -82,13 +87,17 @@ export default function Detail({ navigation, route }) {
          await MediaLibrary.saveToLibraryAsync(localUri);
          if (localUri) {
             ToastAndroid.show(
-               `Article n°${oneArticle.numero} télecharger dans votre galérie.`,
+               langueActual === 'fr'
+                  ? `Article n°${oneArticle.numero} télecharger dans votre galérie.`
+                  : `Lahatsoratra faha${oneArticle.numero} azo ao anaty lisitry ny sarinao.`,
                ToastAndroid.SHORT
             );
          }
       } catch (e) {
          ToastAndroid.show(
-            `La capture a été intérompu. Veuillez réessayer!`,
+            langueActual === 'fr'
+               ? `La capture a été intérompu. Veuillez réessayer!`
+               : "Nisy olana teo amin'ny fangalana ny sary.",
             ToastAndroid.SHORT
          );
       }
@@ -132,13 +141,17 @@ export default function Detail({ navigation, route }) {
          } else {
             await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
             ToastAndroid.show(
-               `Article n°${oneArticle.numero} télecharger dans votre télephone!`,
+               langueActual === 'fr'
+                  ? `Article n°${oneArticle.numero} télecharger dans votre télephone!`
+                  : `Lahatsoratra faha${oneArticle.numero} azo anaty findainao!`,
                ToastAndroid.SHORT
             );
          }
       } catch (e) {
          ToastAndroid.show(
-            'Erreur durant le télechargement du pdf',
+            langueActual === 'fr'
+               ? 'Erreur durant le télechargement du pdf'
+               : 'Nisy olana teo ampangalana ny pdf.',
             ToastAndroid.LONG
          );
       }
@@ -150,17 +163,21 @@ export default function Detail({ navigation, route }) {
 
    const sourceHTML = (data) => {
       const source = {
-         html: data,
+         html:
+            data ?? '<p>Tsy misy dikan-teny malagasy ity lahatsoratra ity.</p>',
       };
       return source;
    };
 
-   const tagsStyles = {
-      p: {
-         width: '100%',
-         fontSize: width < 380 ? 14 : 18,
-      },
-   };
+   const tagsStyles = useMemo(
+      () => ({
+         p: {
+            width: '100%',
+            fontSize: width < 380 ? 14 : 18,
+         },
+      }),
+      []
+   );
 
    //all efects
    useEffect(() => {
@@ -205,13 +222,14 @@ export default function Detail({ navigation, route }) {
                      >
                         {langueActual === 'fr'
                            ? oneArticle.titre_fr
-                           : oneArticle.titre_mg}
+                           : oneArticle.titre_mg ??
+                             'Tsy misy dikan-teny malagasy.'}
                      </Text>
                      {oneArticle.chapitre_id && (
                         <Text
                            style={{
-                              fontSize: 12,
-                              marginVertical: 8,
+                              fontSize: 13,
+                              marginVertical: 4,
                               color: Colors.white,
                            }}
                         >
@@ -221,7 +239,8 @@ export default function Detail({ navigation, route }) {
                            :{' '}
                            {langueActual === 'fr'
                               ? oneArticle.chapitre_titre_fr
-                              : oneArticle.chapitre_titre_mg}
+                              : oneArticle.chapitre_titre_mg ??
+                                'Tsy misy ny dikan-teny malagasy.'}
                         </Text>
                      )}
                   </View>
@@ -378,7 +397,8 @@ export default function Detail({ navigation, route }) {
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
                      {langueActual === 'fr'
                         ? oneArticle.chapitre_titre_fr ?? ''
-                        : oneArticle.chapitre_titre_mg ?? ''}
+                        : oneArticle.chapitre_titre_mg ??
+                          'Tsy misy dikan-teny malagasy.'}
                   </Text>
                </View>
                <View style={styles.view_one_item_in_bottomsheet}>

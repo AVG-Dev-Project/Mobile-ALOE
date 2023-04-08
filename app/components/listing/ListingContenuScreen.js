@@ -145,7 +145,7 @@ export default function ListingContenu({ navigation, route }) {
                   >
                      {langueActual === 'fr'
                         ? item.type_nom_fr + ' n°'
-                        : item.type_nom_mg + ' faha '}{' '}
+                        : item.type_nom_mg ?? 'Votoantiny' + ' faha '}{' '}
                      {item.numero}
                   </Text>
                   <Text
@@ -166,13 +166,13 @@ export default function ListingContenu({ navigation, route }) {
                   style={{
                      fontSize: Dimensions.get('window').height < 700 ? 14 : 16,
                      flex: 2,
-                     textTransform: 'capitalize',
                   }}
                   numberOfLines={3}
                >
                   {langueActual === 'fr'
                      ? item.objet_contenu_fr
-                     : item.objet_contenu_mg}{' '}
+                     : item.objet_contenu_mg ??
+                       'Tsy misy dikan-teny malagasy ito votoantiny iray ito.'}{' '}
                </Text>
                <View
                   style={{
@@ -197,11 +197,16 @@ export default function ListingContenu({ navigation, route }) {
                      >
                         {langueActual === 'fr'
                            ? item.thematique_nom_fr?.substring(0, 30)
-                           : item.thematique_nom_mg?.substring(0, 30)}{' '}
+                           : item.thematique_nom_mg?.substring(0, 30) ??
+                             `Lohahevitra (${item.thematique_nom_fr?.substring(
+                                0,
+                                10
+                             )})`}
                         {' / '}
                         {langueActual === 'fr'
                            ? item.type_nom_fr?.substring(0, 30)
-                           : item.type_nom_mg?.substring(0, 30)}
+                           : item.type_nom_mg?.substring(0, 30) ??
+                             `Karazana (${item.type_nom_fr?.substring(0, 10)})`}
                      </Text>
                   </View>
                   <View

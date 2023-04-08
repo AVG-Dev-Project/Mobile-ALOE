@@ -104,7 +104,7 @@ export default function Home({ navigation }) {
 
                <Text
                   style={{
-                     marginVertical: 8,
+                     marginTop: 8,
                      paddingRight: 8,
                      fontWeight: 'bold',
                      fontSize: height < 700 ? 13 : 17,
@@ -113,13 +113,10 @@ export default function Home({ navigation }) {
                   {langueActual === 'fr' ? 'Loi n° ' : 'Lalana faha '}
                   {langueActual === 'fr' ? item.numero : item.numero}
                </Text>
-               <Text
-                  style={{ fontSize: 12, textTransform: 'capitalize' }}
-                  numberOfLines={1}
-               >
+               <Text style={{ fontSize: 12 }} numberOfLines={1}>
                   {langueActual === 'fr'
                      ? item.objet_contenu_fr
-                     : item.objet_contenu_mg}
+                     : item.objet_contenu_mg ?? 'Tsy misy dikan-teny malagasy.'}
                </Text>
             </View>
          </TouchableOpacity>
@@ -158,7 +155,7 @@ export default function Home({ navigation }) {
                         : item.nom_fr
                      : item.nom_mg?.length > 20
                      ? item.nom_mg?.substring(0, 20) + '...'
-                     : item.nom_mg}
+                     : item.nom_mg ?? item.nom_fr?.substring(0, 20)}
                </Text>
             </View>
          </TouchableOpacity>
@@ -197,7 +194,7 @@ export default function Home({ navigation }) {
                         : item.nom_fr
                      : item.nom_mg?.length > 20
                      ? item.nom_mg?.substring(0, 16) + '...'
-                     : item.nom_mg}
+                     : item.nom_mg ?? item.nom_fr?.substring(0, 20)}
                </Text>
             </View>
          </TouchableOpacity>
@@ -353,7 +350,7 @@ export default function Home({ navigation }) {
                            titleScreen:
                               langueActual === 'fr'
                                  ? 'Tous les contenus'
-                                 : 'Ireo kaontenu',
+                                 : 'Ireo votoantiny rehetra',
                         });
                      }}
                   />
