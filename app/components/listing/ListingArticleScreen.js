@@ -6,6 +6,7 @@ import {
    Image,
    SafeAreaView,
    TouchableOpacity,
+   ToastAndroid,
    useWindowDimensions,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -285,6 +286,10 @@ export default function ListingArticle({ navigation, route }) {
                         await getNextPageArticlesFromApi();
                      }
                   } else {
+                     ToastAndroid.show(
+                        `Pas de connexion, impossible d'obtenir des datas suppl!`,
+                        ToastAndroid.SHORT
+                     );
                      return;
                   }
                }}
