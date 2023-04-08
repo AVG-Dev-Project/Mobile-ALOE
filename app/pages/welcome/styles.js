@@ -5,13 +5,17 @@ const styles = StyleSheet.create({
    view_container_welcome: {
       flex: 1,
       backgroundColor: Colors.white,
-      marginVertical: 30,
+      marginVertical: 20,
       paddingHorizontal: 20,
       alignItems: 'center',
    },
    images_welcome: {
       height: Dimensions.get('window').height < 700 ? 220 : 350,
       width: 300,
+   },
+   logo_image: {
+      height: 60,
+      width: 60,
    },
    view_button_arrondi: {
       borderWidth: 2,
