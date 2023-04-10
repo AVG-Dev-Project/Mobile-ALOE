@@ -131,24 +131,20 @@ export default function Favoris({ navigation, route }) {
                      }}
                      numberOfLines={4}
                   >
-                     {langueActual === 'fr' ? (
-                        <RenderHtml
-                           contentWidth={width}
-                           source={sourceHTML(
-                              cutTextWithBalise(item.contenu_fr, 700)
-                           )}
-                           tagsStyles={tagsStyles}
-                        />
-                     ) : (
-                        <RenderHtml
-                           contentWidth={width}
-                           source={sourceHTML(
-                              cutTextWithBalise(item.contenu_mg, 700)
-                           )}
-                           tagsStyles={tagsStyles}
-                        />
-                     )}
-                     {' ...'}
+                     <Text
+                        style={{
+                           fontSize: width < 380 ? 10 : 16,
+                           flex: 2,
+                           width: 210,
+                        }}
+                        numberOfLines={4}
+                     >
+                        {langueActual === 'fr'
+                           ? item.contenu_fr?.split('________________')[0]
+                           : item.contenu_mg?.split('________________')[0] ??
+                             'Tsy misy dikan-teny malagasy ito lahatsoratra iray ito.'}
+                        {' ...'}
+                     </Text>
                   </Text>
                   <View
                      style={{
