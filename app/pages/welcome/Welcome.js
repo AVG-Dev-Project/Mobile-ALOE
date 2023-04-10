@@ -192,7 +192,6 @@ export default function Welcome({ navigation }) {
             style={{
                display: 'flex',
                flexDirection: 'row',
-               marginTop: 20,
             }}
          >
             <Image
