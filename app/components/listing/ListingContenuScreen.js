@@ -154,7 +154,6 @@ export default function ListingContenu({ navigation, route }) {
                      style={{
                         fontSize:
                            Dimensions.get('window').height < 700 ? 10 : 12,
-                        marginBottom: 8,
                         textTransform: 'lowercase',
                      }}
                   >
@@ -199,21 +198,39 @@ export default function ListingContenu({ navigation, route }) {
                      >
                         {langueActual === 'fr'
                            ? item.thematique_nom_fr?.length > 20
-                              ? item.thematique_nom_fr?.substring(0, 15) + '...'
+                              ? item.thematique_nom_fr?.substring(
+                                   0,
+                                   width < 380 ? 15 : 25
+                                ) + '...'
                               : item.thematique_nom_fr
                            : item.thematique_nom_mg?.length > 20
-                           ? item.thematique_nom_mg?.substring(0, 20) + '...'
+                           ? item.thematique_nom_mg?.substring(
+                                0,
+                                width < 380 ? 15 : 25
+                             ) + '...'
                            : item.thematique_nom_mg ??
                              `${
-                                item.thematique_nom_fr?.substring(0, 10) + '...'
+                                item.thematique_nom_fr?.substring(
+                                   0,
+                                   width < 380 ? 15 : 25
+                                ) + '...'
                              }`}
                         {' / '}
                         {langueActual === 'fr'
                            ? item.type_nom_fr?.length > 20
-                              ? item.type_nom_fr?.substring(0, 15) + '...'
+                              ? item.type_nom_fr?.substring(
+                                   0,
+                                   width < 380 ? 15 : 25
+                                ) + '...'
                               : item.type_nom_fr
-                           : item.type_nom_mg?.substring(0, 30) ??
-                             `${item.type_nom_fr?.substring(0, 10)}`}
+                           : item.type_nom_mg?.substring(
+                                0,
+                                width < 380 ? 15 : 25
+                             ) ??
+                             `${item.type_nom_fr?.substring(
+                                0,
+                                width < 380 ? 15 : 25
+                             )}`}
                      </Text>
                   </View>
                   <View

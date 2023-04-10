@@ -6,8 +6,10 @@ import {
    useWindowDimensions,
    TextInput,
    ActivityIndicator,
+   ScrollView,
    TouchableOpacity,
    ToastAndroid,
+   Dimensions,
    Button,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
@@ -45,12 +47,17 @@ const LabelCustomBottomSheet = ({ text, filterBy, reference }) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'flex-start',
-            paddingVertical: 12,
+            paddingVertical: 6,
          }}
       >
          <Icon name={'category'} color={Colors.black} size={18} />
-         <Text style={{ fontSize: 22, marginLeft: 8 }}>
-            {text?.length > 20 ? text?.substring(0, 30) + '...' : text}
+         <Text
+            style={{
+               fontSize: Dimensions.get('window').width < 380 ? 16 : 22,
+               marginLeft: 8,
+            }}
+         >
+            {text?.length > 40 ? text?.substring(0, 30) + '...' : text}
          </Text>
       </TouchableOpacity>
    );
@@ -279,14 +286,15 @@ export default function Recherche({ navigation, route }) {
                   </Text>
                   <Text
                      style={{
-                        fontSize: width < 370 ? 9 : 12,
-                        marginBottom: 8,
-                        textDecorationLine: 'underline',
+                        fontSize:
+                           Dimensions.get('window').height < 700 ? 10 : 12,
+                        textTransform: 'lowercase',
                      }}
                   >
                      {langueActual === 'fr'
-                        ? item.organisme_nom_fr
-                        : item.organisme_nom_mg}
+                        ? 'Publié le : '
+                        : "Nivoaka tamin'ny : "}
+                     {item.date?.substring(0, 10)}
                   </Text>
                </View>
                <Text
@@ -324,18 +332,30 @@ export default function Recherche({ navigation, route }) {
                      >
                         {langueActual === 'fr'
                            ? item.thematique_nom_fr.length > 20
-                              ? item.thematique_nom_fr?.substring(0, 20) + '...'
+                              ? item.thematique_nom_fr?.substring(
+                                   0,
+                                   width < 380 ? 15 : 25
+                                ) + '...'
                               : item.thematique_nom_fr
                            : item.thematique_nom_mg.length > 20
-                           ? item.thematique_nom_mg?.substring(0, 20) + '...'
+                           ? item.thematique_nom_mg?.substring(
+                                0,
+                                width < 380 ? 15 : 25
+                             ) + '...'
                            : item.thematique_nom_mg}{' '}
                         {' / '}
                         {langueActual === 'fr'
                            ? item.type_nom_fr.length > 20
-                              ? item.type_nom_fr?.substring(0, 20) + '...'
+                              ? item.type_nom_fr?.substring(
+                                   0,
+                                   width < 380 ? 15 : 25
+                                ) + '...'
                               : item.type_nom_fr
                            : item.type_nom_mg.length > 20
-                           ? item.type_nom_mg?.substring(0, 20) + '...'
+                           ? item.type_nom_mg?.substring(
+                                0,
+                                width < 380 ? 15 : 25
+                             ) + '...'
                            : item.type_nom_mg}
                      </Text>
                   </View>
@@ -498,7 +518,12 @@ export default function Recherche({ navigation, route }) {
                                  </Text>
                                  {thematiqueChecked !== null && (
                                     <Text>
-                                       {thematiqueChecked?.substring(0, 15)}
+                                       {thematiqueChecked.length > 10
+                                          ? thematiqueChecked?.substring(
+                                               0,
+                                               10
+                                            ) + '...'
+                                          : thematiqueChecked}
                                     </Text>
                                  )}
                               </View>
@@ -611,34 +636,42 @@ export default function Recherche({ navigation, route }) {
             snapPoints={snapPoints}
             style={styles.view_bottom_sheet}
          >
-            <View style={styles.view_in_bottomsheet}>
-               {allTypes.map((type) => (
-                  <LabelCustomBottomSheet
-                     reference={bottomSheetTypeRef}
-                     filterBy={filterByType}
-                     key={type.id}
-                     text={langueActual === 'fr' ? type.nom_fr : type.nom_mg}
-                  />
-               ))}
-               <TouchableOpacity
-                  onPress={() => {
-                     filterByType('tout');
-                     bottomSheetTypeRef.current.close();
-                  }}
-                  style={{
-                     display: 'flex',
-                     flexDirection: 'row',
-                     alignItems: 'center',
-                     justifyContent: 'flex-start',
-                     paddingVertical: 12,
-                  }}
-               >
-                  <Icon name={'category'} color={Colors.black} size={18} />
-                  <Text style={{ fontSize: 22, marginLeft: 8 }}>
-                     Afficher tout
-                  </Text>
-               </TouchableOpacity>
-            </View>
+            <ScrollView style={styles.view_in_bottomsheet}>
+               <View>
+                  {allTypes.map((type) => (
+                     <LabelCustomBottomSheet
+                        reference={bottomSheetTypeRef}
+                        filterBy={filterByType}
+                        key={type.id}
+                        text={langueActual === 'fr' ? type.nom_fr : type.nom_mg}
+                     />
+                  ))}
+                  <TouchableOpacity
+                     onPress={() => {
+                        filterByType('tout');
+                        bottomSheetTypeRef.current.close();
+                     }}
+                     style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                        paddingVertical: 6,
+                     }}
+                  >
+                     <Icon name={'category'} color={Colors.black} size={18} />
+                     <Text
+                        style={{
+                           fontSize:
+                              Dimensions.get('window').width < 380 ? 16 : 22,
+                           marginLeft: 8,
+                        }}
+                     >
+                        Afficher tout
+                     </Text>
+                  </TouchableOpacity>
+               </View>
+            </ScrollView>
          </BottomSheet>
 
          <BottomSheet
@@ -648,38 +681,46 @@ export default function Recherche({ navigation, route }) {
             snapPoints={snapPoints}
             style={styles.view_bottom_sheet}
          >
-            <View style={styles.view_in_bottomsheet}>
-               {allThematiques.map((thematique) => (
-                  <LabelCustomBottomSheet
-                     reference={bottomSheetThematiqueRef}
-                     filterBy={filterByThematique}
-                     key={thematique.id}
-                     text={
-                        langueActual === 'fr'
-                           ? thematique.nom_fr
-                           : thematique.nom_mg
-                     }
-                  />
-               ))}
-               <TouchableOpacity
-                  onPress={() => {
-                     filterByThematique('tout');
-                     bottomSheetThematiqueRef.current.close();
-                  }}
-                  style={{
-                     display: 'flex',
-                     flexDirection: 'row',
-                     alignItems: 'center',
-                     justifyContent: 'flex-start',
-                     paddingVertical: 12,
-                  }}
-               >
-                  <Icon name={'category'} color={Colors.black} size={18} />
-                  <Text style={{ fontSize: 22, marginLeft: 8 }}>
-                     Afficher tout
-                  </Text>
-               </TouchableOpacity>
-            </View>
+            <ScrollView style={styles.view_in_bottomsheet}>
+               <View>
+                  {allThematiques.map((thematique) => (
+                     <LabelCustomBottomSheet
+                        reference={bottomSheetThematiqueRef}
+                        filterBy={filterByThematique}
+                        key={thematique.id}
+                        text={
+                           langueActual === 'fr'
+                              ? thematique.nom_fr
+                              : thematique.nom_mg
+                        }
+                     />
+                  ))}
+                  <TouchableOpacity
+                     onPress={() => {
+                        filterByThematique('tout');
+                        bottomSheetThematiqueRef.current.close();
+                     }}
+                     style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                        paddingVertical: 6,
+                     }}
+                  >
+                     <Icon name={'category'} color={Colors.black} size={18} />
+                     <Text
+                        style={{
+                           fontSize:
+                              Dimensions.get('window').width < 380 ? 16 : 22,
+                           marginLeft: 8,
+                        }}
+                     >
+                        Afficher tout
+                     </Text>
+                  </TouchableOpacity>
+               </View>
+            </ScrollView>
          </BottomSheet>
       </View>
    );

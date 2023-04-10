@@ -17,8 +17,8 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
    },
    banniere_image: {
-      width: widthDevice < 370 ? 280 : 350,
-      height: heightDevice < 700 ? 180 : 370,
+      width: widthDevice - 150,
+      height: heightDevice - 400,
    },
    view_content_about: {
       marginVertical: 20,

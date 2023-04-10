@@ -23,7 +23,7 @@ export default function About({ navigation }) {
                   style={styles.banniere_image}
                   source={require('_images/aloe.png')}
                />
-               <Text style={{ marginVertical: 6 }}>
+               <Text>
                   {langueActual === 'fr' ? 'Version' : 'Fanovana'} 1.0.0
                </Text>
             </View>

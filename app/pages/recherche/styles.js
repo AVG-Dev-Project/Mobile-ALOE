@@ -52,7 +52,6 @@ export const styles = StyleSheet.create({
       marginVertical: 5,
       padding: 10,
       backgroundColor: Colors.greenWhite,
-      marginHorizontal: 8,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
