@@ -23,6 +23,6 @@ export const styles = StyleSheet.create({
       color: Colors.white,
       fontSize: Dimensions.get('window').width < 380 ? 40 : 44,
       marginVertical: 50,
-      marginHorizontal: Dimensions.get('window').width < 380 ? 40 : 50,
+      marginHorizontal: Dimensions.get('window').width < 380 ? 30 : 50,
    },
 });

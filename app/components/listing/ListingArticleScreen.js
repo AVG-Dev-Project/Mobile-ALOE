@@ -145,20 +145,33 @@ export default function ListingArticle({ navigation, route }) {
                         }}
                         numberOfLines={1}
                      >
-                        {langueActual === 'fr' ? item.titre_fr : item.titre_mg}
+                        {langueActual === 'fr'
+                           ? width < 380
+                              ? item.titre_fr.substring(0, 20) + '...'
+                              : item.titre_fr
+                           : width < 380
+                           ? item.titre_mg.substring(0, 20) + '...'
+                           : item.titre_mg}
                      </Text>
                      {item.chapitre_id && (
                         <Text style={{ fontSize: 12 }}>
                            {langueActual === 'fr'
                               ? `Chapitre ${item.chapitre_numero ?? ''}`
                               : `Lohateny ${item.chapitre_numero ?? ''}`}
-                           : {item.chapitre_titre_fr ?? ''}
+                           :{' '}
+                           {langueActual === 'fr'
+                              ? width < 380
+                                 ? item.chapitre_titre_fr?.substring(0, 15)
+                                 : item.chapitre_titre_mg
+                              : width < 380
+                              ? item.chapitre_titre_mg?.substring(0, 15)
+                              : item.chapitre_titre_mg}
                         </Text>
                      )}
                   </View>
                   <Text
                      style={{
-                        fontSize: width < 380 ? 8 : 16,
+                        fontSize: width < 380 ? 10 : 16,
                         flex: 2,
                         width: 210,
                      }}
