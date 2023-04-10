@@ -7,6 +7,7 @@ import {
    Dimensions,
    SafeAreaView,
    ToastAndroid,
+   useWindowDimensions,
    TouchableOpacity,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -43,6 +44,7 @@ export default function ListingContenu({ navigation, route }) {
    const isNetworkActive = useSelector(
       (selector) => selector.fonctionnality.isNetworkActive
    );
+   let { width } = useWindowDimensions();
    const allContenusFromStore = useSelector(
       (selector) => selector.loi.contenus
    );
@@ -167,7 +169,7 @@ export default function ListingContenu({ navigation, route }) {
                      fontSize: Dimensions.get('window').height < 700 ? 14 : 16,
                      flex: 2,
                   }}
-                  numberOfLines={3}
+                  numberOfLines={2}
                >
                   {langueActual === 'fr'
                      ? item.objet_contenu_fr
@@ -196,17 +198,22 @@ export default function ListingContenu({ navigation, route }) {
                         }}
                      >
                         {langueActual === 'fr'
-                           ? item.thematique_nom_fr?.substring(0, 30)
-                           : item.thematique_nom_mg?.substring(0, 30) ??
-                             `Lohahevitra (${item.thematique_nom_fr?.substring(
-                                0,
-                                10
-                             )})`}
+                           ? item.thematique_nom_fr?.length > 20
+                              ? item.thematique_nom_fr?.substring(0, 15) + '...'
+                              : item.thematique_nom_fr
+                           : item.thematique_nom_mg?.length > 20
+                           ? item.thematique_nom_mg?.substring(0, 20) + '...'
+                           : item.thematique_nom_mg ??
+                             `${
+                                item.thematique_nom_fr?.substring(0, 10) + '...'
+                             }`}
                         {' / '}
                         {langueActual === 'fr'
-                           ? item.type_nom_fr?.substring(0, 30)
+                           ? item.type_nom_fr?.length > 20
+                              ? item.type_nom_fr?.substring(0, 15) + '...'
+                              : item.type_nom_fr
                            : item.type_nom_mg?.substring(0, 30) ??
-                             `Karazana (${item.type_nom_fr?.substring(0, 10)})`}
+                             `${item.type_nom_fr?.substring(0, 10)}`}
                      </Text>
                   </View>
                   <View
