@@ -11,6 +11,7 @@ import {
    TouchableOpacity,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
+import ReactNativeBlobUtil from 'react-native-blob-util';
 import {
    nameStackNavigation as nameNav,
    fetchContenusToApi,
@@ -31,8 +32,6 @@ import {
    getCurrentPageArticleForApi,
    getTotalPageApi,
 } from '_utils/redux/actions/action_creators';
-import { StorageAccessFramework } from 'expo-file-system';
-
 
 export default function ListingContenu({ navigation, route }) {
    //all data
@@ -68,44 +67,55 @@ export default function ListingContenu({ navigation, route }) {
 
    //all functions
    const downloadPdfFile = async (contenu, linkPdf) => {
-      // const downloadResumable = FileSystem.createDownloadResumable(
-      //    urlApiAttachement + linkPdf,
-      //    FileSystem.documentDirectory + "ccacaca.pdf"
-      // );
- 
       try {
-         /*const permissions = await StorageAccessFramework.requestDirectoryPermissionsAsync();
-
-         const { uri } = await downloadResumable.downloadAsync();
-         const asset = await MediaLibrary.createAssetAsync(uri);
-         console.log("getAllbum async");
-         const album = await MediaLibrary.getAlbumAsync('Download');
-         if (album === null) {
-                     console.log("creer ny ablum async");
-
-            await MediaLibrary.createAlbumAsync('Download', asset, false);
-
+         if (isNetworkActive && isConnectedToInternet) {
+            ReactNativeBlobUtil.config({
+               fileCache: true,
+            })
+               .fetch('GET', urlApiAttachement + linkPdf)
+               .then(async (resp) => {
+                  await ReactNativeBlobUtil.MediaCollection.copyToMediaStore(
+                     {
+                        name:
+                           langueActual === 'fr'
+                              ? `${contenu.type_nom_fr} n° ${contenu.numero}`
+                              : `${
+                                   contenu.type_nom_mg ?? contenu.type_nom_fr
+                                } faha ${contenu.numero}`,
+                        parentFolder: 'aloe/pdf',
+                        mimeType: 'application/pdf',
+                     },
+                     'Download',
+                     resp.path()
+                  );
+                  handleToogleIsDownloading(contenu.id);
+                  ToastAndroid.show(
+                     `${
+                        langueActual === 'fr'
+                           ? contenu.type_nom_fr
+                           : contenu.type_nom_mg
+                     } n° ${
+                        contenu.numero
+                     } télecharger dans download/aloe/pdf.`,
+                     ToastAndroid.SHORT
+                  );
+               });
          } else {
-                     console.log("créer ny assets ao anaty album");
-
-            await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
             ToastAndroid.show(
                `${
                   langueActual === 'fr'
-                     ? contenu.type_nom_fr
-                     : contenu.type_nom_mg
-               } n° ${contenu.numero} télecharger dans votre télephone!`,
+                     ? "La télechargement de cette contenu a besoin d'une connexion internet stable!"
+                     : 'Mila interneto mandeha tsara raha te haka io votoantin-dala io!'
+               }`,
                ToastAndroid.SHORT
             );
-            handleToogleIsDownloading(contenu.id);
-         } */
+         }
       } catch (e) {
          ToastAndroid.show(
             'Erreur durant le télechargement du pdf',
             ToastAndroid.LONG
          );
          handleToogleIsDownloading(contenu.id);
-         console.log(e);
       }
    };
 
