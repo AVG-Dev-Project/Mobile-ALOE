@@ -20,6 +20,7 @@ import React, {
    useCallback,
 } from 'react';
 import RenderHtml from 'react-native-render-html';
+import ReactNativeBlobUtil from 'react-native-blob-util';
 import * as MediaLibrary from 'expo-media-library';
 import { styles } from './styles';
 import { Icon } from '@rneui/themed';
@@ -49,8 +50,6 @@ export default function Detail({ navigation, route }) {
    if (status === null) {
       requestPermission();
    }
-
-   console.log("status : ", status)
 
    //all refs
    const bottomSheetRef = useRef(null);
@@ -132,6 +131,42 @@ export default function Detail({ navigation, route }) {
    };
 
    const saveToDownloadDirectory = async (uri) => {
+      ReactNativeBlobUtil.config({
+         fileCache: true,
+      })
+         .fetch('GET', uri)
+         .then(async (resp) => {
+            let result =
+               await ReactNativeBlobUtil.MediaCollection.copyToMediaStore(
+                  {
+                     name: 'test',
+                     /*langueActual === 'fr'
+                           ? `${contenu.type_nom_fr} n° ${contenu.numero}`
+                           : `${
+                                contenu.type_nom_mg ?? contenu.type_nom_fr
+                             } faha ${contenu.numero}`,*/
+                     parentFolder: 'aloe/pdf',
+                     mimeType: 'application/pdf',
+                  },
+                  'Download',
+                  resp.path()
+               );
+            handleToogleIsDownloading(contenu.id);
+            console.log(result);
+            /*ToastAndroid.show(
+               `${
+                  langueActual === 'fr'
+                     ? contenu.type_nom_fr
+                     : contenu.type_nom_mg
+               } n° ${
+                  contenu.numero
+               } télecharger dans download/aloe/pdf.`,
+               ToastAndroid.SHORT
+            );*/
+         });
+   };
+
+   /*const saveToDownloadDirectory = async (uri) => {
       try {
          const asset = await MediaLibrary.createAssetAsync(uri);
          const album = await MediaLibrary.getAlbumAsync('Aloe');
@@ -155,7 +190,7 @@ export default function Detail({ navigation, route }) {
          );
          console.log("error : ", e)
       }
-   };
+   };*/
 
    // const showToastFavorite = () => {
    //    ToastAndroid.show('Vos favoris on été modifié', ToastAndroid.SHORT);
