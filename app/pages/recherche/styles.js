@@ -35,13 +35,19 @@ export const styles = StyleSheet.create({
    input: {
       borderWidth: 1,
       padding: widthDevice < 370 ? 12 : 16,
-      width: widthDevice < 370 ? 270 : '84%',
+      width: widthDevice < 370 ? 270 : '83.8%',
       borderRightWidth: 0,
    },
    boutton_search: {
       borderWidth: 1,
       width: 60,
       padding: 16,
+      borderLeftWidth: 0,
+   },
+   boutton_search_on: {
+      borderWidth: 1,
+      width: 60,
+      height: 62,
       borderLeftWidth: 0,
    },
    view_render: {

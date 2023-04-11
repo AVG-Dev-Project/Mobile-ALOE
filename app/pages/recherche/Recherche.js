@@ -419,6 +419,26 @@ export default function Recherche({ navigation, route }) {
                               alignItems: 'center',
                            }}
                         >
+                           <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
+                              Recherche
+                           </Text>
+                        </View>
+
+                        <View style={styles.view_for_input_search}>
+                           <TextInput
+                              style={styles.input}
+                              keyboardType="default"
+                              placeholder={
+                                 langueActual === 'fr'
+                                    ? 'Entrer le mot de recherche ...'
+                                    : 'Ampidiro ny teny hotadiavina...'
+                              }
+                              value={textFromInputSearch}
+                              onChangeText={(text) => {
+                                 onHandleSearchByValue(text);
+                                 setTextFromValueForSearch(text);
+                              }}
+                           />
                            {!startedSpeech ? (
                               <TouchableOpacity
                                  activeOpacity={0.7}
@@ -437,15 +457,12 @@ export default function Recherche({ navigation, route }) {
                                     }
                                  }}
                               >
-                                 <Icon
-                                    name={'mic'}
-                                    color={Colors.greenAvg}
-                                    size={30}
-                                 />
-                                 <Text style={{ fontWeight: 'bold' }}>
-                                    {langueActual === 'fr'
-                                       ? 'Recherche vocale'
-                                       : "Hitady amin'ny alalan'ny feo"}{' '}
+                                 <Text style={styles.boutton_search}>
+                                    <Icon
+                                       name={'mic'}
+                                       color={Colors.greenAvg}
+                                       size={30}
+                                    />
                                  </Text>
                               </TouchableOpacity>
                            ) : undefined}
@@ -460,45 +477,11 @@ export default function Recherche({ navigation, route }) {
                                  <Lottie
                                     autoPlay
                                     ref={animation}
-                                    style={styles.vocal_off}
+                                    style={styles.boutton_search_on}
                                     source={require('_images/vocal_on.json')}
                                  />
                               </TouchableOpacity>
                            ) : undefined}
-                        </View>
-
-                        <View style={styles.view_for_input_search}>
-                           <TextInput
-                              style={styles.input}
-                              keyboardType="default"
-                              placeholder={
-                                 langueActual === 'fr'
-                                    ? 'Entrer le mot de recherche ...'
-                                    : 'Ampidiro ny teny hotadiavina...'
-                              }
-                              value={textFromInputSearch}
-                              onChangeText={(text) => {
-                                 onHandleSearchByValue(text);
-                                 setTextFromValueForSearch(text);
-                              }}
-                           />
-                           <TouchableOpacity
-                              activeOpacity={0.8}
-                              onPress={() => {
-                                 {
-                                    setIsSearch(true);
-                                    onHandleSearchByValue(textFromInputSearch);
-                                 }
-                              }}
-                           >
-                              <Text style={styles.boutton_search}>
-                                 <Icon
-                                    name={'search'}
-                                    color={Colors.black}
-                                    size={40}
-                                 />
-                              </Text>
-                           </TouchableOpacity>
                         </View>
 
                         <View style={styles.view_for_filtre}>
