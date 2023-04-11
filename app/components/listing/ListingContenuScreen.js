@@ -193,8 +193,7 @@ export default function ListingContenu({ navigation, route }) {
                >
                   {langueActual === 'fr'
                      ? item.objet_contenu_fr
-                     : item.objet_contenu_mg ??
-                       'Tsy misy dikan-teny malagasy ito votoantiny iray ito.'}{' '}
+                     : item.objet_contenu_mg ?? item.objet_contenu_fr}{' '}
                </Text>
                <View
                   style={{

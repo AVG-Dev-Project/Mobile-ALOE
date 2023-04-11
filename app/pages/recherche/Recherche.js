@@ -281,7 +281,9 @@ export default function Recherche({ navigation, route }) {
                         fontSize: width < 370 ? 15 : 18,
                      }}
                   >
-                     {langueActual === 'fr' ? 'Loi n°' : 'Lalana faha '}{' '}
+                     {langueActual === 'fr'
+                        ? item.type_nom_fr + ' n°'
+                        : item.type_nom_mg ?? 'Votoantiny' + ' faha '}{' '}
                      {item.numero}
                   </Text>
                   <Text
