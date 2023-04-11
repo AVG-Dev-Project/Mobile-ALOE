@@ -50,15 +50,13 @@ export default function Detail({ navigation, route }) {
       requestPermission();
    }
 
+   console.log("status : ", status)
+
    //all refs
    const bottomSheetRef = useRef(null);
    const imageRef = useRef();
 
-   //all functions
-
-   if (status === null) {
-      requestPermission();
-   }
+   //all function
 
    /*function to speach article*/
    const playPauseSpeak = (txt_to_say) => {
@@ -136,9 +134,9 @@ export default function Detail({ navigation, route }) {
    const saveToDownloadDirectory = async (uri) => {
       try {
          const asset = await MediaLibrary.createAssetAsync(uri);
-         const album = await MediaLibrary.getAlbumAsync('Download');
+         const album = await MediaLibrary.getAlbumAsync('Aloe');
          if (album === null) {
-            await MediaLibrary.createAlbumAsync('Download', asset, false);
+            await MediaLibrary.createAlbumAsync('Aloe', asset, false);
          } else {
             await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
             ToastAndroid.show(
@@ -155,6 +153,7 @@ export default function Detail({ navigation, route }) {
                : 'Nisy olana teo ampangalana ny pdf.',
             ToastAndroid.LONG
          );
+         console.log("error : ", e)
       }
    };
 

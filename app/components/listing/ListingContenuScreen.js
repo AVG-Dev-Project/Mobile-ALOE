@@ -19,8 +19,8 @@ import {
 import { styles } from './stylesContenu';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
-import * as MediaLibrary from 'expo-media-library';
-import * as FileSystem from 'expo-file-system';
+// import * as MediaLibrary from 'expo-media-library';
+// import * as FileSystem from 'expo-file-system';
 import { Colors } from '_theme/Colors';
 import {
    getAllArticles,
@@ -31,6 +31,8 @@ import {
    getCurrentPageArticleForApi,
    getTotalPageApi,
 } from '_utils/redux/actions/action_creators';
+import { StorageAccessFramework } from 'expo-file-system';
+
 
 export default function ListingContenu({ navigation, route }) {
    //all data
@@ -66,18 +68,26 @@ export default function ListingContenu({ navigation, route }) {
 
    //all functions
    const downloadPdfFile = async (contenu, linkPdf) => {
-      const downloadResumable = FileSystem.createDownloadResumable(
-         urlApiAttachement + linkPdf,
-         FileSystem.documentDirectory + linkPdf?.slice(19)
-      );
-
+      // const downloadResumable = FileSystem.createDownloadResumable(
+      //    urlApiAttachement + linkPdf,
+      //    FileSystem.documentDirectory + "ccacaca.pdf"
+      // );
+ 
       try {
+         /*const permissions = await StorageAccessFramework.requestDirectoryPermissionsAsync();
+
          const { uri } = await downloadResumable.downloadAsync();
          const asset = await MediaLibrary.createAssetAsync(uri);
+         console.log("getAllbum async");
          const album = await MediaLibrary.getAlbumAsync('Download');
          if (album === null) {
+                     console.log("creer ny ablum async");
+
             await MediaLibrary.createAlbumAsync('Download', asset, false);
+
          } else {
+                     console.log("créer ny assets ao anaty album");
+
             await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
             ToastAndroid.show(
                `${
@@ -88,12 +98,13 @@ export default function ListingContenu({ navigation, route }) {
                ToastAndroid.SHORT
             );
             handleToogleIsDownloading(contenu.id);
-         }
+         } */
       } catch (e) {
          ToastAndroid.show(
             'Erreur durant le télechargement du pdf',
             ToastAndroid.LONG
          );
+         handleToogleIsDownloading(contenu.id);
          console.log(e);
       }
    };
