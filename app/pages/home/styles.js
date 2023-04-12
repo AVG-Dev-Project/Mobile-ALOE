@@ -56,9 +56,17 @@ export const styles = StyleSheet.create({
    maskImageCatg: {
       backgroundColor: 'rgba(0, 0, 0, 0.6)',
       borderRadius: 18,
-      height: 80,
+      height: 100,
       width: 230,
    },
+
+   view_container_renderItemType: {
+      width: 230,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+   },
+
    view_carousel: {
       width: '100%',
       flexDirection: 'row',
@@ -68,14 +76,14 @@ export const styles = StyleSheet.create({
       fontWeight: 'bold',
       opacity: 0.9,
       color: Colors.white,
-      marginHorizontal: 2,
+      marginHorizontal: 20,
       fontSize: 20,
       flexWrap: 'wrap',
       textAlign: 'center',
-      top: 28,
+      top: 20,
    },
    image_poster_style_type: {
-      height: 80,
+      height: 100,
       width: 230,
       borderRadius: 15,
    },

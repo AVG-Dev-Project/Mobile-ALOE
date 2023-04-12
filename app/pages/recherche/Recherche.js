@@ -25,8 +25,7 @@ import {
    nameStackNavigation as nameNav,
    filterArticleToListByContenu,
 } from '_utils';
-import * as MediaLibrary from 'expo-media-library';
-import * as FileSystem from 'expo-file-system';
+import ReactNativeBlobUtil from 'react-native-blob-util';
 import Lottie from 'lottie-react-native';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
@@ -196,25 +195,45 @@ export default function Recherche({ navigation, route }) {
    };
 
    const downloadPdfFile = async (contenu, linkPdf) => {
-      const downloadResumable = FileSystem.createDownloadResumable(
-         urlApiAttachement + linkPdf,
-         FileSystem.documentDirectory + linkPdf?.slice(19)
-      );
-
       try {
-         const { uri } = await downloadResumable.downloadAsync();
-         const asset = await MediaLibrary.createAssetAsync(uri);
-         const album = await MediaLibrary.getAlbumAsync('Download');
-         if (album === null) {
-            await MediaLibrary.createAlbumAsync('Download', asset, false);
+         if (isUserNetworkActive && isUserConnectedToInternet) {
+            ReactNativeBlobUtil.config({
+               fileCache: true,
+            })
+               .fetch('GET', urlApiAttachement + linkPdf)
+               .then(async (resp) => {
+                  await ReactNativeBlobUtil.MediaCollection.copyToMediaStore(
+                     {
+                        name:
+                           langueActual === 'fr'
+                              ? `${contenu.type_nom_fr} n° ${contenu.numero}`
+                              : `${
+                                   contenu.type_nom_mg ?? contenu.type_nom_fr
+                                } faha ${contenu.numero}`,
+                        parentFolder: 'aloe/pdf',
+                        mimeType: 'application/pdf',
+                     },
+                     'Download',
+                     resp.path()
+                  );
+                  ToastAndroid.show(
+                     `${
+                        langueActual === 'fr'
+                           ? contenu.type_nom_fr
+                           : contenu.type_nom_mg
+                     } n° ${
+                        contenu.numero
+                     } télecharger dans download/aloe/pdf.`,
+                     ToastAndroid.SHORT
+                  );
+               });
          } else {
-            await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
             ToastAndroid.show(
                `${
                   langueActual === 'fr'
-                     ? contenu.type_nom_fr
-                     : contenu.type_nom_mg
-               } n° ${contenu.numero} télecharger dans votre télephone!`,
+                     ? "La télechargement de cette contenu a besoin d'une connexion internet stable!"
+                     : 'Mila interneto mandeha tsara raha te haka io votoantin-dala io!'
+               }`,
                ToastAndroid.SHORT
             );
          }
@@ -223,7 +242,7 @@ export default function Recherche({ navigation, route }) {
             'Erreur durant le télechargement du pdf',
             ToastAndroid.LONG
          );
-         console.log(e);
+         handleToogleIsDownloading(contenu.id);
       }
    };
 

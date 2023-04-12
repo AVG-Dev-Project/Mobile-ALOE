@@ -147,7 +147,7 @@ export default function Home({ navigation }) {
                      StyleSheet.absoluteFillObject,
                      styles.text_descriptif_for_carousel,
                   ]}
-                  numberOfLines={1}
+                  numberOfLines={3}
                >
                   {langueActual === 'fr'
                      ? item.nom_fr?.length > 20
@@ -186,15 +186,9 @@ export default function Home({ navigation }) {
                      StyleSheet.absoluteFillObject,
                      styles.text_descriptif_for_carousel,
                   ]}
-                  numberOfLines={2}
+                  numberOfLines={4}
                >
-                  {langueActual === 'fr'
-                     ? item.nom_fr?.length > 20
-                        ? item.nom_fr?.substring(0, 16) + '...'
-                        : item.nom_fr
-                     : item.nom_mg?.length > 20
-                     ? item.nom_mg?.substring(0, 16) + '...'
-                     : item.nom_mg ?? item.nom_fr?.substring(0, 20)}
+                  {langueActual === 'fr' ? item.nom_fr : item.nom_mg}
                </Text>
             </View>
          </TouchableOpacity>
