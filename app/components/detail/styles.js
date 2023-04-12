@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
    },
    info_in_landing_detail: {
-      marginTop: heightDevice < 700 ? 60 : 90,
+      marginTop: heightDevice < 700 ? 50 : 60,
       marginLeft: 28,
    },
    maskImageDetailArticle: {
@@ -87,6 +87,6 @@ export const styles = StyleSheet.create({
    view_one_item_in_bottomsheet: {
       display: 'flex',
       flexDirection: 'column',
-      marginBottom: 18,
+      marginBottom: 8,
    },
 });

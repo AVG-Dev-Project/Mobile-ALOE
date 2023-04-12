@@ -7,7 +7,6 @@ import {
    SafeAreaView,
    ScrollView,
    TouchableOpacity,
-   Platform,
    ToastAndroid,
    useWindowDimensions,
 } from 'react-native';
@@ -40,11 +39,16 @@ export default function Detail({ navigation, route }) {
    const { width, height } = useWindowDimensions();
    const dispatch = useDispatch();
    const [isSpeakPlay, setIsSpeakPlay] = useState(false);
+   const allContenus = useSelector((selector) => selector.loi.contenus);
    const oneArticle = route.params.articleToViewDetail;
+   const [contenuMother, setContenuMother] = useState(
+      allContenus.filter((contenu) => contenu.id === oneArticle.contenu)
+   );
    const snapPoints = useMemo(
       () => (height < 700 ? [0, '60%'] : [0, '60%']),
       []
    );
+   console.log(contenuMother);
 
    //permission
    if (status === null) {
@@ -105,9 +109,15 @@ export default function Detail({ navigation, route }) {
       const html = `
          <html>
             <body>
-               <h1 style="text-align: center; color: ${
+               <h1 style="text-align: center; color: ${Colors.greenAvg}">${
+         langueActual === 'fr'
+            ? contenuMother[0].type_nom_fr + ' n°'
+            : contenuMother[0].type_nom_mg ?? 'Votoantiny' + ' faha '
+      }
+               ${contenuMother[0].numero}</h1>
+               <h2 style="text-align: center; color: ${
                   Colors.greenAvg
-               }">Article n° ${oneArticle.numero}</h1>
+               }">Article n° ${oneArticle.numero}</h2>
                <h3 style="text-align: center;">Titre : ${
                   langueActual === 'fr'
                      ? oneArticle.titre_fr
@@ -119,6 +129,9 @@ export default function Detail({ navigation, route }) {
                      ? oneArticle.contenu_fr?.split('________________')[0]
                      : oneArticle.contenu_mg?.split('________________')[0]
                }</p>
+               <footer style="margin-top: 100px; font-size: 12px;text-align:center;">
+                  PDF généré par l'application de l'Alliance Voary Gasy ou AVG
+               </footer>
             </body>
          </html>
       `;
@@ -133,9 +146,7 @@ export default function Detail({ navigation, route }) {
    const saveToDownloadDirectory = async (uri) => {
       try {
          const filename = `Article n° ${oneArticle.numero}/${
-            langueActual === 'fr'
-               ? oneArticle.titre_fr
-               : oneArticle.titre_mg ?? oneArticle.titre_fr
+            oneArticle.titre_fr ?? ''
          }`;
          await ReactNativeBlobUtil.MediaCollection.copyToMediaStore(
             {
@@ -217,8 +228,24 @@ export default function Detail({ navigation, route }) {
                      <Text
                         style={{
                            fontWeight: 'bold',
-                           fontSize: width < 370 ? 18 : 20,
+                           fontSize: width < 370 ? 18 : 24,
+                           textDecorationLine: 'underline',
                            marginBottom: 8,
+                           textAlign: 'center',
+                           width: '90%',
+                           color: Colors.white,
+                        }}
+                     >
+                        {langueActual === 'fr'
+                           ? contenuMother[0].type_nom_fr + ' n°'
+                           : contenuMother[0].type_nom_mg ??
+                             'Votoantiny' + ' faha '}{' '}
+                        {contenuMother[0].numero}
+                     </Text>
+                     <Text
+                        style={{
+                           fontWeight: 'bold',
+                           fontSize: width < 370 ? 16 : 18,
                            width: '90%',
                            color: Colors.white,
                         }}
@@ -386,36 +413,66 @@ export default function Detail({ navigation, route }) {
             snapPoints={snapPoints}
             style={styles.view_bottom_sheet}
          >
-            <View style={styles.view_in_bottomsheet}>
-               <Text style={{ fontSize: 28, fontWeight: 'bold' }}>
-                  {langueActual === 'fr'
-                     ? 'Plus de détails :'
-                     : 'Fanampiny misimisy :'}{' '}
-               </Text>
-               <View style={styles.view_one_item_in_bottomsheet}>
-                  <Text style={styles.label_info_article}>
-                     {langueActual === 'fr' ? 'Chapitre ' : 'Lohateny'}{' '}
-                  </Text>
-                  <Text style={styles.value_info_article}>
-                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+            <ScrollView style={styles.view_in_bottomsheet}>
+               <View>
+                  <Text style={{ fontSize: 28, fontWeight: 'bold' }}>
                      {langueActual === 'fr'
-                        ? oneArticle.chapitre_titre_fr ?? ''
-                        : oneArticle.chapitre_titre_mg ??
-                          'Tsy misy dikan-teny malagasy.'}
+                        ? 'Plus de détails :'
+                        : 'Fanampiny misimisy :'}{' '}
                   </Text>
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Chapitre ' : 'Lohateny'}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {langueActual === 'fr'
+                           ? oneArticle.chapitre_titre_fr ?? ''
+                           : oneArticle.chapitre_titre_mg ??
+                             'Tsy misy dikan-teny malagasy.'}
+                     </Text>
+                  </View>
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Contenu ' : 'Sokajy '}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {langueActual === 'fr'
+                           ? contenuMother[0].type_nom_fr + ' n°'
+                           : contenuMother[0].type_nom_mg ??
+                             'Votoantiny' + ' faha '}{' '}
+                        {contenuMother[0].numero}
+                     </Text>
+                  </View>
+
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Thématique ' : 'Lohahevitra '}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {langueActual === 'fr'
+                           ? contenuMother[0].thematique_nom_fr
+                           : contenuMother[0].thematique_nom_mg ??
+                             contenuMother[0].thematique_nom_fr}
+                     </Text>
+                  </View>
+
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Type ' : 'Sokajy '}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {langueActual === 'fr'
+                           ? contenuMother[0].type_nom_fr
+                           : contenuMother[0].type_nom_mg ??
+                             contenuMother[0].type_nom_fr}
+                     </Text>
+                  </View>
                </View>
-               <View style={styles.view_one_item_in_bottomsheet}>
-                  <Text style={styles.label_info_article}>
-                     {langueActual === 'fr' ? 'Contenu ' : 'Sokajy '}{' '}
-                  </Text>
-                  <Text style={styles.value_info_article}>
-                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                     {langueActual === 'fr'
-                        ? oneArticle.contenu
-                        : oneArticle.contenu}
-                  </Text>
-               </View>
-            </View>
+            </ScrollView>
          </BottomSheet>
       </View>
    );
