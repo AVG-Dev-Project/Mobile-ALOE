@@ -20,8 +20,6 @@ import {
 import { styles } from './stylesContenu';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
-// import * as MediaLibrary from 'expo-media-library';
-// import * as FileSystem from 'expo-file-system';
 import { Colors } from '_theme/Colors';
 import {
    getAllArticles,
