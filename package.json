@@ -71,5 +71,8 @@
   "devDependencies": {
     "@babel/core": "^7.12.9"
   },
+  "resolutions": {
+    "expo-modules-autolinking": "~0.8.1"
+  },
   "private": true
 }
