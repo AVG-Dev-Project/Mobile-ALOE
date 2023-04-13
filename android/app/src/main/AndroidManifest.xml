@@ -13,7 +13,6 @@
     <intent>
       <action android:name="android.intent.action.VIEW"/>
       <category android:name="android.intent.category.BROWSABLE"/>
-      <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
       <data android:scheme="https"/>
     </intent>
   </queries>
