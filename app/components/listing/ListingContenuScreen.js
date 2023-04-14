@@ -196,66 +196,34 @@ export default function ListingContenu({ navigation, route }) {
                <View
                   style={{
                      display: 'flex',
-                     flexDirection: 'row',
-                     justifyContent: 'space-between',
-                     alignItems: 'flex-end',
+                     flexDirection: 'column',
                   }}
                >
-                  <View
+                  <Text style={{textDecorationLine: 'underline'}}>Thématique et Type</Text>
+                  <Text
                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
+                        fontSize: 14,
                      }}
+                      numberOfLines={2}
                   >
-                     <Text
-                        style={{
-                           fontSize: 14,
-                           marginLeft: 2,
-                        }}
-                     >
-                        {langueActual === 'fr'
-                           ? item.thematique_nom_fr?.length > 20
-                              ? item.thematique_nom_fr?.substring(
-                                   0,
-                                   width < 380 ? 15 : 25
-                                ) + '...'
-                              : item.thematique_nom_fr
-                           : item.thematique_nom_mg?.length > 20
-                           ? item.thematique_nom_mg?.substring(
-                                0,
-                                width < 380 ? 15 : 25
-                             ) + '...'
-                           : item.thematique_nom_mg ??
-                             `${
-                                item.thematique_nom_fr?.substring(
-                                   0,
-                                   width < 380 ? 15 : 25
-                                ) + '...'
-                             }`}
-                        {' / '}
-                        {langueActual === 'fr'
-                           ? item.type_nom_fr?.length > 20
-                              ? item.type_nom_fr?.substring(
-                                   0,
-                                   width < 380 ? 15 : 25
-                                ) + '...'
-                              : item.type_nom_fr
-                           : item.type_nom_mg?.substring(
-                                0,
-                                width < 380 ? 15 : 25
-                             ) ??
-                             `${item.type_nom_fr?.substring(
-                                0,
-                                width < 380 ? 15 : 25
-                             )}`}
-                     </Text>
-                  </View>
+                  *{" "}
+                     {langueActual === 'fr'
+                        ? item.thematique_nom_fr : item.thematique_nom_mg ?? item.thematique_nom_fr}
+                  </Text>
+                  <Text style={{
+                        fontSize: 14,
+                     }}
+                      numberOfLines={2}>
+                  *{" "}
+                     {langueActual === 'fr'
+                        ? item.type_nom_fr: item.type_nom_mg ?? item.type_nom_fr}
+                  </Text>
+               </View>
+               <View>
                   <View
                      style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        width: 108,
                         justifyContent: 'flex-end',
                      }}
                   >
@@ -266,6 +234,7 @@ export default function ListingContenu({ navigation, route }) {
                            handleToogleIsDownloading(item.id);
                         }}
                      >
+                        
                         <Icon
                            name={
                               item.isPdfDownloading
@@ -273,7 +242,7 @@ export default function ListingContenu({ navigation, route }) {
                                  : 'file-download'
                            }
                            color={Colors.greenAvg}
-                           size={28}
+                           size={30}
                         />
                      </TouchableOpacity>
                   </View>
