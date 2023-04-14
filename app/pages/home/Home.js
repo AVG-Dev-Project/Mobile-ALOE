@@ -36,10 +36,7 @@ export default function Home({ navigation }) {
    const isCarousel = React.useRef(null);
    const { width, height } = useWindowDimensions();
    const { t } = useTranslation();
-   const allArticles = useSelector((selector) => selector.loi.articles);
-   const allFavoris = useSelector((selector) => selector.loi.favoris);
    const allContenus = useSelector((selector) => selector.loi.contenus);
-   const allTypes = useSelector((selector) => selector.loi.types);
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
@@ -54,10 +51,6 @@ export default function Home({ navigation }) {
       () => (height < 700 ? [0, '60%'] : [0, '50%']),
       []
    );
-
-   const fetchData = () => {
-      fetchAllDataToLocalDatabase(dispatch);
-   };
 
    const showData = () => {
       return ArticleSchema.query({ columns: '*' }).then((res) => {
@@ -123,7 +116,7 @@ export default function Home({ navigation }) {
       );
    };
 
-   const _renderItemType = ({ item }) => {
+   /*const _renderItemType = ({ item }) => {
       return (
          <TouchableOpacity
             activeOpacity={0.8}
@@ -136,7 +129,7 @@ export default function Home({ navigation }) {
          >
             <View key={item.id} style={styles.view_container_renderItemType}>
                <Image
-                  style={styles.image_poster_style_type}
+                  style={styles.image_poster_style_thematique}
                   source={require('_images/book_loi.jpg')}
                />
                <View
@@ -160,7 +153,7 @@ export default function Home({ navigation }) {
             </View>
          </TouchableOpacity>
       );
-   };
+   };*/
 
    const _renderItemThematique = ({ item }) => {
       return (
@@ -173,17 +166,16 @@ export default function Home({ navigation }) {
                });
             }}
          >
-            <View key={item.id} style={styles.view_container_renderItemType}>
-               <Image
-                  style={styles.image_poster_style_type}
+            <View key={item.id} style={styles.view_container_renderItemThematique}>
+               {/*<Image
+                  style={styles.image_poster_style_thematique}
                   source={require('_images/book_loi.jpg')}
-               />
+               />*/}
                <View
                   style={[StyleSheet.absoluteFillObject, styles.maskImageCatg]}
                ></View>
                <Text
                   style={[
-                     StyleSheet.absoluteFillObject,
                      styles.text_descriptif_for_carousel,
                   ]}
                   numberOfLines={4}
@@ -265,47 +257,6 @@ export default function Home({ navigation }) {
                            loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
                            //fin des props spéficifique au section annonce
                            renderItem={_renderItemThematique}
-                           sliderWidth={150}
-                           itemWidth={240}
-                           inactiveSlideOpacity={0.9} //on uniformise tous les opacity
-                           inactiveSlideScale={1} //on uniformise tous les hauteur
-                           useScrollView={true}
-                        />
-                     </View>
-                  </SafeAreaView>
-               </View>
-            </View>
-
-            <View>
-               <View
-                  style={{
-                     display: 'flex',
-                     flexDirection: 'row',
-                     justifyContent: 'space-between',
-                     alignItems: 'center',
-                     marginVertical: 25,
-                  }}
-               >
-                  <Text
-                     style={{
-                        fontSize: height < 700 ? 18 : 22,
-                        fontWeight: 'bold',
-                     }}
-                  >
-                     {t('les_types')}
-                  </Text>
-               </View>
-               <View>
-                  <SafeAreaView>
-                     <View style={styles.view_carousel}>
-                        <Carousel
-                           layout="default"
-                           ref={isCarousel}
-                           data={allTypes}
-                           loop={false}
-                           loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
-                           //fin des props spéficifique au section annonce
-                           renderItem={_renderItemType}
                            sliderWidth={150}
                            itemWidth={240}
                            inactiveSlideOpacity={0.9} //on uniformise tous les opacity
