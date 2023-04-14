@@ -352,13 +352,13 @@ export default function Recherche({ navigation, route }) {
                         }}
                      >
                         {langueActual === 'fr'
-                           ? item.thematique_nom_fr.length > 20
+                           ? item.thematique_nom_fr?.length > 20
                               ? item.thematique_nom_fr?.substring(
                                    0,
                                    width < 380 ? 15 : 25
                                 ) + '...'
                               : item.thematique_nom_fr
-                           : item.thematique_nom_mg.length > 20
+                           : item.thematique_nom_mg?.length > 20
                            ? item.thematique_nom_mg?.substring(
                                 0,
                                 width < 380 ? 15 : 25
@@ -366,13 +366,13 @@ export default function Recherche({ navigation, route }) {
                            : item.thematique_nom_mg}{' '}
                         {' / '}
                         {langueActual === 'fr'
-                           ? item.type_nom_fr.length > 20
+                           ? item.type_nom_fr?.length > 20
                               ? item.type_nom_fr?.substring(
                                    0,
                                    width < 380 ? 15 : 25
                                 ) + '...'
                               : item.type_nom_fr
-                           : item.type_nom_mg.length > 20
+                           : item.type_nom_mg?.length > 20
                            ? item.type_nom_mg?.substring(
                                 0,
                                 width < 380 ? 15 : 25
@@ -522,7 +522,7 @@ export default function Recherche({ navigation, route }) {
                                  </Text>
                                  {thematiqueChecked !== null && (
                                     <Text>
-                                       {thematiqueChecked.length > 10
+                                       {thematiqueChecked?.length > 10
                                           ? thematiqueChecked?.substring(
                                                0,
                                                10
@@ -582,7 +582,7 @@ export default function Recherche({ navigation, route }) {
                      <View style={styles.view_for_result}>
                         {allContenusFilter?.length > 0 && (
                            <Text style={{ textAlign: 'center' }}>
-                              {allContenusFilter.length}{' '}
+                              {allContenusFilter?.length}{' '}
                               {langueActual === 'fr'
                                  ? ' résultats trouvés'
                                  : ' ny valiny hita'}

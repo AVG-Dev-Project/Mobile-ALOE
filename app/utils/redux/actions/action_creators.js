@@ -10,7 +10,8 @@ import {
    IS_CONNECTED_TO_INTERNET,
    CURRENT_PAGE_CONTENU_FOR_API,
    CURRENT_PAGE_ARTICLE_FOR_API,
-   TOTAL_PAGE_API
+   TOTAL_PAGE_API,
+   CHECK_STATUS_DATA
 } from './action_names';
 
 export const getStarted = () => ({
@@ -71,3 +72,8 @@ export const getTotalPageApi = (array) => ({
    type: TOTAL_PAGE_API,
    payload: array,
 });
+
+export const checktatusData = (status) => ({
+   type: CHECK_STATUS_DATA,
+   payload: status
+})
