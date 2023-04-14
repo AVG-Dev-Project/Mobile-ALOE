@@ -83,6 +83,7 @@ export default function ListingArticle({ navigation, route }) {
       dispatch(getAllArticles(oldAllArticles));
       setArticleList(oldAllArticles);
    };
+   console.log("widhtr : ", width)
 
    //all effects
 
@@ -125,7 +126,7 @@ export default function ListingArticle({ navigation, route }) {
                </Text>
                <View
                   style={{
-                     marginLeft: 12,
+                     marginLeft: 8,
                      display: 'flex',
                      flexDirection: 'column',
                      justifyContent: 'space-between',
@@ -142,30 +143,21 @@ export default function ListingArticle({ navigation, route }) {
                         style={{
                            fontSize: 12,
                            textDecorationLine: 'underline',
+                           width: width - 180
                         }}
                         numberOfLines={1}
                      >
                         {langueActual === 'fr'
-                           ? width < 380
-                              ? item.titre_fr.substring(0, 20) + '...'
-                              : item.titre_fr
-                           : width < 380
-                           ? item.titre_mg.substring(0, 20) + '...'
-                           : item.titre_mg}
+                           ? item.titre_fr : item.titre_mg ?? item.titre_fr}
                      </Text>
                      {item.chapitre_id && (
-                        <Text style={{ fontSize: 12 }}>
+                        <Text style={{ fontSize: 12, width: width - 200 }} numberOfLines={1}>
                            {langueActual === 'fr'
                               ? `Chapitre ${item.chapitre_numero ?? ''}`
                               : `Lohateny ${item.chapitre_numero ?? ''}`}
                            :{' '}
                            {langueActual === 'fr'
-                              ? width < 380
-                                 ? item.chapitre_titre_fr?.substring(0, 15)
-                                 : item.chapitre_titre_mg
-                              : width < 380
-                              ? item.chapitre_titre_mg?.substring(0, 15)
-                              : item.chapitre_titre_mg}
+                              ? item.chapitre_titre_fr : item.chapitre_titre_mg ?? item.chapitre_titre_fr}
                         </Text>
                      )}
                   </View>
