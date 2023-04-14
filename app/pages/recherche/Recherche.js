@@ -6,8 +6,10 @@ import {
    useWindowDimensions,
    TextInput,
    ActivityIndicator,
+   ScrollView,
    TouchableOpacity,
    ToastAndroid,
+   Dimensions,
    Button,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
@@ -23,6 +25,7 @@ import {
    nameStackNavigation as nameNav,
    filterArticleToListByContenu,
 } from '_utils';
+import ReactNativeBlobUtil from 'react-native-blob-util';
 import Lottie from 'lottie-react-native';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
@@ -43,12 +46,17 @@ const LabelCustomBottomSheet = ({ text, filterBy, reference }) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'flex-start',
-            paddingVertical: 12,
+            paddingVertical: 6,
          }}
       >
          <Icon name={'category'} color={Colors.black} size={18} />
-         <Text style={{ fontSize: 22, marginLeft: 8 }}>
-            {text?.substring(0, 16)}
+         <Text
+            style={{
+               fontSize: Dimensions.get('window').width < 380 ? 16 : 22,
+               marginLeft: 8,
+            }}
+         >
+            {text?.length > 40 ? text?.substring(0, 30) + '...' : text}
          </Text>
       </TouchableOpacity>
    );
@@ -81,7 +89,7 @@ export default function Recherche({ navigation, route }) {
    const dispatch = useDispatch();
    const animation = useRef(null);
    const [valueForSearch, setValueForSearch] = useState('');
-   const [textFromInputSearch, setTextFromsetValueForSearch] = useState('');
+   const [textFromInputSearch, setTextFromValueForSearch] = useState('');
    const { width, height } = useWindowDimensions();
    const snapPoints = useMemo(
       () => (height < 700 ? [-1, '70%'] : [-1, '60%']),
@@ -101,6 +109,7 @@ export default function Recherche({ navigation, route }) {
    );
    const allTypes = useSelector((selector) => selector.loi.types);
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
+   const urlApiAttachement = 'https://avg.e-commerce-mg.com';
 
    //data from navigation
    let typeFromParams = route.params ? route.params.type : null;
@@ -146,6 +155,8 @@ export default function Recherche({ navigation, route }) {
             setAllContenusFilter([]);
             setTypeChecked(null);
             setThematiqueChecked(null);
+            setValueForSearch('');
+            setTextFromValueForSearch('');
          };
       }, [])
    );
@@ -183,6 +194,58 @@ export default function Recherche({ navigation, route }) {
       return ref.current.snapTo(1);
    };
 
+   const downloadPdfFile = async (contenu, linkPdf) => {
+      try {
+         if (isUserNetworkActive && isUserConnectedToInternet) {
+            ReactNativeBlobUtil.config({
+               fileCache: true,
+            })
+               .fetch('GET', urlApiAttachement + linkPdf)
+               .then(async (resp) => {
+                  await ReactNativeBlobUtil.MediaCollection.copyToMediaStore(
+                     {
+                        name:
+                           langueActual === 'fr'
+                              ? `${contenu.type_nom_fr} n° ${contenu.numero}`
+                              : `${
+                                   contenu.type_nom_mg ?? contenu.type_nom_fr
+                                } faha ${contenu.numero}`,
+                        parentFolder: 'aloe/pdf',
+                        mimeType: 'application/pdf',
+                     },
+                     'Download',
+                     resp.path()
+                  );
+                  ToastAndroid.show(
+                     `${
+                        langueActual === 'fr'
+                           ? contenu.type_nom_fr
+                           : contenu.type_nom_mg
+                     } n° ${
+                        contenu.numero
+                     } télecharger dans download/aloe/pdf.`,
+                     ToastAndroid.SHORT
+                  );
+               });
+         } else {
+            ToastAndroid.show(
+               `${
+                  langueActual === 'fr'
+                     ? "La télechargement de cette contenu a besoin d'une connexion internet stable!"
+                     : 'Mila interneto mandeha tsara raha te haka io votoantin-dala io!'
+               }`,
+               ToastAndroid.SHORT
+            );
+         }
+      } catch (e) {
+         ToastAndroid.show(
+            'Erreur durant le télechargement du pdf',
+            ToastAndroid.LONG
+         );
+         handleToogleIsDownloading(contenu.id);
+      }
+   };
+
    //fontcion utilie pour la translation du vocal en texte
    const startSpeechToText = async () => {
       await Voice.start('fr-FR');
@@ -196,6 +259,7 @@ export default function Recherche({ navigation, route }) {
 
    const onSpeechResults = (result) => {
       setValueForSearch(result.value[0]);
+      setTextFromValueForSearch(result.value[0]);
       ToastAndroid.show(
          `Recherche de : ${result.value[0]} .........`,
          ToastAndroid.LONG
@@ -236,19 +300,22 @@ export default function Recherche({ navigation, route }) {
                         fontSize: width < 370 ? 15 : 18,
                      }}
                   >
-                     {langueActual === 'fr' ? 'Loi n°' : 'Lalana faha '}{' '}
+                     {langueActual === 'fr'
+                        ? item.type_nom_fr + ' n°'
+                        : item.type_nom_mg ?? 'Votoantiny' + ' faha '}{' '}
                      {item.numero}
                   </Text>
                   <Text
                      style={{
-                        fontSize: width < 370 ? 9 : 12,
-                        marginBottom: 8,
-                        textDecorationLine: 'underline',
+                        fontSize:
+                           Dimensions.get('window').height < 700 ? 10 : 12,
+                        textTransform: 'lowercase',
                      }}
                   >
                      {langueActual === 'fr'
-                        ? item.organisme_nom_fr
-                        : item.organisme_nom_mg}
+                        ? 'Publié le : '
+                        : "Nivoaka tamin'ny : "}
+                     {item.date?.substring(0, 10)}
                   </Text>
                </View>
                <Text
@@ -285,11 +352,31 @@ export default function Recherche({ navigation, route }) {
                         }}
                      >
                         {langueActual === 'fr'
-                           ? item.thematique_nom_fr
+                           ? item.thematique_nom_fr.length > 20
+                              ? item.thematique_nom_fr?.substring(
+                                   0,
+                                   width < 380 ? 15 : 25
+                                ) + '...'
+                              : item.thematique_nom_fr
+                           : item.thematique_nom_mg.length > 20
+                           ? item.thematique_nom_mg?.substring(
+                                0,
+                                width < 380 ? 15 : 25
+                             ) + '...'
                            : item.thematique_nom_mg}{' '}
                         {' / '}
                         {langueActual === 'fr'
-                           ? item.type_nom_fr
+                           ? item.type_nom_fr.length > 20
+                              ? item.type_nom_fr?.substring(
+                                   0,
+                                   width < 380 ? 15 : 25
+                                ) + '...'
+                              : item.type_nom_fr
+                           : item.type_nom_mg.length > 20
+                           ? item.type_nom_mg?.substring(
+                                0,
+                                width < 380 ? 15 : 25
+                             ) + '...'
                            : item.type_nom_mg}
                      </Text>
                   </View>
@@ -304,7 +391,7 @@ export default function Recherche({ navigation, route }) {
                      <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => {
-                           alert('PDF');
+                           downloadPdfFile(item, item.attachement?.slice(21));
                         }}
                      >
                         <Icon
@@ -353,6 +440,26 @@ export default function Recherche({ navigation, route }) {
                               alignItems: 'center',
                            }}
                         >
+                           <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
+                              Recherche
+                           </Text>
+                        </View>
+
+                        <View style={styles.view_for_input_search}>
+                           <TextInput
+                              style={styles.input}
+                              keyboardType="default"
+                              placeholder={
+                                 langueActual === 'fr'
+                                    ? 'Entrer le mot de recherche ...'
+                                    : 'Ampidiro ny teny hotadiavina...'
+                              }
+                              value={textFromInputSearch}
+                              onChangeText={(text) => {
+                                 onHandleSearchByValue(text);
+                                 setTextFromValueForSearch(text);
+                              }}
+                           />
                            {!startedSpeech ? (
                               <TouchableOpacity
                                  activeOpacity={0.7}
@@ -371,15 +478,12 @@ export default function Recherche({ navigation, route }) {
                                     }
                                  }}
                               >
-                                 <Icon
-                                    name={'mic'}
-                                    color={Colors.greenAvg}
-                                    size={30}
-                                 />
-                                 <Text style={{ fontWeight: 'bold' }}>
-                                    {langueActual === 'fr'
-                                       ? 'Recherche vocale'
-                                       : "Hitady amin'ny alalan'ny feo"}{' '}
+                                 <Text style={styles.boutton_search}>
+                                    <Icon
+                                       name={'mic'}
+                                       color={Colors.greenAvg}
+                                       size={30}
+                                    />
                                  </Text>
                               </TouchableOpacity>
                            ) : undefined}
@@ -394,45 +498,11 @@ export default function Recherche({ navigation, route }) {
                                  <Lottie
                                     autoPlay
                                     ref={animation}
-                                    style={styles.vocal_off}
+                                    style={styles.boutton_search_on}
                                     source={require('_images/vocal_on.json')}
                                  />
                               </TouchableOpacity>
                            ) : undefined}
-                        </View>
-
-                        <View style={styles.view_for_input_search}>
-                           <TextInput
-                              style={styles.input}
-                              keyboardType="default"
-                              placeholder={
-                                 langueActual === 'fr'
-                                    ? 'Entrer le mot de recherche ...'
-                                    : 'Ampidiro ny teny hotadiavina...'
-                              }
-                              value={textFromInputSearch}
-                              onChangeText={(text) => {
-                                 onHandleSearchByValue(text);
-                                 setTextFromsetValueForSearch(text);
-                              }}
-                           />
-                           <TouchableOpacity
-                              activeOpacity={0.8}
-                              onPress={() => {
-                                 {
-                                    setIsSearch(true);
-                                    onHandleSearchByValue(textFromInputSearch);
-                                 }
-                              }}
-                           >
-                              <Text style={styles.boutton_search}>
-                                 <Icon
-                                    name={'search'}
-                                    color={Colors.black}
-                                    size={40}
-                                 />
-                              </Text>
-                           </TouchableOpacity>
                         </View>
 
                         <View style={styles.view_for_filtre}>
@@ -451,7 +521,14 @@ export default function Recherche({ navigation, route }) {
                                        : 'Lohahevitra'}
                                  </Text>
                                  {thematiqueChecked !== null && (
-                                    <Text>{thematiqueChecked}</Text>
+                                    <Text>
+                                       {thematiqueChecked.length > 10
+                                          ? thematiqueChecked?.substring(
+                                               0,
+                                               10
+                                            ) + '...'
+                                          : thematiqueChecked}
+                                    </Text>
                                  )}
                               </View>
                               <TouchableOpacity
@@ -496,7 +573,7 @@ export default function Recherche({ navigation, route }) {
                                        : 'Karazana'}
                                  </Text>
                                  {typeChecked !== null && (
-                                    <Text>{typeChecked}</Text>
+                                    <Text>{typeChecked?.substring(0, 15)}</Text>
                                  )}
                               </View>
                            </View>
@@ -563,34 +640,42 @@ export default function Recherche({ navigation, route }) {
             snapPoints={snapPoints}
             style={styles.view_bottom_sheet}
          >
-            <View style={styles.view_in_bottomsheet}>
-               {allTypes.map((type) => (
-                  <LabelCustomBottomSheet
-                     reference={bottomSheetTypeRef}
-                     filterBy={filterByType}
-                     key={type.id}
-                     text={langueActual === 'fr' ? type.nom_fr : type.nom_mg}
-                  />
-               ))}
-               <TouchableOpacity
-                  onPress={() => {
-                     filterByType('tout');
-                     bottomSheetTypeRef.current.close();
-                  }}
-                  style={{
-                     display: 'flex',
-                     flexDirection: 'row',
-                     alignItems: 'center',
-                     justifyContent: 'flex-start',
-                     paddingVertical: 12,
-                  }}
-               >
-                  <Icon name={'category'} color={Colors.black} size={18} />
-                  <Text style={{ fontSize: 22, marginLeft: 8 }}>
-                     Afficher tout
-                  </Text>
-               </TouchableOpacity>
-            </View>
+            <ScrollView style={styles.view_in_bottomsheet}>
+               <View>
+                  {allTypes.map((type) => (
+                     <LabelCustomBottomSheet
+                        reference={bottomSheetTypeRef}
+                        filterBy={filterByType}
+                        key={type.id}
+                        text={langueActual === 'fr' ? type.nom_fr : type.nom_mg}
+                     />
+                  ))}
+                  <TouchableOpacity
+                     onPress={() => {
+                        filterByType('tout');
+                        bottomSheetTypeRef.current.close();
+                     }}
+                     style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                        paddingVertical: 6,
+                     }}
+                  >
+                     <Icon name={'category'} color={Colors.black} size={18} />
+                     <Text
+                        style={{
+                           fontSize:
+                              Dimensions.get('window').width < 380 ? 16 : 22,
+                           marginLeft: 8,
+                        }}
+                     >
+                        Afficher tout
+                     </Text>
+                  </TouchableOpacity>
+               </View>
+            </ScrollView>
          </BottomSheet>
 
          <BottomSheet
@@ -600,38 +685,46 @@ export default function Recherche({ navigation, route }) {
             snapPoints={snapPoints}
             style={styles.view_bottom_sheet}
          >
-            <View style={styles.view_in_bottomsheet}>
-               {allThematiques.map((thematique) => (
-                  <LabelCustomBottomSheet
-                     reference={bottomSheetThematiqueRef}
-                     filterBy={filterByThematique}
-                     key={thematique.id}
-                     text={
-                        langueActual === 'fr'
-                           ? thematique.nom_fr
-                           : thematique.nom_mg
-                     }
-                  />
-               ))}
-               <TouchableOpacity
-                  onPress={() => {
-                     filterByThematique('tout');
-                     bottomSheetThematiqueRef.current.close();
-                  }}
-                  style={{
-                     display: 'flex',
-                     flexDirection: 'row',
-                     alignItems: 'center',
-                     justifyContent: 'flex-start',
-                     paddingVertical: 12,
-                  }}
-               >
-                  <Icon name={'category'} color={Colors.black} size={18} />
-                  <Text style={{ fontSize: 22, marginLeft: 8 }}>
-                     Afficher tout
-                  </Text>
-               </TouchableOpacity>
-            </View>
+            <ScrollView style={styles.view_in_bottomsheet}>
+               <View>
+                  {allThematiques.map((thematique) => (
+                     <LabelCustomBottomSheet
+                        reference={bottomSheetThematiqueRef}
+                        filterBy={filterByThematique}
+                        key={thematique.id}
+                        text={
+                           langueActual === 'fr'
+                              ? thematique.nom_fr
+                              : thematique.nom_mg
+                        }
+                     />
+                  ))}
+                  <TouchableOpacity
+                     onPress={() => {
+                        filterByThematique('tout');
+                        bottomSheetThematiqueRef.current.close();
+                     }}
+                     style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                        paddingVertical: 6,
+                     }}
+                  >
+                     <Icon name={'category'} color={Colors.black} size={18} />
+                     <Text
+                        style={{
+                           fontSize:
+                              Dimensions.get('window').width < 380 ? 16 : 22,
+                           marginLeft: 8,
+                        }}
+                     >
+                        Afficher tout
+                     </Text>
+                  </TouchableOpacity>
+               </View>
+            </ScrollView>
          </BottomSheet>
       </View>
    );

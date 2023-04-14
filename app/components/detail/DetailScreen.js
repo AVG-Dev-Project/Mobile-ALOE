@@ -7,7 +7,6 @@ import {
    SafeAreaView,
    ScrollView,
    TouchableOpacity,
-   Platform,
    ToastAndroid,
    useWindowDimensions,
 } from 'react-native';
@@ -20,18 +19,17 @@ import React, {
    useCallback,
 } from 'react';
 import RenderHtml from 'react-native-render-html';
+import ReactNativeBlobUtil from 'react-native-blob-util';
 import * as MediaLibrary from 'expo-media-library';
 import { styles } from './styles';
 import { Icon } from '@rneui/themed';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { printToFileAsync } from 'expo-print';
-import { captureRef } from 'react-native-view-shot';
 import bgImage from '_images/bg_loi.jpg';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
 // import { addFavoris } from '_utils/redux/actions/action_creators';
-import ViewShot, { captureRef } from 'react-native-view-shot';
-import * as MediaLibrary from 'expo-media-library';
+import { captureRef } from 'react-native-view-shot';
 
 export default function Detail({ navigation, route }) {
    const [status, requestPermission] = MediaLibrary.usePermissions();
@@ -41,11 +39,16 @@ export default function Detail({ navigation, route }) {
    const { width, height } = useWindowDimensions();
    const dispatch = useDispatch();
    const [isSpeakPlay, setIsSpeakPlay] = useState(false);
+   const allContenus = useSelector((selector) => selector.loi.contenus);
    const oneArticle = route.params.articleToViewDetail;
+   const [contenuMother, setContenuMother] = useState(
+      allContenus.filter((contenu) => contenu.id === oneArticle.contenu)
+   );
    const snapPoints = useMemo(
       () => (height < 700 ? [0, '60%'] : [0, '60%']),
       []
    );
+   console.log(contenuMother);
 
    //permission
    if (status === null) {
@@ -56,18 +59,20 @@ export default function Detail({ navigation, route }) {
    const bottomSheetRef = useRef(null);
    const imageRef = useRef();
 
-   //all functions
-
-   if (status === null) {
-      requestPermission();
-   }
+   //all function
 
    /*function to speach article*/
    const playPauseSpeak = (txt_to_say) => {
       if (isSpeakPlay) {
          Speech.stop();
       } else {
-         Speech.speak(txt_to_say, { language: 'fr-FR' });
+         Speech.speak(
+            txt_to_say ??
+               (langueActual === 'fr'
+                  ? "Pas d'artcile à lire"
+                  : 'Tsy misy dikan-teny malagasy ilay lahatsoratra.'),
+            { language: 'fr-FR' }
+         );
       }
    };
 
@@ -84,13 +89,17 @@ export default function Detail({ navigation, route }) {
          await MediaLibrary.saveToLibraryAsync(localUri);
          if (localUri) {
             ToastAndroid.show(
-               `Article n°${oneArticle.numero} télecharger dans votre galérie.`,
+               langueActual === 'fr'
+                  ? `Article n°${oneArticle.numero} télecharger dans votre galérie.`
+                  : `Lahatsoratra faha${oneArticle.numero} azo ao anaty lisitry ny sarinao.`,
                ToastAndroid.SHORT
             );
          }
       } catch (e) {
          ToastAndroid.show(
-            `La capture a été intérompu. Veuillez réessayer!`,
+            langueActual === 'fr'
+               ? `La capture a été intérompu. Veuillez réessayer!`
+               : "Nisy olana teo amin'ny fangalana ny sary.",
             ToastAndroid.SHORT
          );
       }
@@ -100,9 +109,15 @@ export default function Detail({ navigation, route }) {
       const html = `
          <html>
             <body>
-               <h1 style="text-align: center; color: ${
+               <h1 style="text-align: center; color: ${Colors.greenAvg}">${
+         langueActual === 'fr'
+            ? contenuMother[0].type_nom_fr + ' n°'
+            : contenuMother[0].type_nom_mg ?? 'Votoantiny' + ' faha '
+      }
+               ${contenuMother[0].numero}</h1>
+               <h2 style="text-align: center; color: ${
                   Colors.greenAvg
-               }">Article n° ${oneArticle.numero}</h1>
+               }">Article n° ${oneArticle.numero}</h2>
                <h3 style="text-align: center;">Titre : ${
                   langueActual === 'fr'
                      ? oneArticle.titre_fr
@@ -114,6 +129,9 @@ export default function Detail({ navigation, route }) {
                      ? oneArticle.contenu_fr?.split('________________')[0]
                      : oneArticle.contenu_mg?.split('________________')[0]
                }</p>
+               <footer style="margin-top: 100px; font-size: 12px;text-align:center;">
+                  PDF généré par l'application de l'Alliance Voary Gasy ou AVG
+               </footer>
             </body>
          </html>
       `;
@@ -127,20 +145,27 @@ export default function Detail({ navigation, route }) {
 
    const saveToDownloadDirectory = async (uri) => {
       try {
-         const asset = await MediaLibrary.createAssetAsync(uri);
-         const album = await MediaLibrary.getAlbumAsync('Download');
-         if (album === null) {
-            await MediaLibrary.createAlbumAsync('Download', asset, false);
-         } else {
-            await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-            ToastAndroid.show(
-               `Article n°${oneArticle.numero} télecharger dans votre télephone!`,
-               ToastAndroid.SHORT
-            );
-         }
+         const filename = `Article n° ${oneArticle.numero}/${
+            oneArticle.titre_fr ?? ''
+         }`;
+         await ReactNativeBlobUtil.MediaCollection.copyToMediaStore(
+            {
+               name: filename,
+               parentFolder: 'aloe/pdf',
+               mimeType: 'application/pdf',
+            },
+            'Download',
+            uri.replace('file://', '')
+         );
+         ToastAndroid.show(
+            `Article n° ${oneArticle.numero} télecharger dans download/aloe/pdf.`,
+            ToastAndroid.SHORT
+         );
       } catch (e) {
          ToastAndroid.show(
-            'Erreur durant le télechargement du pdf',
+            langueActual === 'fr'
+               ? 'Erreur durant le télechargement du pdf'
+               : 'Nisy olana teo ampangalana ny pdf.',
             ToastAndroid.LONG
          );
       }
@@ -152,17 +177,21 @@ export default function Detail({ navigation, route }) {
 
    const sourceHTML = (data) => {
       const source = {
-         html: data,
+         html:
+            data ?? '<p>Tsy misy dikan-teny malagasy ity lahatsoratra ity.</p>',
       };
       return source;
    };
 
-   const tagsStyles = {
-      p: {
-         width: '100%',
-         fontSize: width < 380 ? 14 : 18,
-      },
-   };
+   const tagsStyles = useMemo(
+      () => ({
+         p: {
+            width: '100%',
+            fontSize: width < 380 ? 14 : 18,
+         },
+      }),
+      []
+   );
 
    //all efects
    useEffect(() => {
@@ -199,21 +228,38 @@ export default function Detail({ navigation, route }) {
                      <Text
                         style={{
                            fontWeight: 'bold',
-                           fontSize: width < 370 ? 18 : 20,
+                           fontSize: width < 370 ? 18 : 24,
+                           textDecorationLine: 'underline',
                            marginBottom: 8,
+                           textAlign: 'center',
+                           width: '90%',
+                           color: Colors.white,
+                        }}
+                     >
+                        {langueActual === 'fr'
+                           ? contenuMother[0].type_nom_fr + ' n°'
+                           : contenuMother[0].type_nom_mg ??
+                             'Votoantiny' + ' faha '}{' '}
+                        {contenuMother[0].numero}
+                     </Text>
+                     <Text
+                        style={{
+                           fontWeight: 'bold',
+                           fontSize: width < 370 ? 16 : 18,
                            width: '90%',
                            color: Colors.white,
                         }}
                      >
                         {langueActual === 'fr'
                            ? oneArticle.titre_fr
-                           : oneArticle.titre_mg}
+                           : oneArticle.titre_mg ??
+                             'Tsy misy dikan-teny malagasy.'}
                      </Text>
                      {oneArticle.chapitre_id && (
                         <Text
                            style={{
-                              fontSize: 12,
-                              marginVertical: 8,
+                              fontSize: 13,
+                              marginVertical: 4,
                               color: Colors.white,
                            }}
                         >
@@ -223,7 +269,8 @@ export default function Detail({ navigation, route }) {
                            :{' '}
                            {langueActual === 'fr'
                               ? oneArticle.chapitre_titre_fr
-                              : oneArticle.chapitre_titre_mg}
+                              : oneArticle.chapitre_titre_mg ??
+                                'Tsy misy ny dikan-teny malagasy.'}
                         </Text>
                      )}
                   </View>
@@ -297,72 +344,26 @@ export default function Detail({ navigation, route }) {
                            />
                         )}
                      </ScrollView>
-                     <View style={styles.all_button_in_detail_screen}>
-                        <TouchableOpacity
-                           onPress={() => {
-                              onSaveImageAsync();
-                           }}
-                        >
-                           <Text style={styles.button_in_detail}>
-                              {' '}
-                              <Icon
-                                 name={'image'}
-                                 size={34}
-                                 color={Colors.greenAvg}
-                              />{' '}
-                           </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                           onPress={() => {
-                              downloadAsPdf();
-                           }}
-                        >
-                           <Text style={styles.button_in_detail}>
-                              {' '}
-                              <Icon
-                                 name={'picture-as-pdf'}
-                                 size={34}
-                                 color={Colors.greenAvg}
-                              />{' '}
-                           </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                           onPress={() => {
-                              setIsSpeakPlay(!isSpeakPlay);
-                              if (langueActual === 'fr') {
-                                 playPauseSpeak(
-                                    oneArticle.contenu_fr
-                                       ?.split('________________')[0]
-                                       .substring(0, 4000)
-                                 );
-                              } else {
-                                 playPauseSpeak(
-                                    oneArticle.contenu_mg
-                                       ?.split('________________')[0]
-                                       .substring(0, 4000)
-                                 );
-                              }
-                           }}
-                        >
-                           <Text style={[styles.button_in_detail]}>
-                              {' '}
-                              <Icon
-                                 name={
-                                    isSpeakPlay ? 'stop' : 'play-circle-outline'
-                                 }
-                                 size={34}
-                                 color={Colors.greenAvg}
-                              />{' '}
-                           </Text>
-                        </TouchableOpacity>
-                     </View>
                   </View>
                </View>
                <View style={styles.all_button_in_detail_screen}>
                   <TouchableOpacity
                      onPress={() => {
-                        //alert('télechargés en PDF');
                         onSaveImageAsync();
+                     }}
+                  >
+                     <Text style={styles.button_in_detail}>
+                        {' '}
+                        <Icon
+                           name={'image'}
+                           size={34}
+                           color={Colors.greenAvg}
+                        />{' '}
+                     </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                     onPress={() => {
+                        downloadAsPdf();
                      }}
                   >
                      <Text style={styles.button_in_detail}>
@@ -379,11 +380,15 @@ export default function Detail({ navigation, route }) {
                         setIsSpeakPlay(!isSpeakPlay);
                         if (langueActual === 'fr') {
                            playPauseSpeak(
-                              oneArticle.contenu_fr.substring(0, 4000)
+                              oneArticle.contenu_fr
+                                 ?.split('________________')[0]
+                                 .substring(0, 4000)
                            );
                         } else {
                            playPauseSpeak(
-                              oneArticle.contenu_mg.substring(0, 4000)
+                              oneArticle.contenu_mg
+                                 ?.split('________________')[0]
+                                 .substring(0, 4000)
                            );
                         }
                      }}
@@ -408,35 +413,66 @@ export default function Detail({ navigation, route }) {
             snapPoints={snapPoints}
             style={styles.view_bottom_sheet}
          >
-            <View style={styles.view_in_bottomsheet}>
-               <Text style={{ fontSize: 28, fontWeight: 'bold' }}>
-                  {langueActual === 'fr'
-                     ? 'Plus de détails :'
-                     : 'Fanampiny misimisy :'}{' '}
-               </Text>
-               <View style={styles.view_one_item_in_bottomsheet}>
-                  <Text style={styles.label_info_article}>
-                     {langueActual === 'fr' ? 'Chapitre ' : 'Lohateny'}{' '}
-                  </Text>
-                  <Text style={styles.value_info_article}>
-                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+            <ScrollView style={styles.view_in_bottomsheet}>
+               <View>
+                  <Text style={{ fontSize: 28, fontWeight: 'bold' }}>
                      {langueActual === 'fr'
-                        ? oneArticle.chapitre_titre_fr ?? ''
-                        : oneArticle.chapitre_titre_mg ?? ''}
+                        ? 'Plus de détails :'
+                        : 'Fanampiny misimisy :'}{' '}
                   </Text>
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Chapitre ' : 'Lohateny'}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {langueActual === 'fr'
+                           ? oneArticle.chapitre_titre_fr ?? ''
+                           : oneArticle.chapitre_titre_mg ??
+                             'Tsy misy dikan-teny malagasy.'}
+                     </Text>
+                  </View>
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Contenu ' : 'Sokajy '}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {langueActual === 'fr'
+                           ? contenuMother[0].type_nom_fr + ' n°'
+                           : contenuMother[0].type_nom_mg ??
+                             'Votoantiny' + ' faha '}{' '}
+                        {contenuMother[0].numero}
+                     </Text>
+                  </View>
+
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Thématique ' : 'Lohahevitra '}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {langueActual === 'fr'
+                           ? contenuMother[0].thematique_nom_fr
+                           : contenuMother[0].thematique_nom_mg ??
+                             contenuMother[0].thematique_nom_fr}
+                     </Text>
+                  </View>
+
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Type ' : 'Sokajy '}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {langueActual === 'fr'
+                           ? contenuMother[0].type_nom_fr
+                           : contenuMother[0].type_nom_mg ??
+                             contenuMother[0].type_nom_fr}
+                     </Text>
+                  </View>
                </View>
-               <View style={styles.view_one_item_in_bottomsheet}>
-                  <Text style={styles.label_info_article}>
-                     {langueActual === 'fr' ? 'Contenu ' : 'Sokajy '}{' '}
-                  </Text>
-                  <Text style={styles.value_info_article}>
-                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                     {langueActual === 'fr'
-                        ? oneArticle.contenu
-                        : oneArticle.contenu}
-                  </Text>
-               </View>
-            </View>
+            </ScrollView>
          </BottomSheet>
       </View>
    );

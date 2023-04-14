@@ -58,8 +58,8 @@ export const styles = StyleSheet.create({
    number_of_article: {
       fontWeight: 'bold',
       color: Colors.white,
-      fontSize: widthDevice < 380 ? 40 : 44,
+      fontSize: Dimensions.get('window').width < 380 ? 40 : 44,
       marginVertical: 50,
-      marginHorizontal: widthDevice < 380 ? 40 : 56,
+      marginHorizontal: Dimensions.get('window').width < 380 ? 30 : 50,
    },
 });

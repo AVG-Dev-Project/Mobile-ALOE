@@ -5,13 +5,16 @@ const styles = StyleSheet.create({
    view_container_welcome: {
       flex: 1,
       backgroundColor: Colors.white,
-      marginVertical: 30,
       paddingHorizontal: 20,
       alignItems: 'center',
    },
    images_welcome: {
-      height: Dimensions.get('window').height < 700 ? 220 : 350,
-      width: 300,
+      height: Dimensions.get('window').height - 430,
+      width: Dimensions.get('window').width - 160,
+   },
+   logo_image: {
+      height: Dimensions.get('window').height < 700 ? 60 : 70,
+      width: Dimensions.get('window').height < 700 ? 60 : 70,
    },
    view_button_arrondi: {
       borderWidth: 2,

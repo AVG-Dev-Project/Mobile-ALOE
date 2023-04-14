@@ -133,7 +133,7 @@ export default function BottomBarTabs() {
 const styles = StyleSheet.create({
    tabBarStyles: {
       position: 'absolute',
-      borderRadius: 20,
+      borderRadius: 10,
       marginVertical: 10,
       backgroundColors: Colors.background,
       height: 60,

@@ -23,6 +23,8 @@ import {
    filterArticleToListByContenu,
    cutTextWithBalise,
    checkAndsendMailFromLocalDBToAPI,
+   parseDataArticleLazyLoading,
+   parseDataContenuLazyLoading,
 } from './helper/functionHelpler';
 
 import {
@@ -56,6 +58,8 @@ export {
    cutTextWithBalise,
    checkAndsendMailFromLocalDBToAPI,
    fetchTypesToApi,
+   parseDataArticleLazyLoading,
+   parseDataContenuLazyLoading,
    fetchContenusToApi,
    fetchArticlesToApi,
    fetchArticlesByContenuToApi,

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
    View,
    Text,
@@ -9,6 +9,7 @@ import {
    TouchableOpacity,
 } from 'react-native';
 import { Colors } from '_theme/Colors';
+import Lottie from 'lottie-react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Icon, Input, Button } from '@rneui/themed';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -21,6 +22,7 @@ import {
 
 export default function Doleance({ navigation }) {
    //all datas
+   const animation = useRef(null);
    const dispatch = useDispatch();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
@@ -49,7 +51,9 @@ export default function Doleance({ navigation }) {
          setIsLoadSendingMail(false);
       });
       return showToastDoleance(
-         'Votre mail a été bien et belle envoyé. Merci beaucoup.'
+         langueActual === 'fr'
+            ? 'Votre mail a été bien et belle envoyé. Merci beaucoup.'
+            : 'Lasa ny mailaka anao. Misaotra tompoko.'
       );
    };
    const sendMailToLocalDB = async (email, obj, message) => {
@@ -134,9 +138,11 @@ export default function Doleance({ navigation }) {
          <SafeAreaView>
             <View style={styles.view_container}>
                <View style={styles.head_banniere}>
-                  <Image
+                  <Lottie
+                     autoPlay
+                     ref={animation}
                      style={styles.banniere_image}
-                     source={require('_images/bg_loi.jpg')}
+                     source={require('_images/mail.json')}
                   />
                   <Text
                      style={{
@@ -146,15 +152,20 @@ export default function Doleance({ navigation }) {
                         textAlign: 'center',
                      }}
                   >
-                     NB : Veuillez renseigner tous les champs de cette
-                     formulaire pour procéder à votre doléance!
+                     {langueActual === 'fr'
+                        ? 'NB : Veuillez renseigner tous les champs de cette formulaire pour procéder à votre doléance!'
+                        : "NB : Miangavy mba fenky daholo ny fampidiran-teny alohan'ny handefasanao ny fitarainanao."}
                   </Text>
                </View>
                <View style={styles.content_form}>
                   <Input
                      name="email"
                      value={emailContent.email}
-                     placeholder={'Votre adresse email : '}
+                     placeholder={
+                        langueActual === 'fr'
+                           ? 'Votre adresse email : '
+                           : 'Eto ny adiresy mailakao : '
+                     }
                      leftIcon={
                         <Icon name="email" size={24} color={Colors.greenAvg} />
                      }
@@ -165,7 +176,11 @@ export default function Doleance({ navigation }) {
                   <Input
                      name="objet"
                      value={emailContent.objet}
-                     placeholder={"Objet de l'email : "}
+                     placeholder={
+                        langueActual === 'fr'
+                           ? "Objet de l'email : "
+                           : 'Foto-dresaka ny mailakao : '
+                     }
                      onChangeText={(text) =>
                         handleChangeEmailContent('objet', text)
                      }
@@ -177,7 +192,11 @@ export default function Doleance({ navigation }) {
                      name="message"
                      value={emailContent.message}
                      style={styles.champ_message}
-                     placeholder={'Votre message ici : '}
+                     placeholder={
+                        langueActual === 'fr'
+                           ? 'Votre message ici : '
+                           : 'Ny hafatrao : '
+                     }
                      multiline
                      onChangeText={(text) =>
                         handleChangeEmailContent('message', text)
@@ -185,7 +204,7 @@ export default function Doleance({ navigation }) {
                      numberOfLines={6}
                   />
                   <Button
-                     title="Envoyer"
+                     title={langueActual === 'fr' ? 'Envoyer' : 'Alefa'}
                      icon={{
                         name: 'send',
                         type: 'material',

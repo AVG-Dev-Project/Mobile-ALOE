@@ -94,29 +94,36 @@ export default function Information({ navigation }) {
                   longitudeDelta: 1.15,
                }}
                showsUserLocation={true}
-               userLocationAnnotationTitle="Vous êtes ici"
+               userLocationAnnotationTitle={
+                  langueActual === 'fr' ? 'Vous êtes ici' : 'Eto ianao'
+               }
                followsUserLocation={true}
             >
                <Marker
                   key={'AVG'}
                   coordinate={{ latitude: -18.911, longitude: 47.54379 }}
-                  title={'AVG est ici'}
+                  title={langueActual === 'fr' ? 'AVG est ici' : 'Eto ny AVG'}
                />
             </MapView>
 
             <View style={styles.view_adresse}>
                <Text style={{ fontSize: 18, textDecorationLine: 'underline' }}>
-                  Adresses:
+                  {langueActual === 'fr' ? 'Adresses: ' : 'Adiresy'}
                </Text>
                <View>
-                  <Text style={styles.txt_label}>SIEGE ANTANANARIVO</Text>
+                  <Text style={styles.txt_label}>
+                     {langueActual === 'fr' ? 'SIEGE' : 'IVONTOERANA'}{' '}
+                     ANTANANARIVO
+                  </Text>
                   <Text style={styles.txt_value}>
                      Lot II Andrianarivo-Antananarivo 101-Madagascar
                   </Text>
                </View>
 
                <View>
-                  <Text style={styles.txt_label}>BUREAU REGIONAL BOENY</Text>
+                  <Text style={styles.txt_label}>
+                     {langueActual === 'fr' ? 'BUREAU' : 'BIRAO'} REGIONAL BOENY
+                  </Text>
                   <Text style={styles.txt_value}>
                      Studio n°2, 1er étage de l'Immeuble NY HAVANA, Rue
                      Paul-Mahajanga 401
@@ -124,14 +131,18 @@ export default function Information({ navigation }) {
                </View>
 
                <View>
-                  <Text style={styles.txt_label}>BUREAU MORONDAVA</Text>
+                  <Text style={styles.txt_label}>
+                     {langueActual === 'fr' ? 'BUREAU' : 'BIRAO'} MORONDAVA
+                  </Text>
                   <Text style={styles.txt_value}>
                      Andakabe-Immeuble NY HAVANA- Morondava 619
                   </Text>
                </View>
 
                <View>
-                  <Text style={styles.txt_label}>BUREAU MAROANTSETRA</Text>
+                  <Text style={styles.txt_label}>
+                     {langueActual === 'fr' ? 'BUREAU' : 'BIRAO'} MAROANTSETRA
+                  </Text>
                   <Text style={styles.txt_value}>
                      Immeuble SAF FJKM Ankiakandrefana-Maroantsetra 512
                   </Text>
@@ -140,7 +151,7 @@ export default function Information({ navigation }) {
 
             <View style={styles.all_buttons_links}>
                <Button
-                  title="Call (512)"
+                  title={langueActual === 'fr' ? 'Call (512)' : 'Antsoy (512)'}
                   icon={{
                      name: 'call',
                      type: 'material',
@@ -161,7 +172,7 @@ export default function Information({ navigation }) {
                   }}
                />
                <Button
-                  title="Email"
+                  title={langueActual === 'fr' ? 'Email' : 'Mailaka'}
                   icon={{
                      name: 'email',
                      type: 'material',
@@ -192,7 +203,7 @@ export default function Information({ navigation }) {
                ]}
             >
                <Button
-                  title="Facebook"
+                  title={'Facebook'}
                   icon={{
                      name: 'language',
                      type: 'material',

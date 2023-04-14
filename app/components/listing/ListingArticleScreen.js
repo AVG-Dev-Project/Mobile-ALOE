@@ -6,58 +6,56 @@ import {
    Image,
    SafeAreaView,
    TouchableOpacity,
+   ToastAndroid,
    useWindowDimensions,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
-import RenderHtml from 'react-native-render-html';
 import { nameStackNavigation as nameNav } from '_utils/constante/NameStackNavigation';
 import { styles } from './stylesArticle';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
-import { cutTextWithBalise, LoiService } from '_utils';
-import { addFavoris, getAllArticles } from '_utils/redux/actions/action_creators';
+import {
+   parseDataArticleLazyLoading,
+   filterArticleToListByContenu,
+   fetchArticlesByContenuToApi,
+} from '_utils';
+import {
+   addFavoris,
+   getAllArticles,
+} from '_utils/redux/actions/action_creators';
 
 export default function ListingArticle({ navigation, route }) {
    //all data
-   let currentPage = 0;
-   let totalPage = 1;
    const dispatch = useDispatch();
    const { width } = useWindowDimensions();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const isConnectedToInternet = useSelector(
+      (selector) => selector.fonctionnality.isConnectedToInternet
+   );
+   const isNetworkActive = useSelector(
+      (selector) => selector.fonctionnality.isNetworkActive
+   );
+   const allArticles = useSelector((selector) => selector.loi.articles);
+
+   const [totalPage, setTotalPage] = useState(1);
+   const [currentPage, setCurrentPage] = useState(0);
    const allFavoriteIdFromStore = useSelector(
       (selector) => selector.loi.favoris
    );
-   const dataFromParams = route.params.allArticleRelatedTotheContenu;
    const idOfTheContenuMother = route.params.idOfThisContenu;
    const [articleList, setArticleList] = useState(
-      dataFromParams.map((item) => {
-         return {
-            ...item,
-            isFavorite: allFavoriteIdFromStore.includes(item.id),
-         };
-      })
+      filterArticleToListByContenu(idOfTheContenuMother, allArticles).map(
+         (item) => {
+            return {
+               ...item,
+               isFavorite: allFavoriteIdFromStore.includes(item.id),
+            };
+         }
+      )
    );
-
-    console.log("totalPage on mount: ", totalPage);
-
-
-   const tagsStyles = {
-      p: {
-         width: '40%',
-         fontSize: width < 370 ? 12 : 14,
-      },
-   };
-
-   //all function
-   const sourceHTML = (data) => {
-      const source = {
-         html: data,
-      };
-      return source;
-   };
 
    const handleToogleIsFavorite = (id) => {
       dispatch(addFavoris(id));
@@ -70,21 +68,21 @@ export default function ListingArticle({ navigation, route }) {
    };
 
    const getNextPageArticlesFromApi = async () => {
-      let res = await LoiService.getArticlesByContenuFromServ(idOfTheContenuMother, currentPage + 1);
-      currentPage += 1;
-      totalPage = 1;
+      let res = await fetchArticlesByContenuToApi(
+         idOfTheContenuMother,
+         currentPage + 1
+      );
+      setCurrentPage(currentPage + 1);
+      setTotalPage(res.pages_count);
       let oldAllArticles = [...articleList];
       res.results.map((result) => {
-            if (
-               !oldAllArticles.find((article) => article.id === result.id)
-            ) {
-               console.log("tsy find e :" , result.id);
-               oldAllArticles.push(result);
-            }
-         })
-      setArticleList(oldAllArticles);
+         if (!oldAllArticles.find((article) => article.id === result.id)) {
+            oldAllArticles.push(parseDataArticleLazyLoading(result));
+         }
+      });
       dispatch(getAllArticles(oldAllArticles));
-   }
+      setArticleList(oldAllArticles);
+   };
 
    //all effects
 
@@ -135,7 +133,9 @@ export default function ListingArticle({ navigation, route }) {
                >
                   <View>
                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
-                        {langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '}{' '}
+                        {langueActual === 'fr'
+                           ? 'Article n°'
+                           : 'Lahatsoratra faha'}{' '}
                         {item.numero}
                      </Text>
                      <Text
@@ -145,42 +145,42 @@ export default function ListingArticle({ navigation, route }) {
                         }}
                         numberOfLines={1}
                      >
-                        {langueActual === 'fr' ? item.titre_fr : item.titre_mg}
+                        {langueActual === 'fr'
+                           ? width < 380
+                              ? item.titre_fr.substring(0, 20) + '...'
+                              : item.titre_fr
+                           : width < 380
+                           ? item.titre_mg.substring(0, 20) + '...'
+                           : item.titre_mg}
                      </Text>
                      {item.chapitre_id && (
                         <Text style={{ fontSize: 12 }}>
                            {langueActual === 'fr'
                               ? `Chapitre ${item.chapitre_numero ?? ''}`
                               : `Lohateny ${item.chapitre_numero ?? ''}`}
-                           : {item.chapitre_titre_fr ?? ''}
+                           :{' '}
+                           {langueActual === 'fr'
+                              ? width < 380
+                                 ? item.chapitre_titre_fr?.substring(0, 15)
+                                 : item.chapitre_titre_mg
+                              : width < 380
+                              ? item.chapitre_titre_mg?.substring(0, 15)
+                              : item.chapitre_titre_mg}
                         </Text>
                      )}
                   </View>
                   <Text
                      style={{
-                        fontSize: width < 380 ? 8 : 16,
+                        fontSize: width < 380 ? 10 : 16,
                         flex: 2,
                         width: 210,
                      }}
                      numberOfLines={4}
                   >
-                     {langueActual === 'fr' ? (
-                        <RenderHtml
-                           contentWidth={width}
-                           source={sourceHTML(
-                              cutTextWithBalise(item.contenu_fr, 700)
-                           )}
-                           tagsStyles={tagsStyles}
-                        />
-                     ) : (
-                        <RenderHtml
-                           contentWidth={width}
-                           source={sourceHTML(
-                              cutTextWithBalise(item.contenu_mg, 700)
-                           )}
-                           tagsStyles={tagsStyles}
-                        />
-                     )}
+                     {langueActual === 'fr'
+                        ? item.contenu_fr?.split('________________')[0]
+                        : item.contenu_mg?.split('________________')[0] ??
+                          'Tsy misy dikan-teny malagasy ito lahatsoratra iray ito.'}
                      {' ...'}
                   </Text>
                   <View
@@ -297,14 +297,17 @@ export default function ListingArticle({ navigation, route }) {
                extraData={articleList}
                onEndReachedThreshold={0.5}
                onEndReached={async () => {
-                  console.log("starting fetch next page .......")
-                  console.log("totalPage on reach: ", totalPage);
-                  if(currentPage < totalPage){
-                     console.log("mbola tsy page farany +++++++")
-                     await getNextPageArticlesFromApi();
+                  if (isConnectedToInternet && isNetworkActive) {
+                     if (currentPage < totalPage) {
+                        await getNextPageArticlesFromApi();
+                     }
+                  } else {
+                     ToastAndroid.show(
+                        `Pas de connexion, impossible d'obtenir des datas suppl!`,
+                        ToastAndroid.SHORT
+                     );
+                     return;
                   }
-                  console.log("totalPage after fetchuind reach:******** ", totalPage);
-                  console.log("current page : ", currentPage);
                }}
             />
          </SafeAreaView>

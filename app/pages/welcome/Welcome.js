@@ -9,25 +9,18 @@ import {
 import styles from './styles';
 import { Colors } from '_theme/Colors';
 import NetInfo from '@react-native-community/netinfo';
-import Lottie from 'lottie-react-native';
 import { Icon, Button } from '@rneui/themed';
 import { useSelector, useDispatch } from 'react-redux';
 import {
    getStarted,
    addFavoris,
    isNetworkActive,
-   getCurrentPageContenuForApi,
-   getCurrentPageArticleForApi,
    isConnectedToInternet,
 } from '_utils/redux/actions/action_creators';
 import {
    nameStackNavigation as nameNav,
    getDataFromLocalStorage,
    removeInLocalStorage,
-   fetchTypesToApi,
-   fetchArticlesToApi,
-   fetchThematiquesToApi,
-   fetchContenusToApi,
    getFavoriteFromLocalStorage,
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
@@ -35,7 +28,6 @@ import {
 
 export default function Welcome({ navigation }) {
    //all datas
-   const animation = useRef(null);
    const { width } = useWindowDimensions();
    const dispatch = useDispatch();
    const langueActual = useSelector(
@@ -44,7 +36,9 @@ export default function Welcome({ navigation }) {
    const isUserNetworkActive = useSelector(
       (selector) => selector.fonctionnality.isNetworkActive
    );
-   const currentPageContenuApi = useSelector((selector) => selector.loi.currentPageContenu);
+   const currentPageContenuApi = useSelector(
+      (selector) => selector.loi.currentPageContenu
+   );
    const currentPageArticleApi = useSelector(
       (selector) => selector.loi.currentPageArticle
    );
@@ -59,17 +53,7 @@ export default function Welcome({ navigation }) {
    //functions
    //deux functions selon disponibilité de isUserNetworkActive (une pour fetcher 10 datas afin de peupler la base)
 
-   const getSmallDatasOnLine = async () => {
-      await fetchContenusToApi(currentPageContenuApi, dispatch);
-      await fetchArticlesToApi(currentPageArticleApi, dispatch);
-      await fetchThematiquesToApi();
-      await fetchTypesToApi();
-   };
-
    const getOfflineDatas = async () => {
-      if (isUserNetworkActive && isUserConnectedToInternet) {
-         await getSmallDatasOnLine();
-      }
       getFavoriteFromLocalStorage().then((res) => {
          if (res !== null) {
             dispatch(addFavoris(res));
@@ -100,12 +84,6 @@ export default function Welcome({ navigation }) {
       getDataFromLocalStorage('isAllDataDownloaded').then((res) => {
          if (res === 'true') setIsAllDataAlsoDownloaded(true);
       });
-      getDataFromLocalStorage('currentPageArticleApi').then((res) => {
-         dispatch(getCurrentPageArticleForApi(parseInt(res)));
-      });
-      getDataFromLocalStorage('currentPageContenuApi').then((res) => {
-         dispatch(getCurrentPageContenuForApi(parseInt(res)));
-      });
    }, []);
 
    useEffect(() => {
@@ -116,11 +94,9 @@ export default function Welcome({ navigation }) {
 
    return (
       <View style={styles.view_container_welcome}>
-         <Lottie
-            autoPlay
-            ref={animation}
+         <Image
             style={styles.images_welcome}
-            source={require('_images/read.json')}
+            source={require('_images/aloe.png')}
          />
          <View>
             <Text
@@ -131,19 +107,28 @@ export default function Welcome({ navigation }) {
                }}
             >
                {langueActual === 'fr'
-                  ? 'Bienvenue sur Aloe'
-                  : "Tongasoa eto amin'ny Aloe"}
+                  ? 'Bienvenue sur ALOE'
+                  : "Tongasoa eto amin'ny ALOE"}
             </Text>
             <Text style={{ textAlign: 'center', marginVertical: 10 }}>
-               C'est une application mobile où vous trouvez tous les lois
-               forêstiers ici à Madagascar que vous pouvez consulter à tout
-               moment. Avec ou sans internet, vous pouvez la consulter avec
-               toute tranquilité.
+               ALOE ou{' '}
+               <Text
+                  style={{
+                     fontSize: 16,
+                     fontWeight: 'bold',
+                     color: Colors.greenAvg,
+                  }}
+               >
+                  Accès sur les LOis Environnementales
+               </Text>{' '}
+               est application mobile où vous trouverez tous les lois forêstiers
+               ici à Madagascar que vous pouvez consulter à tout moment. Avec ou
+               sans internet, vous pouvez la consulter avec toute tranquilité.
             </Text>
             {isAllDataAlsoUploaded || isAllDataAlsoDownloaded ? (
                <Text style={{ textAlign: 'center' }}>
-                  Vos données sont prêts, vous pouvez commencer à lire. Veuillez
-                  cliquer la flèche droite...
+                  Les lois sont prêts, vous pouvez commencer à lire. Vous pouvez
+                  cliquer sur la flèche droite...
                </Text>
             ) : (
                <Text style={{ textAlign: 'center' }}>
@@ -202,6 +187,21 @@ export default function Welcome({ navigation }) {
                   />
                </View>
             )}
+         </View>
+         <View
+            style={{
+               display: 'flex',
+               flexDirection: 'row',
+            }}
+         >
+            <Image
+               style={styles.logo_image}
+               source={require('_images/avg_logo.jpeg')}
+            />
+            <Image
+               style={styles.logo_image}
+               source={require('_images/usaid_logo.png')}
+            />
          </View>
       </View>
    );

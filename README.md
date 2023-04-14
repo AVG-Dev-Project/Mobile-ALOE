@@ -4,4 +4,4 @@
 
 ### Command to build for Android :
 
-<p>eas build --profile --plateform android</p>
+<p>eas build --profile preview --plateform android</p>

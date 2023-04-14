@@ -92,10 +92,6 @@ export default function Home({ navigation }) {
                   titleScreen: `${
                      langueActual === 'fr' ? 'Loi n°' : 'Lalana faha '
                   } ${item.numero}`,
-                  allArticleRelatedTotheContenu: filterArticleToListByContenu(
-                     item.id,
-                     allArticles
-                  ),
                   idOfThisContenu: item.id,
                });
             }}
@@ -108,7 +104,7 @@ export default function Home({ navigation }) {
 
                <Text
                   style={{
-                     marginVertical: 8,
+                     marginTop: 8,
                      paddingRight: 8,
                      fontWeight: 'bold',
                      fontSize: height < 700 ? 13 : 17,
@@ -117,13 +113,10 @@ export default function Home({ navigation }) {
                   {langueActual === 'fr' ? 'Loi n° ' : 'Lalana faha '}
                   {langueActual === 'fr' ? item.numero : item.numero}
                </Text>
-               <Text
-                  style={{ fontSize: 12, textTransform: 'capitalize' }}
-                  numberOfLines={1}
-               >
+               <Text style={{ fontSize: 12 }} numberOfLines={1}>
                   {langueActual === 'fr'
                      ? item.objet_contenu_fr
-                     : item.objet_contenu_mg}
+                     : item.objet_contenu_mg ?? 'Tsy misy dikan-teny malagasy.'}
                </Text>
             </View>
          </TouchableOpacity>
@@ -154,9 +147,15 @@ export default function Home({ navigation }) {
                      StyleSheet.absoluteFillObject,
                      styles.text_descriptif_for_carousel,
                   ]}
-                  numberOfLines={1}
+                  numberOfLines={3}
                >
-                  {langueActual === 'fr' ? item.nom_fr : item.nom_mg}
+                  {langueActual === 'fr'
+                     ? item.nom_fr?.length > 20
+                        ? item.nom_fr?.substring(0, 20) + '...'
+                        : item.nom_fr
+                     : item.nom_mg?.length > 20
+                     ? item.nom_mg?.substring(0, 20) + '...'
+                     : item.nom_mg ?? item.nom_fr?.substring(0, 20)}
                </Text>
             </View>
          </TouchableOpacity>
@@ -187,7 +186,7 @@ export default function Home({ navigation }) {
                      StyleSheet.absoluteFillObject,
                      styles.text_descriptif_for_carousel,
                   ]}
-                  numberOfLines={2}
+                  numberOfLines={4}
                >
                   {langueActual === 'fr' ? item.nom_fr : item.nom_mg}
                </Text>
@@ -345,8 +344,7 @@ export default function Home({ navigation }) {
                            titleScreen:
                               langueActual === 'fr'
                                  ? 'Tous les contenus'
-                                 : 'Ireo kaontenu',
-                           dataToList: allContenus,
+                                 : 'Ireo votoantiny rehetra',
                         });
                      }}
                   />
