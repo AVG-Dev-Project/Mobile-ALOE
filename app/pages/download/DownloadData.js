@@ -12,6 +12,7 @@ import {
    isNetworkActive,
    addFavoris,
    isConnectedToInternet,
+   checktatusData,
    getCurrentPageContenuForApi,
    getCurrentPageArticleForApi,
 } from '_utils/redux/actions/action_creators';
@@ -57,11 +58,14 @@ export default function DownloadData({ navigation }) {
    const isUserConnectedToInternet = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
+   const isDataAvailable = useSelector(
+      (selector) => selector.fonctionnality.isDataAvailable
+   );
    const [isFetchData, setIsFetchData] = useState(false);
    const [isUploadData, setIsUploadData] = useState(false);
-   const [isAllDataAlsoUploaded, setIsAllDataAlsoUploaded] = useState(false);
+   /*const [isAllDataAlsoUploaded, setIsAllDataAlsoUploaded] = useState(false);
    const [isAllDataAlsoDownloaded, setIsAllDataAlsoDownloaded] =
-      useState(false);
+      useState(false);*/
    const [buttonStartDisabled, setButtonStartDisabled] = useState(true);
    const [isDataLoaded, setIsDataLoaded] = useState(false);
    const [messageStatusInternet, setMessageStatusInternet] = useState('');
@@ -75,6 +79,7 @@ export default function DownloadData({ navigation }) {
       await fetchTypesToApi();
       setIsFetchData(false);
       storeDataToLocalStorage('isAllDataDownloaded', 'true');
+      dispatch(checktatusData(true));
    };
 
    const getOfflineDatas = () => {
@@ -129,6 +134,7 @@ export default function DownloadData({ navigation }) {
             );
             setIsUploadData(false);
             storeDataToLocalStorage('isAllDataImported', 'true');
+            dispatch(checktatusData(true));
          } else {
             setIsUploadData(false);
          }
@@ -174,20 +180,27 @@ export default function DownloadData({ navigation }) {
 
    useEffect(() => {
       getDataFromLocalStorage('isAllDataImported').then((res) => {
-         if (res === 'true') setIsAllDataAlsoUploaded(true);
+         if (res === 'true'){
+             //setIsAllDataAlsoUploaded(true);
+             dispatch(checktatusData(true));
+         };
       });
       getDataFromLocalStorage('isAllDataDownloaded').then((res) => {
-         if (res === 'true') setIsAllDataAlsoDownloaded(true);
+         if (res === 'true'){
+             //setIsAllDataAlsoDownloaded(true);
+             dispatch(checktatusData(true));
+         };
       });
    }, [isUploadData, isFetchData]);
 
    useEffect(() => {
-      if (isAllDataAlsoDownloaded || isAllDataAlsoUploaded) {
+      if (/*isAllDataAlsoDownloaded || isAllDataAlsoUploaded*/isDataAvailable) {
          return setButtonStartDisabled(false);
       }
    }, [
-      isAllDataAlsoDownloaded,
-      isAllDataAlsoUploaded,
+      /*isAllDataAlsoDownloaded,
+      isAllDataAlsoUploaded,*/
+      isDataAvailable,
       isUploadData,
       isFetchData,
    ]);

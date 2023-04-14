@@ -11,3 +11,4 @@ export const IS_CONNECTED_TO_INTERNET =
 export const CURRENT_PAGE_CONTENU_FOR_API = 'loi/current_page_contenu_for_api';
 export const CURRENT_PAGE_ARTICLE_FOR_API = 'loi/current_page_article_for_api';
 export const TOTAL_PAGE_API = 'loi/total_page_api';
+export const CHECK_STATUS_DATA = 'fonctionnality/check_status_data';

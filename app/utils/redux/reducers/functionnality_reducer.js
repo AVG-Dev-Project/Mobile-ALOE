@@ -4,6 +4,7 @@ import {
    changeLanguage,
    isNetworkActive,
    isConnectedToInternet,
+   checktatusData
 } from '../actions/action_creators';
 
 const initialState = {
@@ -11,6 +12,7 @@ const initialState = {
    langue: 'fr',
    isNetworkActive: null,
    isConnectedToInternet: null,
+   isDataAvailable: false
 };
 
 export const functionnalityReducer = (state = initialState, action) => {
@@ -31,6 +33,10 @@ export const functionnalityReducer = (state = initialState, action) => {
          return produce(state, (draft) => {
             draft.isConnectedToInternet = action.payload;
          });
+      case checktatusData().type: 
+         return produce(state, (draft) => {
+            draft.isDataAvailable = action.payload;
+         })
       default:
          return state;
    }
