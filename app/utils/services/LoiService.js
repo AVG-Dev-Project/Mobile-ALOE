@@ -27,7 +27,7 @@ function getArticlesFromServ(page) {
 }
 
 function getArticlesByContenuFromServ(contenuId,page) {
-   return RouteAxios.get(`/article?contenu__id=${contenuId}&page=${page}`)
+   return RouteAxios.get(`/mobile/article?contenu__id=${contenuId}&page=${page}`)
       .then((response) => {
          return response.data;
       })
