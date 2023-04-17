@@ -33,6 +33,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { Colors } from '_theme/Colors';
 import Voice from '@react-native-voice/voice';
+import { ListItem } from '@rneui/base';
 
 //component custom
 const LabelCustomBottomSheet = ({ text, filterBy, reference }) => {
@@ -111,15 +112,23 @@ export default function Recherche({ navigation, route }) {
    const allTypes = useSelector((selector) => selector.loi.types);
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
    const urlApiAttachement = 'https://avg.e-commerce-mg.com';
-   const textChips = ['Code pénal', 'Aires protégés', 'kdkdkkdkdkdkdkkdkdkdkdkdkdkkd', 'Tsy misy fotony', 'Farany ty less dada a'];
+   const textChips = [
+      'Code pénal',
+      'Aires protégés',
+      'kdkdkkdkdkdkdkkdkdkdkdkdkdkkd',
+      'Tsy misy fotony',
+      'Farany ty less dada a',
+   ];
    const [allChipChoice, setAllChipChoice] = useState([]);
-   const [chips, setChips] = useState(textChips.map((item) => {
-      return {
-         label: item,
-         choice: false
-      }
-   }))
-console.log(allChipChoice)
+   const [chips, setChips] = useState(
+      textChips.map((item) => {
+         return {
+            label: item,
+            choice: false,
+         };
+      })
+   );
+   //console.log(chips);
    //data from navigation
    let typeFromParams = route.params ? route.params.type : null;
    let thematiqueFromParams = route.params ? route.params.thematique : null;
@@ -131,7 +140,7 @@ console.log(allChipChoice)
    //all refs
    const bottomSheetTypeRef = useRef(null);
    const bottomSheetThematiqueRef = useRef(null);
-   const isCarousel =useRef(null);
+   const isCarousel = useRef(null);
 
    //all effect
    useEffect(() => {
@@ -167,6 +176,7 @@ console.log(allChipChoice)
             setThematiqueChecked(null);
             setValueForSearch('');
             setTextFromValueForSearch('');
+            setAllChipChoice([]);
          };
       }, [])
    );
@@ -256,6 +266,14 @@ console.log(allChipChoice)
       }
    };
 
+   const handleAddChips = (chip) => {
+      setChips((prevState) => {
+         prevState.map((item) => {
+            item.label === chip ? console.log('ito e : ', item) : item;
+         });
+      });
+   };
+
    //fontcion utilie pour la translation du vocal en texte
    const startSpeechToText = async () => {
       await Voice.start('fr-FR');
@@ -343,24 +361,30 @@ console.log(allChipChoice)
                      flexDirection: 'column',
                   }}
                >
-                  <Text style={{textDecorationLine: 'underline'}}>Thématique et Type</Text>
+                  <Text style={{ textDecorationLine: 'underline' }}>
+                     Thématique et Type
+                  </Text>
                   <Text
                      style={{
                         fontSize: 14,
                      }}
-                      numberOfLines={2}
+                     numberOfLines={2}
                   >
-                  *{" "}
+                     *{' '}
                      {langueActual === 'fr'
-                        ? item.thematique_nom_fr : item.thematique_nom_mg ?? item.thematique_nom_fr}
+                        ? item.thematique_nom_fr
+                        : item.thematique_nom_mg ?? item.thematique_nom_fr}
                   </Text>
-                  <Text style={{
+                  <Text
+                     style={{
                         fontSize: 14,
                      }}
-                      numberOfLines={2}>
-                  *{" "}
+                     numberOfLines={2}
+                  >
+                     *{' '}
                      {langueActual === 'fr'
-                        ? item.type_nom_fr: item.type_nom_mg ?? item.type_nom_fr}
+                        ? item.type_nom_fr
+                        : item.type_nom_mg ?? item.type_nom_fr}
                   </Text>
                </View>
                <View>
@@ -378,7 +402,6 @@ console.log(allChipChoice)
                            handleToogleIsDownloading(item.id);
                         }}
                      >
-                        
                         <Icon
                            name={
                               item.isPdfDownloading
@@ -396,22 +419,37 @@ console.log(allChipChoice)
       );
    }, []);
 
-   const _renderItemChips = useCallback(({item}) => {
+   const _renderItemChips = useCallback(({ item }) => {
       return (
          <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() => {
-               if(allChipChoice.includes(item.label)){
-                  return;
-               }
-            }}
+            onPress={() => handleAddChips(item.label)}
          >
-            <View style={[styles.view_chips, {backgroundColor: item.choice ? Colors.greenAvg : Colors.baackground}]}>
-               <Text numberOfLines={1} style={[styles.item_chip, {color: item.choice ? Colors.white : Colors.black}]}>{item.label}</Text>
+            <View
+               style={[
+                  styles.view_chips,
+                  {
+                     backgroundColor:
+                        /*item.choice
+                        ?*/ Colors.greenAvg,
+                  },
+               ]}
+            >
+               <Text
+                  numberOfLines={1}
+                  style={[
+                     styles.item_chip,
+                     {
+                        color: /* item.choice ? */ Colors.white /*:  Colors.black */,
+                     },
+                  ]}
+               >
+                  {item.label}
+               </Text>
             </View>
          </TouchableOpacity>
-      )
-   }, [])
+      );
+   }, []);
 
    const renderBackDrop = useCallback(
       (props) => <BottomSheetBackdrop {...props} opacity={0.6} />,
@@ -512,7 +550,12 @@ console.log(allChipChoice)
                         </View>
 
                         <View style={styles.view_for_filtre}>
-                           <View style={[styles.view_in_filtre, {paddingLeft: 0}]}>
+                           <View
+                              style={[
+                                 styles.view_in_filtre,
+                                 { paddingLeft: 0 },
+                              ]}
+                           >
                               <View>
                                  <Text
                                     style={{
@@ -526,7 +569,11 @@ console.log(allChipChoice)
                                        ? 'Type'
                                        : 'Karazana'}
                                  </Text>
-                                 <Text>{typeChecked ? typeChecked?.substring(0, 15) : ""}</Text>
+                                 <Text>
+                                    {typeChecked
+                                       ? typeChecked?.substring(0, 15)
+                                       : ''}
+                                 </Text>
                               </View>
                               <TouchableOpacity
                                  activeOpacity={0.8}
@@ -567,15 +614,16 @@ console.log(allChipChoice)
                                        ? 'Théme'
                                        : 'Lohahevitra'}
                                  </Text>
-                                    <Text>
-                                       {thematiqueChecked ? 
-                                          thematiqueChecked?.length > 10
+                                 <Text>
+                                    {thematiqueChecked
+                                       ? thematiqueChecked?.length > 10
                                           ? thematiqueChecked?.substring(
                                                0,
                                                10
                                             ) + '...'
-                                          : thematiqueChecked : ""}
-                                    </Text>
+                                          : thematiqueChecked
+                                       : ''}
+                                 </Text>
                               </View>
                            </View>
                         </View>
