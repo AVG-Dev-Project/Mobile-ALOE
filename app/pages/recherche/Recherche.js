@@ -26,6 +26,7 @@ import {
    filterArticleToListByContenu,
 } from '_utils';
 import ReactNativeBlobUtil from 'react-native-blob-util';
+import Carousel from 'react-native-snap-carousel';
 import Lottie from 'lottie-react-native';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
@@ -110,7 +111,15 @@ export default function Recherche({ navigation, route }) {
    const allTypes = useSelector((selector) => selector.loi.types);
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
    const urlApiAttachement = 'https://avg.e-commerce-mg.com';
-
+   const textChips = ['Code pénal', 'Aires protégés', 'kdkdkkdkdkdkdkkdkdkdkdkdkdkkd', 'Tsy misy fotony', 'Farany ty less dada a'];
+   const [allChipChoice, setAllChipChoice] = useState([]);
+   const [chips, setChips] = useState(textChips.map((item) => {
+      return {
+         label: item,
+         choice: false
+      }
+   }))
+console.log(allChipChoice)
    //data from navigation
    let typeFromParams = route.params ? route.params.type : null;
    let thematiqueFromParams = route.params ? route.params.thematique : null;
@@ -122,6 +131,7 @@ export default function Recherche({ navigation, route }) {
    //all refs
    const bottomSheetTypeRef = useRef(null);
    const bottomSheetThematiqueRef = useRef(null);
+   const isCarousel =useRef(null);
 
    //all effect
    useEffect(() => {
@@ -282,12 +292,10 @@ export default function Recherche({ navigation, route }) {
             onPress={() => {
                navigation.navigate(nameNav.listArticle, {
                   titleScreen: `${
-                     langueActual === 'fr' ? 'Loi n°' : 'Lalana faha '
+                     langueActual === 'fr'
+                        ? item.type_nom_fr + ' n° '
+                        : item.type_nom_mg + ' faha '
                   } ${item.numero}`,
-                  allArticleRelatedTotheContenu: filterArticleToListByContenu(
-                     item.id,
-                     allArticles
-                  ),
                   idOfThisContenu: item.id,
                });
             }}
@@ -297,7 +305,7 @@ export default function Recherche({ navigation, route }) {
                   <Text
                      style={{
                         fontWeight: 'bold',
-                        fontSize: width < 370 ? 15 : 18,
+                        fontSize: 18,
                      }}
                   >
                      {langueActual === 'fr'
@@ -320,71 +328,46 @@ export default function Recherche({ navigation, route }) {
                </View>
                <Text
                   style={{
-                     fontSize: width < 370 ? 12 : 16,
+                     fontSize: Dimensions.get('window').height < 700 ? 14 : 16,
                      flex: 2,
-                     textTransform: 'capitalize',
                   }}
-                  numberOfLines={width < 370 ? 2 : 3}
+                  numberOfLines={2}
                >
                   {langueActual === 'fr'
                      ? item.objet_contenu_fr
-                     : item.objet_contenu_mg}{' '}
+                     : item.objet_contenu_mg ?? item.objet_contenu_fr}{' '}
                </Text>
                <View
                   style={{
                      display: 'flex',
-                     flexDirection: 'row',
-                     justifyContent: 'space-between',
-                     alignItems: 'flex-end',
+                     flexDirection: 'column',
                   }}
                >
-                  <View
+                  <Text style={{textDecorationLine: 'underline'}}>Thématique et Type</Text>
+                  <Text
                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
+                        fontSize: 14,
                      }}
+                      numberOfLines={2}
                   >
-                     <Text
-                        style={{
-                           fontSize: 14,
-                           marginLeft: 2,
-                        }}
-                     >
-                        {langueActual === 'fr'
-                           ? item.thematique_nom_fr?.length > 20
-                              ? item.thematique_nom_fr?.substring(
-                                   0,
-                                   width < 380 ? 15 : 25
-                                ) + '...'
-                              : item.thematique_nom_fr
-                           : item.thematique_nom_mg?.length > 20
-                           ? item.thematique_nom_mg?.substring(
-                                0,
-                                width < 380 ? 15 : 25
-                             ) + '...'
-                           : item.thematique_nom_mg}{' '}
-                        {' / '}
-                        {langueActual === 'fr'
-                           ? item.type_nom_fr?.length > 20
-                              ? item.type_nom_fr?.substring(
-                                   0,
-                                   width < 380 ? 15 : 25
-                                ) + '...'
-                              : item.type_nom_fr
-                           : item.type_nom_mg?.length > 20
-                           ? item.type_nom_mg?.substring(
-                                0,
-                                width < 380 ? 15 : 25
-                             ) + '...'
-                           : item.type_nom_mg}
-                     </Text>
-                  </View>
+                  *{" "}
+                     {langueActual === 'fr'
+                        ? item.thematique_nom_fr : item.thematique_nom_mg ?? item.thematique_nom_fr}
+                  </Text>
+                  <Text style={{
+                        fontSize: 14,
+                     }}
+                      numberOfLines={2}>
+                  *{" "}
+                     {langueActual === 'fr'
+                        ? item.type_nom_fr: item.type_nom_mg ?? item.type_nom_fr}
+                  </Text>
+               </View>
+               <View>
                   <View
                      style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        width: 108,
                         justifyContent: 'flex-end',
                      }}
                   >
@@ -392,12 +375,18 @@ export default function Recherche({ navigation, route }) {
                         activeOpacity={0.8}
                         onPress={() => {
                            downloadPdfFile(item, item.attachement?.slice(21));
+                           handleToogleIsDownloading(item.id);
                         }}
                      >
+                        
                         <Icon
-                           name={'file-download'}
+                           name={
+                              item.isPdfDownloading
+                                 ? 'hourglass-top'
+                                 : 'file-download'
+                           }
                            color={Colors.greenAvg}
-                           size={28}
+                           size={30}
                         />
                      </TouchableOpacity>
                   </View>
@@ -406,6 +395,23 @@ export default function Recherche({ navigation, route }) {
          </TouchableOpacity>
       );
    }, []);
+
+   const _renderItemChips = useCallback(({item}) => {
+      return (
+         <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => {
+               if(allChipChoice.includes(item.label)){
+                  return;
+               }
+            }}
+         >
+            <View style={[styles.view_chips, {backgroundColor: item.choice ? Colors.greenAvg : Colors.baackground}]}>
+               <Text numberOfLines={1} style={[styles.item_chip, {color: item.choice ? Colors.white : Colors.black}]}>{item.label}</Text>
+            </View>
+         </TouchableOpacity>
+      )
+   }, [])
 
    const renderBackDrop = useCallback(
       (props) => <BottomSheetBackdrop {...props} opacity={0.6} />,
@@ -416,7 +422,7 @@ export default function Recherche({ navigation, route }) {
       if (isSearch) {
          return (
             <View style={{ display: 'flex', flex: 1 }}>
-               <ActivityIndicator size="large" />
+               <ActivityIndicator size="large" color={Colors.greenAvg} />
             </View>
          );
       }
@@ -506,59 +512,7 @@ export default function Recherche({ navigation, route }) {
                         </View>
 
                         <View style={styles.view_for_filtre}>
-                           <View style={styles.view_in_filtre}>
-                              <View>
-                                 <Text
-                                    style={{
-                                       textAlign: 'center',
-                                       fontWeight: 'bold',
-                                       fontSize: 18,
-                                       marginTop: 10,
-                                    }}
-                                 >
-                                    {langueActual === 'fr'
-                                       ? 'Thématique'
-                                       : 'Lohahevitra'}
-                                 </Text>
-                                 {thematiqueChecked !== null && (
-                                    <Text>
-                                       {thematiqueChecked?.length > 10
-                                          ? thematiqueChecked?.substring(
-                                               0,
-                                               10
-                                            ) + '...'
-                                          : thematiqueChecked}
-                                    </Text>
-                                 )}
-                              </View>
-                              <TouchableOpacity
-                                 activeOpacity={0.8}
-                                 onPress={() =>
-                                    openBottomSheet(bottomSheetThematiqueRef)
-                                 }
-                              >
-                                 <Icon
-                                    name={'filter-list'}
-                                    color={Colors.greenAvg}
-                                    size={34}
-                                 />
-                              </TouchableOpacity>
-                           </View>
-
-                           <View style={styles.view_in_filtre}>
-                              <TouchableOpacity
-                                 activeOpacity={0.8}
-                                 onPress={() =>
-                                    openBottomSheet(bottomSheetTypeRef)
-                                 }
-                              >
-                                 <Icon
-                                    name={'filter-list'}
-                                    color={Colors.greenAvg}
-                                    size={34}
-                                 />
-                              </TouchableOpacity>
-
+                           <View style={[styles.view_in_filtre, {paddingLeft: 0}]}>
                               <View>
                                  <Text
                                     style={{
@@ -572,12 +526,75 @@ export default function Recherche({ navigation, route }) {
                                        ? 'Type'
                                        : 'Karazana'}
                                  </Text>
-                                 {typeChecked !== null && (
-                                    <Text>{typeChecked?.substring(0, 15)}</Text>
-                                 )}
+                                 <Text>{typeChecked ? typeChecked?.substring(0, 15) : ""}</Text>
+                              </View>
+                              <TouchableOpacity
+                                 activeOpacity={0.8}
+                                 onPress={() =>
+                                    openBottomSheet(bottomSheetTypeRef)
+                                 }
+                              >
+                                 <Icon
+                                    name={'filter-list'}
+                                    color={Colors.greenAvg}
+                                    size={34}
+                                 />
+                              </TouchableOpacity>
+                           </View>
+                           <View style={styles.view_in_filtre}>
+                              <TouchableOpacity
+                                 activeOpacity={0.8}
+                                 onPress={() =>
+                                    openBottomSheet(bottomSheetThematiqueRef)
+                                 }
+                              >
+                                 <Icon
+                                    name={'filter-list'}
+                                    color={Colors.greenAvg}
+                                    size={34}
+                                 />
+                              </TouchableOpacity>
+                              <View>
+                                 <Text
+                                    style={{
+                                       textAlign: 'center',
+                                       fontWeight: 'bold',
+                                       fontSize: 18,
+                                       marginTop: 10,
+                                    }}
+                                 >
+                                    {langueActual === 'fr'
+                                       ? 'Théme'
+                                       : 'Lohahevitra'}
+                                 </Text>
+                                    <Text>
+                                       {thematiqueChecked ? 
+                                          thematiqueChecked?.length > 10
+                                          ? thematiqueChecked?.substring(
+                                               0,
+                                               10
+                                            ) + '...'
+                                          : thematiqueChecked : ""}
+                                    </Text>
                               </View>
                            </View>
                         </View>
+                     </View>
+                     <View style={styles.view_carousel}>
+                        <Carousel
+                           layout="default"
+                           ref={isCarousel}
+                           data={chips}
+                           loop={false}
+                           loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
+                           //fin des props spéficifique au section annonce
+                           renderItem={_renderItemChips}
+                           sliderWidth={80}
+                           itemWidth={130}
+                           inactiveSlideOpacity={0.9} //on uniformise tous les opacity
+                           inactiveSlideScale={1} //on uniformise tous les hauteur
+                           useScrollView={true}
+                        />
                      </View>
                      <View style={styles.view_for_result}>
                         {allContenusFilter?.length > 0 && (

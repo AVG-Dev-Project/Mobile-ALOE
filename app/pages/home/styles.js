@@ -54,7 +54,6 @@ export const styles = StyleSheet.create({
    /*Thematique*/
    /*Types*/
    maskImageCatg: {
-      //backgroundColor: '#08070D',/*#08070D*/
       borderRadius: 18,
       height: 130,
       width: 230,
@@ -68,6 +67,7 @@ export const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
+      paddingHorizontal: 6
    },
 
    view_carousel: {

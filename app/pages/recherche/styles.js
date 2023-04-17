@@ -13,13 +13,19 @@ export const styles = StyleSheet.create({
    head_content: {
       marginTop: 10,
    },
+   view_carousel: {
+      width: '100%',
+      flexDirection: 'row',
+      paddingVertical: 6,
+      //backgroundColor: Colors.greenWhite,
+   },
    view_for_filtre: {
-      backgroundColor: Colors.greenWhite,
-      padding: 10,
+      //backgroundColor: Colors.greenWhite,
+      padding: 6,
       marginVertical: 4,
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'space-evenly',
+      justifyContent: 'space-around',
       alignItems: 'center',
    },
    view_in_filtre: {
@@ -51,13 +57,15 @@ export const styles = StyleSheet.create({
       borderLeftWidth: 0,
    },
    view_render: {
-      height: widthDevice < 370 ? 130 : 160,
+      height: 210,
       borderWidth: 1,
       borderRadius: 10,
       borderColor: Colors.greenWhite,
-      marginVertical: 5,
-      padding: 10,
+      marginVertical: 4,
+      paddingHorizontal: 10,
+      paddingVertical: 6,
       backgroundColor: Colors.greenWhite,
+      marginHorizontal: 8,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
@@ -86,4 +94,17 @@ export const styles = StyleSheet.create({
       padding: 0,
       height: 46,
    },
+   view_chips: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: 6,
+      borderRadius: 20,
+      borderWidth: 1,
+      borderColor: Colors.greenAvg
+   },
+   item_chip: {
+      paddingVertical: 8,
+      paddingHorizontal: 12
+   }
 });

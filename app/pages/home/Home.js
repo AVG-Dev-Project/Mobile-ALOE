@@ -167,10 +167,6 @@ export default function Home({ navigation }) {
             }}
          >
             <View key={item.id} style={styles.view_container_renderItemThematique}>
-               {/*<Image
-                  style={styles.image_poster_style_thematique}
-                  source={require('_images/book_loi.jpg')}
-               />*/}
                <View
                   style={[StyleSheet.absoluteFillObject, styles.maskImageCatg]}
                ></View>
