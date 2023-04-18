@@ -83,7 +83,6 @@ export default function ListingArticle({ navigation, route }) {
       dispatch(getAllArticles(oldAllArticles));
       setArticleList(oldAllArticles);
    };
-   console.log("widhtr : ", width)
 
    //all effects
 

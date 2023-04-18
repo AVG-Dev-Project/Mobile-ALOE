@@ -18,18 +18,18 @@ import React, {
    useRef,
    useCallback,
 } from 'react';
+import { captureRef } from 'react-native-view-shot';
 import RenderHtml from 'react-native-render-html';
+import { useDispatch, useSelector } from 'react-redux';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import * as MediaLibrary from 'expo-media-library';
 import { styles } from './styles';
-import { Icon } from '@rneui/themed';
+import { Icon, FAB } from '@rneui/themed';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { printToFileAsync } from 'expo-print';
 import bgImage from '_images/bg_loi.jpg';
-import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
-// import { addFavoris } from '_utils/redux/actions/action_creators';
-import { captureRef } from 'react-native-view-shot';
+import { addFavoris } from '_utils/redux/actions/action_creators';
 
 export default function Detail({ navigation, route }) {
    const [status, requestPermission] = MediaLibrary.usePermissions();
@@ -40,6 +40,7 @@ export default function Detail({ navigation, route }) {
    const dispatch = useDispatch();
    const [isSpeakPlay, setIsSpeakPlay] = useState(false);
    const allContenus = useSelector((selector) => selector.loi.contenus);
+   const [isFABshow, setIsFABshow] = useState(false);
    const oneArticle = route.params.articleToViewDetail;
    const [contenuMother, setContenuMother] = useState(
       allContenus.filter((contenu) => contenu.id === oneArticle.contenu)
@@ -48,7 +49,6 @@ export default function Detail({ navigation, route }) {
       () => (height < 700 ? [0, '60%'] : [0, '60%']),
       []
    );
-   console.log(contenuMother);
 
    //permission
    if (status === null) {
@@ -171,9 +171,9 @@ export default function Detail({ navigation, route }) {
       }
    };
 
-   // const showToastFavorite = () => {
-   //    ToastAndroid.show('Vos favoris on été modifié', ToastAndroid.SHORT);
-   // };
+   const showToastFavorite = () => {
+      ToastAndroid.show(`Article n° ${oneArticle.numero} ajouté dans vos favoris.`, ToastAndroid.SHORT);
+   };
 
    const sourceHTML = (data) => {
       const source = {
@@ -276,7 +276,7 @@ export default function Detail({ navigation, route }) {
                   </View>
                   <View style={styles.description_section}>
                      <View style={styles.view_round_button_detail_article}>
-                        {/* <TouchableOpacity
+                        <TouchableOpacity
                         onPress={() => {
                            dispatch(addFavoris(oneArticle.id));
                            showToastFavorite();
@@ -290,7 +290,7 @@ export default function Detail({ navigation, route }) {
                               size={32}
                            />{' '}
                         </Text>
-                     </TouchableOpacity> */}
+                     </TouchableOpacity>
 
                         <TouchableOpacity
                            activeOpacity={0.7}
@@ -346,62 +346,61 @@ export default function Detail({ navigation, route }) {
                      </ScrollView>
                   </View>
                </View>
-               <View style={styles.all_button_in_detail_screen}>
-                  <TouchableOpacity
-                     onPress={() => {
-                        onSaveImageAsync();
-                     }}
-                  >
-                     <Text style={styles.button_in_detail}>
-                        {' '}
-                        <Icon
-                           name={'image'}
-                           size={34}
-                           color={Colors.greenAvg}
-                        />{' '}
-                     </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                     onPress={() => {
-                        downloadAsPdf();
-                     }}
-                  >
-                     <Text style={styles.button_in_detail}>
-                        {' '}
-                        <Icon
-                           name={'picture-as-pdf'}
-                           size={34}
-                           color={Colors.greenAvg}
-                        />{' '}
-                     </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                     onPress={() => {
-                        setIsSpeakPlay(!isSpeakPlay);
-                        if (langueActual === 'fr') {
-                           playPauseSpeak(
-                              oneArticle.contenu_fr
-                                 ?.split('________________')[0]
-                                 .substring(0, 4000)
-                           );
-                        } else {
-                           playPauseSpeak(
-                              oneArticle.contenu_mg
-                                 ?.split('________________')[0]
-                                 .substring(0, 4000)
-                           );
-                        }
-                     }}
-                  >
-                     <Text style={[styles.button_in_detail]}>
-                        {' '}
-                        <Icon
-                           name={isSpeakPlay ? 'stop' : 'play-circle-outline'}
-                           size={34}
-                           color={Colors.greenAvg}
-                        />{' '}
-                     </Text>
-                  </TouchableOpacity>
+               <View style={styles.fab_button}>
+                  <View style={styles.view_content_fab_button}>
+                     <FAB
+                        visible={isFABshow}
+                        icon={{ name: 'image', color: 'white' }}
+                        color={Colors.greenAvg}
+                        onPress={() => {
+                           onSaveImageAsync();
+                        }}
+                     />
+                     <FAB
+                        visible={isFABshow}
+                        icon={{ name: 'picture-as-pdf', color: 'white' }}
+                        color={Colors.greenAvg}
+                        onPress={() => {
+                           downloadAsPdf();
+                        }}
+                     />
+                     <FAB
+                        visible={isFABshow}
+                        icon={{ name: isSpeakPlay ? 'stop' : 'play-circle-outline', color: 'white' }}
+                        color={Colors.greenAvg}
+                        onPress={() => {
+                           setIsSpeakPlay(!isSpeakPlay);
+                           if (langueActual === 'fr') {
+                              playPauseSpeak(
+                                 oneArticle.contenu_fr
+                                    ?.split('________________')[0]
+                                    .substring(0, 4000)
+                              );
+                           } else {
+                              playPauseSpeak(
+                                 oneArticle.contenu_mg
+                                    ?.split('________________')[0]
+                                    .substring(0, 4000)
+                              );
+                           }
+                        }}
+                     />
+                  </View>
+
+                  <FAB
+                     visible={isFABshow}
+                     onPress={() => setIsFABshow(!isFABshow)}
+                     placement="right"
+                     icon={{ name: 'close', color: 'white' }}
+                     color={Colors.redError}
+                  />
+                  <FAB
+                     visible={!isFABshow}
+                     onPress={() => setIsFABshow(!isFABshow)}
+                     placement="right"
+                     icon={{ name: 'add', color: 'white' }}
+                     color={Colors.greenAvg}
+                  />
                </View>
             </ImageBackground>
          </SafeAreaView>

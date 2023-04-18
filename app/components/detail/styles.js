@@ -20,13 +20,13 @@ export const styles = StyleSheet.create({
    },
    description_section: {
       paddingHorizontal: 24,
-      height: heightDevice < 700 ? heightDevice - 230 : heightDevice - 260,
+      height: heightDevice < 700 ? heightDevice - 230 : heightDevice - 270,
       backgroundColor: Colors.white,
    },
    view_round_button_detail_article: {
       position: 'absolute',
       top: -28,
-      right: 32,
+      right: 14,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
@@ -55,23 +55,17 @@ export const styles = StyleSheet.create({
       padding: 10,
       borderRadius: 52,
    },
-   all_button_in_detail_screen: {
-      marginTop: heightDevice < 700 ? 10 : 12,
-      marginBottom: heightDevice < 700 ? 0 : 26,
-      display: 'flex',
+   fab_button: {
       flexDirection: 'row',
-      justifyContent: 'space-around',
+      paddingVertical: 5,
+      flexGrow: 1,
    },
-   button_in_detail: {
-      textAlign: 'center',
-      backgroundColor: Colors.greenWhite,
-      paddingVertical: 10,
-      width: 90,
-      paddingHorizontal: 24,
-      color: Colors.greenAvg,
-      borderRadius: 20,
-      fontSize: 21,
-      fontWeight: '800',
+   view_content_fab_button: {
+      width: '90%',
+      marginBottom: 12,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-evenly'
    },
    view_bottom_sheet: {
       backgroundColor: '#f2f2f2',
