@@ -8,21 +8,21 @@ export const styles = StyleSheet.create({
       marginTop: 8,
       paddingBottom: 70,
       paddingHorizontal: 15,
-      backgroundColor: Colors.baackground,
+      backgroundColor: Colors.background,
    },
    head_content: {
       marginTop: 10,
    },
+   labelTags: {
+      paddingBottom: 6
+   },
    view_carousel: {
       width: '100%',
-      flexDirection: 'row',
-      paddingVertical: 6,
+      flexDirection: 'column',
       //backgroundColor: Colors.greenWhite,
    },
    view_for_filtre: {
       //backgroundColor: Colors.greenWhite,
-      padding: 6,
-      marginVertical: 4,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-around',
@@ -105,6 +105,7 @@ export const styles = StyleSheet.create({
    },
    item_chip: {
       paddingVertical: 8,
-      paddingHorizontal: 12
+      paddingHorizontal: 12,
+      fontWeight: 'bold'
    }
 });

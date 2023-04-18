@@ -11,7 +11,8 @@ import {
    CURRENT_PAGE_CONTENU_FOR_API,
    CURRENT_PAGE_ARTICLE_FOR_API,
    TOTAL_PAGE_API,
-   CHECK_STATUS_DATA
+   CHECK_STATUS_DATA,
+   UPDATE_LIST_TAG_CHOICE
 } from './action_names';
 
 export const getStarted = () => ({
@@ -76,4 +77,9 @@ export const getTotalPageApi = (array) => ({
 export const checktatusData = (status) => ({
    type: CHECK_STATUS_DATA,
    payload: status
+})
+
+export const updateTagsChoice = (tag) => ({
+   type: UPDATE_LIST_TAG_CHOICE,
+   payload: tag
 })

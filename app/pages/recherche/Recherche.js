@@ -5,7 +5,6 @@ import {
    SafeAreaView,
    useWindowDimensions,
    TextInput,
-   ActivityIndicator,
    ScrollView,
    TouchableOpacity,
    ToastAndroid,
@@ -21,19 +20,19 @@ import React, {
    useRef,
 } from 'react';
 import { styles } from './styles';
+import Voice from '@react-native-voice/voice';
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import { useDispatch, useSelector } from 'react-redux';
 import {
    nameStackNavigation as nameNav,
-   filterArticleToListByContenu,
 } from '_utils';
 import ReactNativeBlobUtil from 'react-native-blob-util';
-import Carousel from 'react-native-snap-carousel';
 import Lottie from 'lottie-react-native';
 import { Icon } from '@rneui/themed';
-import { useDispatch, useSelector } from 'react-redux';
-import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { Colors } from '_theme/Colors';
-import Voice from '@react-native-voice/voice';
-import { ListItem } from '@rneui/base';
+import {
+   updateTagsChoice
+} from '_utils/redux/actions/action_creators';
 
 //component custom
 const LabelCustomBottomSheet = ({ text, filterBy, reference }) => {
@@ -97,7 +96,6 @@ export default function Recherche({ navigation, route }) {
       () => (height < 700 ? [-1, '70%'] : [-1, '60%']),
       []
    );
-   const allArticles = useSelector((selector) => selector.loi.articles);
    const allContenus = useSelector((selector) => selector.loi.contenus);
    const [allContenusFilter, setAllContenusFilter] = useState([]);
    const langueActual = useSelector(
@@ -119,7 +117,6 @@ export default function Recherche({ navigation, route }) {
       'Tsy misy fotony',
       'Farany ty less dada a',
    ];
-   const [allChipChoice, setAllChipChoice] = useState([]);
    const [chips, setChips] = useState(
       textChips.map((item) => {
          return {
@@ -128,19 +125,18 @@ export default function Recherche({ navigation, route }) {
          };
       })
    );
-   //console.log(chips);
+   const allTagsFromStore = useSelector((selector) => selector.loi.tagsChoice);
+
    //data from navigation
    let typeFromParams = route.params ? route.params.type : null;
    let thematiqueFromParams = route.params ? route.params.thematique : null;
    const [typeChecked, setTypeChecked] = useState(null);
    const [thematiqueChecked, setThematiqueChecked] = useState(null);
-   const [isSearch, setIsSearch] = useState(false);
    let [startedSpeech, setStartedSpeech] = useState(false);
 
    //all refs
    const bottomSheetTypeRef = useRef(null);
    const bottomSheetThematiqueRef = useRef(null);
-   const isCarousel = useRef(null);
 
    //all effect
    useEffect(() => {
@@ -176,7 +172,15 @@ export default function Recherche({ navigation, route }) {
             setThematiqueChecked(null);
             setValueForSearch('');
             setTextFromValueForSearch('');
-            setAllChipChoice([]);
+            dispatch(updateTagsChoice([]));
+            setChips((prevList) =>
+               prevList.map((item) => {
+                  return {
+                     label: item.label,
+                     choice: false
+                  }
+               })
+            );
          };
       }, [])
    );
@@ -200,7 +204,6 @@ export default function Recherche({ navigation, route }) {
    //all function
    const onHandleSearchByValue = (text) => {
       setValueForSearch(text);
-      setIsSearch(false);
    };
 
    const filterByType = (text) => {
@@ -266,12 +269,14 @@ export default function Recherche({ navigation, route }) {
       }
    };
 
+   //add tags to store
    const handleAddChips = (chip) => {
-      setChips((prevState) => {
-         prevState.map((item) => {
-            item.label === chip ? console.log('ito e : ', item) : item;
-         });
-      });
+      dispatch(updateTagsChoice(chip));
+      setChips((prevList) =>
+         prevList.map((item) =>
+            item.label === chip ? { ...item, choice: !item.choice } : item
+         )
+      );
    };
 
    //fontcion utilie pour la translation du vocal en texte
@@ -289,13 +294,12 @@ export default function Recherche({ navigation, route }) {
       setValueForSearch(result.value[0]);
       setTextFromValueForSearch(result.value[0]);
       ToastAndroid.show(
-         `Recherche de : ${result.value[0]} .........`,
+         `Recherche de : ${result.value[0]} ....`,
          ToastAndroid.LONG
       );
    };
 
    const onSpeechError = (error) => {
-      console.log(error);
       ToastAndroid.show(
          `Erreur !!! Veuillez bien prononcé votre mot en français.`,
          ToastAndroid.LONG
@@ -429,9 +433,7 @@ export default function Recherche({ navigation, route }) {
                style={[
                   styles.view_chips,
                   {
-                     backgroundColor:
-                        /*item.choice
-                        ?*/ Colors.greenAvg,
+                     backgroundColor: item.choice ? Colors.greenAvg : Colors.background
                   },
                ]}
             >
@@ -440,7 +442,7 @@ export default function Recherche({ navigation, route }) {
                   style={[
                      styles.item_chip,
                      {
-                        color: /* item.choice ? */ Colors.white /*:  Colors.black */,
+                        color: item.choice ? Colors.white :  Colors.black,
                      },
                   ]}
                >
@@ -456,206 +458,198 @@ export default function Recherche({ navigation, route }) {
       []
    );
 
-   const activityIndicator = () => {
-      if (isSearch) {
-         return (
-            <View style={{ display: 'flex', flex: 1 }}>
-               <ActivityIndicator size="large" color={Colors.greenAvg} />
-            </View>
-         );
-      }
-   };
-
    const _idKeyExtractor = (item, index) =>
+      item?.id == null ? index.toString() : item.id.toString();
+
+   const _idKeyExtractorChip = (item, index) =>
       item?.id == null ? index.toString() : item.id.toString();
 
    return (
       <View style={styles.view_container_search}>
+          <View>
+            <View style={styles.head_content}>
+               <View
+                  style={{
+                     display: 'flex',
+                     flexDirection: 'column',
+                     alignItems: 'center',
+                  }}
+               >
+                  <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
+                     Recherche
+                  </Text>
+               </View>
+
+               <View style={styles.view_for_input_search}>
+                  <TextInput
+                     style={styles.input}
+                     keyboardType="default"
+                     placeholder={
+                        langueActual === 'fr'
+                           ? 'Entrer le mot de recherche ...'
+                           : 'Ampidiro ny teny hotadiavina...'
+                     }
+                     value={textFromInputSearch}
+                     onChangeText={(text) => {
+                        onHandleSearchByValue(text);
+                        setTextFromValueForSearch(text);
+                     }}
+                  />
+                  {!startedSpeech ? (
+                     <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={() => {
+                           if (
+                              isUserNetworkActive &&
+                              isUserConnectedToInternet
+                           ) {
+                              setStartedSpeech(true);
+                              startSpeechToText();
+                           } else {
+                              ToastAndroid.show(
+                                 `La recherche a besoin d'une connexion internet stable !!!`,
+                                 ToastAndroid.LONG
+                              );
+                           }
+                        }}
+                     >
+                        <Text style={styles.boutton_search}>
+                           <Icon
+                              name={'mic'}
+                              color={Colors.greenAvg}
+                              size={30}
+                           />
+                        </Text>
+                     </TouchableOpacity>
+                  ) : undefined}
+                  {startedSpeech ? (
+                     <TouchableOpacity
+                        activeOpacity={0.7}
+                        onPress={() => {
+                           setStartedSpeech(false);
+                           stopSpeechToText();
+                        }}
+                     >
+                        <Lottie
+                           autoPlay
+                           ref={animation}
+                           style={styles.boutton_search_on}
+                           source={require('_images/vocal_on.json')}
+                        />
+                     </TouchableOpacity>
+                  ) : undefined}
+               </View>
+
+               <View style={styles.view_for_filtre}>
+                  <View
+                     style={
+                        styles.view_in_filtre
+                     }
+                  >
+                     <View>
+                        <Text
+                           style={{
+                              textAlign: 'center',
+                              fontWeight: 'bold',
+                              fontSize: 18,
+                              marginTop: 10,
+                           }}
+                        >
+                           {langueActual === 'fr'
+                              ? 'Type'
+                              : 'Karazana'}
+                        </Text>
+                        <Text>
+                           {typeChecked
+                              ? typeChecked?.substring(0, 15)
+                              : ''}
+                        </Text>
+                     </View>
+                     <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() =>
+                           openBottomSheet(bottomSheetTypeRef)
+                        }
+                     >
+                        <Icon
+                           name={'filter-list'}
+                           color={Colors.greenAvg}
+                           size={34}
+                        />
+                     </TouchableOpacity>
+                  </View>
+                  <View style={styles.view_in_filtre}>
+                     <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() =>
+                           openBottomSheet(bottomSheetThematiqueRef)
+                        }
+                     >
+                        <Icon
+                           name={'filter-list'}
+                           color={Colors.greenAvg}
+                           size={34}
+                        />
+                     </TouchableOpacity>
+                     <View>
+                        <Text
+                           style={{
+                              textAlign: 'center',
+                              fontWeight: 'bold',
+                              fontSize: 18,
+                              marginTop: 10,
+                           }}
+                        >
+                           {langueActual === 'fr'
+                              ? 'Théme'
+                              : 'Lohahevitra'}
+                        </Text>
+                        <Text>
+                           {thematiqueChecked
+                              ? thematiqueChecked?.length > 10
+                                 ? thematiqueChecked?.substring(
+                                       0,
+                                       10
+                                    ) + '...'
+                                 : thematiqueChecked
+                              : ''}
+                        </Text>
+                     </View>
+                  </View>
+               </View>
+            </View>
+            <View style={styles.view_carousel}>
+               <Text style={styles.labelTags}>Tags : </Text>
+               <FlatList
+                  data={chips}
+                  horizontal={true}
+                  extraData={chips}
+                  key={'_'}
+                  keyExtractor={_idKeyExtractorChip}
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={_renderItemChips}
+                  removeClippedSubviews={true}
+                  getItemLayout={(data, index) => ({
+                     length: data.length,
+                     offset: data.length * index,
+                     index,
+                  })}
+               />
+            </View>
+            <View style={styles.view_for_result}>
+               {allContenusFilter?.length > 0 && (
+                  <Text style={{ textAlign: 'center' }}>
+                     {allContenusFilter?.length}{' '}
+                     {langueActual === 'fr'
+                        ? ' résultats trouvés'
+                        : ' ny valiny hita'}
+                  </Text>
+               )}
+            </View>
+         </View>
          <SafeAreaView>
             <FlatList
                data={allContenusFilter}
-               ListHeaderComponent={
-                  <View>
-                     <View style={styles.head_content}>
-                        <View
-                           style={{
-                              display: 'flex',
-                              flexDirection: 'column',
-                              alignItems: 'center',
-                           }}
-                        >
-                           <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
-                              Recherche
-                           </Text>
-                        </View>
-
-                        <View style={styles.view_for_input_search}>
-                           <TextInput
-                              style={styles.input}
-                              keyboardType="default"
-                              placeholder={
-                                 langueActual === 'fr'
-                                    ? 'Entrer le mot de recherche ...'
-                                    : 'Ampidiro ny teny hotadiavina...'
-                              }
-                              value={textFromInputSearch}
-                              onChangeText={(text) => {
-                                 onHandleSearchByValue(text);
-                                 setTextFromValueForSearch(text);
-                              }}
-                           />
-                           {!startedSpeech ? (
-                              <TouchableOpacity
-                                 activeOpacity={0.7}
-                                 onPress={() => {
-                                    if (
-                                       isUserNetworkActive &&
-                                       isUserConnectedToInternet
-                                    ) {
-                                       setStartedSpeech(true);
-                                       startSpeechToText();
-                                    } else {
-                                       ToastAndroid.show(
-                                          `La recherche a besoin d'une connexion internet stable !!!`,
-                                          ToastAndroid.LONG
-                                       );
-                                    }
-                                 }}
-                              >
-                                 <Text style={styles.boutton_search}>
-                                    <Icon
-                                       name={'mic'}
-                                       color={Colors.greenAvg}
-                                       size={30}
-                                    />
-                                 </Text>
-                              </TouchableOpacity>
-                           ) : undefined}
-                           {startedSpeech ? (
-                              <TouchableOpacity
-                                 activeOpacity={0.7}
-                                 onPress={() => {
-                                    setStartedSpeech(false);
-                                    stopSpeechToText();
-                                 }}
-                              >
-                                 <Lottie
-                                    autoPlay
-                                    ref={animation}
-                                    style={styles.boutton_search_on}
-                                    source={require('_images/vocal_on.json')}
-                                 />
-                              </TouchableOpacity>
-                           ) : undefined}
-                        </View>
-
-                        <View style={styles.view_for_filtre}>
-                           <View
-                              style={[
-                                 styles.view_in_filtre,
-                                 { paddingLeft: 0 },
-                              ]}
-                           >
-                              <View>
-                                 <Text
-                                    style={{
-                                       textAlign: 'center',
-                                       fontWeight: 'bold',
-                                       fontSize: 18,
-                                       marginTop: 10,
-                                    }}
-                                 >
-                                    {langueActual === 'fr'
-                                       ? 'Type'
-                                       : 'Karazana'}
-                                 </Text>
-                                 <Text>
-                                    {typeChecked
-                                       ? typeChecked?.substring(0, 15)
-                                       : ''}
-                                 </Text>
-                              </View>
-                              <TouchableOpacity
-                                 activeOpacity={0.8}
-                                 onPress={() =>
-                                    openBottomSheet(bottomSheetTypeRef)
-                                 }
-                              >
-                                 <Icon
-                                    name={'filter-list'}
-                                    color={Colors.greenAvg}
-                                    size={34}
-                                 />
-                              </TouchableOpacity>
-                           </View>
-                           <View style={styles.view_in_filtre}>
-                              <TouchableOpacity
-                                 activeOpacity={0.8}
-                                 onPress={() =>
-                                    openBottomSheet(bottomSheetThematiqueRef)
-                                 }
-                              >
-                                 <Icon
-                                    name={'filter-list'}
-                                    color={Colors.greenAvg}
-                                    size={34}
-                                 />
-                              </TouchableOpacity>
-                              <View>
-                                 <Text
-                                    style={{
-                                       textAlign: 'center',
-                                       fontWeight: 'bold',
-                                       fontSize: 18,
-                                       marginTop: 10,
-                                    }}
-                                 >
-                                    {langueActual === 'fr'
-                                       ? 'Théme'
-                                       : 'Lohahevitra'}
-                                 </Text>
-                                 <Text>
-                                    {thematiqueChecked
-                                       ? thematiqueChecked?.length > 10
-                                          ? thematiqueChecked?.substring(
-                                               0,
-                                               10
-                                            ) + '...'
-                                          : thematiqueChecked
-                                       : ''}
-                                 </Text>
-                              </View>
-                           </View>
-                        </View>
-                     </View>
-                     <View style={styles.view_carousel}>
-                        <Carousel
-                           layout="default"
-                           ref={isCarousel}
-                           data={chips}
-                           loop={false}
-                           loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
-                           //fin des props spéficifique au section annonce
-                           renderItem={_renderItemChips}
-                           sliderWidth={80}
-                           itemWidth={130}
-                           inactiveSlideOpacity={0.9} //on uniformise tous les opacity
-                           inactiveSlideScale={1} //on uniformise tous les hauteur
-                           useScrollView={true}
-                        />
-                     </View>
-                     <View style={styles.view_for_result}>
-                        {allContenusFilter?.length > 0 && (
-                           <Text style={{ textAlign: 'center' }}>
-                              {allContenusFilter?.length}{' '}
-                              {langueActual === 'fr'
-                                 ? ' résultats trouvés'
-                                 : ' ny valiny hita'}
-                           </Text>
-                        )}
-                     </View>
-                  </View>
-               }
                ListEmptyComponent={
                   <View
                      style={{
@@ -690,12 +684,7 @@ export default function Recherche({ navigation, route }) {
                   index,
                })}
                maxToRenderPerBatch={3}
-               onEndReachedThreshold={1}
-               onEndReached={() => {
-                  console.log('on end reached');
-               }}
             />
-            {activityIndicator()}
          </SafeAreaView>
 
          <BottomSheet

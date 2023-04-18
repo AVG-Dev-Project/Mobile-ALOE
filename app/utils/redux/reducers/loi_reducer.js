@@ -5,6 +5,7 @@ import {
    getAllThematiques,
    getAllTypes,
    getAllContenus,
+   updateTagsChoice,
    getCurrentPageArticleForApi,
    getCurrentPageContenuForApi,
    getTotalPageApi,
@@ -20,6 +21,7 @@ const initialState = {
    favoris: [],
    currentPageContenu: 1,
    currentPageArticle: 1,
+   tagsChoice: [],
    totalPage: {
       article: 0,
       contenu: 0,
@@ -89,6 +91,22 @@ export const loiReducer = (state = initialState, action) => {
                }
                storeFavoriteIdToLocalStorage(draft.favoris);
             });
+         }
+      case updateTagsChoice().type:
+         if (Array.isArray(action.payload)) {
+            return produce(state, (draft) => {
+               draft.tagsChoice = [];
+            });
+         }else{
+            return produce(state, (draft) => {
+               if (state.tagsChoice.includes(action.payload)) {
+                     draft.tagsChoice = draft.tagsChoice.filter(
+                        (tag) => tag !== action.payload
+                     );
+                  } else {
+                     draft.tagsChoice.push(action.payload);
+                  }
+            })
          }
 
       default:
