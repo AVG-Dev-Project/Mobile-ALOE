@@ -112,45 +112,6 @@ export default function Home({ navigation }) {
       );
    };
 
-   /*const _renderItemType = ({ item }) => {
-      return (
-         <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => {
-               navigation.navigate('Recherche', {
-                  screen: 'Recherche',
-                  type: langueActual === 'fr' ? item.nom_fr : item.nom_mg,
-               });
-            }}
-         >
-            <View key={item.id} style={styles.view_container_renderItemType}>
-               <Image
-                  style={styles.image_poster_style_thematique}
-                  source={require('_images/book_loi.jpg')}
-               />
-               <View
-                  style={[StyleSheet.absoluteFillObject, styles.maskImageCatg]}
-               ></View>
-               <Text
-                  style={[
-                     StyleSheet.absoluteFillObject,
-                     styles.text_descriptif_for_carousel,
-                  ]}
-                  numberOfLines={3}
-               >
-                  {langueActual === 'fr'
-                     ? item.nom_fr?.length > 20
-                        ? item.nom_fr?.substring(0, 20) + '...'
-                        : item.nom_fr
-                     : item.nom_mg?.length > 20
-                     ? item.nom_mg?.substring(0, 20) + '...'
-                     : item.nom_mg ?? item.nom_fr?.substring(0, 20)}
-               </Text>
-            </View>
-         </TouchableOpacity>
-      );
-   };*/
-
    const _renderItemThematique = ({ item }) => {
       return (
          <TouchableOpacity
