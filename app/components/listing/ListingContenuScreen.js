@@ -186,6 +186,7 @@ export default function ListingContenu({ navigation, route }) {
                   style={{
                      fontSize: Dimensions.get('window').height < 700 ? 14 : 16,
                      flex: 2,
+                     marginBottom: 18
                   }}
                   numberOfLines={3}
                >
