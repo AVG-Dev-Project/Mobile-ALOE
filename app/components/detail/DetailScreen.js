@@ -11,8 +11,11 @@ import {
    useWindowDimensions,
 } from 'react-native';
 import * as Speech from 'expo-speech';
-import { Gesture, GestureDetector, GestureHandlerRootView  } from 'react-native-gesture-handler';
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, {
+   useAnimatedStyle,
+   useSharedValue,
+} from 'react-native-reanimated';
 import React, {
    useState,
    useEffect,
@@ -26,8 +29,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import * as MediaLibrary from 'expo-media-library';
 import { styles } from './styles';
-import { Icon, FAB } from '@rneui/themed';
-import {BottomSheetModal, BottomSheetBackdrop  } from '@gorhom/bottom-sheet';
+import { Icon, FAB, Button } from '@rneui/themed';
+import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { printToFileAsync } from 'expo-print';
 import bgImage from '_images/bg_loi.jpg';
 import { Colors } from '_theme/Colors';
@@ -44,6 +47,9 @@ export default function Detail({ navigation, route }) {
    const allContenus = useSelector((selector) => selector.loi.contenus);
    const [isFABshow, setIsFABshow] = useState(false);
    const oneArticle = route.params.articleToViewDetail;
+   const [fontSizeDynamic, setFontSizeDynamic] = useState(
+      width < 380 ? 14 : 18
+   );
    const [contenuMother, setContenuMother] = useState(
       allContenus.filter((contenu) => contenu.id === oneArticle.contenu)
    );
@@ -54,16 +60,6 @@ export default function Detail({ navigation, route }) {
       () => (height < 700 ? [0, '60%'] : [0, '60%']),
       []
    );
-
-   //for reanimated
-   const scale = useSharedValue(1);
-   const savedScale = useSharedValue(1);
-   const animatedStyle = useAnimatedStyle(() => ({
-      transform: [{scale: scale.value}]
-   }))
-
-   console.log("test scale :", scale.value);
-   console.log("test scale saved : ", savedScale.value);
 
    //permission
    if (status === null) {
@@ -212,20 +208,11 @@ export default function Detail({ navigation, route }) {
       () => ({
          p: {
             width: '100%',
-            fontSize: width < 380 ? 14 : 18,
+            fontSize: fontSizeDynamic,
          },
       }),
-      []
+      [fontSizeDynamic]
    );
-
-   //for gestureHandler
-   const zoomContentWithPinch = Gesture.Pinch()
-   .onUpdate((e) => {
-      scale.value = savedScale.value * e.scale;
-   })
-  .onEnd(() => {
-      savedScale.value = scale.value
-   })
 
    //all efects
 
@@ -236,287 +223,305 @@ export default function Detail({ navigation, route }) {
    );
 
    return (
-            <View style={styles.view_container}>
-               <StatusBar backgroundColor={Colors.greenAvg} />
-               <SafeAreaView style={styles.container_safe}>
-                  <ImageBackground
-                     source={bgImage}
-                     style={{
-                        height: 230,
-                     }}
-                     imageStyle={{
-                        resizeMode: 'cover',
-                     }}
-                  >
-                     <View
-                        style={[
-                           StyleSheet.absoluteFillObject,
-                           styles.maskImageDetailArticle,
-                        ]}
-                     ></View>
-                     <View ref={imageRef} collapsable={false}>
-                        <View style={styles.info_in_landing_detail}>
-                           <Text
-                              style={{
-                                 fontWeight: 'bold',
-                                 fontSize: width < 370 ? 18 : 24,
-                                 textDecorationLine: 'underline',
-                                 marginBottom: 8,
-                                 textAlign: 'center',
-                                 width: '90%',
-                                 color: Colors.white,
-                              }}
-                           >
-                              {langueActual === 'fr'
-                                 ? contenuMother[0].type_nom_fr + ' n°'
-                                 : contenuMother[0].type_nom_mg ??
-                                 'Votoantiny' + ' faha '}{' '}
-                              {contenuMother[0].numero}
-                           </Text>
-                           <Text
-                              style={{
-                                 fontWeight: 'bold',
-                                 fontSize: width < 370 ? 16 : 18,
-                                 width: '90%',
-                                 color: Colors.white,
-                              }}
-                           >
-                              {langueActual === 'fr'
-                                 ? oneArticle.titre_fr
-                                 : oneArticle.titre_mg ??
-                                 'Tsy misy dikan-teny malagasy.'}
-                           </Text>
-                           {oneArticle.chapitre_id && (
-                              <Text
-                                 style={{
-                                    fontSize: 13,
-                                    marginVertical: 4,
-                                    color: Colors.white,
-                                 }}
-                              >
-                                 {langueActual === 'fr'
-                                    ? `Chapitre n°${oneArticle.chapitre_numero}`
-                                    : `Lohateny faha ${oneArticle.chapitre_numero}`}{' '}
-                                 :{' '}
-                                 {langueActual === 'fr'
-                                    ? oneArticle.chapitre_titre_fr
-                                    : oneArticle.chapitre_titre_mg ??
-                                    'Tsy misy ny dikan-teny malagasy.'}
-                              </Text>
-                           )}
-                        </View>
-                        <View style={styles.description_section}>
-                           <View style={styles.view_round_button_detail_article}>
-                              <TouchableOpacity
-                                 onPress={() => {
-                                    dispatch(addFavoris(oneArticle.id));
-                                    showToastFavorite();
-                                 }}
-                                 activeOpacity={0.7}
-                              >
-                                 <Text style={styles.boutton_add_favorite}>
-                                    <Icon
-                                       name={
-                                          allFavoriteIdFromStore.includes(
-                                             oneArticle.id
-                                          )
-                                             ? 'favorite'
-                                             : 'favorite-border'
-                                       }
-                                       color={Colors.greenAvg}
-                                       size={32}
-                                    />{' '}
-                                 </Text>
-                              </TouchableOpacity>
-
-                              <TouchableOpacity
-                                 activeOpacity={0.7}
-                                 onPress={() => openBottomSheet()}
-                              >
-                                 <Text style={styles.boutton_info_article}>
-                                    <Icon
-                                       name={'info-outline'}
-                                       color={Colors.greenAvg}
-                                       size={32}
-                                    />{' '}
-                                 </Text>
-                              </TouchableOpacity>
-                           </View>
-
-                           <GestureDetector gesture={zoomContentWithPinch}>
-                              <Animated.View style={animatedStyle}>
-                                 <Text
-                                    style={{
-                                       fontSize: 22,
-                                       fontWeight: 'bold',
-                                       marginTop: 18,
-                                    }}
-                                 >
-                                    {langueActual === 'fr'
-                                       ? "Contenu de l'article "
-                                       : "Votoatin'ny lahatsoratra"}
-                                 </Text>
-                                 <ScrollView
-                                    style={{
-                                       paddingRight: 4,
-                                    }}
-                                 >
-                                    {langueActual === 'fr' ? (
-                                       <RenderHtml
-                                          contentWidth={width}
-                                          source={sourceHTML(
-                                             oneArticle.contenu_fr?.split(
-                                                '________________'
-                                             )[1]
-                                          )}
-                                          tagsStyles={tagsStyles}
-                                       />
-                                    ) : (
-                                       <RenderHtml
-                                          contentWidth={width}
-                                          source={sourceHTML(
-                                             oneArticle.contenu_mg?.split(
-                                                '________________'
-                                             )[1]
-                                          )}
-                                          tagsStyles={tagsStyles}
-                                       />
-                                    )}
-                                 </ScrollView>
-                              </Animated.View>
-                           </GestureDetector>
-                        </View>
-                     </View>
-                     <View style={styles.fab_button}>
-                        <View style={styles.view_content_fab_button}>
-                           <FAB
-                              visible={isFABshow}
-                              icon={{ name: 'image', color: 'white' }}
-                              color={Colors.greenAvg}
-                              onPress={() => {
-                                 onSaveImageAsync();
-                              }}
-                           />
-                           <FAB
-                              visible={isFABshow}
-                              icon={{ name: 'picture-as-pdf', color: 'white' }}
-                              color={Colors.greenAvg}
-                              onPress={() => {
-                                 downloadAsPdf();
-                              }}
-                           />
-                           <FAB
-                              visible={isFABshow}
-                              icon={{
-                                 name: isSpeakPlay ? 'stop' : 'play-circle-outline',
-                                 color: 'white',
-                              }}
-                              color={Colors.greenAvg}
-                              onPress={() => {
-                                 setIsSpeakPlay(!isSpeakPlay);
-                                 if (langueActual === 'fr') {
-                                    playPauseSpeak(
-                                       oneArticle.contenu_fr
-                                          ?.split('________________')[0]
-                                          .substring(0, 4000)
-                                    );
-                                 } else {
-                                    playPauseSpeak(
-                                       oneArticle.contenu_mg
-                                          ?.split('________________')[0]
-                                          .substring(0, 4000)
-                                    );
-                                 }
-                              }}
-                           />
-                        </View>
-
-                        <FAB
-                           visible={isFABshow}
-                           onPress={() => setIsFABshow(!isFABshow)}
-                           placement="right"
-                           icon={{ name: 'close', color: 'white' }}
-                           color={Colors.redError}
-                        />
-                        <FAB
-                           visible={!isFABshow}
-                           onPress={() => setIsFABshow(!isFABshow)}
-                           placement="right"
-                           icon={{ name: 'add', color: 'white' }}
-                           color={Colors.greenAvg}
-                        />
-                     </View>
-                  </ImageBackground>
-               </SafeAreaView>
-
-               <BottomSheetModal
-                  backdropComponent={renderBackDrop}
-                  ref={bottomSheetRef}
-                  index={1}
-                  snapPoints={snapPoints}
-                  style={styles.view_bottom_sheet}
-               >
-                  <ScrollView  style={styles.view_in_bottomsheet}>
-                     <View>
-                        <Text style={{ fontSize: 28, fontWeight: 'bold' }}>
+      <View style={styles.view_container}>
+         <StatusBar backgroundColor={Colors.greenAvg} />
+         <SafeAreaView style={styles.container_safe}>
+            <ImageBackground
+               source={bgImage}
+               style={{
+                  height: 230,
+               }}
+               imageStyle={{
+                  resizeMode: 'cover',
+               }}
+            >
+               <View
+                  style={[
+                     StyleSheet.absoluteFillObject,
+                     styles.maskImageDetailArticle,
+                  ]}
+               ></View>
+               <View ref={imageRef} collapsable={false}>
+                  <View style={styles.info_in_landing_detail}>
+                     <Text
+                        style={{
+                           fontWeight: 'bold',
+                           fontSize: width < 370 ? 18 : 24,
+                           textDecorationLine: 'underline',
+                           marginBottom: 8,
+                           textAlign: 'center',
+                           width: '90%',
+                           color: Colors.white,
+                        }}
+                     >
+                        {langueActual === 'fr'
+                           ? contenuMother[0].type_nom_fr + ' n°'
+                           : contenuMother[0].type_nom_mg ??
+                             'Votoantiny' + ' faha '}{' '}
+                        {contenuMother[0].numero}
+                     </Text>
+                     <Text
+                        style={{
+                           fontWeight: 'bold',
+                           fontSize: width < 370 ? 16 : 18,
+                           width: '90%',
+                           color: Colors.white,
+                        }}
+                     >
+                        {langueActual === 'fr'
+                           ? oneArticle.titre_fr
+                           : oneArticle.titre_mg ??
+                             'Tsy misy dikan-teny malagasy.'}
+                     </Text>
+                     {oneArticle.chapitre_id && (
+                        <Text
+                           style={{
+                              fontSize: 13,
+                              marginVertical: 4,
+                              color: Colors.white,
+                           }}
+                        >
                            {langueActual === 'fr'
-                              ? 'Plus de détails :'
-                              : 'Fanampiny misimisy :'}{' '}
+                              ? `Chapitre n°${oneArticle.chapitre_numero}`
+                              : `Lohateny faha ${oneArticle.chapitre_numero}`}{' '}
+                           :{' '}
+                           {langueActual === 'fr'
+                              ? oneArticle.chapitre_titre_fr
+                              : oneArticle.chapitre_titre_mg ??
+                                'Tsy misy ny dikan-teny malagasy.'}
                         </Text>
-                        <View style={styles.view_one_item_in_bottomsheet}>
-                           <Text style={styles.label_info_article}>
-                              {langueActual === 'fr' ? 'Chapitre ' : 'Lohateny'}{' '}
+                     )}
+                  </View>
+                  <View style={styles.description_section}>
+                     <View style={styles.view_round_button_detail_article}>
+                        <TouchableOpacity
+                           onPress={() => {
+                              dispatch(addFavoris(oneArticle.id));
+                              showToastFavorite();
+                           }}
+                           activeOpacity={0.7}
+                        >
+                           <Text style={styles.boutton_add_favorite}>
+                              <Icon
+                                 name={
+                                    allFavoriteIdFromStore.includes(
+                                       oneArticle.id
+                                    )
+                                       ? 'favorite'
+                                       : 'favorite-border'
+                                 }
+                                 color={Colors.greenAvg}
+                                 size={32}
+                              />{' '}
                            </Text>
-                           <Text style={styles.value_info_article}>
-                              <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                              {langueActual === 'fr'
-                                 ? oneArticle.chapitre_titre_fr ?? ''
-                                 : oneArticle.chapitre_titre_mg ??
-                                 'Tsy misy dikan-teny malagasy.'}
-                           </Text>
-                        </View>
-                        <View style={styles.view_one_item_in_bottomsheet}>
-                           <Text style={styles.label_info_article}>
-                              {langueActual === 'fr' ? 'Contenu ' : 'Sokajy '}{' '}
-                           </Text>
-                           <Text style={styles.value_info_article}>
-                              <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                              {langueActual === 'fr'
-                                 ? contenuMother[0].type_nom_fr + ' n°'
-                                 : contenuMother[0].type_nom_mg ??
-                                 'Votoantiny' + ' faha '}{' '}
-                              {contenuMother[0].numero}
-                           </Text>
-                        </View>
+                        </TouchableOpacity>
 
-                        <View style={styles.view_one_item_in_bottomsheet}>
-                           <Text style={styles.label_info_article}>
-                              {langueActual === 'fr' ? 'Thématique ' : 'Lohahevitra '}{' '}
+                        <TouchableOpacity
+                           activeOpacity={0.7}
+                           onPress={() => openBottomSheet()}
+                        >
+                           <Text style={styles.boutton_info_article}>
+                              <Icon
+                                 name={'info-outline'}
+                                 color={Colors.greenAvg}
+                                 size={32}
+                              />{' '}
                            </Text>
-                           <Text style={styles.value_info_article}>
-                              <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                              {langueActual === 'fr'
-                                 ? contenuMother[0].thematique_nom_fr
-                                 : contenuMother[0].thematique_nom_mg ??
-                                 contenuMother[0].thematique_nom_fr}
-                           </Text>
-                        </View>
+                        </TouchableOpacity>
+                     </View>
 
-                        <View style={styles.view_one_item_in_bottomsheet}>
-                           <Text style={styles.label_info_article}>
-                              {langueActual === 'fr' ? 'Type ' : 'Sokajy '}{' '}
-                           </Text>
-                           <Text style={styles.value_info_article}>
-                              <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                              {langueActual === 'fr'
-                                 ? contenuMother[0].type_nom_fr
-                                 : contenuMother[0].type_nom_mg ??
-                                 contenuMother[0].type_nom_fr}
-                           </Text>
+                     <View>
+                        <Text
+                           style={{
+                              fontSize: 22,
+                              fontWeight: 'bold',
+                              marginTop: 18,
+                           }}
+                        >
+                           {langueActual === 'fr'
+                              ? "Contenu de l'article "
+                              : "Votoatin'ny lahatsoratra"}
+                        </Text>
+                        <ScrollView
+                           style={{
+                              paddingRight: 4,
+                           }}
+                        >
+                           {langueActual === 'fr' ? (
+                              <RenderHtml
+                                 contentWidth={width}
+                                 source={sourceHTML(
+                                    oneArticle.contenu_fr?.split(
+                                       '________________'
+                                    )[1]
+                                 )}
+                                 tagsStyles={tagsStyles}
+                              />
+                           ) : (
+                              <RenderHtml
+                                 contentWidth={width}
+                                 source={sourceHTML(
+                                    oneArticle.contenu_mg?.split(
+                                       '________________'
+                                    )[1]
+                                 )}
+                                 tagsStyles={tagsStyles}
+                              />
+                           )}
+                        </ScrollView>
+                        <View style={styles.view_button_zoom}>
+                           <Button
+                              type="clear"
+                              size="xs"
+                              onPress={() =>
+                                 setFontSizeDynamic(fontSizeDynamic + 2)
+                              }
+                           >
+                              <Icon name="zoom-in" color={Colors.greenAvg} />
+                           </Button>
+                           <Button
+                              type="clear"
+                              size="xs"
+                              onPress={() =>
+                                 setFontSizeDynamic(fontSizeDynamic - 2)
+                              }
+                           >
+                              <Icon name="zoom-out" color={Colors.greenAvg} />
+                           </Button>
                         </View>
                      </View>
-                  </ScrollView>
-               </BottomSheetModal>
-            </View>
+                  </View>
+               </View>
+               <View style={styles.fab_button}>
+                  <View style={styles.view_content_fab_button}>
+                     <FAB
+                        visible={isFABshow}
+                        icon={{ name: 'image', color: 'white' }}
+                        color={Colors.greenAvg}
+                        onPress={() => {
+                           onSaveImageAsync();
+                        }}
+                     />
+                     <FAB
+                        visible={isFABshow}
+                        icon={{ name: 'picture-as-pdf', color: 'white' }}
+                        color={Colors.greenAvg}
+                        onPress={() => {
+                           downloadAsPdf();
+                        }}
+                     />
+                     <FAB
+                        visible={isFABshow}
+                        icon={{
+                           name: isSpeakPlay ? 'stop' : 'play-circle-outline',
+                           color: 'white',
+                        }}
+                        color={Colors.greenAvg}
+                        onPress={() => {
+                           setIsSpeakPlay(!isSpeakPlay);
+                           if (langueActual === 'fr') {
+                              playPauseSpeak(
+                                 oneArticle.contenu_fr
+                                    ?.split('________________')[0]
+                                    .substring(0, 4000)
+                              );
+                           } else {
+                              playPauseSpeak(
+                                 oneArticle.contenu_mg
+                                    ?.split('________________')[0]
+                                    .substring(0, 4000)
+                              );
+                           }
+                        }}
+                     />
+                  </View>
+
+                  <FAB
+                     visible={isFABshow}
+                     onPress={() => setIsFABshow(!isFABshow)}
+                     placement="right"
+                     icon={{ name: 'close', color: 'white' }}
+                     color={Colors.redError}
+                  />
+                  <FAB
+                     visible={!isFABshow}
+                     onPress={() => setIsFABshow(!isFABshow)}
+                     placement="right"
+                     icon={{ name: 'add', color: 'white' }}
+                     color={Colors.greenAvg}
+                  />
+               </View>
+            </ImageBackground>
+         </SafeAreaView>
+
+         <BottomSheetModal
+            backdropComponent={renderBackDrop}
+            ref={bottomSheetRef}
+            index={1}
+            snapPoints={snapPoints}
+            style={styles.view_bottom_sheet}
+         >
+            <ScrollView style={styles.view_in_bottomsheet}>
+               <View>
+                  <Text style={{ fontSize: 28, fontWeight: 'bold' }}>
+                     {langueActual === 'fr'
+                        ? 'Plus de détails :'
+                        : 'Fanampiny misimisy :'}{' '}
+                  </Text>
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Chapitre ' : 'Lohateny'}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {langueActual === 'fr'
+                           ? oneArticle.chapitre_titre_fr ?? ''
+                           : oneArticle.chapitre_titre_mg ??
+                             'Tsy misy dikan-teny malagasy.'}
+                     </Text>
+                  </View>
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Contenu ' : 'Sokajy '}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {langueActual === 'fr'
+                           ? contenuMother[0].type_nom_fr + ' n°'
+                           : contenuMother[0].type_nom_mg ??
+                             'Votoantiny' + ' faha '}{' '}
+                        {contenuMother[0].numero}
+                     </Text>
+                  </View>
+
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Thématique ' : 'Lohahevitra '}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {langueActual === 'fr'
+                           ? contenuMother[0].thematique_nom_fr
+                           : contenuMother[0].thematique_nom_mg ??
+                             contenuMother[0].thematique_nom_fr}
+                     </Text>
+                  </View>
+
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Type ' : 'Sokajy '}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {langueActual === 'fr'
+                           ? contenuMother[0].type_nom_fr
+                           : contenuMother[0].type_nom_mg ??
+                             contenuMother[0].type_nom_fr}
+                     </Text>
+                  </View>
+               </View>
+            </ScrollView>
+         </BottomSheetModal>
+      </View>
    );
 }

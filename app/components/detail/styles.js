@@ -65,7 +65,7 @@ export const styles = StyleSheet.create({
       marginBottom: 12,
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-evenly'
+      justifyContent: 'space-evenly',
    },
    view_bottom_sheet: {
       backgroundColor: '#f2f2f2',
@@ -82,5 +82,10 @@ export const styles = StyleSheet.create({
       display: 'flex',
       flexDirection: 'column',
       marginBottom: 8,
+   },
+   view_button_zoom: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
    },
 });
