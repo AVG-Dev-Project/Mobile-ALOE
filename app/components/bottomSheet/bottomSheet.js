@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '@rneui/themed';
-import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { useDispatch } from 'react-redux';
 import { changeLanguage } from '_utils/redux/actions/action_creators';
 import { Colors } from '_theme/Colors';
@@ -25,9 +25,9 @@ export default function BottomSheetCustom({ bottomSheetRef, snapPoints }) {
    };
 
    //all efects
-   useEffect(() => {
-      bottomSheetRef.current.close();
-   }, []);
+   // useEffect(() => {
+   //    bottomSheetRef.current.close();
+   // }, []);
 
    //components
    const renderBackDrop = useCallback(
@@ -36,7 +36,7 @@ export default function BottomSheetCustom({ bottomSheetRef, snapPoints }) {
    );
 
    return (
-      <BottomSheet
+      <BottomSheetModal
          ref={bottomSheetRef}
          backdropComponent={renderBackDrop}
          index={1}
@@ -67,7 +67,7 @@ export default function BottomSheetCustom({ bottomSheetRef, snapPoints }) {
                <Text style={styles.text_bottomsheet}>Malagasy</Text>
             </TouchableOpacity>
          </View>
-      </BottomSheet>
+      </BottomSheetModal>
    );
 }
 

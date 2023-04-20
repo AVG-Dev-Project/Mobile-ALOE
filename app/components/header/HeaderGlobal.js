@@ -17,7 +17,8 @@ export default function HeaderGlobal({ navigation, bottomSheetRef }) {
    };
 
    const openBottomSheet = () => {
-      return bottomSheetRef.current.snapTo(1);
+      //return bottomSheetRef.current.snapTo(1);
+      return bottomSheetRef.current?.present();
    };
 
    return (

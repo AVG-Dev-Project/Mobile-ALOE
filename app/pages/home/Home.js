@@ -64,10 +64,6 @@ export default function Home({ navigation }) {
    //all functions
 
    //all efects
-   useEffect(() => {
-      bottomSheetRef.current.close();
-      //removeInLocalStorage('favorite');
-   }, []);
 
    useEffect(() => {
       if (isUserConnectedToInternet && isUserNetworkActive) {

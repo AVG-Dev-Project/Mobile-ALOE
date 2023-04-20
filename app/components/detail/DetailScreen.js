@@ -27,7 +27,7 @@ import ReactNativeBlobUtil from 'react-native-blob-util';
 import * as MediaLibrary from 'expo-media-library';
 import { styles } from './styles';
 import { Icon, FAB } from '@rneui/themed';
-import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import {BottomSheetModal, BottomSheetBackdrop, BottomSheetScrollView  } from '@gorhom/bottom-sheet';
 import { printToFileAsync } from 'expo-print';
 import bgImage from '_images/bg_loi.jpg';
 import { Colors } from '_theme/Colors';
@@ -92,7 +92,7 @@ export default function Detail({ navigation, route }) {
    };
 
    const openBottomSheet = () => {
-      return bottomSheetRef.current.snapTo(1);
+      return bottomSheetRef.current.present();
    };
 
    const onSaveImageAsync = async () => {
@@ -228,9 +228,6 @@ export default function Detail({ navigation, route }) {
    })
 
    //all efects
-   useEffect(() => {
-      bottomSheetRef.current.close();
-   }, []);
 
    //all components
    const renderBackDrop = useCallback(
@@ -239,7 +236,6 @@ export default function Detail({ navigation, route }) {
    );
 
    return (
-         <GestureHandlerRootView style={{flex: 1}}>
             <View style={styles.view_container}>
                <StatusBar backgroundColor={Colors.greenAvg} />
                <SafeAreaView style={styles.container_safe}>
@@ -453,14 +449,14 @@ export default function Detail({ navigation, route }) {
                   </ImageBackground>
                </SafeAreaView>
 
-               <BottomSheet
+               <BottomSheetModal
                   backdropComponent={renderBackDrop}
                   ref={bottomSheetRef}
                   index={1}
                   snapPoints={snapPoints}
                   style={styles.view_bottom_sheet}
                >
-                  <ScrollView style={styles.view_in_bottomsheet}>
+                  <BottomSheetScrollView  style={styles.view_in_bottomsheet}>
                      <View>
                         <Text style={{ fontSize: 28, fontWeight: 'bold' }}>
                            {langueActual === 'fr'
@@ -519,9 +515,8 @@ export default function Detail({ navigation, route }) {
                            </Text>
                         </View>
                      </View>
-                  </ScrollView>
-               </BottomSheet>
+                  </BottomSheetScrollView>
+               </BottomSheetModal>
             </View>
-         </GestureHandlerRootView>
    );
 }

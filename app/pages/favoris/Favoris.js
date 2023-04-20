@@ -195,13 +195,6 @@ export default function Favoris({ navigation, route }) {
    }, []);
 
    //all function
-   const sourceHTML = (data) => {
-      const source = {
-         html: data,
-      };
-      return source;
-   };
-
    const showToastFavorite = (id) => {
       ToastAndroid.show(
          `Vous avez enlevé l'article n° ${id} dans votre favoris`,

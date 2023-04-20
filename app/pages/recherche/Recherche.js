@@ -21,7 +21,7 @@ import React, {
 } from 'react';
 import { styles } from './styles';
 import Voice from '@react-native-voice/voice';
-import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import { BottomSheetModal,  BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { useDispatch, useSelector } from 'react-redux';
 import { nameStackNavigation as nameNav } from '_utils';
 import ReactNativeBlobUtil from 'react-native-blob-util';
@@ -181,12 +181,6 @@ export default function Recherche({ navigation, route }) {
       }, [])
    );
 
-   //pour le bottom sheet
-   useEffect(() => {
-      bottomSheetTypeRef.current.close();
-      bottomSheetThematiqueRef.current.close();
-   }, []);
-
    //Effect pour declancher la translation
    useEffect(() => {
       Voice.onSpeechError = onSpeechError;
@@ -210,7 +204,7 @@ export default function Recherche({ navigation, route }) {
       setThematiqueChecked(text);
    };
    const openBottomSheet = (ref) => {
-      return ref.current.snapTo(1);
+      return ref.current?.present();
    };
 
    const downloadPdfFile = async (contenu, linkPdf) => {
@@ -670,7 +664,7 @@ export default function Recherche({ navigation, route }) {
             />
          </SafeAreaView>
 
-         <BottomSheet
+         <BottomSheetModal
             ref={bottomSheetTypeRef}
             backdropComponent={renderBackDrop}
             index={1}
@@ -713,9 +707,9 @@ export default function Recherche({ navigation, route }) {
                   </TouchableOpacity>
                </View>
             </ScrollView>
-         </BottomSheet>
+         </BottomSheetModal>
 
-         <BottomSheet
+         <BottomSheetModal
             ref={bottomSheetThematiqueRef}
             backdropComponent={renderBackDrop}
             index={1}
@@ -762,7 +756,7 @@ export default function Recherche({ navigation, route }) {
                   </TouchableOpacity>
                </View>
             </ScrollView>
-         </BottomSheet>
+         </BottomSheetModal>
       </View>
    );
 }
