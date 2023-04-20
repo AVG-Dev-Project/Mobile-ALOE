@@ -53,12 +53,14 @@ export default function Favoris({ navigation, route }) {
    const dataForFlatList = allArticles.filter((article) =>
       listOfIdFavorites.includes(article.id)
    );
-   
+
    //all functions
    const getOneContenuReferenceByIdFromArticle = (idCont) => {
-      const referenceContenu = allContenus.filter((contenu) => contenu.id === idCont);
-      return referenceContenu;
-   }
+      const referenceContenu = allContenus.filter(
+         (contenu) => contenu.id === idCont
+      );
+      return referenceContenu[0];
+   };
 
    //all refs
    const bottomSheetRef = useRef(null);
@@ -110,7 +112,11 @@ export default function Favoris({ navigation, route }) {
                >
                   <View>
                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
-                        {getOneContenuReferenceByIdFromArticle(item.contenu).type_nom_fr + " "  + getOneContenuReferenceByIdFromArticle(item.contenu).numero}
+                        {getOneContenuReferenceByIdFromArticle(item.contenu)
+                           .type_nom_fr +
+                           ' ' +
+                           getOneContenuReferenceByIdFromArticle(item.contenu)
+                              .numero}
                      </Text>
                      <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
                         {langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '}{' '}
@@ -131,14 +137,14 @@ export default function Favoris({ navigation, route }) {
                         fontSize: width < 380 ? 10 : 16,
                         flex: 2,
                         width: 210,
-                        marginTop: 8
+                        marginTop: 8,
                      }}
                      numberOfLines={4}
                   >
                      {langueActual === 'fr'
                         ? item.contenu_fr?.split('________________')[0]
                         : item.contenu_mg?.split('________________')[0] ??
-                           'Tsy misy dikan-teny malagasy ito lahatsoratra iray ito.'}
+                          'Tsy misy dikan-teny malagasy ito lahatsoratra iray ito.'}
                      {' ...'}
                   </Text>
                   <View
