@@ -11,6 +11,7 @@ export default function About({ navigation }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const allArticles = useSelector((selector) => selector.loi.articles);
 
    return (
       <KeyboardAwareScrollView style={{ backgroundColor: Colors.background }}>
@@ -25,6 +26,12 @@ export default function About({ navigation }) {
                />
                <Text>
                   {langueActual === 'fr' ? 'Version' : 'Fanovana'} 1.0.0
+               </Text>
+               <Text>
+                  {langueActual === 'fr'
+                     ? 'Total des articles présents : '
+                     : "Totalin'ny lahatsoratra misy ato : "}{' '}
+                  {allArticles.length}
                </Text>
             </View>
 
@@ -44,7 +51,7 @@ export default function About({ navigation }) {
                         : "Mombamomban'ny AVG"}
                   </Text>
                </TouchableOpacity>
-               <TouchableOpacity activeOpacity={0.6}>
+               {/*<TouchableOpacity activeOpacity={0.6}>
                   <Text
                      style={styles.button_link_about}
                      onPress={() =>
@@ -59,7 +66,7 @@ export default function About({ navigation }) {
                         ? "Conditions d'utilisation"
                         : "Fepetran'ny fampiasana"}
                   </Text>
-               </TouchableOpacity>
+                  </TouchableOpacity>*/}
                <TouchableOpacity
                   activeOpacity={0.6}
                   onPress={() =>
