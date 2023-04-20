@@ -9,6 +9,7 @@ import {
    ToastAndroid,
    useWindowDimensions,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { nameStackNavigation as nameNav } from '_utils/constante/NameStackNavigation';
 import { styles } from './stylesArticle';
@@ -57,6 +58,20 @@ export default function ListingArticle({ navigation, route }) {
       )
    );
 
+   useFocusEffect(
+      useCallback(() => {
+         setArticleList((prevList) =>
+            prevList.map((item) =>
+              {
+               return {
+                  ...item,
+                  isFavorite: allFavoriteIdFromStore.includes(item.id),
+               };
+              }
+         ))
+      }, [allFavoriteIdFromStore])
+   );
+   
    const handleToogleIsFavorite = (id) => {
       dispatch(addFavoris(id));
       // Mettre à jour la propriété isFavorite de l'article avec l'ID donné

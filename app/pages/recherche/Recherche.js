@@ -23,16 +23,12 @@ import { styles } from './styles';
 import Voice from '@react-native-voice/voice';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-   nameStackNavigation as nameNav,
-} from '_utils';
+import { nameStackNavigation as nameNav } from '_utils';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import Lottie from 'lottie-react-native';
 import { Icon } from '@rneui/themed';
 import { Colors } from '_theme/Colors';
-import {
-   updateTagsChoice
-} from '_utils/redux/actions/action_creators';
+import { updateTagsChoice } from '_utils/redux/actions/action_creators';
 
 //component custom
 const LabelCustomBottomSheet = ({ text, filterBy, reference }) => {
@@ -161,7 +157,7 @@ export default function Recherche({ navigation, route }) {
       }
    }, [typeChecked, thematiqueChecked, valueForSearch]);
 
-   //necessary when we come back from home page i.e rehefa unmount page
+   //necessary when we come back from home page i.e rehefa miverina amin'ilay page
    useFocusEffect(
       useCallback(() => {
          return () => {
@@ -177,8 +173,8 @@ export default function Recherche({ navigation, route }) {
                prevList.map((item) => {
                   return {
                      label: item.label,
-                     choice: false
-                  }
+                     choice: false,
+                  };
                })
             );
          };
@@ -433,7 +429,9 @@ export default function Recherche({ navigation, route }) {
                style={[
                   styles.view_chips,
                   {
-                     backgroundColor: item.choice ? Colors.greenAvg : Colors.background
+                     backgroundColor: item.choice
+                        ? Colors.greenAvg
+                        : Colors.background,
                   },
                ]}
             >
@@ -442,7 +440,7 @@ export default function Recherche({ navigation, route }) {
                   style={[
                      styles.item_chip,
                      {
-                        color: item.choice ? Colors.white :  Colors.black,
+                        color: item.choice ? Colors.white : Colors.black,
                      },
                   ]}
                >
@@ -466,7 +464,7 @@ export default function Recherche({ navigation, route }) {
 
    return (
       <View style={styles.view_container_search}>
-          <View>
+         <View>
             <View style={styles.head_content}>
                <View
                   style={{
@@ -541,11 +539,7 @@ export default function Recherche({ navigation, route }) {
                </View>
 
                <View style={styles.view_for_filtre}>
-                  <View
-                     style={
-                        styles.view_in_filtre
-                     }
-                  >
+                  <View style={styles.view_in_filtre}>
                      <View>
                         <Text
                            style={{
@@ -555,21 +549,15 @@ export default function Recherche({ navigation, route }) {
                               marginTop: 10,
                            }}
                         >
-                           {langueActual === 'fr'
-                              ? 'Type'
-                              : 'Karazana'}
+                           {langueActual === 'fr' ? 'Type' : 'Karazana'}
                         </Text>
                         <Text>
-                           {typeChecked
-                              ? typeChecked?.substring(0, 15)
-                              : ''}
+                           {typeChecked ? typeChecked?.substring(0, 15) : ''}
                         </Text>
                      </View>
                      <TouchableOpacity
                         activeOpacity={0.8}
-                        onPress={() =>
-                           openBottomSheet(bottomSheetTypeRef)
-                        }
+                        onPress={() => openBottomSheet(bottomSheetTypeRef)}
                      >
                         <Icon
                            name={'filter-list'}
@@ -600,17 +588,12 @@ export default function Recherche({ navigation, route }) {
                               marginTop: 10,
                            }}
                         >
-                           {langueActual === 'fr'
-                              ? 'Théme'
-                              : 'Lohahevitra'}
+                           {langueActual === 'fr' ? 'Théme' : 'Lohahevitra'}
                         </Text>
                         <Text>
                            {thematiqueChecked
                               ? thematiqueChecked?.length > 10
-                                 ? thematiqueChecked?.substring(
-                                       0,
-                                       10
-                                    ) + '...'
+                                 ? thematiqueChecked?.substring(0, 10) + '...'
                                  : thematiqueChecked
                               : ''}
                         </Text>
