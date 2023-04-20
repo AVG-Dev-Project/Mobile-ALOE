@@ -12,11 +12,22 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
    },
    info_in_landing_detail: {
-      marginTop: heightDevice < 700 ? 50 : 60,
+      marginTop: 5,
       marginLeft: 28,
    },
    maskImageDetailArticle: {
       backgroundColor: 'rgba(0, 0, 0, 0.3)',
+   },
+   view_header_nav: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '90%',
+   },
+   view_button_switch_article: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-evenly',
    },
    description_section: {
       paddingHorizontal: 24,
@@ -25,7 +36,7 @@ export const styles = StyleSheet.create({
    },
    view_round_button_detail_article: {
       position: 'absolute',
-      top: -28,
+      top: -22,
       right: 14,
       display: 'flex',
       flexDirection: 'row',

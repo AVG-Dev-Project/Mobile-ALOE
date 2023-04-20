@@ -35,6 +35,7 @@ import { printToFileAsync } from 'expo-print';
 import bgImage from '_images/bg_loi.jpg';
 import { Colors } from '_theme/Colors';
 import { addFavoris } from '_utils/redux/actions/action_creators';
+import { filterArticleToListByContenu } from '_utils';
 
 export default function Detail({ navigation, route }) {
    const [status, requestPermission] = MediaLibrary.usePermissions();
@@ -45,14 +46,25 @@ export default function Detail({ navigation, route }) {
    const dispatch = useDispatch();
    const [isSpeakPlay, setIsSpeakPlay] = useState(false);
    const allContenus = useSelector((selector) => selector.loi.contenus);
+   const allArticles = useSelector((selector) => selector.loi.articles);
    const [isFABshow, setIsFABshow] = useState(false);
-   const oneArticle = route.params.articleToViewDetail;
+   const [oneArticle, setOneArticle] = useState(
+      route.params.articleToViewDetail
+   );
    const [fontSizeDynamic, setFontSizeDynamic] = useState(
       width < 380 ? 14 : 18
    );
    const [contenuMother, setContenuMother] = useState(
       allContenus.filter((contenu) => contenu.id === oneArticle.contenu)
    );
+   const [numberOfCurrentArticle, setNumberOfCurrentArticle] = useState(0);
+   const allArticlesRelatedToThisContenu = filterArticleToListByContenu(
+      oneArticle.contenu,
+      allArticles
+   );
+   const numberTotalOfArticleRelatedToThisContenu =
+      allArticlesRelatedToThisContenu.length - 1;
+
    const allFavoriteIdFromStore = useSelector(
       (selector) => selector.loi.favoris
    );
@@ -60,6 +72,7 @@ export default function Detail({ navigation, route }) {
       () => (height < 700 ? [0, '60%'] : [0, '60%']),
       []
    );
+   console.log('numberOfCurrentArticle : ', numberOfCurrentArticle);
 
    //permission
    if (status === null) {
@@ -71,6 +84,43 @@ export default function Detail({ navigation, route }) {
    const imageRef = useRef();
 
    //all function
+   //next-previous article
+   const changeArticle = (actionName, currentArticleNumber) => {
+      let result = null;
+      switch (actionName) {
+         case 'previous':
+            if (currentArticleNumber - 1 < 0) {
+               result =
+                  allArticlesRelatedToThisContenu[
+                     numberTotalOfArticleRelatedToThisContenu
+                  ];
+               setNumberOfCurrentArticle(
+                  numberTotalOfArticleRelatedToThisContenu - 1
+               );
+            } else {
+               result =
+                  allArticlesRelatedToThisContenu[currentArticleNumber - 1];
+               setNumberOfCurrentArticle(numberOfCurrentArticle - 1);
+            }
+            break;
+         case 'next':
+            if (
+               currentArticleNumber + 1 >
+               numberTotalOfArticleRelatedToThisContenu
+            ) {
+               result = allArticlesRelatedToThisContenu[0];
+               setNumberOfCurrentArticle(0 + 1);
+            } else {
+               result =
+                  allArticlesRelatedToThisContenu[currentArticleNumber + 1];
+               setNumberOfCurrentArticle(numberOfCurrentArticle + 1);
+            }
+            break;
+         default:
+            break;
+      }
+      return setOneArticle(result);
+   };
 
    /*function to speach article*/
    const playPauseSpeak = (txt_to_say) => {
@@ -242,11 +292,18 @@ export default function Detail({ navigation, route }) {
                   ]}
                ></View>
                <View ref={imageRef} collapsable={false}>
-                  <View style={styles.info_in_landing_detail}>
+                  <View style={styles.view_header_nav}>
+                     <Button
+                        type="clear"
+                        size="md"
+                        onPress={() => navigation.goBack()}
+                     >
+                        <Icon name="arrow-back" />
+                     </Button>
                      <Text
                         style={{
                            fontWeight: 'bold',
-                           fontSize: width < 370 ? 18 : 24,
+                           fontSize: width < 370 ? 18 : 22,
                            textDecorationLine: 'underline',
                            marginBottom: 8,
                            textAlign: 'center',
@@ -260,6 +317,45 @@ export default function Detail({ navigation, route }) {
                              'Votoantiny' + ' faha '}{' '}
                         {contenuMother[0].numero}
                      </Text>
+                  </View>
+                  <View style={styles.view_button_switch_article}>
+                     <Button
+                        type="clear"
+                        size="sm"
+                        onPress={() =>
+                           changeArticle('previous', numberOfCurrentArticle)
+                        }
+                     >
+                        <Icon name="arrow-back-ios" color={Colors.greenWhite} />
+                     </Button>
+
+                     <Text
+                        style={{
+                           fontWeight: 'bold',
+                           fontSize: width < 370 ? 16 : 20,
+                           color: Colors.white,
+                        }}
+                     >
+                        {langueActual === 'fr'
+                           ? `Article n° ${oneArticle.numero}`
+                           : `Lalana faha ${oneArticle.numero}` ??
+                             `Article n° ${oneArticle.numero}`}
+                     </Text>
+
+                     <Button
+                        type="clear"
+                        size="sm"
+                        onPress={() =>
+                           changeArticle('next', numberOfCurrentArticle)
+                        }
+                     >
+                        <Icon
+                           name="arrow-forward-ios"
+                           color={Colors.greenWhite}
+                        />
+                     </Button>
+                  </View>
+                  <View style={styles.info_in_landing_detail}>
                      <Text
                         style={{
                            fontWeight: 'bold',
@@ -267,19 +363,21 @@ export default function Detail({ navigation, route }) {
                            width: '90%',
                            color: Colors.white,
                         }}
+                        numberOfLines={1}
                      >
                         {langueActual === 'fr'
                            ? oneArticle.titre_fr
                            : oneArticle.titre_mg ??
                              'Tsy misy dikan-teny malagasy.'}
                      </Text>
-                     {oneArticle.chapitre_id && (
+                     {oneArticle.chapitre_id ? (
                         <Text
                            style={{
                               fontSize: 13,
                               marginVertical: 4,
                               color: Colors.white,
                            }}
+                           numberOfLines={1}
                         >
                            {langueActual === 'fr'
                               ? `Chapitre n°${oneArticle.chapitre_numero}`
@@ -289,6 +387,17 @@ export default function Detail({ navigation, route }) {
                               ? oneArticle.chapitre_titre_fr
                               : oneArticle.chapitre_titre_mg ??
                                 'Tsy misy ny dikan-teny malagasy.'}
+                        </Text>
+                     ) : (
+                        <Text
+                           style={{
+                              fontSize: 13,
+                              marginVertical: 4,
+                              color: Colors.white,
+                           }}
+                           numberOfLines={1}
+                        >
+                           {' '}
                         </Text>
                      )}
                   </View>

@@ -40,9 +40,7 @@ export default function StackNavigation() {
             />
          </Stack.Group>
 
-         <Stack.Group
-            screenOptions={configStack.screenOptionsForHeaderTransparent}
-         >
+         <Stack.Group screenOptions={configStack.screenOptionsForHeaderDisable}>
             <Stack.Screen
                name={nameNav.detailPage}
                component={Detail}
@@ -50,7 +48,11 @@ export default function StackNavigation() {
                   title: route.params.titleScreen,
                })}
             />
+         </Stack.Group>
 
+         <Stack.Group
+            screenOptions={configStack.screenOptionsForHeaderTransparent}
+         >
             <Stack.Screen
                name={nameNav.doleance}
                component={Doleance}
