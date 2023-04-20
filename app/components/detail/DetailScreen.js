@@ -72,7 +72,6 @@ export default function Detail({ navigation, route }) {
       () => (height < 700 ? [0, '60%'] : [0, '60%']),
       []
    );
-   console.log('numberOfCurrentArticle : ', numberOfCurrentArticle);
 
    //permission
    if (status === null) {
