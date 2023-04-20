@@ -187,7 +187,7 @@ export default function ListingContenu({ navigation, route }) {
                      fontSize: Dimensions.get('window').height < 700 ? 14 : 16,
                      flex: 2,
                   }}
-                  numberOfLines={2}
+                  numberOfLines={3}
                >
                   {langueActual === 'fr'
                      ? item.objet_contenu_fr
@@ -218,6 +218,10 @@ export default function ListingContenu({ navigation, route }) {
                      {langueActual === 'fr'
                         ? item.type_nom_fr: item.type_nom_mg ?? item.type_nom_fr}
                   </Text>
+
+                  <Text style={{textDecorationLine: 'underline'}}>Tags</Text>
+                  <Text numberOfLines={2}>* Code pénale, aires protégés</Text>
+
                </View>
                <View>
                   <View
