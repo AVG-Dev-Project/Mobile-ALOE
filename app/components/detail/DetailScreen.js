@@ -45,6 +45,9 @@ export default function Detail({ navigation, route }) {
    const [contenuMother, setContenuMother] = useState(
       allContenus.filter((contenu) => contenu.id === oneArticle.contenu)
    );
+   const allFavoriteIdFromStore = useSelector(
+      (selector) => selector.loi.favoris
+   );
    const snapPoints = useMemo(
       () => (height < 700 ? [0, '60%'] : [0, '60%']),
       []
@@ -172,7 +175,17 @@ export default function Detail({ navigation, route }) {
    };
 
    const showToastFavorite = () => {
-      ToastAndroid.show(`Article n° ${oneArticle.numero} ajouté dans vos favoris.`, ToastAndroid.SHORT);
+      if (allFavoriteIdFromStore.includes(oneArticle.id)) {
+         ToastAndroid.show(
+            `Article n° ${oneArticle.numero} retiré dans vos favoris.`,
+            ToastAndroid.SHORT
+         );
+      } else {
+         ToastAndroid.show(
+            `Article n° ${oneArticle.numero} ajouté dans vos favoris.`,
+            ToastAndroid.SHORT
+         );
+      }
    };
 
    const sourceHTML = (data) => {
@@ -277,20 +290,26 @@ export default function Detail({ navigation, route }) {
                   <View style={styles.description_section}>
                      <View style={styles.view_round_button_detail_article}>
                         <TouchableOpacity
-                        onPress={() => {
-                           dispatch(addFavoris(oneArticle.id));
-                           showToastFavorite();
-                        }}
-                        activeOpacity={0.7}
-                     >
-                        <Text style={styles.boutton_add_favorite}>
-                           <Icon
-                              name={'favorite'}
-                              color={Colors.greenAvg}
-                              size={32}
-                           />{' '}
-                        </Text>
-                     </TouchableOpacity>
+                           onPress={() => {
+                              dispatch(addFavoris(oneArticle.id));
+                              showToastFavorite();
+                           }}
+                           activeOpacity={0.7}
+                        >
+                           <Text style={styles.boutton_add_favorite}>
+                              <Icon
+                                 name={
+                                    allFavoriteIdFromStore.includes(
+                                       oneArticle.id
+                                    )
+                                       ? 'favorite'
+                                       : 'favorite-border'
+                                 }
+                                 color={Colors.greenAvg}
+                                 size={32}
+                              />{' '}
+                           </Text>
+                        </TouchableOpacity>
 
                         <TouchableOpacity
                            activeOpacity={0.7}
@@ -366,7 +385,10 @@ export default function Detail({ navigation, route }) {
                      />
                      <FAB
                         visible={isFABshow}
-                        icon={{ name: isSpeakPlay ? 'stop' : 'play-circle-outline', color: 'white' }}
+                        icon={{
+                           name: isSpeakPlay ? 'stop' : 'play-circle-outline',
+                           color: 'white',
+                        }}
                         color={Colors.greenAvg}
                         onPress={() => {
                            setIsSpeakPlay(!isSpeakPlay);
