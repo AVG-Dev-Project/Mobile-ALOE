@@ -85,7 +85,7 @@ export const styles = StyleSheet.create({
    },
    view_button_zoom: {
       flexDirection: 'row',
-      justifyContent: 'flex-end',
+      justifyContent: 'center',
       alignItems: 'center',
    },
 });
