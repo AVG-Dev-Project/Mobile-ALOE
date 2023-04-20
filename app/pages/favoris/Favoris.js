@@ -44,6 +44,8 @@ export default function Favoris({ navigation, route }) {
    const isUserConnectedToInternet = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
+   const allContenus = useSelector((selector) => selector.loi.contenus);
+
    const snapPoints = useMemo(
       () => (height < 700 ? [0, '40%'] : [0, '28%']),
       []
@@ -51,6 +53,12 @@ export default function Favoris({ navigation, route }) {
    const dataForFlatList = allArticles.filter((article) =>
       listOfIdFavorites.includes(article.id)
    );
+   
+   //all functions
+   const getOneContenuReferenceByIdFromArticle = (idCont) => {
+      const referenceContenu = allContenus.filter((contenu) => contenu.id === idCont);
+      return referenceContenu;
+   }
 
    //all refs
    const bottomSheetRef = useRef(null);
@@ -102,6 +110,9 @@ export default function Favoris({ navigation, route }) {
                >
                   <View>
                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                        {getOneContenuReferenceByIdFromArticle(item.contenu).type_nom_fr + " "  + getOneContenuReferenceByIdFromArticle(item.contenu).numero}
+                     </Text>
+                     <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
                         {langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '}{' '}
                         {item.numero}
                      </Text>
@@ -114,37 +125,21 @@ export default function Favoris({ navigation, route }) {
                      >
                         {langueActual === 'fr' ? item.titre_fr : item.titre_mg}
                      </Text>
-                     {item.chapitre_id && (
-                        <Text style={{ fontSize: 12 }}>
-                           {langueActual === 'fr'
-                              ? `Chapitre ${item.chapitre_numero ?? ''}`
-                              : `Lohateny ${item.chapitre_numero ?? ''}`}
-                           : {item.chapitre_titre_fr ?? ''}
-                        </Text>
-                     )}
                   </View>
                   <Text
                      style={{
-                        fontSize: width < 380 ? 8 : 16,
+                        fontSize: width < 380 ? 10 : 16,
                         flex: 2,
                         width: 210,
+                        marginTop: 8
                      }}
                      numberOfLines={4}
                   >
-                     <Text
-                        style={{
-                           fontSize: width < 380 ? 10 : 16,
-                           flex: 2,
-                           width: 210,
-                        }}
-                        numberOfLines={4}
-                     >
-                        {langueActual === 'fr'
-                           ? item.contenu_fr?.split('________________')[0]
-                           : item.contenu_mg?.split('________________')[0] ??
-                             'Tsy misy dikan-teny malagasy ito lahatsoratra iray ito.'}
-                        {' ...'}
-                     </Text>
+                     {langueActual === 'fr'
+                        ? item.contenu_fr?.split('________________')[0]
+                        : item.contenu_mg?.split('________________')[0] ??
+                           'Tsy misy dikan-teny malagasy ito lahatsoratra iray ito.'}
+                     {' ...'}
                   </Text>
                   <View
                      style={{
@@ -200,13 +195,6 @@ export default function Favoris({ navigation, route }) {
          `Vous avez enlevé l'article n° ${id} dans votre favoris`,
          ToastAndroid.SHORT
       );
-   };
-
-   const tagsStyles = {
-      p: {
-         width: '40%',
-         fontSize: width < 370 ? 12 : 14,
-      },
    };
 
    //all effects

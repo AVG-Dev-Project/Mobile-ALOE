@@ -27,7 +27,7 @@ import ReactNativeBlobUtil from 'react-native-blob-util';
 import * as MediaLibrary from 'expo-media-library';
 import { styles } from './styles';
 import { Icon, FAB } from '@rneui/themed';
-import {BottomSheetModal, BottomSheetBackdrop, BottomSheetScrollView  } from '@gorhom/bottom-sheet';
+import {BottomSheetModal, BottomSheetBackdrop  } from '@gorhom/bottom-sheet';
 import { printToFileAsync } from 'expo-print';
 import bgImage from '_images/bg_loi.jpg';
 import { Colors } from '_theme/Colors';
@@ -456,7 +456,7 @@ export default function Detail({ navigation, route }) {
                   snapPoints={snapPoints}
                   style={styles.view_bottom_sheet}
                >
-                  <BottomSheetScrollView  style={styles.view_in_bottomsheet}>
+                  <ScrollView  style={styles.view_in_bottomsheet}>
                      <View>
                         <Text style={{ fontSize: 28, fontWeight: 'bold' }}>
                            {langueActual === 'fr'
@@ -515,7 +515,7 @@ export default function Detail({ navigation, route }) {
                            </Text>
                         </View>
                      </View>
-                  </BottomSheetScrollView>
+                  </ScrollView>
                </BottomSheetModal>
             </View>
    );

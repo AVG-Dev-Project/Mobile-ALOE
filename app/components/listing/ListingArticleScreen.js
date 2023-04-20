@@ -108,6 +108,9 @@ export default function ListingArticle({ navigation, route }) {
             activeOpacity={0.9}
             onPress={() => {
                navigation.navigate(nameNav.detailPage, {
+                  titleScreen: `${
+                     langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '
+                  } ${item.numero}`,
                   articleToViewDetail: item,
                });
             }}

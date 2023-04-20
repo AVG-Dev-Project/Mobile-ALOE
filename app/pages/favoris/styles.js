@@ -14,6 +14,7 @@ export const styles = StyleSheet.create({
       marginVertical: 8,
       display: 'flex',
       flexDirection: 'row',
+      height: 'auto'
    },
    head_content: {
       height: 45,
