@@ -628,6 +628,18 @@ export default function Detail({ navigation, route }) {
                              contenuMother[0].type_nom_fr}
                      </Text>
                   </View>
+
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Tags ' : 'Tagy '}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {langueActual === 'fr'
+                           ? 'Code pénal'
+                           : 'Kaody penaly' ?? 'Code pénal'}
+                     </Text>
+                  </View>
                </View>
             </ScrollView>
          </BottomSheetModal>
