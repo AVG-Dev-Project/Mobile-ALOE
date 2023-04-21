@@ -248,7 +248,9 @@ export default function Detail({ navigation, route }) {
    const sourceHTML = (data) => {
       const source = {
          html:
-            data ?? '<p>Tsy misy dikan-teny malagasy ity lahatsoratra ity.</p>',
+            data ?? langueActual === 'fr'
+               ? "Le contenu de l'article n'est pas disponible"
+               : '<p>Tsy misy dikan-teny malagasy ity lahatsoratra ity.</p>',
       };
       return source;
    };
