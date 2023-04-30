@@ -21,7 +21,7 @@ import React, {
 } from 'react';
 import { styles } from './styles';
 import Voice from '@react-native-voice/voice';
-import { BottomSheetModal,  BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { useDispatch, useSelector } from 'react-redux';
 import { nameStackNavigation as nameNav } from '_utils';
 import ReactNativeBlobUtil from 'react-native-blob-util';
@@ -342,8 +342,9 @@ export default function Recherche({ navigation, route }) {
                   style={{
                      fontSize: Dimensions.get('window').height < 700 ? 14 : 16,
                      flex: 2,
+                     marginBottom: 18,
                   }}
-                  numberOfLines={2}
+                  numberOfLines={3}
                >
                   {langueActual === 'fr'
                      ? item.objet_contenu_fr
@@ -380,6 +381,9 @@ export default function Recherche({ navigation, route }) {
                         ? item.type_nom_fr
                         : item.type_nom_mg ?? item.type_nom_fr}
                   </Text>
+
+                  <Text style={{ textDecorationLine: 'underline' }}>Tags</Text>
+                  <Text numberOfLines={2}>* Code pénale, aires protégés</Text>
                </View>
                <View>
                   <View
@@ -392,16 +396,17 @@ export default function Recherche({ navigation, route }) {
                      <TouchableOpacity
                         activeOpacity={0.8}
                         onPress={() => {
+                           ToastAndroid.show(
+                              langueActual === 'fr'
+                                 ? 'Télechargement en cours...'
+                                 : 'Andalam-pangalana ...',
+                              ToastAndroid.SHORT
+                           );
                            downloadPdfFile(item, item.attachement?.slice(21));
-                           handleToogleIsDownloading(item.id);
                         }}
                      >
                         <Icon
-                           name={
-                              item.isPdfDownloading
-                                 ? 'hourglass-top'
-                                 : 'file-download'
-                           }
+                           name={'file-download'}
                            color={Colors.greenAvg}
                            size={30}
                         />
@@ -413,6 +418,7 @@ export default function Recherche({ navigation, route }) {
       );
    }, []);
 
+   //tags
    const _renderItemChips = useCallback(({ item }) => {
       return (
          <TouchableOpacity

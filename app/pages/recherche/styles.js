@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
    view_container_search: {
       flex: 1,
       marginTop: 8,
-      paddingBottom: 70,
+      paddingBottom: 290,
       paddingHorizontal: 15,
       backgroundColor: Colors.background,
    },
@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
       marginTop: 10,
    },
    labelTags: {
-      paddingBottom: 6
+      paddingBottom: 6,
    },
    view_carousel: {
       width: '100%',
@@ -101,11 +101,11 @@ export const styles = StyleSheet.create({
       marginRight: 6,
       borderRadius: 20,
       borderWidth: 1,
-      borderColor: Colors.greenAvg
+      borderColor: Colors.greenAvg,
    },
    item_chip: {
       paddingVertical: 8,
       paddingHorizontal: 12,
-      fontWeight: 'bold'
-   }
+      fontWeight: 'bold',
+   },
 });

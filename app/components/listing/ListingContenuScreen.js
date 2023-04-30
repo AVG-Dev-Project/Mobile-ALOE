@@ -186,7 +186,7 @@ export default function ListingContenu({ navigation, route }) {
                   style={{
                      fontSize: Dimensions.get('window').height < 700 ? 14 : 16,
                      flex: 2,
-                     marginBottom: 18
+                     marginBottom: 18,
                   }}
                   numberOfLines={3}
                >
@@ -200,29 +200,34 @@ export default function ListingContenu({ navigation, route }) {
                      flexDirection: 'column',
                   }}
                >
-                  <Text style={{textDecorationLine: 'underline'}}>Thématique et Type</Text>
+                  <Text style={{ textDecorationLine: 'underline' }}>
+                     Thématique et Type
+                  </Text>
                   <Text
                      style={{
                         fontSize: 14,
                      }}
-                      numberOfLines={2}
+                     numberOfLines={2}
                   >
-                  *{" "}
+                     *{' '}
                      {langueActual === 'fr'
-                        ? item.thematique_nom_fr : item.thematique_nom_mg ?? item.thematique_nom_fr}
+                        ? item.thematique_nom_fr
+                        : item.thematique_nom_mg ?? item.thematique_nom_fr}
                   </Text>
-                  <Text style={{
+                  <Text
+                     style={{
                         fontSize: 14,
                      }}
-                      numberOfLines={2}>
-                  *{" "}
+                     numberOfLines={2}
+                  >
+                     *{' '}
                      {langueActual === 'fr'
-                        ? item.type_nom_fr: item.type_nom_mg ?? item.type_nom_fr}
+                        ? item.type_nom_fr
+                        : item.type_nom_mg ?? item.type_nom_fr}
                   </Text>
 
-                  <Text style={{textDecorationLine: 'underline'}}>Tags</Text>
+                  <Text style={{ textDecorationLine: 'underline' }}>Tags</Text>
                   <Text numberOfLines={2}>* Code pénale, aires protégés</Text>
-
                </View>
                <View>
                   <View
@@ -239,7 +244,6 @@ export default function ListingContenu({ navigation, route }) {
                            handleToogleIsDownloading(item.id);
                         }}
                      >
-                        
                         <Icon
                            name={
                               item.isPdfDownloading

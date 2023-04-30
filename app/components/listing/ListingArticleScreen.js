@@ -4,6 +4,7 @@ import {
    StyleSheet,
    FlatList,
    Image,
+   TextInput,
    SafeAreaView,
    TouchableOpacity,
    ToastAndroid,
@@ -25,6 +26,27 @@ import {
    addFavoris,
    getAllArticles,
 } from '_utils/redux/actions/action_creators';
+
+const filterGlobal = (langueActual, array, query) => {
+   let res = array;
+   if (query) {
+      langueActual === 'fr'
+         ? (res = res.filter((_loi) =>
+              _loi.contenu_fr
+                 ?.split('________________')[0]
+                 .toLowerCase()
+                 .includes(query.toLowerCase())
+           ))
+         : (res = res.filter((_loi) =>
+              _loi.contenu_mg
+                 ?.split('________________')[0]
+                 .toLowerCase()
+                 .includes(query.toLowerCase())
+           ));
+   }
+
+   return res;
+};
 
 export default function ListingArticle({ navigation, route }) {
    //all data
@@ -57,21 +79,8 @@ export default function ListingArticle({ navigation, route }) {
          }
       )
    );
+   const [valueForSearch, setValueForSearch] = useState('');
 
-   useFocusEffect(
-      useCallback(() => {
-         setArticleList((prevList) =>
-            prevList.map((item) =>
-              {
-               return {
-                  ...item,
-                  isFavorite: allFavoriteIdFromStore.includes(item.id),
-               };
-              }
-         ))
-      }, [allFavoriteIdFromStore])
-   );
-   
    const handleToogleIsFavorite = (id) => {
       dispatch(addFavoris(id));
       // Mettre à jour la propriété isFavorite de l'article avec l'ID donné
@@ -100,6 +109,44 @@ export default function ListingArticle({ navigation, route }) {
    };
 
    //all effects
+   useFocusEffect(
+      useCallback(() => {
+         setArticleList((prevList) =>
+            prevList.map((item) => {
+               return {
+                  ...item,
+                  isFavorite: allFavoriteIdFromStore.includes(item.id),
+               };
+            })
+         );
+      }, [allFavoriteIdFromStore])
+   );
+
+   useEffect(() => {
+      if (valueForSearch) {
+         setArticleList(
+            filterGlobal(langueActual, articleList, valueForSearch).map(
+               (item) => {
+                  return {
+                     ...item,
+                     isFavorite: allFavoriteIdFromStore.includes(item.id),
+                  };
+               }
+            )
+         );
+      } else {
+         setArticleList(
+            filterArticleToListByContenu(idOfTheContenuMother, allArticles).map(
+               (item) => {
+                  return {
+                     ...item,
+                     isFavorite: allFavoriteIdFromStore.includes(item.id),
+                  };
+               }
+            )
+         );
+      }
+   }, [valueForSearch]);
 
    //all components
    const _renderItem = useCallback(({ item }) => {
@@ -157,21 +204,27 @@ export default function ListingArticle({ navigation, route }) {
                         style={{
                            fontSize: 12,
                            textDecorationLine: 'underline',
-                           width: width - 180
+                           width: width - 180,
                         }}
                         numberOfLines={1}
                      >
                         {langueActual === 'fr'
-                           ? item.titre_fr : item.titre_mg ?? item.titre_fr}
+                           ? item.titre_fr
+                           : item.titre_mg ?? item.titre_fr}
                      </Text>
                      {item.chapitre_id && (
-                        <Text style={{ fontSize: 12, width: width - 200 }} numberOfLines={1}>
+                        <Text
+                           style={{ fontSize: 12, width: width - 200 }}
+                           numberOfLines={1}
+                        >
                            {langueActual === 'fr'
                               ? `Chapitre ${item.chapitre_numero ?? ''}`
                               : `Lohateny ${item.chapitre_numero ?? ''}`}
                            :{' '}
                            {langueActual === 'fr'
-                              ? item.chapitre_titre_fr : item.chapitre_titre_mg ?? item.chapitre_titre_fr}
+                              ? item.chapitre_titre_fr
+                              : item.chapitre_titre_mg ??
+                                item.chapitre_titre_fr}
                         </Text>
                      )}
                   </View>
@@ -264,6 +317,21 @@ export default function ListingArticle({ navigation, route }) {
 
    return (
       <View style={styles.view_container}>
+         <View style={styles.view_search}>
+            <TextInput
+               style={styles.input}
+               keyboardType="default"
+               placeholder={
+                  langueActual === 'fr'
+                     ? 'Entrer le mot de recherche ...'
+                     : 'Ampidiro ny teny hotadiavina...'
+               }
+               value={valueForSearch}
+               onChangeText={(text) => {
+                  setValueForSearch(text);
+               }}
+            />
+         </View>
          <SafeAreaView style={styles.container_safe}>
             <FlatList
                data={articleList}
