@@ -7,6 +7,15 @@ export const styles = StyleSheet.create({
       paddingHorizontal: 8,
       backgroundColor: Colors.background,
    },
+   input: {
+      borderWidth: 1,
+      height: 40,
+      paddingHorizontal: 10,
+      borderRadius: 8,
+   },
+   view_search: {
+      marginBottom: 6,
+   },
    view_render: {
       marginVertical: 8,
       display: 'flex',
