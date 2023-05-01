@@ -639,19 +639,6 @@ export default function Detail({ navigation, route }) {
 
                   <View style={styles.view_one_item_in_bottomsheet}>
                      <Text style={styles.label_info_article}>
-                        {langueActual === 'fr' ? 'Objet ' : 'Objet '}{' '}
-                     </Text>
-                     <Text style={styles.value_info_article} numberOfLines={2}>
-                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                        {langueActual === 'fr'
-                           ? contenuMother[0].objet_contenu_fr
-                           : contenuMother[0].objet_contenu_mg ??
-                             contenuMother[0].objet_contenu_fr}
-                     </Text>
-                  </View>
-
-                  <View style={styles.view_one_item_in_bottomsheet}>
-                     <Text style={styles.label_info_article}>
                         {langueActual === 'fr' ? 'Etat ' : 'Fanjakana '}{' '}
                      </Text>
                      <Text style={styles.value_info_article} numberOfLines={2}>
