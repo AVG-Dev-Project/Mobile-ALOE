@@ -63,10 +63,7 @@ export default function Detail({ navigation, route }) {
    const allFavoriteIdFromStore = useSelector(
       (selector) => selector.loi.favoris
    );
-   const snapPoints = useMemo(
-      () => (height < 700 ? [0, '60%'] : [0, '60%']),
-      []
-   );
+   const snapPoints = useMemo(() => [0, '60%', '80%'], []);
 
    //permission
    if (status === null) {
@@ -576,6 +573,15 @@ export default function Detail({ navigation, route }) {
                   </Text>
                   <View style={styles.view_one_item_in_bottomsheet}>
                      <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Date ' : 'Daty '}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {contenuMother[0].date}
+                     </Text>
+                  </View>
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
                         {langueActual === 'fr' ? 'Chapitre ' : 'Lohateny'}{' '}
                      </Text>
                      <Text style={styles.value_info_article}>
@@ -588,15 +594,24 @@ export default function Detail({ navigation, route }) {
                   </View>
                   <View style={styles.view_one_item_in_bottomsheet}>
                      <Text style={styles.label_info_article}>
-                        {langueActual === 'fr' ? 'Contenu ' : 'Sokajy '}{' '}
+                        {langueActual === 'fr' ? 'Numero ' : 'Laharana '}{' '}
                      </Text>
                      <Text style={styles.value_info_article}>
                         <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                        {langueActual === 'fr'
-                           ? contenuMother[0].type_nom_fr + ' n°'
-                           : contenuMother[0].type_nom_mg ??
-                             'Votoantiny' + ' faha '}{' '}
                         {contenuMother[0].numero}
+                     </Text>
+                  </View>
+
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Objet ' : 'Objet '}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article} numberOfLines={2}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {langueActual === 'fr'
+                           ? contenuMother[0].objet_contenu_fr
+                           : contenuMother[0].objet_contenu_mg ??
+                             contenuMother[0].objet_contenu_fr}
                      </Text>
                   </View>
 
@@ -623,6 +638,47 @@ export default function Detail({ navigation, route }) {
                            ? contenuMother[0].type_nom_fr
                            : contenuMother[0].type_nom_mg ??
                              contenuMother[0].type_nom_fr}
+                     </Text>
+                  </View>
+
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Objet ' : 'Objet '}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article} numberOfLines={2}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {langueActual === 'fr'
+                           ? contenuMother[0].objet_contenu_fr
+                           : contenuMother[0].objet_contenu_mg ??
+                             contenuMother[0].objet_contenu_fr}
+                     </Text>
+                  </View>
+
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Etat ' : 'Fanjakana '}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article} numberOfLines={2}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {langueActual === 'fr'
+                           ? contenuMother[0].etat_nom_fr
+                           : contenuMother[0].etat_nom_mg ??
+                             contenuMother[0].etat_nom_fr}
+                     </Text>
+                  </View>
+
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr'
+                           ? 'Organisme '
+                           : 'Filankevi-pitatanana '}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article} numberOfLines={2}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {langueActual === 'fr'
+                           ? contenuMother[0].organisme_nom_fr
+                           : contenuMother[0].organisme_nom_mg ??
+                             contenuMother[0].organisme_nom_fr}
                      </Text>
                   </View>
 
