@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
    },
    description_section: {
       paddingHorizontal: 24,
-      height: heightDevice < 700 ? heightDevice - 230 : heightDevice - 230,
+      height: heightDevice < 700 ? heightDevice - 230 : heightDevice - 290,
       backgroundColor: Colors.white,
    },
    view_round_button_detail_article: {
@@ -67,15 +67,14 @@ export const styles = StyleSheet.create({
       borderRadius: 52,
    },
    fab_button: {
-      backgroundColor: 'red',
-      flexDirection: 'row',
-      justifyContent: 'space-around',
+      height: 150,
+      flexDirection: 'column',
       paddingVertical: 5,
       flexGrow: 1,
    },
    view_content_fab_button: {
       width: '90%',
-      marginBottom: 12,
+      marginTop: 10,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-evenly',
@@ -97,8 +96,9 @@ export const styles = StyleSheet.create({
       marginBottom: 8,
    },
    view_button_zoom: {
-      flexDirection: 'row',
+      flexDirection: 'column',
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'flex-end',
+      marginRight: 28,
    },
 });

@@ -479,14 +479,14 @@ export default function Detail({ navigation, route }) {
                   <View style={styles.view_button_zoom}>
                      <Button
                         type="clear"
-                        size="xs"
+                        size="sm"
                         onPress={() => setFontSizeDynamic(fontSizeDynamic + 2)}
                      >
                         <Icon name="zoom-in" color={Colors.greenAvg} />
                      </Button>
                      <Button
                         type="clear"
-                        size="xs"
+                        size="sm"
                         onPress={() => setFontSizeDynamic(fontSizeDynamic - 2)}
                      >
                         <Icon name="zoom-out" color={Colors.greenAvg} />
