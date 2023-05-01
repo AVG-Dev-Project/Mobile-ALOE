@@ -16,6 +16,7 @@ import {
    nameStackNavigation as nameNav,
    fetchContenusToApi,
    parseDataContenuLazyLoading,
+   parsingTags,
 } from '_utils';
 import { styles } from './stylesContenu';
 import { Icon } from '@rneui/themed';
@@ -56,13 +57,10 @@ export default function ListingContenu({ navigation, route }) {
          };
       })
    );
-   const currentPage = useSelector(
-      (selector) => selector.loi.currentPageContenu
-   );
-   const totalPageContenu = useSelector(
-      (selector) => selector.loi.totalPage.contenu
-   );
+   const [totalPage, setTotalPage] = useState(1);
+   const [currentPage, setCurrentPage] = useState(0);
 
+   console.log(currentPage + ' et total : ' + totalPage);
    //all functions
    const downloadPdfFile = async (contenu, linkPdf) => {
       try {
@@ -129,7 +127,9 @@ export default function ListingContenu({ navigation, route }) {
    };
 
    const getNextPageContenusFromApi = async () => {
-      let res = await fetchContenusToApi(currentPage, dispatch);
+      let res = await fetchContenusToApi(currentPage + 1, dispatch);
+      setCurrentPage(currentPage + 1);
+      setTotalPage(res.pages_count);
       let oldAllContenus = [...contenuList];
       res.results.map((result) => {
          if (!oldAllContenus.find((contenu) => contenu.id === result.id)) {
@@ -226,8 +226,21 @@ export default function ListingContenu({ navigation, route }) {
                         : item.type_nom_mg ?? item.type_nom_fr}
                   </Text>
 
-                  <Text style={{ textDecorationLine: 'underline' }}>Tags</Text>
-                  <Text numberOfLines={2}>* Code pénale, aires protégés</Text>
+                  {parsingTags(item.tag).length > 0 && (
+                     <View>
+                        <Text style={{ textDecorationLine: 'underline' }}>
+                           Tags
+                        </Text>
+                        <Text numberOfLines={2}>
+                           *{' '}
+                           {parsingTags(item.tag).map((tag) =>
+                              langueActual === 'fr'
+                                 ? tag.contenu_fr + ', '
+                                 : tag.contenu_mg + ', '
+                           )}
+                        </Text>
+                     </View>
+                  )}
                </View>
                <View>
                   <View
@@ -283,7 +296,7 @@ export default function ListingContenu({ navigation, route }) {
                onEndReachedThreshold={0.5}
                onEndReached={async () => {
                   if (isConnectedToInternet && isNetworkActive) {
-                     if (currentPage < totalPageContenu) {
+                     if (totalPage < totalPage) {
                         await getNextPageContenusFromApi();
                      }
                   } else {

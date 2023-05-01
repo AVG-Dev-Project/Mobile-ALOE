@@ -53,7 +53,7 @@ export default function Home({ navigation }) {
    );
 
    const showData = () => {
-      return ArticleSchema.query({ columns: '*' }).then((res) => {
+      return ContenuSchema.query({ columns: '*' }).then((res) => {
          console.log(res.length);
       });
    };
@@ -123,14 +123,15 @@ export default function Home({ navigation }) {
                });
             }}
          >
-            <View key={item.id} style={styles.view_container_renderItemThematique}>
+            <View
+               key={item.id}
+               style={styles.view_container_renderItemThematique}
+            >
                <View
                   style={[StyleSheet.absoluteFillObject, styles.maskImageCatg]}
                ></View>
                <Text
-                  style={[
-                     styles.text_descriptif_for_carousel,
-                  ]}
+                  style={[styles.text_descriptif_for_carousel]}
                   numberOfLines={4}
                >
                   {langueActual === 'fr' ? item.nom_fr : item.nom_mg}

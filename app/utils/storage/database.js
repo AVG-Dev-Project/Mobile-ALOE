@@ -77,6 +77,7 @@ export class ContenuSchema extends BaseModel {
          organisme_id: { type: types.INTEGER },
          organisme_nom_fr: { type: types.TEXT },
          organisme_nom_mg: { type: types.TEXT },
+         tag: { type: types.TEXT },
          signature: { type: types.TEXT },
          attachement: { type: types.TEXT },
       };

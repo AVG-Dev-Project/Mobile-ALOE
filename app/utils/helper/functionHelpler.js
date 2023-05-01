@@ -49,6 +49,7 @@ export const parseStructureDataForContenu = (data) => {
       organisme_id: d.organisme?.id,
       organisme_nom_fr: d.organisme?.nom_fr,
       organisme_nom_mg: d.organisme?.nom_mg,
+      tag: JSON.stringify(d.tag),
       signature: d.signature,
       attachement: d.attachement,
    }));
@@ -103,6 +104,7 @@ export const parseDataContenuLazyLoading = (d) => {
       organisme_id: d.organisme?.id,
       organisme_nom_fr: d.organisme?.nom_fr,
       organisme_nom_mg: d.organisme?.nom_mg,
+      tag: JSON.stringify(d.tag),
       signature: d.signature,
       attachement: d.attachement,
    };
@@ -115,34 +117,6 @@ export const filterArticleToListByContenu = (idContenu, articles) => {
    return res;
 };
 
-export const cutTextWithBalise = (texte, longueur) => {
-   // Vérifier que le texte est plus long que la longueur spécifiée
-   if (texte.length > longueur) {
-      // Couper le texte à la longueur spécifiée
-      let texteCoupe = texte.substring(0, longueur);
-
-      // Trouver la dernière balise fermante dans le texte coupé
-      let lastTagIndex = texteCoupe.lastIndexOf('>');
-
-      // Vérifier si la dernière balise fermante est suivie d'une balise ouverte dans le texte coupé
-      if (texteCoupe.substring(lastTagIndex).includes('<')) {
-         // Si c'est le cas, trouver la prochaine balise ouverte après la dernière balise fermante
-         let nextTagIndex = texte.indexOf('<', lastTagIndex);
-
-         // Si une balise ouverte est trouvée, ajuster le texte coupé en conséquence
-         if (nextTagIndex != -1) {
-            texteCoupe = texte.substring(0, nextTagIndex);
-         }
-      }
-
-      return texteCoupe;
-   }
-   // Si le texte est déjà plus court que la longueur spécifiée, le renvoyer tel quel
-   else {
-      return texte;
-   }
-};
-
 export const checkAndsendMailFromLocalDBToAPI = async () => {
    let mails = await DoleanceSchema.query({ columns: '*' });
    if (mails.length > 0) {
@@ -153,4 +127,9 @@ export const checkAndsendMailFromLocalDBToAPI = async () => {
       console.log('Mail envoyé en background');
    }
    return;
+};
+
+export const parsingTags = (jsonContent) => {
+   let res = JSON.parse(jsonContent);
+   return res;
 };

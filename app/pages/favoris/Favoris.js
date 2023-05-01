@@ -19,7 +19,6 @@ import React, {
 } from 'react';
 import {
    nameStackNavigation as nameNav,
-   cutTextWithBalise,
    checkAndsendMailFromLocalDBToAPI,
 } from '_utils';
 import { styles } from './styles';

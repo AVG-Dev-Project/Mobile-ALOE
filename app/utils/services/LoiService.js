@@ -58,6 +58,16 @@ function getThematiqueFromServ() {
       });
 }
 
+function getTagFromServ() {
+   return RouteAxios.get('/tag')
+      .then((response) => {
+         return response.data.results;
+      })
+      .catch((error) => {
+         return error.message;
+      });
+}
+
 function getTypeFromServ() {
    return RouteAxios.get('/type')
       .then((response) => {
@@ -75,4 +85,5 @@ export const LoiService = {
    getTypeFromServ,
    getContenusFromServ,
    sendMailToServ,
+   getTagFromServ,
 };
