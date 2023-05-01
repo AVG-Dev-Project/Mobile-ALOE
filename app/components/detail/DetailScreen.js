@@ -27,7 +27,7 @@ import { styles } from './styles';
 import { Icon, FAB, Button } from '@rneui/themed';
 import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { printToFileAsync } from 'expo-print';
-import bgImage from '_images/bg_loi.jpg';
+import bgImage from '_images/abstract.jpg';
 import { Colors } from '_theme/Colors';
 import { addFavoris } from '_utils/redux/actions/action_creators';
 import { filterArticleToListByContenu, parsingTags } from '_utils';
@@ -335,7 +335,7 @@ export default function Detail({ navigation, route }) {
                         size="md"
                         onPress={() => navigation.goBack()}
                      >
-                        <Icon name="arrow-back" />
+                        <Icon name="arrow-back" color={Colors.white} />
                      </Button>
                      <Text
                         style={{

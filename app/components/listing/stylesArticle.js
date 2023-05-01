@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
       flexDirection: 'row',
    },
    maskImageArticle: {
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: 'rgba(0, 0, 0, 0.2)',
       borderRadius: 18,
       height: 160,
       width: Dimensions.get('window').width < 380 ? 100 : 130,

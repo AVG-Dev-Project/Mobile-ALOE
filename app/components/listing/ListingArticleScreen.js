@@ -178,7 +178,7 @@ export default function ListingArticle({ navigation, route }) {
          >
             <View style={styles.view_render}>
                <Image
-                  source={require('_images/book_loi.jpg')}
+                  source={require('_images/abstract.jpg')}
                   style={{
                      width: width < 380 ? 100 : 130,
                      height: 160,

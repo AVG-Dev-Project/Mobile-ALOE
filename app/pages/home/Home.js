@@ -100,7 +100,7 @@ export default function Home({ navigation }) {
             <View key={item.id} style={styles.view_container_renderItemArticle}>
                <Image
                   style={styles.image_poster_style_article}
-                  source={require('_images/book_loi.jpg')}
+                  source={require('_images/abstract_3.jpg')}
                />
 
                <Text
@@ -170,7 +170,7 @@ export default function Home({ navigation }) {
                <View style={styles.content_in_landing_screen}>
                   <Image
                      style={styles.icon_in_content_landing}
-                     source={require('_images/book_loi.jpg')}
+                     source={require('_images/abstract_3.jpg')}
                   />
                   <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
                      {t('renseignez')}
