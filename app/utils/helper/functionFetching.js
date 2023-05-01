@@ -87,6 +87,22 @@ export const fetchAllDataToLocalDatabase = (dispatcher) => {
    TypeSchema.query({ columns: '*' }).then((results) => {
       dispatcher(getAllTypes(results));
    });
+   //tag
+   TagSchema.query({ columns: '*' }).then((results) => {
+      dispatcher(getAllTags(results));
+   });
+};
+
+export const fetchPartialDataForUpdating = (dispatcher) => {
+   //thematique
+   ThematiqueSchema.query({ columns: '*' }).then((results) => {
+      dispatcher(getAllThematiques(results));
+   });
+   //type
+   TypeSchema.query({ columns: '*' }).then((results) => {
+      dispatcher(getAllTypes(results));
+   });
+   //tag
    TagSchema.query({ columns: '*' }).then((results) => {
       dispatcher(getAllTags(results));
    });

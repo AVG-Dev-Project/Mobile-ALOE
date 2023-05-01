@@ -97,12 +97,6 @@ export default function DownloadData({ navigation }) {
       }, 500);
    };
 
-   /*const showData = () => {
-      return ArticleSchema.query({ columns: '*' }).then((res) => {
-         console.log(res.length);
-      });
-   };*/
-
    const handleFileSelectionAndImportData = async () => {
       setIsUploadData(true);
       try {
@@ -300,28 +294,6 @@ export default function DownloadData({ navigation }) {
                   onPress={() => handleFileSelectionAndImportData()}
                   loading={isUploadData}
                />
-
-               {/*<Button
-                  title="Show data"
-                  icon={{
-                     name: 'file-upload',
-                     type: 'material',
-                     size: 24,
-                     color: Colors.white,
-                  }}
-                  titleStyle={{ fontSize: 16 }}
-                  buttonStyle={{
-                     borderRadius: 15,
-                     backgroundColor: Colors.greenAvg,
-                  }}
-                  containerStyle={{
-                     width: 250,
-                     marginVertical: 5,
-                  }}
-                  onPress={() => {
-                     showData();
-                  }}
-               />*/}
             </View>
          </View>
          <View>

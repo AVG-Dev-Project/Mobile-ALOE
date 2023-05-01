@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo, useState } from 'react';
 import {
    View,
    Text,
    Image,
    SafeAreaView,
+   ActivityIndicator,
    useWindowDimensions,
    StyleSheet,
    TouchableOpacity,
@@ -17,8 +18,7 @@ import HeaderGlobal from '_components/header/HeaderGlobal';
 import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
 import {
    nameStackNavigation as nameNav,
-   filterArticleToListByContenu,
-   fetchAllDataToLocalDatabase,
+   fetchPartialDataForUpdating,
 } from '_utils';
 import { styles } from './styles';
 import { Colors } from '_theme/Colors';
@@ -28,6 +28,9 @@ import {
    checkAndsendMailFromLocalDBToAPI,
    ArticleSchema,
    ContenuSchema,
+   fetchTypesToApi,
+   fetchTagsToApi,
+   fetchThematiquesToApi,
 } from '_utils';
 
 export default function Home({ navigation }) {
@@ -38,6 +41,7 @@ export default function Home({ navigation }) {
    const { t } = useTranslation();
    const allContenus = useSelector((selector) => selector.loi.contenus);
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
+   const [isFetchData, setIsFetchData] = useState(false);
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
@@ -52,10 +56,12 @@ export default function Home({ navigation }) {
       []
    );
 
-   const showData = () => {
-      return ContenuSchema.query({ columns: '*' }).then((res) => {
-         console.log(res.length);
-      });
+   const updatingPartialData = async () => {
+      await fetchTypesToApi();
+      await fetchTagsToApi();
+      await fetchThematiquesToApi();
+      fetchPartialDataForUpdating(dispatch);
+      setIsFetchData(false);
    };
 
    //all refs
@@ -172,12 +178,19 @@ export default function Home({ navigation }) {
                      </Text>
                      <Text>{t('continue_de_lire')} </Text>
                   </View>
-                  <Icon
-                     name={'autorenew'}
-                     color={Colors.white}
-                     size={38}
-                     onPress={() => showData()}
-                  />
+                  {isFetchData ? (
+                     <ActivityIndicator size="large" color={Colors.greenAvg} />
+                  ) : (
+                     <Icon
+                        name={'autorenew'}
+                        color={Colors.white}
+                        size={38}
+                        onPress={() => {
+                           setIsFetchData(true);
+                           updatingPartialData();
+                        }}
+                     />
+                  )}
                </View>
             </View>
 

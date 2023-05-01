@@ -36,6 +36,7 @@ import {
    fetchTagsToApi,
    fetchContenusToApi,
    fetchAllDataToLocalDatabase,
+   fetchPartialDataForUpdating,
 } from './helper/functionFetching';
 
 export {
@@ -69,5 +70,6 @@ export {
    fetchArticlesByContenuToApi,
    fetchThematiquesToApi,
    fetchAllDataToLocalDatabase,
+   fetchPartialDataForUpdating,
    filterArticleToListByContenu,
 };
