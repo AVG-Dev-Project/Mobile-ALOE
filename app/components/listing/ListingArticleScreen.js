@@ -99,17 +99,19 @@ export default function ListingArticle({ navigation, route }) {
          idOfTheContenuMother,
          currentPage + 1
       );
-      setCurrentPage(currentPage + 1);
-      setTotalPage(res.pages_count);
-      let oldAllArticles = [...articleList];
-      res.results.map((result) => {
-         if (!oldAllArticles.find((article) => article.id === result.id)) {
-            oldAllArticles.push(parseDataArticleLazyLoading(result));
-         }
-      });
-      dispatch(getAllArticles(oldAllArticles));
-      setArticleList(oldAllArticles);
-      setIsGetNextData(false);
+      if (res.results.length > 0) {
+         setCurrentPage(currentPage + 1);
+         setTotalPage(res.pages_count);
+         let oldAllArticles = [...articleList];
+         res.results.map((result) => {
+            if (!oldAllArticles.find((article) => article.id === result.id)) {
+               oldAllArticles.push(parseDataArticleLazyLoading(result));
+            }
+         });
+         dispatch(getAllArticles(oldAllArticles));
+         setArticleList(oldAllArticles);
+         setIsGetNextData(false);
+      }
    };
 
    //all effects

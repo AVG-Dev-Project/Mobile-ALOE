@@ -67,7 +67,9 @@ export const styles = StyleSheet.create({
       borderRadius: 52,
    },
    fab_button: {
+      backgroundColor: 'red',
       flexDirection: 'row',
+      justifyContent: 'space-around',
       paddingVertical: 5,
       flexGrow: 1,
    },

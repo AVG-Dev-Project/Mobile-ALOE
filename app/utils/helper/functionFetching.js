@@ -47,11 +47,13 @@ export const fetchArticlesByContenuToApi = async (contenuId, currentPage) => {
       contenuId,
       currentPage
    );
-   insertOrUpdateToDBFunc(
-      'database',
-      'article',
-      parseStructureDataForArticle(res.results)
-   );
+   if (res.results.length > 0) {
+      insertOrUpdateToDBFunc(
+         'database',
+         'article',
+         parseStructureDataForArticle(res.results)
+      );
+   }
    return res;
 };
 

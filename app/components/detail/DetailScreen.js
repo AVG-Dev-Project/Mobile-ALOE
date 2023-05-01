@@ -472,30 +472,26 @@ export default function Detail({ navigation, route }) {
                               />
                            )}
                         </ScrollView>
-                        <View style={styles.view_button_zoom}>
-                           <Button
-                              type="clear"
-                              size="xs"
-                              onPress={() =>
-                                 setFontSizeDynamic(fontSizeDynamic + 2)
-                              }
-                           >
-                              <Icon name="zoom-in" color={Colors.greenAvg} />
-                           </Button>
-                           <Button
-                              type="clear"
-                              size="xs"
-                              onPress={() =>
-                                 setFontSizeDynamic(fontSizeDynamic - 2)
-                              }
-                           >
-                              <Icon name="zoom-out" color={Colors.greenAvg} />
-                           </Button>
-                        </View>
                      </View>
                   </View>
                </View>
                <View style={styles.fab_button}>
+                  <View style={styles.view_button_zoom}>
+                     <Button
+                        type="clear"
+                        size="xs"
+                        onPress={() => setFontSizeDynamic(fontSizeDynamic + 2)}
+                     >
+                        <Icon name="zoom-in" color={Colors.greenAvg} />
+                     </Button>
+                     <Button
+                        type="clear"
+                        size="xs"
+                        onPress={() => setFontSizeDynamic(fontSizeDynamic - 2)}
+                     >
+                        <Icon name="zoom-out" color={Colors.greenAvg} />
+                     </Button>
+                  </View>
                   <View style={styles.view_content_fab_button}>
                      <FAB
                         visible={isFABshow}
