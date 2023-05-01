@@ -11,11 +11,6 @@ import {
    useWindowDimensions,
 } from 'react-native';
 import * as Speech from 'expo-speech';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, {
-   useAnimatedStyle,
-   useSharedValue,
-} from 'react-native-reanimated';
 import React, {
    useState,
    useEffect,
@@ -35,7 +30,7 @@ import { printToFileAsync } from 'expo-print';
 import bgImage from '_images/bg_loi.jpg';
 import { Colors } from '_theme/Colors';
 import { addFavoris } from '_utils/redux/actions/action_creators';
-import { filterArticleToListByContenu } from '_utils';
+import { filterArticleToListByContenu, parsingTags } from '_utils';
 
 export default function Detail({ navigation, route }) {
    const [status, requestPermission] = MediaLibrary.usePermissions();
@@ -631,17 +626,25 @@ export default function Detail({ navigation, route }) {
                      </Text>
                   </View>
 
-                  <View style={styles.view_one_item_in_bottomsheet}>
-                     <Text style={styles.label_info_article}>
-                        {langueActual === 'fr' ? 'Tags ' : 'Tagy '}{' '}
-                     </Text>
-                     <Text style={styles.value_info_article}>
-                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                        {langueActual === 'fr'
-                           ? 'Code pénal'
-                           : 'Kaody penaly' ?? 'Code pénal'}
-                     </Text>
-                  </View>
+                  {parsingTags(contenuMother[0].tag).length > 0 && (
+                     <View style={styles.view_one_item_in_bottomsheet}>
+                        <Text style={styles.label_info_article}>
+                           {langueActual === 'fr' ? 'Tags ' : 'Tagy '}{' '}
+                        </Text>
+                        <Text style={styles.value_info_article}>
+                           <Icon
+                              name={'star'}
+                              color={Colors.greenAvg}
+                              size={16}
+                           />{' '}
+                           {parsingTags(contenuMother[0].tag).map((tag) =>
+                              langueActual === 'fr'
+                                 ? tag.contenu_fr + ', '
+                                 : tag.contenu_mg + ', '
+                           )}
+                        </Text>
+                     </View>
+                  )}
                </View>
             </ScrollView>
          </BottomSheetModal>
