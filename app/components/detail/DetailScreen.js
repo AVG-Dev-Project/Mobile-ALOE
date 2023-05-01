@@ -164,18 +164,61 @@ export default function Detail({ navigation, route }) {
                <h1 style="text-align: center; color: ${Colors.greenAvg}">${
          langueActual === 'fr'
             ? contenuMother[0].type_nom_fr + ' n°'
-            : contenuMother[0].type_nom_mg ?? 'Votoantiny' + ' faha '
+            : contenuMother[0].type_nom_mg ??
+              contenuMother[0].type_nom_fr + ' n°'
       }
                ${contenuMother[0].numero}</h1>
-               <h2 style="text-align: center; color: ${
-                  Colors.greenAvg
-               }">Article n° ${oneArticle.numero}</h2>
-               <h3 style="text-align: center;">Titre : ${
+               <h3 style="text-align: left;">Date: <span style="font-weight: normal;">${
+                  contenuMother[0].date
+               }</span></h3>
+               <h3 style="text-align: left;">Numero: <span style="font-weight: normal;">${
+                  contenuMother[0].numero
+               }</span></h3>
+               <h3 style="text-align: left;">Type: <span style="font-weight: normal;">${
+                  langueActual === 'fr'
+                     ? contenuMother[0].type_nom_fr
+                     : contenuMother[0].type_nom_mg ??
+                       contenuMother[0].type_nom_fr
+               }</span></h3>
+               <h3 style="text-align: left;">Thematique: <span style="font-weight: normal;">${
+                  langueActual === 'fr'
+                     ? contenuMother[0].thematique_nom_fr
+                     : contenuMother[0].thematique_nom_mg ??
+                       contenuMother[0].thematique_nom_fr
+               }</span></h3>
+               <h3 style="text-align: left;">Objet: <span style="font-weight: normal;">${
+                  langueActual === 'fr'
+                     ? contenuMother[0].objet_contenu_fr ?? ' '
+                     : contenuMother[0].objet_contenu_mg ?? ' '
+               }</span></h3>
+               <h3 style="text-align: left;">Etat: <span style="font-weight: normal;">${
+                  langueActual === 'fr'
+                     ? contenuMother[0].etat_nom_fr ?? ' '
+                     : contenuMother[0].etat_nom_mg ?? ' '
+               }</span></h3>
+               <h3 style="text-align: left;">Organisme: <span style="font-weight: normal;">${
+                  langueActual === 'fr'
+                     ? contenuMother[0].organisme_nom_fr ?? ' '
+                     : contenuMother[0].organisme_nom_mg ?? ' '
+               }</span></h3>
+
+               <h3 style="text-align: left;">Titre : <span style="font-weight: normal;">${
                   langueActual === 'fr'
                      ? oneArticle.titre_fr
                      : oneArticle.titre_mg
-               }</h3>
-               <h3 style="text-decoration: underline">Contenu de l'article : </h3>
+               }</span></h3>
+               
+               <h4 style="text-align: left;">Tags: <span style="font-weight: normal;">${parsingTags(
+                  contenuMother[0].tag
+               ).map((tag) =>
+                  langueActual === 'fr'
+                     ? tag.contenu_fr + ', '
+                     : tag.contenu_mg + ', '
+               )}</span></h4>
+               
+               <h3 style="text-decoration: underline; color: ${
+                  Colors.greenAvg
+               }">Article n° ${oneArticle.numero}</h3>
                <p style="width: 90%">${
                   langueActual === 'fr'
                      ? oneArticle.contenu_fr?.split('________________')[0]
