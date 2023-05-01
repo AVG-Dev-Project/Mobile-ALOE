@@ -80,7 +80,7 @@ export default function Favoris({ navigation, route }) {
          >
             <View style={styles.view_render}>
                <Image
-                  source={require('_images/book_loi.jpg')}
+                  source={require('_images/abstract.jpg')}
                   style={{
                      width: width < 380 ? 100 : 140,
                      height: 170,
@@ -234,7 +234,7 @@ export default function Favoris({ navigation, route }) {
                         <View style={styles.content_in_landing_screen}>
                            <Image
                               style={styles.icon_in_content_landing}
-                              source={require('_images/book_loi.jpg')}
+                              source={require('_images/abstract_3.jpg')}
                            />
                            <View
                               style={{

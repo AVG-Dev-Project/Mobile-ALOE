@@ -52,7 +52,7 @@ export default function Information({ navigation }) {
          <View style={styles.view_container}>
             <View style={styles.view_head_information}>
                <Image
-                  source={require('_images/book_loi.jpg')}
+                  source={require('_images/avg_logo.jpeg')}
                   style={{
                      width: 60,
                      height: 60,

@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
       marginVertical: 8,
       display: 'flex',
       flexDirection: 'row',
-      height: 'auto'
+      height: 'auto',
    },
    head_content: {
       height: 45,
@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
       borderRadius: 62,
    },
    maskImageArticle: {
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: 'rgba(0, 0, 0, 0.2)',
       borderRadius: 18,
       height: 170,
       width: Dimensions.get('window').width < 380 ? 100 : 140,
