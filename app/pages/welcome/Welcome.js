@@ -80,13 +80,13 @@ export default function Welcome({ navigation }) {
          if (res === 'true') {
             //setIsAllDataAlsoUploaded(true);
             dispatch(checktatusData(true));
-         };
+         }
       });
       getDataFromLocalStorage('isAllDataDownloaded').then((res) => {
          if (res === 'true') {
             //setIsAllDataAlsoDownloaded(true);
             dispatch(checktatusData(true));
-         };
+         }
       });
    }, []);
 
@@ -192,7 +192,7 @@ export default function Welcome({ navigation }) {
                </View>
             )}*/}
 
-            {(isDataAvailable) ? (
+            {isDataAvailable ? (
                <View style={styles.view_button_arrondi}>
                   <Button
                      icon={{
@@ -239,15 +239,18 @@ export default function Welcome({ navigation }) {
             style={{
                display: 'flex',
                flexDirection: 'row',
+               alignItems: 'center',
+               justifyContent: 'center',
+               width: '100%',
             }}
          >
-            <Image
+            {/*<Image
                style={styles.logo_image}
                source={require('_images/avg_logo.jpeg')}
-            />
+         />*/}
             <Image
                style={styles.logo_image}
-               source={require('_images/usaid_logo.png')}
+               source={require('_images/usaid.png')}
             />
          </View>
       </View>
