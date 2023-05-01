@@ -25,14 +25,14 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
    },
    text_landing_screen: {
-      fontSize: 22,
+      fontSize: 20,
       color: Colors.white,
       fontWeight: 'bold',
    },
    content_in_landing_screen: {
       display: 'flex',
       flexDirection: 'row',
-      alignContent: 'center',
+      alignItems: 'center',
       justifyContent: 'space-around',
       backgroundColor: Colors.greenWhite,
       width: '90%',
@@ -58,7 +58,7 @@ export const styles = StyleSheet.create({
       height: 130,
       width: 230,
       borderWidth: 2,
-      borderColor: Colors.greenAvg
+      borderColor: Colors.greenAvg,
    },
 
    view_container_renderItemThematique: {
@@ -67,7 +67,7 @@ export const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      paddingHorizontal: 6
+      paddingHorizontal: 6,
    },
 
    view_carousel: {

@@ -6,6 +6,7 @@ import {
    SafeAreaView,
    ActivityIndicator,
    useWindowDimensions,
+   ToastAndroid,
    StyleSheet,
    TouchableOpacity,
 } from 'react-native';
@@ -61,6 +62,11 @@ export default function Home({ navigation }) {
       await fetchTagsToApi();
       await fetchThematiquesToApi();
       fetchPartialDataForUpdating(dispatch);
+      ToastAndroid.show(
+         langueActual === 'fr'
+            ? "Contenu de l'application mis à jour."
+            : "Votoatin'ny application nohavaozina."
+      );
       setIsFetchData(false);
    };
 
@@ -166,18 +172,9 @@ export default function Home({ navigation }) {
                      style={styles.icon_in_content_landing}
                      source={require('_images/book_loi.jpg')}
                   />
-                  <View
-                     style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'flex-start',
-                     }}
-                  >
-                     <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                        {t('allez_y')}
-                     </Text>
-                     <Text>{t('continue_de_lire')} </Text>
-                  </View>
+                  <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                     {t('renseignez')}
+                  </Text>
                   {isFetchData ? (
                      <ActivityIndicator size="large" color={Colors.greenAvg} />
                   ) : (
