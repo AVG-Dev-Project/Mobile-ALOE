@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
    },
    description_section: {
       paddingHorizontal: 24,
-      height: heightDevice < 700 ? heightDevice - 230 : heightDevice - 270,
+      height: heightDevice < 700 ? heightDevice - 230 : heightDevice - 230,
       backgroundColor: Colors.white,
    },
    view_round_button_detail_article: {
