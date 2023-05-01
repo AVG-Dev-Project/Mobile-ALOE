@@ -309,7 +309,7 @@ export default function ListingContenu({ navigation, route }) {
                }}
                ListFooterComponent={
                   isGetNextData && (
-                     <View>
+                     <View style={styles.activity_indicator}>
                         <ActivityIndicator
                            size="large"
                            color={Colors.greenAvg}

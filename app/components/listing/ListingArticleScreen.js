@@ -6,6 +6,7 @@ import {
    Image,
    TextInput,
    SafeAreaView,
+   ActivityIndicator,
    TouchableOpacity,
    ToastAndroid,
    useWindowDimensions,
@@ -69,6 +70,7 @@ export default function ListingArticle({ navigation, route }) {
       (selector) => selector.loi.favoris
    );
    const idOfTheContenuMother = route.params.idOfThisContenu;
+   const [isGetNextData, setIsGetNextData] = useState(false);
    const [articleList, setArticleList] = useState(
       filterArticleToListByContenu(idOfTheContenuMother, allArticles).map(
          (item) => {
@@ -81,6 +83,7 @@ export default function ListingArticle({ navigation, route }) {
    );
    const [valueForSearch, setValueForSearch] = useState('');
 
+   //all functions
    const handleToogleIsFavorite = (id) => {
       dispatch(addFavoris(id));
       // Mettre à jour la propriété isFavorite de l'article avec l'ID donné
@@ -106,6 +109,7 @@ export default function ListingArticle({ navigation, route }) {
       });
       dispatch(getAllArticles(oldAllArticles));
       setArticleList(oldAllArticles);
+      setIsGetNextData(false);
    };
 
    //all effects
@@ -120,6 +124,14 @@ export default function ListingArticle({ navigation, route }) {
             })
          );
       }, [allFavoriteIdFromStore])
+   );
+
+   useFocusEffect(
+      useCallback(() => {
+         if (articleList.length <= 0) {
+            getNextPageArticlesFromApi();
+         }
+      }, [articleList])
    );
 
    useEffect(() => {
@@ -373,6 +385,8 @@ export default function ListingArticle({ navigation, route }) {
                onEndReached={async () => {
                   if (isConnectedToInternet && isNetworkActive) {
                      if (currentPage < totalPage) {
+                        setIsGetNextData(true);
+                        console.log('gte next e :');
                         await getNextPageArticlesFromApi();
                      }
                   } else {
@@ -383,6 +397,16 @@ export default function ListingArticle({ navigation, route }) {
                      return;
                   }
                }}
+               ListFooterComponent={
+                  isGetNextData && (
+                     <View>
+                        <ActivityIndicator
+                           size="large"
+                           color={Colors.greenAvg}
+                        />
+                     </View>
+                  )
+               }
             />
          </SafeAreaView>
       </View>
