@@ -236,7 +236,8 @@ export default function ListingContenu({ navigation, route }) {
                            {parsingTags(item.tag).map((tag) =>
                               langueActual === 'fr'
                                  ? tag.contenu_fr + ', '
-                                 : tag.contenu_mg + ', '
+                                 : tag.contenu_mg ??
+                                   ', ' + tag.contenu_fr + ', '
                            )}
                         </Text>
                      </View>

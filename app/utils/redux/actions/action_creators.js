@@ -11,8 +11,9 @@ import {
    CURRENT_PAGE_CONTENU_FOR_API,
    CURRENT_PAGE_ARTICLE_FOR_API,
    TOTAL_PAGE_API,
+   GET_ALL_TAG,
    CHECK_STATUS_DATA,
-   UPDATE_LIST_TAG_CHOICE
+   UPDATE_LIST_TAG_CHOICE,
 } from './action_names';
 
 export const getStarted = () => ({
@@ -32,6 +33,11 @@ export const getAllArticles = (articles) => ({
 export const getAllThematiques = (thematiques) => ({
    type: GET_ALL_THEMATIQUES,
    payload: thematiques,
+});
+
+export const getAllTags = (tags) => ({
+   type: GET_ALL_TAG,
+   payload: tags,
 });
 
 export const getAllTypes = (types) => ({
@@ -76,10 +82,10 @@ export const getTotalPageApi = (array) => ({
 
 export const checktatusData = (status) => ({
    type: CHECK_STATUS_DATA,
-   payload: status
-})
+   payload: status,
+});
 
 export const updateTagsChoice = (tag) => ({
    type: UPDATE_LIST_TAG_CHOICE,
-   payload: tag
-})
+   payload: tag,
+});

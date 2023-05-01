@@ -9,6 +9,7 @@ import {
    getCurrentPageArticleForApi,
    getCurrentPageContenuForApi,
    getTotalPageApi,
+   getAllTags,
 } from '../actions/action_creators';
 
 import { storeFavoriteIdToLocalStorage } from '../../storage/asyncStorage';
@@ -22,6 +23,7 @@ const initialState = {
    currentPageContenu: 1,
    currentPageArticle: 1,
    tagsChoice: [],
+   tags: [],
    totalPage: {
       article: 0,
       contenu: 0,
@@ -47,6 +49,10 @@ export const loiReducer = (state = initialState, action) => {
       case getAllTypes().type:
          return produce(state, (draft) => {
             draft.types = action.payload;
+         });
+      case getAllTags().type:
+         return produce(state, (draft) => {
+            draft.tags = action.payload;
          });
       case getCurrentPageContenuForApi().type:
          return produce(state, (draft) => {
@@ -97,16 +103,16 @@ export const loiReducer = (state = initialState, action) => {
             return produce(state, (draft) => {
                draft.tagsChoice = [];
             });
-         }else{
+         } else {
             return produce(state, (draft) => {
                if (state.tagsChoice.includes(action.payload)) {
-                     draft.tagsChoice = draft.tagsChoice.filter(
-                        (tag) => tag !== action.payload
-                     );
-                  } else {
-                     draft.tagsChoice.push(action.payload);
-                  }
-            })
+                  draft.tagsChoice = draft.tagsChoice.filter(
+                     (tag) => tag !== action.payload
+                  );
+               } else {
+                  draft.tagsChoice.push(action.payload);
+               }
+            });
          }
 
       default:

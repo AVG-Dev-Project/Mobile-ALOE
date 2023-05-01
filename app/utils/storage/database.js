@@ -150,3 +150,25 @@ export class DoleanceSchema extends BaseModel {
       };
    }
 }
+
+export class TagSchema extends BaseModel {
+   constructor(obj) {
+      super(obj);
+   }
+
+   static get database() {
+      return async () => SQLite.openDatabase('database.db');
+   }
+
+   static get tableName() {
+      return 'tag';
+   }
+
+   static get columnMapping() {
+      return {
+         id: { type: types.INTEGER, primary_key: true }, // For while only supports id as primary key
+         contenu_fr: { type: types.TEXT, not_null: true },
+         contenu_mg: { type: types.TEXT },
+      };
+   }
+}

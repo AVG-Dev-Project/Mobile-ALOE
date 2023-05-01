@@ -23,7 +23,7 @@ import { styles } from './styles';
 import Voice from '@react-native-voice/voice';
 import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { useDispatch, useSelector } from 'react-redux';
-import { nameStackNavigation as nameNav } from '_utils';
+import { nameStackNavigation as nameNav, parsingTags } from '_utils';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import Lottie from 'lottie-react-native';
 import { Icon } from '@rneui/themed';
@@ -60,7 +60,7 @@ const LabelCustomBottomSheet = ({ text, filterBy, reference }) => {
 };
 
 //filter global include search bar / filter by thematique and type
-const filterGlobal = (array, theme, type, query) => {
+const filterGlobal = (array, theme, type, query, tagChoice) => {
    let res = theme === null && type === null && query === null ? [] : array;
 
    if (type === 'tout' || theme === 'tout') {
@@ -73,9 +73,16 @@ const filterGlobal = (array, theme, type, query) => {
       res = res.filter((_contenu) => _contenu.type_nom_fr === type);
    }
    if (query) {
-      res = res.filter((_loi) =>
-         _loi.objet_contenu_fr.toLowerCase().includes(query.toLowerCase())
+      res = res.filter((_contenu) =>
+         _contenu.objet_contenu_fr.toLowerCase().includes(query.toLowerCase())
       );
+   }
+   if (tagChoice.length > 0) {
+      res = res.filter((_contenu) => {
+         return parsingTags(_contenu.tag).some((tag) =>
+            tagChoice.includes(tag.contenu_fr)
+         );
+      });
    }
 
    return res;
@@ -105,24 +112,21 @@ export default function Recherche({ navigation, route }) {
    );
    const allTypes = useSelector((selector) => selector.loi.types);
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
+   const allTags = useSelector((selector) => selector.loi.tags);
    const urlApiAttachement = 'https://avg.e-commerce-mg.com';
-   const textChips = [
-      'Code pénal',
-      'Aires protégés',
-      'kdkdkkdkdkdkdkkdkdkdkdkdkdkkd',
-      'Tsy misy fotony',
-      'Farany ty less dada a',
-   ];
    const [chips, setChips] = useState(
-      textChips.map((item) => {
+      allTags.map((tag) => {
          return {
-            label: item,
+            label:
+               langueActual === 'fr'
+                  ? tag.contenu_fr
+                  : tag.contenu_mg ?? tag.contenu_fr,
             choice: false,
          };
       })
    );
    const allTagsFromStore = useSelector((selector) => selector.loi.tagsChoice);
-
+   console.log('allTags ', allTags);
    //data from navigation
    let typeFromParams = route.params ? route.params.type : null;
    let thematiqueFromParams = route.params ? route.params.thematique : null;
@@ -143,21 +147,27 @@ export default function Recherche({ navigation, route }) {
    }, [typeFromParams, thematiqueFromParams]);
 
    useEffect(() => {
-      if (typeChecked || thematiqueChecked || valueForSearch) {
+      if (
+         typeChecked ||
+         thematiqueChecked ||
+         valueForSearch ||
+         allTagsFromStore.length > 0
+      ) {
          setAllContenusFilter(
             filterGlobal(
                allContenus,
                thematiqueChecked,
                typeChecked,
-               valueForSearch
+               valueForSearch,
+               allTagsFromStore
             )
          );
       } else {
          setAllContenusFilter([]);
       }
-   }, [typeChecked, thematiqueChecked, valueForSearch]);
+   }, [typeChecked, thematiqueChecked, valueForSearch, allTagsFromStore]);
 
-   //necessary when we come back from home page i.e rehefa miverina amin'ilay page
+   //necessary when we quit the page i.e rehefa miala amin'ilay page
    useFocusEffect(
       useCallback(() => {
          return () => {
@@ -169,16 +179,25 @@ export default function Recherche({ navigation, route }) {
             setValueForSearch('');
             setTextFromValueForSearch('');
             dispatch(updateTagsChoice([]));
-            setChips((prevList) =>
-               prevList.map((item) => {
-                  return {
-                     label: item.label,
-                     choice: false,
-                  };
-               })
-            );
          };
       }, [])
+   );
+
+   //necessary when we come back
+   useFocusEffect(
+      useCallback(() => {
+         setChips(
+            allTags.map((tag) => {
+               return {
+                  label:
+                     langueActual === 'fr'
+                        ? tag.contenu_fr
+                        : tag.contenu_mg ?? tag.contenu_fr,
+                  choice: false,
+               };
+            })
+         );
+      }, [allTags, langueActual])
    );
 
    //Effect pour declancher la translation
@@ -297,126 +316,147 @@ export default function Recherche({ navigation, route }) {
    };
 
    //all render
-   const _renderItem = useCallback(({ item }) => {
-      return (
-         <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() => {
-               navigation.navigate(nameNav.listArticle, {
-                  titleScreen: `${
-                     langueActual === 'fr'
-                        ? item.type_nom_fr + ' n° '
-                        : item.type_nom_mg + ' faha '
-                  } ${item.numero}`,
-                  idOfThisContenu: item.id,
-               });
-            }}
-         >
-            <View style={styles.view_render}>
-               <View>
-                  <Text
-                     style={{
-                        fontWeight: 'bold',
-                        fontSize: 18,
-                     }}
-                  >
-                     {langueActual === 'fr'
-                        ? item.type_nom_fr + ' n°'
-                        : item.type_nom_mg ?? 'Votoantiny' + ' faha '}{' '}
-                     {item.numero}
-                  </Text>
+   const _renderItem = useCallback(
+      ({ item }) => {
+         return (
+            <TouchableOpacity
+               activeOpacity={0.9}
+               onPress={() => {
+                  navigation.navigate(nameNav.listArticle, {
+                     titleScreen: `${
+                        langueActual === 'fr'
+                           ? item.type_nom_fr + ' n° '
+                           : item.type_nom_mg + ' faha '
+                     } ${item.numero}`,
+                     idOfThisContenu: item.id,
+                  });
+               }}
+            >
+               <View style={styles.view_render}>
+                  <View>
+                     <Text
+                        style={{
+                           fontWeight: 'bold',
+                           fontSize: 18,
+                        }}
+                     >
+                        {langueActual === 'fr'
+                           ? item.type_nom_fr + ' n°'
+                           : item.type_nom_mg ?? 'Votoantiny' + ' faha '}{' '}
+                        {item.numero}
+                     </Text>
+                     <Text
+                        style={{
+                           fontSize:
+                              Dimensions.get('window').height < 700 ? 10 : 12,
+                           textTransform: 'lowercase',
+                        }}
+                     >
+                        {langueActual === 'fr'
+                           ? 'Publié le : '
+                           : "Nivoaka tamin'ny : "}
+                        {item.date?.substring(0, 10)}
+                     </Text>
+                  </View>
                   <Text
                      style={{
                         fontSize:
-                           Dimensions.get('window').height < 700 ? 10 : 12,
-                        textTransform: 'lowercase',
+                           Dimensions.get('window').height < 700 ? 14 : 16,
+                        flex: 2,
+                        marginBottom: 18,
                      }}
+                     numberOfLines={3}
                   >
                      {langueActual === 'fr'
-                        ? 'Publié le : '
-                        : "Nivoaka tamin'ny : "}
-                     {item.date?.substring(0, 10)}
+                        ? item.objet_contenu_fr
+                        : item.objet_contenu_mg ?? item.objet_contenu_fr}{' '}
                   </Text>
-               </View>
-               <Text
-                  style={{
-                     fontSize: Dimensions.get('window').height < 700 ? 14 : 16,
-                     flex: 2,
-                     marginBottom: 18,
-                  }}
-                  numberOfLines={3}
-               >
-                  {langueActual === 'fr'
-                     ? item.objet_contenu_fr
-                     : item.objet_contenu_mg ?? item.objet_contenu_fr}{' '}
-               </Text>
-               <View
-                  style={{
-                     display: 'flex',
-                     flexDirection: 'column',
-                  }}
-               >
-                  <Text style={{ textDecorationLine: 'underline' }}>
-                     Thématique et Type
-                  </Text>
-                  <Text
-                     style={{
-                        fontSize: 14,
-                     }}
-                     numberOfLines={2}
-                  >
-                     *{' '}
-                     {langueActual === 'fr'
-                        ? item.thematique_nom_fr
-                        : item.thematique_nom_mg ?? item.thematique_nom_fr}
-                  </Text>
-                  <Text
-                     style={{
-                        fontSize: 14,
-                     }}
-                     numberOfLines={2}
-                  >
-                     *{' '}
-                     {langueActual === 'fr'
-                        ? item.type_nom_fr
-                        : item.type_nom_mg ?? item.type_nom_fr}
-                  </Text>
-
-                  <Text style={{ textDecorationLine: 'underline' }}>Tags</Text>
-                  <Text numberOfLines={2}>* Code pénale, aires protégés</Text>
-               </View>
-               <View>
                   <View
                      style={{
                         display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'flex-end',
+                        flexDirection: 'column',
                      }}
                   >
-                     <TouchableOpacity
-                        activeOpacity={0.8}
-                        onPress={() => {
-                           ToastAndroid.show(
-                              langueActual === 'fr'
-                                 ? 'Télechargement en cours...'
-                                 : 'Andalam-pangalana ...',
-                              ToastAndroid.SHORT
-                           );
-                           downloadPdfFile(item, item.attachement?.slice(21));
+                     <Text style={{ textDecorationLine: 'underline' }}>
+                        Thématique et Type
+                     </Text>
+                     <Text
+                        style={{
+                           fontSize: 14,
+                        }}
+                        numberOfLines={2}
+                     >
+                        *{' '}
+                        {langueActual === 'fr'
+                           ? item.thematique_nom_fr
+                           : item.thematique_nom_mg ?? item.thematique_nom_fr}
+                     </Text>
+                     <Text
+                        style={{
+                           fontSize: 14,
+                        }}
+                        numberOfLines={2}
+                     >
+                        *{' '}
+                        {langueActual === 'fr'
+                           ? item.type_nom_fr
+                           : item.type_nom_mg ?? item.type_nom_fr}
+                     </Text>
+
+                     {parsingTags(item.tag).length > 0 && (
+                        <View>
+                           <Text style={{ textDecorationLine: 'underline' }}>
+                              Tags
+                           </Text>
+                           <Text numberOfLines={2}>
+                              *{' '}
+                              {parsingTags(item.tag).map((tag) =>
+                                 langueActual === 'fr'
+                                    ? tag.contenu_fr + ', '
+                                    : tag.contenu_mg ??
+                                      ', ' + tag.contenu_fr + ', '
+                              )}
+                           </Text>
+                        </View>
+                     )}
+                  </View>
+                  <View>
+                     <View
+                        style={{
+                           display: 'flex',
+                           flexDirection: 'row',
+                           justifyContent: 'flex-end',
                         }}
                      >
-                        <Icon
-                           name={'file-download'}
-                           color={Colors.greenAvg}
-                           size={30}
-                        />
-                     </TouchableOpacity>
+                        <TouchableOpacity
+                           activeOpacity={0.8}
+                           onPress={() => {
+                              ToastAndroid.show(
+                                 langueActual === 'fr'
+                                    ? 'Télechargement en cours...'
+                                    : 'Andalam-pangalana ...',
+                                 ToastAndroid.SHORT
+                              );
+                              downloadPdfFile(
+                                 item,
+                                 item.attachement?.slice(21)
+                              );
+                           }}
+                        >
+                           <Icon
+                              name={'file-download'}
+                              color={Colors.greenAvg}
+                              size={30}
+                           />
+                        </TouchableOpacity>
+                     </View>
                   </View>
                </View>
-            </View>
-         </TouchableOpacity>
-      );
-   }, []);
+            </TouchableOpacity>
+         );
+      },
+      [langueActual]
+   );
 
    //tags
    const _renderItemChips = useCallback(({ item }) => {

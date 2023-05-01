@@ -7,6 +7,7 @@ import {
    getAllArticles,
    getAllThematiques,
    getAllTypes,
+   getAllTags,
    getAllContenus,
    getCurrentPageContenuForApi,
    getCurrentPageArticleForApi,
@@ -18,12 +19,17 @@ import {
    ContenuSchema,
    TypeSchema,
    ThematiqueSchema,
+   TagSchema,
 } from '_utils/storage/database';
-import { storeDataToLocalStorage } from '_utils/storage/asyncStorage';
 
 export const fetchThematiquesToApi = async () => {
    let results = await LoiService.getThematiqueFromServ();
    return insertOrUpdateToDBFunc('database', 'thematique', results);
+};
+
+export const fetchTagsToApi = async () => {
+   let results = await LoiService.getTagFromServ();
+   return insertOrUpdateToDBFunc('database', 'tag', results);
 };
 
 export const fetchContenusToApi = async (currentPage, dispatcher) => {
@@ -70,7 +76,7 @@ export const fetchTypesToApi = async () => {
 //offline
 export const fetchAllDataToLocalDatabase = (dispatcher) => {
    //article
-   ArticleSchema.query({ columns: '*' }).then((results) => {
+   ArticleSchema.query({ columns: '*', order: 'id ASC' }).then((results) => {
       dispatcher(getAllArticles(results));
    });
    //contenu
@@ -84,5 +90,8 @@ export const fetchAllDataToLocalDatabase = (dispatcher) => {
    //type
    TypeSchema.query({ columns: '*' }).then((results) => {
       dispatcher(getAllTypes(results));
+   });
+   TagSchema.query({ columns: '*' }).then((results) => {
+      dispatcher(getAllTags(results));
    });
 };

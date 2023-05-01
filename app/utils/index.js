@@ -15,6 +15,7 @@ import {
    TypeSchema,
    ThematiqueSchema,
    DoleanceSchema,
+   TagSchema,
 } from './storage/database';
 import { insertOrUpdateToDBFunc } from './storage/querySqlite';
 import {
@@ -32,6 +33,7 @@ import {
    fetchArticlesToApi,
    fetchArticlesByContenuToApi,
    fetchThematiquesToApi,
+   fetchTagsToApi,
    fetchContenusToApi,
    fetchAllDataToLocalDatabase,
 } from './helper/functionFetching';
@@ -52,12 +54,14 @@ export {
    TypeSchema,
    ThematiqueSchema,
    DoleanceSchema,
+   TagSchema,
    insertOrUpdateToDBFunc,
    parseStructureDataForArticle,
    parseStructureDataForContenu,
    checkAndsendMailFromLocalDBToAPI,
    parsingTags,
    fetchTypesToApi,
+   fetchTagsToApi,
    parseDataArticleLazyLoading,
    parseDataContenuLazyLoading,
    fetchContenusToApi,

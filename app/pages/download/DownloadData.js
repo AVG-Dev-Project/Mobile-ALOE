@@ -32,6 +32,7 @@ import {
    fetchTypesToApi,
    fetchArticlesToApi,
    fetchContenusToApi,
+   fetchTagsToApi,
    fetchThematiquesToApi,
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
@@ -76,6 +77,7 @@ export default function DownloadData({ navigation }) {
       await fetchContenusToApi(currentPageContenuApi, dispatch);
       await fetchArticlesToApi(currentPageArticleApi, dispatch);
       await fetchThematiquesToApi();
+      await fetchTagsToApi();
       await fetchTypesToApi();
       setIsFetchData(false);
       storeDataToLocalStorage('isAllDataDownloaded', 'true');
@@ -180,21 +182,23 @@ export default function DownloadData({ navigation }) {
 
    useEffect(() => {
       getDataFromLocalStorage('isAllDataImported').then((res) => {
-         if (res === 'true'){
-             //setIsAllDataAlsoUploaded(true);
-             dispatch(checktatusData(true));
-         };
+         if (res === 'true') {
+            //setIsAllDataAlsoUploaded(true);
+            dispatch(checktatusData(true));
+         }
       });
       getDataFromLocalStorage('isAllDataDownloaded').then((res) => {
-         if (res === 'true'){
-             //setIsAllDataAlsoDownloaded(true);
-             dispatch(checktatusData(true));
-         };
+         if (res === 'true') {
+            //setIsAllDataAlsoDownloaded(true);
+            dispatch(checktatusData(true));
+         }
       });
    }, [isUploadData, isFetchData]);
 
    useEffect(() => {
-      if (/*isAllDataAlsoDownloaded || isAllDataAlsoUploaded*/isDataAvailable) {
+      if (
+         /*isAllDataAlsoDownloaded || isAllDataAlsoUploaded*/ isDataAvailable
+      ) {
          return setButtonStartDisabled(false);
       }
    }, [
