@@ -546,7 +546,7 @@ export default function Detail({ navigation, route }) {
                      visible={!isFABshow}
                      onPress={() => setIsFABshow(!isFABshow)}
                      placement="right"
-                     icon={{ name: 'add', color: 'white' }}
+                     icon={{ name: 'menu', color: 'white' }}
                      color={Colors.greenAvg}
                   />
                </View>
