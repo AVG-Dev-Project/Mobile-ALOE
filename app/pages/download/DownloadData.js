@@ -74,8 +74,8 @@ export default function DownloadData({ navigation }) {
    //all functions
    // functions selon disponibilité de isUserNetworkActive 1 pour démarrer tous les fonction fetch depuis API 2 pour importer les données depuis le fichier
    const getOnlineDatas = async () => {
-      await fetchContenusToApi(currentPageContenuApi, dispatch);
-      await fetchArticlesToApi(currentPageArticleApi, dispatch);
+      await fetchContenusToApi(currentPageContenuApi);
+      await fetchArticlesToApi(currentPageArticleApi);
       await fetchThematiquesToApi();
       await fetchTagsToApi();
       await fetchTypesToApi();

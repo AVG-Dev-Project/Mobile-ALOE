@@ -32,10 +32,8 @@ export const fetchTagsToApi = async () => {
    return insertOrUpdateToDBFunc('database', 'tag', results);
 };
 
-export const fetchContenusToApi = async (currentPage, dispatcher) => {
+export const fetchContenusToApi = async (currentPage) => {
    let res = await LoiService.getContenusFromServ(currentPage);
-   dispatcher(getCurrentPageContenuForApi(currentPage + 1));
-   dispatcher(getTotalPageApi(['contenu', res.pages_count ?? 0]));
    insertOrUpdateToDBFunc(
       'database',
       'contenu',
@@ -57,10 +55,8 @@ export const fetchArticlesByContenuToApi = async (contenuId, currentPage) => {
    return res;
 };
 
-export const fetchArticlesToApi = async (currentPage, dispatcher) => {
+export const fetchArticlesToApi = async (currentPage) => {
    let res = await LoiService.getArticlesFromServ(currentPage);
-   dispatcher(getCurrentPageArticleForApi(currentPage + 1));
-   dispatcher(getTotalPageApi(['article', res.pages_count]));
    return insertOrUpdateToDBFunc(
       'database',
       'article',

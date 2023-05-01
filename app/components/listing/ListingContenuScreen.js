@@ -7,6 +7,7 @@ import {
    Dimensions,
    SafeAreaView,
    ToastAndroid,
+   ActivityIndicator,
    useWindowDimensions,
    TouchableOpacity,
 } from 'react-native';
@@ -49,6 +50,7 @@ export default function ListingContenu({ navigation, route }) {
       (selector) => selector.loi.contenus
    );
    const urlApiAttachement = 'https://avg.e-commerce-mg.com';
+   const [isGetNextData, setIsGetNextData] = useState(false);
    const [contenuList, setContenuList] = useState(
       allContenusFromStore.map((item) => {
          return {
@@ -60,7 +62,6 @@ export default function ListingContenu({ navigation, route }) {
    const [totalPage, setTotalPage] = useState(1);
    const [currentPage, setCurrentPage] = useState(0);
 
-   console.log(currentPage + ' et total : ' + totalPage);
    //all functions
    const downloadPdfFile = async (contenu, linkPdf) => {
       try {
@@ -127,7 +128,7 @@ export default function ListingContenu({ navigation, route }) {
    };
 
    const getNextPageContenusFromApi = async () => {
-      let res = await fetchContenusToApi(currentPage + 1, dispatch);
+      let res = await fetchContenusToApi(currentPage + 1);
       setCurrentPage(currentPage + 1);
       setTotalPage(res.pages_count);
       let oldAllContenus = [...contenuList];
@@ -138,6 +139,7 @@ export default function ListingContenu({ navigation, route }) {
       });
       dispatch(getAllContenus(oldAllContenus));
       setContenuList(oldAllContenus);
+      setIsGetNextData(false);
    };
 
    //all logics
@@ -297,13 +299,24 @@ export default function ListingContenu({ navigation, route }) {
                onEndReachedThreshold={0.5}
                onEndReached={async () => {
                   if (isConnectedToInternet && isNetworkActive) {
-                     if (totalPage < totalPage) {
+                     if (currentPage < totalPage) {
+                        setIsGetNextData(true);
                         await getNextPageContenusFromApi();
                      }
                   } else {
                      return;
                   }
                }}
+               ListFooterComponent={
+                  isGetNextData && (
+                     <View>
+                        <ActivityIndicator
+                           size="large"
+                           color={Colors.greenAvg}
+                        />
+                     </View>
+                  )
+               }
             />
          </SafeAreaView>
       </View>
