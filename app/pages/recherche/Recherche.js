@@ -208,7 +208,6 @@ export default function Recherche({ navigation, route }) {
          Voice.destroy().then(Voice.removeAllListeners);
       };
    }, []);
-   console.log(offset);
 
    //all function
    const scrollingFlatlist = (e) => {
