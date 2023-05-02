@@ -11,3 +11,4 @@ export const IS_CONNECTED_TO_INTERNET =
 export const CHECK_STATUS_DATA = 'fonctionnality/check_status_data';
 export const UPDATE_LIST_TAG_CHOICE = 'loi/update_list_tag_choice';
 export const GET_ALL_TAG = 'loi/get_all_tag';
+export const HIDE_SHOW_TAB_BAR = 'fonctionnality/hide_show_tab_bar';

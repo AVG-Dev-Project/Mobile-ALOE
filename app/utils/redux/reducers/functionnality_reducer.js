@@ -4,7 +4,8 @@ import {
    changeLanguage,
    isNetworkActive,
    isConnectedToInternet,
-   checktatusData
+   checktatusData,
+   hideShowTabBar,
 } from '../actions/action_creators';
 
 const initialState = {
@@ -12,7 +13,8 @@ const initialState = {
    langue: 'fr',
    isNetworkActive: null,
    isConnectedToInternet: null,
-   isDataAvailable: false
+   isDataAvailable: false,
+   isTabBarHide: false,
 };
 
 export const functionnalityReducer = (state = initialState, action) => {
@@ -33,10 +35,14 @@ export const functionnalityReducer = (state = initialState, action) => {
          return produce(state, (draft) => {
             draft.isConnectedToInternet = action.payload;
          });
-      case checktatusData().type: 
+      case checktatusData().type:
          return produce(state, (draft) => {
             draft.isDataAvailable = action.payload;
-         })
+         });
+      case hideShowTabBar().type:
+         return produce(state, (draft) => {
+            draft.isTabBarHide = action.payload;
+         });
       default:
          return state;
    }

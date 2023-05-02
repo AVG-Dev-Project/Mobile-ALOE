@@ -13,6 +13,10 @@ export default function BottomBarTabs() {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const isTabBarHide = useSelector(
+      (selector) => selector.fonctionnality.isTabBarHide
+   );
+
    return (
       <Tab.Navigator
          initialRouteName="Home"
@@ -76,6 +80,10 @@ export default function BottomBarTabs() {
                      size={26}
                   />
                ),
+               tabBarStyle: [
+                  styles.tabBarStyles,
+                  { display: isTabBarHide ? 'none' : 'flex' },
+               ],
             }}
          />
          <Tab.Screen

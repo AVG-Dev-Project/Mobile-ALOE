@@ -5,9 +5,8 @@ const widthDevice = Dimensions.get('window').width;
 const heightDevice = Dimensions.get('window').height;
 export const styles = StyleSheet.create({
    view_container_search: {
-      flex: 1,
       marginTop: 8,
-      paddingBottom: heightDevice < 800 ? 310 : 290,
+      paddingBottom: 0,
       paddingHorizontal: 15,
       backgroundColor: Colors.background,
    },
@@ -78,6 +77,9 @@ export const styles = StyleSheet.create({
       shadowOpacity: 0.21,
       shadowRadius: 7.68,
       elevation: 7,
+   },
+   view_flatlist: {
+      height: heightDevice < 700 ? heightDevice - 290 : 'auto',
    },
    view_bottom_sheet: {
       backgroundColor: '#f2f2f2',

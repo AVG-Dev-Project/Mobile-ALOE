@@ -4,7 +4,6 @@ import {
    FlatList,
    SafeAreaView,
    useWindowDimensions,
-   TextInput,
    ScrollView,
    TouchableOpacity,
    ToastAndroid,
@@ -24,10 +23,12 @@ import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { useDispatch, useSelector } from 'react-redux';
 import { nameStackNavigation as nameNav, parsingTags } from '_utils';
 import ReactNativeBlobUtil from 'react-native-blob-util';
-import Lottie from 'lottie-react-native';
-import { Icon } from '@rneui/themed';
+import { Icon, Input } from '@rneui/themed';
 import { Colors } from '_theme/Colors';
-import { updateTagsChoice } from '_utils/redux/actions/action_creators';
+import {
+   updateTagsChoice,
+   hideShowTabBar,
+} from '_utils/redux/actions/action_creators';
 
 //component custom
 const LabelCustomBottomSheet = ({ text, filterBy, reference }) => {
@@ -90,7 +91,6 @@ const filterGlobal = (array, theme, type, query, tagChoice) => {
 export default function Recherche({ navigation, route }) {
    //all data
    const dispatch = useDispatch();
-   const animation = useRef(null);
    const [valueForSearch, setValueForSearch] = useState('');
    const [textFromInputSearch, setTextFromValueForSearch] = useState('');
    const { width, height } = useWindowDimensions();
@@ -131,6 +131,7 @@ export default function Recherche({ navigation, route }) {
    const [typeChecked, setTypeChecked] = useState(null);
    const [thematiqueChecked, setThematiqueChecked] = useState(null);
    let [startedSpeech, setStartedSpeech] = useState(false);
+   const [offset, setOffset] = useState(0);
 
    //all refs
    const bottomSheetTypeRef = useRef(null);
@@ -207,8 +208,20 @@ export default function Recherche({ navigation, route }) {
          Voice.destroy().then(Voice.removeAllListeners);
       };
    }, []);
+   console.log(offset);
 
    //all function
+   const scrollingFlatlist = (e) => {
+      const currentOffset = e.nativeEvent.contentOffset.y;
+
+      if (offset > currentOffset) {
+         dispatch(hideShowTabBar(false));
+      } else {
+         dispatch(hideShowTabBar(true));
+      }
+      setOffset(currentOffset);
+   };
+
    const onHandleSearchByValue = (text) => {
       setValueForSearch(text);
    };
@@ -223,7 +236,6 @@ export default function Recherche({ navigation, route }) {
    const openBottomSheet = (ref) => {
       return ref.current?.present();
    };
-
    const downloadPdfFile = async (contenu, linkPdf) => {
       try {
          if (isUserNetworkActive && isUserConnectedToInternet) {
@@ -502,173 +514,159 @@ export default function Recherche({ navigation, route }) {
 
    return (
       <View style={styles.view_container_search}>
-         <View>
-            <View style={styles.head_content}>
-               <View
-                  style={{
-                     display: 'flex',
-                     flexDirection: 'column',
-                     alignItems: 'center',
-                  }}
-               >
-                  <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
-                     Recherche
-                  </Text>
-               </View>
-
-               <View style={styles.view_for_input_search}>
-                  <TextInput
-                     style={styles.input}
-                     keyboardType="default"
-                     placeholder={
-                        langueActual === 'fr'
-                           ? 'Entrer le mot de recherche ...'
-                           : 'Ampidiro ny teny hotadiavina...'
-                     }
-                     value={textFromInputSearch}
-                     onChangeText={(text) => {
-                        onHandleSearchByValue(text);
-                        setTextFromValueForSearch(text);
-                     }}
-                  />
-                  {!startedSpeech ? (
-                     <TouchableOpacity
-                        activeOpacity={0.7}
-                        onPress={() => {
-                           if (
-                              isUserNetworkActive &&
-                              isUserConnectedToInternet
-                           ) {
-                              setStartedSpeech(true);
-                              startSpeechToText();
-                           } else {
-                              ToastAndroid.show(
-                                 `La recherche a besoin d'une connexion internet stable !!!`,
-                                 ToastAndroid.LONG
-                              );
-                           }
-                        }}
-                     >
-                        <Text style={styles.boutton_search}>
-                           <Icon
-                              name={'mic'}
-                              color={Colors.greenAvg}
-                              size={30}
-                           />
-                        </Text>
-                     </TouchableOpacity>
-                  ) : undefined}
-                  {startedSpeech ? (
-                     <TouchableOpacity
-                        activeOpacity={0.7}
-                        onPress={() => {
-                           setStartedSpeech(false);
-                           stopSpeechToText();
-                        }}
-                     >
-                        <Lottie
-                           autoPlay
-                           ref={animation}
-                           style={styles.boutton_search_on}
-                           source={require('_images/vocal_on.json')}
-                        />
-                     </TouchableOpacity>
-                  ) : undefined}
-               </View>
-
-               <View style={styles.view_for_filtre}>
-                  <View style={styles.view_in_filtre}>
-                     <View>
-                        <Text
-                           style={{
-                              textAlign: 'center',
-                              fontWeight: 'bold',
-                              fontSize: 18,
-                              marginTop: 10,
-                           }}
-                        >
-                           {langueActual === 'fr' ? 'Type' : 'Karazana'}
-                        </Text>
-                        <Text>
-                           {typeChecked ? typeChecked?.substring(0, 15) : ''}
-                        </Text>
-                     </View>
-                     <TouchableOpacity
-                        activeOpacity={0.8}
-                        onPress={() => openBottomSheet(bottomSheetTypeRef)}
-                     >
-                        <Icon
-                           name={'filter-list'}
-                           color={Colors.greenAvg}
-                           size={34}
-                        />
-                     </TouchableOpacity>
-                  </View>
-                  <View style={styles.view_in_filtre}>
-                     <TouchableOpacity
-                        activeOpacity={0.8}
-                        onPress={() =>
-                           openBottomSheet(bottomSheetThematiqueRef)
-                        }
-                     >
-                        <Icon
-                           name={'filter-list'}
-                           color={Colors.greenAvg}
-                           size={34}
-                        />
-                     </TouchableOpacity>
-                     <View>
-                        <Text
-                           style={{
-                              textAlign: 'center',
-                              fontWeight: 'bold',
-                              fontSize: 18,
-                              marginTop: 10,
-                           }}
-                        >
-                           {langueActual === 'fr' ? 'Théme' : 'Lohahevitra'}
-                        </Text>
-                        <Text>
-                           {thematiqueChecked
-                              ? thematiqueChecked?.length > 10
-                                 ? thematiqueChecked?.substring(0, 10) + '...'
-                                 : thematiqueChecked
-                              : ''}
-                        </Text>
-                     </View>
-                  </View>
-               </View>
+         <View style={styles.head_content}>
+            <View
+               style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+               }}
+            >
+               <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
+                  Recherche
+               </Text>
             </View>
-            <View style={styles.view_carousel}>
-               <Text style={styles.labelTags}>Tags : </Text>
-               <FlatList
-                  data={chips}
-                  horizontal={true}
-                  extraData={chips}
-                  key={'_'}
-                  keyExtractor={_idKeyExtractorChip}
-                  showsHorizontalScrollIndicator={false}
-                  renderItem={_renderItemChips}
-                  removeClippedSubviews={true}
-                  getItemLayout={(data, index) => ({
-                     length: data.length,
-                     offset: data.length * index,
-                     index,
-                  })}
+
+            <View style={styles.view_for_input_search}>
+               <Input
+                  //style={styles.input}
+                  //keyboardType="default"
+                  placeholder={
+                     langueActual === 'fr'
+                        ? 'Entrer le mot de recherche ...'
+                        : 'Ampidiro ny teny hotadiavina...'
+                  }
+                  value={textFromInputSearch}
+                  onChangeText={(text) => {
+                     onHandleSearchByValue(text);
+                     setTextFromValueForSearch(text);
+                  }}
+                  rightIcon={
+                     !startedSpeech ? (
+                        <Icon
+                           name={'mic'}
+                           color={Colors.greenAvg}
+                           size={30}
+                           onPress={() => {
+                              if (
+                                 isUserNetworkActive &&
+                                 isUserConnectedToInternet
+                              ) {
+                                 setStartedSpeech(true);
+                                 startSpeechToText();
+                              } else {
+                                 ToastAndroid.show(
+                                    `La recherche a besoin d'une connexion internet stable !!!`,
+                                    ToastAndroid.LONG
+                                 );
+                              }
+                           }}
+                        />
+                     ) : (
+                        <Icon
+                           name={'more-horiz'}
+                           color={Colors.greenAvg}
+                           size={30}
+                           onPress={() => {
+                              setStartedSpeech(false);
+                              stopSpeechToText();
+                           }}
+                        />
+                     )
+                  }
                />
             </View>
-            <View style={styles.view_for_result}>
-               {allContenusFilter?.length > 0 && (
-                  <Text style={{ textAlign: 'center' }}>
-                     {allContenusFilter?.length}{' '}
-                     {langueActual === 'fr'
-                        ? ' résultats trouvés'
-                        : ' ny valiny hita'}
-                  </Text>
-               )}
+
+            <View style={styles.view_for_filtre}>
+               <View style={styles.view_in_filtre}>
+                  <View>
+                     <Text
+                        style={{
+                           textAlign: 'center',
+                           fontWeight: 'bold',
+                           fontSize: 18,
+                           marginTop: 10,
+                        }}
+                     >
+                        {langueActual === 'fr' ? 'Type' : 'Karazana'}
+                     </Text>
+                     <Text>
+                        {typeChecked ? typeChecked?.substring(0, 15) : ''}
+                     </Text>
+                  </View>
+                  <TouchableOpacity
+                     activeOpacity={0.8}
+                     onPress={() => openBottomSheet(bottomSheetTypeRef)}
+                  >
+                     <Icon
+                        name={'filter-list'}
+                        color={Colors.greenAvg}
+                        size={34}
+                     />
+                  </TouchableOpacity>
+               </View>
+               <View style={styles.view_in_filtre}>
+                  <TouchableOpacity
+                     activeOpacity={0.8}
+                     onPress={() => openBottomSheet(bottomSheetThematiqueRef)}
+                  >
+                     <Icon
+                        name={'filter-list'}
+                        color={Colors.greenAvg}
+                        size={34}
+                     />
+                  </TouchableOpacity>
+                  <View>
+                     <Text
+                        style={{
+                           textAlign: 'center',
+                           fontWeight: 'bold',
+                           fontSize: 18,
+                           marginTop: 10,
+                        }}
+                     >
+                        {langueActual === 'fr' ? 'Théme' : 'Lohahevitra'}
+                     </Text>
+                     <Text>
+                        {thematiqueChecked
+                           ? thematiqueChecked?.length > 10
+                              ? thematiqueChecked?.substring(0, 10) + '...'
+                              : thematiqueChecked
+                           : ''}
+                     </Text>
+                  </View>
+               </View>
             </View>
          </View>
-         <SafeAreaView>
+         <View style={styles.view_carousel}>
+            <Text style={styles.labelTags}>Tags : </Text>
+            <FlatList
+               data={chips}
+               horizontal={true}
+               extraData={chips}
+               key={'_'}
+               keyExtractor={_idKeyExtractorChip}
+               showsHorizontalScrollIndicator={false}
+               renderItem={_renderItemChips}
+               removeClippedSubviews={true}
+               getItemLayout={(data, index) => ({
+                  length: data.length,
+                  offset: data.length * index,
+                  index,
+               })}
+            />
+         </View>
+         <View style={styles.view_for_result}>
+            {allContenusFilter?.length > 0 && (
+               <Text style={{ textAlign: 'center' }}>
+                  {allContenusFilter?.length}{' '}
+                  {langueActual === 'fr'
+                     ? ' résultats trouvés'
+                     : ' ny valiny hita'}
+               </Text>
+            )}
+         </View>
+         <SafeAreaView style={styles.view_flatlist}>
             <FlatList
                data={allContenusFilter}
                ListEmptyComponent={
@@ -697,6 +695,7 @@ export default function Recherche({ navigation, route }) {
                }
                key={'_'}
                keyExtractor={_idKeyExtractor}
+               onScroll={scrollingFlatlist}
                renderItem={_renderItem}
                removeClippedSubviews={true}
                getItemLayout={(data, index) => ({

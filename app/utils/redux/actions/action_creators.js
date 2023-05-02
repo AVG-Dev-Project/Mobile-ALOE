@@ -11,6 +11,7 @@ import {
    GET_ALL_TAG,
    CHECK_STATUS_DATA,
    UPDATE_LIST_TAG_CHOICE,
+   HIDE_SHOW_TAB_BAR,
 } from './action_names';
 
 export const getStarted = () => ({
@@ -75,4 +76,9 @@ export const checktatusData = (status) => ({
 export const updateTagsChoice = (tag) => ({
    type: UPDATE_LIST_TAG_CHOICE,
    payload: tag,
+});
+
+export const hideShowTabBar = (value) => ({
+   type: HIDE_SHOW_TAB_BAR,
+   payload: value,
 });
