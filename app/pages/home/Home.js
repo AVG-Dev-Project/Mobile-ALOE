@@ -65,7 +65,8 @@ export default function Home({ navigation }) {
       ToastAndroid.show(
          langueActual === 'fr'
             ? "Contenu de l'application mis à jour."
-            : "Votoatin'ny application nohavaozina."
+            : "Votoatin'ny application nohavaozina.",
+         ToastAndroid.SHORT
       );
       setIsFetchData(false);
    };
