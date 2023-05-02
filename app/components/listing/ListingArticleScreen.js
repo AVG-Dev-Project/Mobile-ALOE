@@ -179,6 +179,7 @@ export default function ListingArticle({ navigation, route }) {
             <View style={styles.view_render}>
                <Image
                   source={require('_images/abstract.jpg')}
+                  blurRadius={5}
                   style={{
                      width: width < 380 ? 100 : 130,
                      height: 160,

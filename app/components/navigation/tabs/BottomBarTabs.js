@@ -108,6 +108,7 @@ export default function BottomBarTabs() {
             options={{
                tabBarLabel: ({ focused }) => (
                   <Text
+                     numberOfLines={1}
                      style={{
                         fontSize: 14,
                         fontWeight: 'bold',

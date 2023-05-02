@@ -102,6 +102,7 @@ export default function Home({ navigation }) {
                <Image
                   style={styles.image_poster_style_article}
                   source={require('_images/abstract_3.jpg')}
+                  blurRadius={6}
                />
 
                <Text
@@ -118,7 +119,7 @@ export default function Home({ navigation }) {
                <Text style={{ fontSize: 12 }} numberOfLines={1}>
                   {langueActual === 'fr'
                      ? item.objet_contenu_fr
-                     : item.objet_contenu_mg ?? 'Tsy misy dikan-teny malagasy.'}
+                     : item.objet_contenu_mg ?? item.objet_contenu_fr}
                </Text>
             </View>
          </TouchableOpacity>
@@ -132,7 +133,10 @@ export default function Home({ navigation }) {
             onPress={() => {
                navigation.navigate('Recherche', {
                   screen: 'Recherche',
-                  thematique: langueActual === 'fr' ? item.nom_fr : item.nom_mg,
+                  thematique:
+                     langueActual === 'fr'
+                        ? item.nom_fr
+                        : item.nom_mg ?? item.nom_fr,
                });
             }}
          >
@@ -147,7 +151,9 @@ export default function Home({ navigation }) {
                   style={[styles.text_descriptif_for_carousel]}
                   numberOfLines={4}
                >
-                  {langueActual === 'fr' ? item.nom_fr : item.nom_mg}
+                  {langueActual === 'fr'
+                     ? item.nom_fr
+                     : item.nom_mg ?? item.nom_fr}
                </Text>
             </View>
          </TouchableOpacity>

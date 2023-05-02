@@ -315,6 +315,7 @@ export default function Detail({ navigation, route }) {
          <SafeAreaView style={styles.container_safe}>
             <ImageBackground
                source={bgImage}
+               blurRadius={5}
                style={{
                   height: 230,
                }}

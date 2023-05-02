@@ -126,7 +126,6 @@ export default function Recherche({ navigation, route }) {
       })
    );
    const allTagsFromStore = useSelector((selector) => selector.loi.tagsChoice);
-   console.log('height ', height);
    //data from navigation
    let typeFromParams = route.params ? route.params.type : null;
    let thematiqueFromParams = route.params ? route.params.thematique : null;
