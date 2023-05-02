@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
    view_container_search: {
       flex: 1,
       marginTop: 8,
-      paddingBottom: heightDevice < 700 ? 310 : 290,
+      paddingBottom: heightDevice < 800 ? 310 : 290,
       paddingHorizontal: 15,
       backgroundColor: Colors.background,
    },
@@ -58,7 +58,7 @@ export const styles = StyleSheet.create({
       borderLeftWidth: 0,
    },
    view_render: {
-      height: heightDevice < 700 ? 260 : 220,
+      height: heightDevice < 800 ? 260 : 220,
       borderWidth: 1,
       borderRadius: 10,
       borderColor: Colors.greenWhite,
