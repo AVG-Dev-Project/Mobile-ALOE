@@ -1,25 +1,17 @@
-import { Icon } from '@rneui/base';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Colors } from '_theme/Colors';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { changeLanguage } from '_utils/redux/actions/action_creators';
 
-export default function HeaderGlobal({ navigation, bottomSheetRef }) {
+export default function HeaderGlobal({ bottomSheetRef }) {
    //all data
-   const dispatch = useDispatch();
 
    //all logics
-   const { t, i18n } = useTranslation();
-   const onHandleChangeLanguage = (langue) => {
-      i18n.changeLanguage(langue);
-      dispatch(changeLanguage(langue));
-   };
+   const { t } = useTranslation();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
    const openBottomSheet = () => {
-      //return bottomSheetRef.current.snapTo(1);
       return bottomSheetRef.current?.present();
    };
 
