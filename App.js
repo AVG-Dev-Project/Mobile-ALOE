@@ -17,8 +17,8 @@ export default function App() {
    return (
       <Provider store={store}>
          <SafeAreaProvider>
-            <GestureHandlerRootView style={{flex: 1}}>
-               <BottomSheetModalProvider >
+            <GestureHandlerRootView style={{ flex: 1 }}>
+               <BottomSheetModalProvider>
                   <StatusBar backgroundColor={Colors.greenAvg} />
                   <Navigation />
                </BottomSheetModalProvider>

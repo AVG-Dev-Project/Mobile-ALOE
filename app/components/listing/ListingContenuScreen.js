@@ -130,6 +130,7 @@ export default function ListingContenu({ navigation }) {
          setContenuList(oldAllContenus);
          setIsGetNextData(false);
       }
+      setIsGetNextData(false);
    };
 
    //all logics

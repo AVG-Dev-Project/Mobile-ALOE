@@ -112,6 +112,7 @@ export default function ListingArticle({ navigation, route }) {
          setArticleList(oldAllArticles);
          setIsGetNextData(false);
       }
+      setIsGetNextData(false);
    };
 
    //all effects
