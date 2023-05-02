@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
       width: Dimensions.get('window').width - 160,
    },
    logo_image: {
-      height: Dimensions.get('window').height < 700 ? 40 : 50,
+      height: 60,
       width: Dimensions.get('window').height < 700 ? 140 : 180,
    },
    view_button_arrondi: {
