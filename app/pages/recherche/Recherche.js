@@ -9,7 +9,6 @@ import {
    TouchableOpacity,
    ToastAndroid,
    Dimensions,
-   Button,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import React, {

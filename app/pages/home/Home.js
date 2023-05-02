@@ -24,11 +24,7 @@ import {
 import { styles } from './styles';
 import { Colors } from '_theme/Colors';
 import {
-   getFavoriteFromLocalStorage,
-   removeInLocalStorage,
    checkAndsendMailFromLocalDBToAPI,
-   ArticleSchema,
-   ContenuSchema,
    fetchTypesToApi,
    fetchTagsToApi,
    fetchThematiquesToApi,
@@ -38,7 +34,7 @@ export default function Home({ navigation }) {
    //all states
    const dispatch = useDispatch();
    const isCarousel = React.useRef(null);
-   const { width, height } = useWindowDimensions();
+   const { height } = useWindowDimensions();
    const { t } = useTranslation();
    const allContenus = useSelector((selector) => selector.loi.contenus);
    const allThematiques = useSelector((selector) => selector.loi.thematiques);

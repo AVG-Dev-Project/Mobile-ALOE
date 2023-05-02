@@ -6,9 +6,6 @@ import {
    getAllTypes,
    getAllContenus,
    updateTagsChoice,
-   getCurrentPageArticleForApi,
-   getCurrentPageContenuForApi,
-   getTotalPageApi,
    getAllTags,
 } from '../actions/action_creators';
 
@@ -20,14 +17,8 @@ const initialState = {
    types: [],
    contenus: [],
    favoris: [],
-   currentPageContenu: 1,
-   currentPageArticle: 1,
    tagsChoice: [],
    tags: [],
-   totalPage: {
-      article: 0,
-      contenu: 0,
-   },
 };
 
 export const loiReducer = (state = initialState, action) => {
@@ -53,23 +44,6 @@ export const loiReducer = (state = initialState, action) => {
       case getAllTags().type:
          return produce(state, (draft) => {
             draft.tags = action.payload;
-         });
-      case getCurrentPageContenuForApi().type:
-         return produce(state, (draft) => {
-            draft.currentPageContenu = action.payload;
-         });
-      case getCurrentPageArticleForApi().type:
-         return produce(state, (draft) => {
-            draft.currentPageArticle = action.payload;
-         });
-      case getTotalPageApi().type:
-         return produce(state, (draft) => {
-            if (action.payload[0] === 'contenu') {
-               draft.totalPage.contenu = action.payload[1];
-            }
-            if (action.payload[0] === 'article') {
-               draft.totalPage.article = action.payload[1];
-            }
          });
       case getAllContenus().type:
          return produce(state, (draft) => {

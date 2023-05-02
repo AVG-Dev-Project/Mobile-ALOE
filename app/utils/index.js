@@ -1,11 +1,8 @@
 import { nameStackNavigation } from './constante/NameStackNavigation';
-import { ContexteProvider, Contexte } from './contexte/Contexte';
 import { LoiService } from './services/LoiService';
 import {
    storeDataToLocalStorage,
    getDataFromLocalStorage,
-   removeInLocalStorage,
-   getAllKeys,
    storeFavoriteIdToLocalStorage,
    getFavoriteFromLocalStorage,
 } from './storage/asyncStorage';
@@ -41,13 +38,9 @@ import {
 
 export {
    nameStackNavigation,
-   ContexteProvider,
-   Contexte,
    LoiService,
    storeDataToLocalStorage,
    getDataFromLocalStorage,
-   removeInLocalStorage,
-   getAllKeys,
    storeFavoriteIdToLocalStorage,
    getFavoriteFromLocalStorage,
    ArticleSchema,

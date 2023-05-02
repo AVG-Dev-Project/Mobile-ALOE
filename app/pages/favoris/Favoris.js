@@ -10,13 +10,7 @@ import {
    TouchableOpacity,
 } from 'react-native';
 import RenderHtml from 'react-native-render-html';
-import React, {
-   useCallback,
-   useEffect,
-   useState,
-   useMemo,
-   useRef,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
    nameStackNavigation as nameNav,
    checkAndsendMailFromLocalDBToAPI,

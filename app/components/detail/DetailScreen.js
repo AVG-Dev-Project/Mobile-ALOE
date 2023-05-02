@@ -11,13 +11,7 @@ import {
    useWindowDimensions,
 } from 'react-native';
 import * as Speech from 'expo-speech';
-import React, {
-   useState,
-   useEffect,
-   useMemo,
-   useRef,
-   useCallback,
-} from 'react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
 import { captureRef } from 'react-native-view-shot';
 import RenderHtml from 'react-native-render-html';
 import { useDispatch, useSelector } from 'react-redux';
@@ -37,7 +31,7 @@ export default function Detail({ navigation, route }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   const { width, height } = useWindowDimensions();
+   const { width } = useWindowDimensions();
    const dispatch = useDispatch();
    const [isSpeakPlay, setIsSpeakPlay] = useState(false);
    const allContenus = useSelector((selector) => selector.loi.contenus);

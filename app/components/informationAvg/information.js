@@ -2,8 +2,6 @@ import {
    View,
    Text,
    Image,
-   TouchableOpacity,
-   StyleSheet,
    Linking,
    ScrollView,
    useWindowDimensions,
@@ -12,18 +10,15 @@ import * as Location from 'expo-location';
 import { useState, useEffect } from 'react';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Colors } from '_theme/Colors';
-import { useDispatch, useSelector } from 'react-redux';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useSelector } from 'react-redux';
 import { styles } from './styles';
-import { nameStackNavigation as nameNav } from '_utils';
 import { Icon, Button } from '@rneui/base';
 
-export default function Information({ navigation }) {
+export default function Information() {
    //all states
    const [position, setPosition] = useState({ longitude: 0.0, latitude: 0.0 });
    const { width, height } = useWindowDimensions();
    const [errorMsgLocation, setErrorMsgLocation] = useState(null);
-   const dispatch = useDispatch();
 
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue

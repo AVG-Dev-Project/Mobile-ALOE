@@ -13,22 +13,14 @@ import {
    addFavoris,
    isConnectedToInternet,
    checktatusData,
-   getCurrentPageContenuForApi,
-   getCurrentPageArticleForApi,
 } from '_utils/redux/actions/action_creators';
 import {
-   ArticleSchema,
-   ContenuSchema,
-   TypeSchema,
-   ThematiqueSchema,
    insertOrUpdateToDBFunc,
    parseStructureDataForArticle,
    parseStructureDataForContenu,
    storeDataToLocalStorage,
    getDataFromLocalStorage,
    getFavoriteFromLocalStorage,
-   removeInLocalStorage,
-   getAllKeys,
    fetchTypesToApi,
    fetchArticlesToApi,
    fetchContenusToApi,
@@ -44,9 +36,6 @@ export default function DownloadData({ navigation }) {
    const animation = useRef(null);
    const { width } = useWindowDimensions();
    const dispatch = useDispatch();
-   const langueActual = useSelector(
-      (selector) => selector.fonctionnality.langue
-   );
    const isUserNetworkActive = useSelector(
       (selector) => selector.fonctionnality.isNetworkActive
    );

@@ -1,17 +1,14 @@
 import {
    View,
    Text,
-   StyleSheet,
    FlatList,
-   Image,
    Dimensions,
    SafeAreaView,
    ToastAndroid,
    ActivityIndicator,
-   useWindowDimensions,
    TouchableOpacity,
 } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import {
    nameStackNavigation as nameNav,
@@ -23,17 +20,9 @@ import { styles } from './stylesContenu';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
-import {
-   getAllArticles,
-   getAllThematiques,
-   getAllTypes,
-   getAllContenus,
-   getCurrentPageContenuForApi,
-   getCurrentPageArticleForApi,
-   getTotalPageApi,
-} from '_utils/redux/actions/action_creators';
+import { getAllContenus } from '_utils/redux/actions/action_creators';
 
-export default function ListingContenu({ navigation, route }) {
+export default function ListingContenu({ navigation }) {
    //all data
    const dispatch = useDispatch();
    const langueActual = useSelector(
@@ -45,7 +34,6 @@ export default function ListingContenu({ navigation, route }) {
    const isNetworkActive = useSelector(
       (selector) => selector.fonctionnality.isNetworkActive
    );
-   let { width } = useWindowDimensions();
    const allContenusFromStore = useSelector(
       (selector) => selector.loi.contenus
    );

@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
    Text,
    View,
@@ -21,7 +21,6 @@ import {
 import {
    nameStackNavigation as nameNav,
    getDataFromLocalStorage,
-   removeInLocalStorage,
    getFavoriteFromLocalStorage,
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,

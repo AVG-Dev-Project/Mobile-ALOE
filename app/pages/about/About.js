@@ -1,13 +1,11 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Colors } from '_theme/Colors';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { styles } from './styles';
 import { nameStackNavigation as nameNav } from '_utils';
 
 export default function About({ navigation }) {
-   const dispatch = useDispatch();
-
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );

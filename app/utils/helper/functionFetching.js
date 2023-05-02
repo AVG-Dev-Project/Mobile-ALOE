@@ -9,9 +9,6 @@ import {
    getAllTypes,
    getAllTags,
    getAllContenus,
-   getCurrentPageContenuForApi,
-   getCurrentPageArticleForApi,
-   getTotalPageApi,
 } from '_utils/redux/actions/action_creators';
 import { LoiService } from '_utils/services/LoiService';
 import {

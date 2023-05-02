@@ -1,12 +1,5 @@
-import React, { useEffect, useCallback } from 'react';
-import {
-   View,
-   Text,
-   StyleSheet,
-   Image,
-   TouchableOpacity,
-   useWindowDimensions,
-} from 'react-native';
+import React, { useCallback } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { useDispatch } from 'react-redux';
@@ -16,7 +9,6 @@ import { Colors } from '_theme/Colors';
 export default function BottomSheetCustom({ bottomSheetRef, snapPoints }) {
    const dispatch = useDispatch();
    const { i18n } = useTranslation();
-   const { height } = useWindowDimensions();
 
    //all functions
    const onHandleChangeLanguage = (langue) => {
