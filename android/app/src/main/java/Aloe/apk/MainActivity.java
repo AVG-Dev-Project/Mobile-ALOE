@@ -1,4 +1,4 @@
-package aloe.apk;
+package Aloe.apk;
 
 import android.os.Build;
 import android.os.Bundle;

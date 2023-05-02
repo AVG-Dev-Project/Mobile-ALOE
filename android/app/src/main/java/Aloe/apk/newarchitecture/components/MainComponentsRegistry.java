@@ -1,4 +1,4 @@
-package aloe.apk.newarchitecture.components;
+package Aloe.apk.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;
