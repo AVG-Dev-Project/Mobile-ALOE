@@ -111,6 +111,8 @@ export default function ListingArticle({ navigation, route }) {
          dispatch(getAllArticles(oldAllArticles));
          setArticleList(oldAllArticles);
          setIsGetNextData(false);
+      } else {
+         setCurrentPage(1);
       }
       setIsGetNextData(false);
    };

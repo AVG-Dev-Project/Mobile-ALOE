@@ -129,6 +129,8 @@ export default function ListingContenu({ navigation }) {
          dispatch(getAllContenus(oldAllContenus));
          setContenuList(oldAllContenus);
          setIsGetNextData(false);
+      } else {
+         setCurrentPage(1);
       }
       setIsGetNextData(false);
    };
