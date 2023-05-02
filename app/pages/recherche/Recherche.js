@@ -96,7 +96,7 @@ export default function Recherche({ navigation, route }) {
    const [textFromInputSearch, setTextFromValueForSearch] = useState('');
    const { width, height } = useWindowDimensions();
    const snapPoints = useMemo(
-      () => (height < 700 ? [-1, '70%'] : [-1, '60%']),
+      () => (height < 700 ? [0, '70%'] : [0, '60%']),
       []
    );
    const allContenus = useSelector((selector) => selector.loi.contenus);
@@ -126,7 +126,7 @@ export default function Recherche({ navigation, route }) {
       })
    );
    const allTagsFromStore = useSelector((selector) => selector.loi.tagsChoice);
-   console.log('allTags ', allTags);
+   console.log('height ', height);
    //data from navigation
    let typeFromParams = route.params ? route.params.type : null;
    let thematiqueFromParams = route.params ? route.params.thematique : null;

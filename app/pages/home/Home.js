@@ -165,7 +165,9 @@ export default function Home({ navigation }) {
             </View>
 
             <View style={styles.landing_screen}>
-               <Text style={styles.text_landing_screen}>
+               <Text
+                  style={[styles.text_landing_screen, { textAlign: 'center' }]}
+               >
                   {t('txt_landing_home')}
                </Text>
                <View style={styles.content_in_landing_screen}>

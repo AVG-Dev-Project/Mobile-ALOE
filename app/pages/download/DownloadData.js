@@ -310,7 +310,7 @@ export default function DownloadData({ navigation }) {
                   borderRadius: 30,
                   backgroundColor: Colors.greenAvg,
                   paddingVertical: 24,
-                  width: width < 370 ? 160 : 180,
+                  width: width < 370 ? 170 : 190,
                }}
                containerStyle={{
                   marginVertical: 10,

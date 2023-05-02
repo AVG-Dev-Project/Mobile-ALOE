@@ -2,11 +2,12 @@ import { Colors } from '_theme/Colors';
 import { StyleSheet, Dimensions } from 'react-native';
 
 const widthDevice = Dimensions.get('window').width;
+const heightDevice = Dimensions.get('window').height;
 export const styles = StyleSheet.create({
    view_container_search: {
       flex: 1,
       marginTop: 8,
-      paddingBottom: 290,
+      paddingBottom: heightDevice < 700 ? 310 : 290,
       paddingHorizontal: 15,
       backgroundColor: Colors.background,
    },
@@ -57,7 +58,7 @@ export const styles = StyleSheet.create({
       borderLeftWidth: 0,
    },
    view_render: {
-      height: 210,
+      height: heightDevice < 700 ? 260 : 220,
       borderWidth: 1,
       borderRadius: 10,
       borderColor: Colors.greenWhite,
