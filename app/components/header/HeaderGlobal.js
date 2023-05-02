@@ -1,7 +1,7 @@
 import { Icon } from '@rneui/base';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Colors } from '_theme/Colors';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { changeLanguage } from '_utils/redux/actions/action_creators';
 
@@ -15,7 +15,9 @@ export default function HeaderGlobal({ navigation, bottomSheetRef }) {
       i18n.changeLanguage(langue);
       dispatch(changeLanguage(langue));
    };
-
+   const langueActual = useSelector(
+      (selector) => selector.fonctionnality.langue
+   );
    const openBottomSheet = () => {
       //return bottomSheetRef.current.snapTo(1);
       return bottomSheetRef.current?.present();
@@ -30,7 +32,14 @@ export default function HeaderGlobal({ navigation, bottomSheetRef }) {
             activeOpacity={0.7}
             onPress={() => openBottomSheet()}
          >
-            <Icon name={'widgets'} color={Colors.greenAvg} size={34} />
+            <Image
+               style={styles.flagImg}
+               source={
+                  langueActual === 'fr'
+                     ? require('_images/french.png')
+                     : require('_images/malagasy.png')
+               }
+            />
          </TouchableOpacity>
       </View>
    );
@@ -48,5 +57,10 @@ const styles = StyleSheet.create({
       color: Colors.black,
       fontSize: 26,
       fontWeight: 'bold',
+   },
+   flagImg: {
+      height: 30,
+      width: 30,
+      borderRadius: 30,
    },
 });
