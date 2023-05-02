@@ -52,7 +52,6 @@ export default function Home({ navigation }) {
       () => (height < 700 ? [0, '60%'] : [0, '50%']),
       []
    );
-
    const updatingPartialData = async () => {
       await fetchTypesToApi();
       await fetchTagsToApi();

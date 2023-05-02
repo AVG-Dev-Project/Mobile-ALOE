@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
    },
    text_landing_screen: {
-      fontSize: 20,
+      fontSize: widthDevice < 400 ? 18 : 20,
       color: Colors.white,
       fontWeight: 'bold',
    },

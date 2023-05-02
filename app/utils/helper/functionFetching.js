@@ -21,21 +21,29 @@ import {
 
 export const fetchThematiquesToApi = async () => {
    let results = await LoiService.getThematiqueFromServ();
-   return insertOrUpdateToDBFunc('database', 'thematique', results);
+   if (results.length > 0) {
+      insertOrUpdateToDBFunc('database', 'thematique', results);
+   }
+   return;
 };
 
 export const fetchTagsToApi = async () => {
    let results = await LoiService.getTagFromServ();
-   return insertOrUpdateToDBFunc('database', 'tag', results);
+   if (results.length > 0) {
+      insertOrUpdateToDBFunc('database', 'tag', results);
+   }
+   return;
 };
 
 export const fetchContenusToApi = async (currentPage) => {
    let res = await LoiService.getContenusFromServ(currentPage);
-   insertOrUpdateToDBFunc(
-      'database',
-      'contenu',
-      parseStructureDataForContenu(res.results)
-   );
+   if (res.results.length > 0) {
+      insertOrUpdateToDBFunc(
+         'database',
+         'contenu',
+         parseStructureDataForContenu(res.results)
+      );
+   }
    return res;
 };
 
@@ -56,16 +64,22 @@ export const fetchArticlesByContenuToApi = async (contenuId, currentPage) => {
 
 export const fetchArticlesToApi = async (currentPage) => {
    let res = await LoiService.getArticlesFromServ(currentPage);
-   return insertOrUpdateToDBFunc(
-      'database',
-      'article',
-      parseStructureDataForArticle(res.results)
-   );
+   if (res.results.length > 0) {
+      insertOrUpdateToDBFunc(
+         'database',
+         'article',
+         parseStructureDataForArticle(res.results)
+      );
+   }
+   return;
 };
 
 export const fetchTypesToApi = async () => {
    let results = await LoiService.getTypeFromServ();
-   return insertOrUpdateToDBFunc('database', 'type', results);
+   if (results.length > 0) {
+      insertOrUpdateToDBFunc('database', 'type', results);
+   }
+   return;
 };
 
 //offline

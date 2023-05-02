@@ -117,17 +117,19 @@ export default function ListingContenu({ navigation }) {
 
    const getNextPageContenusFromApi = async () => {
       let res = await fetchContenusToApi(currentPage + 1);
-      setCurrentPage(currentPage + 1);
-      setTotalPage(res.pages_count);
-      let oldAllContenus = [...contenuList];
-      res.results.map((result) => {
-         if (!oldAllContenus.find((contenu) => contenu.id === result.id)) {
-            oldAllContenus.push(parseDataContenuLazyLoading(result));
-         }
-      });
-      dispatch(getAllContenus(oldAllContenus));
-      setContenuList(oldAllContenus);
-      setIsGetNextData(false);
+      if (res.results.length > 0) {
+         setCurrentPage(currentPage + 1);
+         setTotalPage(res.pages_count);
+         let oldAllContenus = [...contenuList];
+         res.results.map((result) => {
+            if (!oldAllContenus.find((contenu) => contenu.id === result.id)) {
+               oldAllContenus.push(parseDataContenuLazyLoading(result));
+            }
+         });
+         dispatch(getAllContenus(oldAllContenus));
+         setContenuList(oldAllContenus);
+         setIsGetNextData(false);
+      }
    };
 
    //all logics
