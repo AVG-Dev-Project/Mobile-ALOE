@@ -63,7 +63,7 @@ export default function Detail({ navigation, route }) {
    const allFavoriteIdFromStore = useSelector(
       (selector) => selector.loi.favoris
    );
-   const snapPoints = useMemo(() => [0, '60%', '80%'], []);
+   const snapPoints = useMemo(() => [0, '60%', '90%'], []);
 
    //permission
    if (status === null) {
@@ -604,130 +604,124 @@ export default function Detail({ navigation, route }) {
             style={styles.view_bottom_sheet}
          >
             <ScrollView style={styles.view_in_bottomsheet}>
-               <View>
-                  <Text style={{ fontSize: 28, fontWeight: 'bold' }}>
-                     {langueActual === 'fr'
-                        ? 'Plus de détails :'
-                        : 'Fanampiny misimisy :'}{' '}
+               <Text style={{ fontSize: 28, fontWeight: 'bold' }}>
+                  {langueActual === 'fr'
+                     ? 'Plus de détails :'
+                     : 'Fanampiny misimisy :'}{' '}
+               </Text>
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Date ' : 'Daty '}{' '}
                   </Text>
-                  <View style={styles.view_one_item_in_bottomsheet}>
-                     <Text style={styles.label_info_article}>
-                        {langueActual === 'fr' ? 'Date ' : 'Daty '}{' '}
-                     </Text>
-                     <Text style={styles.value_info_article}>
-                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                        {contenuMother[0].date}
-                     </Text>
-                  </View>
-                  <View style={styles.view_one_item_in_bottomsheet}>
-                     <Text style={styles.label_info_article}>
-                        {langueActual === 'fr' ? 'Chapitre ' : 'Lohateny'}{' '}
-                     </Text>
-                     <Text style={styles.value_info_article}>
-                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                        {langueActual === 'fr'
-                           ? oneArticle.chapitre_titre_fr ?? ''
-                           : oneArticle.chapitre_titre_mg ??
-                             'Tsy misy dikan-teny malagasy.'}
-                     </Text>
-                  </View>
-                  <View style={styles.view_one_item_in_bottomsheet}>
-                     <Text style={styles.label_info_article}>
-                        {langueActual === 'fr' ? 'Numero ' : 'Laharana '}{' '}
-                     </Text>
-                     <Text style={styles.value_info_article}>
-                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                        {contenuMother[0].numero}
-                     </Text>
-                  </View>
-
-                  <View style={styles.view_one_item_in_bottomsheet}>
-                     <Text style={styles.label_info_article}>
-                        {langueActual === 'fr' ? 'Objet ' : 'Objet '}{' '}
-                     </Text>
-                     <Text style={styles.value_info_article} numberOfLines={2}>
-                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                        {langueActual === 'fr'
-                           ? contenuMother[0].objet_contenu_fr
-                           : contenuMother[0].objet_contenu_mg ??
-                             contenuMother[0].objet_contenu_fr}
-                     </Text>
-                  </View>
-
-                  <View style={styles.view_one_item_in_bottomsheet}>
-                     <Text style={styles.label_info_article}>
-                        {langueActual === 'fr' ? 'Thématique ' : 'Lohahevitra '}{' '}
-                     </Text>
-                     <Text style={styles.value_info_article}>
-                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                        {langueActual === 'fr'
-                           ? contenuMother[0].thematique_nom_fr
-                           : contenuMother[0].thematique_nom_mg ??
-                             contenuMother[0].thematique_nom_fr}
-                     </Text>
-                  </View>
-
-                  <View style={styles.view_one_item_in_bottomsheet}>
-                     <Text style={styles.label_info_article}>
-                        {langueActual === 'fr' ? 'Type ' : 'Sokajy '}{' '}
-                     </Text>
-                     <Text style={styles.value_info_article}>
-                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                        {langueActual === 'fr'
-                           ? contenuMother[0].type_nom_fr
-                           : contenuMother[0].type_nom_mg ??
-                             contenuMother[0].type_nom_fr}
-                     </Text>
-                  </View>
-
-                  <View style={styles.view_one_item_in_bottomsheet}>
-                     <Text style={styles.label_info_article}>
-                        {langueActual === 'fr' ? 'Etat ' : 'Fanjakana '}{' '}
-                     </Text>
-                     <Text style={styles.value_info_article} numberOfLines={2}>
-                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                        {langueActual === 'fr'
-                           ? contenuMother[0].etat_nom_fr
-                           : contenuMother[0].etat_nom_mg ??
-                             contenuMother[0].etat_nom_fr}
-                     </Text>
-                  </View>
-
-                  <View style={styles.view_one_item_in_bottomsheet}>
-                     <Text style={styles.label_info_article}>
-                        {langueActual === 'fr'
-                           ? 'Organisme '
-                           : 'Filankevi-pitatanana '}{' '}
-                     </Text>
-                     <Text style={styles.value_info_article} numberOfLines={2}>
-                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                        {langueActual === 'fr'
-                           ? contenuMother[0].organisme_nom_fr
-                           : contenuMother[0].organisme_nom_mg ??
-                             contenuMother[0].organisme_nom_fr}
-                     </Text>
-                  </View>
-
-                  {parsingTags(contenuMother[0].tag).length > 0 && (
-                     <View style={styles.view_one_item_in_bottomsheet}>
-                        <Text style={styles.label_info_article}>
-                           {langueActual === 'fr' ? 'Tags ' : 'Tagy '}{' '}
-                        </Text>
-                        <Text style={styles.value_info_article}>
-                           <Icon
-                              name={'star'}
-                              color={Colors.greenAvg}
-                              size={16}
-                           />{' '}
-                           {parsingTags(contenuMother[0].tag).map((tag) =>
-                              langueActual === 'fr'
-                                 ? tag.contenu_fr + ', '
-                                 : tag.contenu_mg + ', '
-                           )}
-                        </Text>
-                     </View>
-                  )}
+                  <Text style={styles.value_info_article}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {contenuMother[0].date}
+                  </Text>
                </View>
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Chapitre ' : 'Lohateny'}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? oneArticle.chapitre_titre_fr ?? ''
+                        : oneArticle.chapitre_titre_mg ??
+                          'Tsy misy dikan-teny malagasy.'}
+                  </Text>
+               </View>
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Numero ' : 'Laharana '}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {contenuMother[0].numero}
+                  </Text>
+               </View>
+
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Objet ' : 'Objet '}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article} numberOfLines={2}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? contenuMother[0].objet_contenu_fr
+                        : contenuMother[0].objet_contenu_mg ??
+                          contenuMother[0].objet_contenu_fr}
+                  </Text>
+               </View>
+
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Thématique ' : 'Lohahevitra '}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? contenuMother[0].thematique_nom_fr
+                        : contenuMother[0].thematique_nom_mg ??
+                          contenuMother[0].thematique_nom_fr}
+                  </Text>
+               </View>
+
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Type ' : 'Sokajy '}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? contenuMother[0].type_nom_fr
+                        : contenuMother[0].type_nom_mg ??
+                          contenuMother[0].type_nom_fr}
+                  </Text>
+               </View>
+
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Etat ' : 'Fanjakana '}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article} numberOfLines={2}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? contenuMother[0].etat_nom_fr
+                        : contenuMother[0].etat_nom_mg ??
+                          contenuMother[0].etat_nom_fr}
+                  </Text>
+               </View>
+
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr'
+                        ? 'Organisme '
+                        : 'Filankevi-pitatanana '}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article} numberOfLines={2}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? contenuMother[0].organisme_nom_fr
+                        : contenuMother[0].organisme_nom_mg ??
+                          contenuMother[0].organisme_nom_fr}
+                  </Text>
+               </View>
+
+               {parsingTags(contenuMother[0].tag).length > 0 && (
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Tags ' : 'Tagy '}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {parsingTags(contenuMother[0].tag).map((tag) =>
+                           langueActual === 'fr'
+                              ? tag.contenu_fr + ', '
+                              : tag.contenu_mg + ', '
+                        )}
+                     </Text>
+                  </View>
+               )}
             </ScrollView>
          </BottomSheetModal>
       </View>
