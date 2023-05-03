@@ -20,24 +20,24 @@ import {
 } from '_utils/storage/database';
 
 export const fetchThematiquesToApi = async () => {
-   let results = await LoiService.getThematiqueFromServ();
-   if (results.length > 0) {
-      insertOrUpdateToDBFunc('database', 'thematique', results);
+   let res = await LoiService.getThematiqueFromServ();
+   if (res.results?.length > 0) {
+      insertOrUpdateToDBFunc('database', 'thematique', res.results);
    }
-   return;
+   return res;
 };
 
 export const fetchTagsToApi = async () => {
-   let results = await LoiService.getTagFromServ();
-   if (results.length > 0) {
-      insertOrUpdateToDBFunc('database', 'tag', results);
+   let res = await LoiService.getTagFromServ();
+   if (res.results?.length > 0) {
+      insertOrUpdateToDBFunc('database', 'tag', res.results);
    }
-   return;
+   return res;
 };
 
 export const fetchContenusToApi = async (currentPage) => {
    let res = await LoiService.getContenusFromServ(currentPage);
-   if (res.results.length > 0) {
+   if (res.results?.length > 0) {
       insertOrUpdateToDBFunc(
          'database',
          'contenu',
@@ -52,7 +52,7 @@ export const fetchArticlesByContenuToApi = async (contenuId, currentPage) => {
       contenuId,
       currentPage
    );
-   if (res.results.length > 0) {
+   if (res.results?.length > 0) {
       insertOrUpdateToDBFunc(
          'database',
          'article',
@@ -64,22 +64,22 @@ export const fetchArticlesByContenuToApi = async (contenuId, currentPage) => {
 
 export const fetchArticlesToApi = async (currentPage) => {
    let res = await LoiService.getArticlesFromServ(currentPage);
-   if (res.results.length > 0) {
+   if (res.results?.length > 0) {
       insertOrUpdateToDBFunc(
          'database',
          'article',
          parseStructureDataForArticle(res.results)
       );
    }
-   return;
+   return res;
 };
 
 export const fetchTypesToApi = async () => {
-   let results = await LoiService.getTypeFromServ();
-   if (results.length > 0) {
-      insertOrUpdateToDBFunc('database', 'type', results);
+   let res = await LoiService.getTypeFromServ();
+   if (res.results?.length > 0) {
+      insertOrUpdateToDBFunc('database', 'type', res.results);
    }
-   return;
+   return res;
 };
 
 //offline

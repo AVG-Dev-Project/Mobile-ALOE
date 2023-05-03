@@ -53,16 +53,29 @@ export default function Home({ navigation }) {
       []
    );
    const updatingPartialData = async () => {
-      await fetchTypesToApi();
-      await fetchTagsToApi();
-      await fetchThematiquesToApi();
+      let resType = await fetchTypesToApi();
+      let resTag = await fetchTagsToApi();
+      let resTheme = await fetchThematiquesToApi();
       fetchPartialDataForUpdating(dispatch);
-      ToastAndroid.show(
-         langueActual === 'fr'
-            ? "Contenu de l'application mis à jour."
-            : "Votoatin'ny application nohavaozina.",
-         ToastAndroid.SHORT
-      );
+      if (
+         resType.results?.length > 0 &&
+         resTag.results?.length > 0 &&
+         resTheme.results?.length > 0
+      ) {
+         ToastAndroid.show(
+            langueActual === 'fr'
+               ? "Contenu de l'application mis à jour."
+               : "Votoatin'ny application nohavaozina.",
+            ToastAndroid.SHORT
+         );
+      } else {
+         ToastAndroid.show(
+            langueActual === 'fr'
+               ? "Certains contenu ne sont pas disponible et n'ont pas été mis à jour."
+               : "Misy votoatin'ny application maromaro tsy nohavaozina noho ny tsy fisian'izy ireo.",
+            ToastAndroid.SHORT
+         );
+      }
       setIsFetchData(false);
    };
 

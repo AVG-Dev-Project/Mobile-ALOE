@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { Text, View, useWindowDimensions } from 'react-native';
+import { Text, View, useWindowDimensions, ToastAndroid } from 'react-native';
 import { Colors } from '_theme/Colors';
 import Lottie from 'lottie-react-native';
 import { Icon, Button } from '@rneui/themed';
@@ -39,12 +39,6 @@ export default function DownloadData({ navigation }) {
    const isUserNetworkActive = useSelector(
       (selector) => selector.fonctionnality.isNetworkActive
    );
-   const currentPageContenuApi = useSelector(
-      (selector) => selector.loi.currentPageContenu
-   );
-   const currentPageArticleApi = useSelector(
-      (selector) => selector.loi.currentPageArticle
-   );
    const isUserConnectedToInternet = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
@@ -63,14 +57,27 @@ export default function DownloadData({ navigation }) {
    //all functions
    // functions selon disponibilité de isUserNetworkActive 1 pour démarrer tous les fonction fetch depuis API 2 pour importer les données depuis le fichier
    const getOnlineDatas = async () => {
-      await fetchContenusToApi(currentPageContenuApi);
-      await fetchArticlesToApi(currentPageArticleApi);
-      await fetchThematiquesToApi();
-      await fetchTagsToApi();
-      await fetchTypesToApi();
+      let resContenu = await fetchContenusToApi(1);
+      let resArticle = await fetchArticlesToApi(1);
+      let resTheme = await fetchThematiquesToApi();
+      let resTag = await fetchTagsToApi();
+      let resType = await fetchTypesToApi();
+      if (
+         resContenu.results?.length > 0 &&
+         resArticle.results?.length > 0 &&
+         resTheme.results?.length > 0 &&
+         resType.results?.length > 0 &&
+         resTag.results?.length > 0
+      ) {
+         storeDataToLocalStorage('isAllDataDownloaded', 'true');
+         dispatch(checktatusData(true));
+      } else {
+         ToastAndroid.show(
+            'Certain contenu ne sont pas disponible et non pas été télecharger.',
+            ToastAndroid.SHORT
+         );
+      }
       setIsFetchData(false);
-      storeDataToLocalStorage('isAllDataDownloaded', 'true');
-      dispatch(checktatusData(true));
    };
 
    const getOfflineDatas = () => {

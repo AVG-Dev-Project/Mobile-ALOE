@@ -243,10 +243,6 @@ export default function Welcome({ navigation }) {
                width: '100%',
             }}
          >
-            {/*<Image
-               style={styles.logo_image}
-               source={require('_images/avg_logo.jpeg')}
-         />*/}
             <Image
                style={styles.logo_image}
                source={require('_images/usaid.png')}
