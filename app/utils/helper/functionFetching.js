@@ -89,9 +89,11 @@ export const fetchAllDataToLocalDatabase = (dispatcher) => {
       dispatcher(getAllArticles(results));
    });
    //contenu
-   ContenuSchema.query({ columns: '*' }).then((results) => {
-      dispatcher(getAllContenus(results));
-   });
+   ContenuSchema.query({ columns: '*', order: 'numero ASC' }).then(
+      (results) => {
+         dispatcher(getAllContenus(results));
+      }
+   );
    //thematique
    ThematiqueSchema.query({ columns: '*' }).then((results) => {
       dispatcher(getAllThematiques(results));

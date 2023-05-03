@@ -91,6 +91,51 @@ const filterGlobal = (array, theme, type, query, tagChoice) => {
    return res;
 };
 
+const filterGlobalForDeepSearch = (
+   arrayArticle,
+   arrayContenu,
+   theme,
+   type,
+   query,
+   tagChoice
+) => {
+   let res =
+      theme === null && type === null && query === null ? [] : arrayContenu;
+
+   if (type === 'tout' || theme === 'tout') {
+      res = arrayContenu;
+   }
+   if (theme && theme !== 'tout') {
+      res = res.filter((_contenu) => _contenu.thematique_nom_fr === theme);
+   }
+   if (type && type !== 'tout') {
+      res = res.filter((_contenu) => _contenu.type_nom_fr === type);
+   }
+   if (query) {
+      let allIdOfContenuContainArticle = arrayArticle
+         .filter((_article) =>
+            _article.contenu_fr
+               ?.split('________________')[0]
+               .toLowerCase()
+               .includes(query.toLowerCase())
+         )
+         .map((_article) => _article.contenu);
+
+      res = res.filter((_contenu) =>
+         allIdOfContenuContainArticle.includes(_contenu.id)
+      );
+   }
+   if (tagChoice.length > 0) {
+      res = res.filter((_contenu) => {
+         return parsingTags(_contenu.tag).some((tag) =>
+            tagChoice.includes(tag.contenu_fr)
+         );
+      });
+   }
+
+   return res;
+};
+
 export default function Recherche({ navigation, route }) {
    //all data
    const dispatch = useDispatch();
@@ -102,6 +147,7 @@ export default function Recherche({ navigation, route }) {
       []
    );
    const allContenus = useSelector((selector) => selector.loi.contenus);
+   const allArticles = useSelector((selector) => selector.loi.articles);
    const [allContenusFilter, setAllContenusFilter] = useState([]);
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
@@ -134,6 +180,7 @@ export default function Recherche({ navigation, route }) {
    const [typeChecked, setTypeChecked] = useState(null);
    const [thematiqueChecked, setThematiqueChecked] = useState(null);
    let [startedSpeech, setStartedSpeech] = useState(false);
+   const [isUseDeepSearch, setIsUseDeepSearch] = useState(false);
    const [offset, setOffset] = useState(0);
 
    //all refs
@@ -149,25 +196,55 @@ export default function Recherche({ navigation, route }) {
    }, [typeFromParams, thematiqueFromParams]);
 
    useEffect(() => {
-      if (
-         typeChecked ||
-         thematiqueChecked ||
-         valueForSearch ||
-         allTagsFromStore.length > 0
-      ) {
-         setAllContenusFilter(
-            filterGlobal(
-               allContenus,
-               thematiqueChecked,
-               typeChecked,
-               valueForSearch,
-               allTagsFromStore
-            )
-         );
-      } else {
-         setAllContenusFilter([]);
+      if (isUseDeepSearch) {
+         if (
+            typeChecked ||
+            thematiqueChecked ||
+            valueForSearch ||
+            allTagsFromStore.length > 0
+         ) {
+            setAllContenusFilter(
+               filterGlobalForDeepSearch(
+                  allArticles,
+                  allContenus,
+                  thematiqueChecked,
+                  typeChecked,
+                  valueForSearch,
+                  allTagsFromStore
+               )
+            );
+         } else {
+            setAllContenusFilter([]);
+         }
       }
-   }, [typeChecked, thematiqueChecked, valueForSearch, allTagsFromStore]);
+
+      if (!isUseDeepSearch) {
+         if (
+            typeChecked ||
+            thematiqueChecked ||
+            valueForSearch ||
+            allTagsFromStore.length > 0
+         ) {
+            setAllContenusFilter(
+               filterGlobal(
+                  allContenus,
+                  thematiqueChecked,
+                  typeChecked,
+                  valueForSearch,
+                  allTagsFromStore
+               )
+            );
+         } else {
+            setAllContenusFilter([]);
+         }
+      }
+   }, [
+      typeChecked,
+      thematiqueChecked,
+      valueForSearch,
+      allTagsFromStore,
+      isUseDeepSearch,
+   ]);
 
    //necessary when we quit the page i.e rehefa miala amin'ilay page
    useFocusEffect(
@@ -561,8 +638,6 @@ export default function Recherche({ navigation, route }) {
 
             <View style={styles.view_for_input_search}>
                <Input
-                  //style={styles.input}
-                  //keyboardType="default"
                   placeholder={
                      langueActual === 'fr'
                         ? 'Entrer le mot de recherche ...'
@@ -573,6 +648,34 @@ export default function Recherche({ navigation, route }) {
                      onHandleSearchByValue(text);
                      setTextFromValueForSearch(text);
                   }}
+                  errorMessage={
+                     isUseDeepSearch &&
+                     (langueActual === 'fr'
+                        ? 'Vous utilisez la recherche approfondie!'
+                        : 'Mampiasa ny fikarohana lalina ianao.')
+                  }
+                  errorStyle={{ color: Colors.greenAvg }}
+                  leftIcon={
+                     isUseDeepSearch ? (
+                        <Icon
+                           name={'radio-button-checked'}
+                           color={Colors.greenAvg}
+                           size={26}
+                           onPress={() => {
+                              setIsUseDeepSearch(false);
+                           }}
+                        />
+                     ) : (
+                        <Icon
+                           name={'radio-button-unchecked'}
+                           color={Colors.greenAvg}
+                           size={26}
+                           onPress={() => {
+                              setIsUseDeepSearch(true);
+                           }}
+                        />
+                     )
+                  }
                   rightIcon={
                      !startedSpeech ? (
                         <Icon
