@@ -355,7 +355,7 @@ export default function ListingContenu({ navigation }) {
                onEndReachedThreshold={0.5}
                onEndReached={() => {
                   if (!isGetNextData && currentPage < totalPage) {
-                     handleLoadMore;
+                     handleLoadMore();
                   }
                }}
                ListFooterComponent={
