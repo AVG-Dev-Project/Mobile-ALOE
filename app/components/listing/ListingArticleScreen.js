@@ -99,7 +99,7 @@ export default function ListingArticle({ navigation, route }) {
          idOfTheContenuMother,
          currentPage + 1
       );
-      if (res.results.length > 0) {
+      if (res.results?.length > 0) {
          setCurrentPage(currentPage + 1);
          setTotalPage(res.pages_count);
          let oldAllArticles = [...articleList];
