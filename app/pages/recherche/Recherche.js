@@ -1,8 +1,6 @@
 import {
    View,
    Text,
-   FlatList,
-   SafeAreaView,
    useWindowDimensions,
    ScrollView,
    TouchableOpacity,
@@ -21,6 +19,7 @@ import React, {
 import { styles } from './styles';
 import Voice from '@react-native-voice/voice';
 import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import { FlashList } from '@shopify/flash-list';
 import { useDispatch, useSelector } from 'react-redux';
 import { nameStackNavigation as nameNav, parsingTags } from '_utils';
 import ReactNativeBlobUtil from 'react-native-blob-util';
@@ -290,7 +289,7 @@ export default function Recherche({ navigation, route }) {
    }, []);
 
    //all function
-   const scrollingFlatlist = (e) => {
+   const scrollingFlashList = (e) => {
       const currentOffset = e.nativeEvent.contentOffset.y;
 
       if (offset > currentOffset) {
@@ -775,15 +774,15 @@ export default function Recherche({ navigation, route }) {
          </View>
          <View style={styles.view_carousel}>
             <Text style={styles.labelTags}>Tags : </Text>
-            <FlatList
+            <FlashList
                data={chips}
                horizontal={true}
                extraData={chips}
                key={'_'}
                keyExtractor={_idKeyExtractorChip}
                showsHorizontalScrollIndicator={false}
+               estimatedItemSize={100}
                renderItem={_renderItemChips}
-               removeClippedSubviews={true}
                getItemLayout={(data, index) => ({
                   length: data.length,
                   offset: data.length * index,
@@ -801,8 +800,8 @@ export default function Recherche({ navigation, route }) {
                </Text>
             )}
          </View>
-         <SafeAreaView style={styles.view_flatlist}>
-            <FlatList
+         <View style={styles.view_flatlist}>
+            <FlashList
                data={allContenusFilter}
                ListEmptyComponent={
                   <View
@@ -824,15 +823,15 @@ export default function Recherche({ navigation, route }) {
                      >
                         {langueActual === 'fr'
                            ? 'pas de résultat'
-                           : '0 ny valiny'}
+                           : 'tsy misy ny valiny'}
                      </Text>
                   </View>
                }
                key={'_'}
                keyExtractor={_idKeyExtractor}
-               onScroll={scrollingFlatlist}
+               onScroll={scrollingFlashList}
+               estimatedItemSize={100}
                renderItem={_renderItem}
-               removeClippedSubviews={true}
                getItemLayout={(data, index) => ({
                   length: data.length,
                   offset: data.length * index,
@@ -840,7 +839,7 @@ export default function Recherche({ navigation, route }) {
                })}
                maxToRenderPerBatch={3}
             />
-         </SafeAreaView>
+         </View>
 
          <BottomSheetModal
             ref={bottomSheetTypeRef}

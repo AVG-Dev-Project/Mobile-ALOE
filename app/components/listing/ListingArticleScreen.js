@@ -2,16 +2,15 @@ import {
    View,
    Text,
    StyleSheet,
-   FlatList,
    Image,
    TextInput,
-   SafeAreaView,
    ActivityIndicator,
    TouchableOpacity,
    ToastAndroid,
    useWindowDimensions,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { FlashList } from '@shopify/flash-list';
 import React, { useCallback, useEffect, useState } from 'react';
 import { nameStackNavigation as nameNav } from '_utils/constante/NameStackNavigation';
 import { styles } from './stylesArticle';
@@ -95,26 +94,56 @@ export default function ListingArticle({ navigation, route }) {
    };
 
    const getNextPageArticlesFromApi = async () => {
-      let res = await fetchArticlesByContenuToApi(
-         idOfTheContenuMother,
-         currentPage + 1
-      );
-      if (res.results?.length > 0) {
-         setCurrentPage(currentPage + 1);
-         setTotalPage(res.pages_count);
-         let oldAllArticles = [...articleList];
-         res.results.map((result) => {
-            if (!oldAllArticles.find((article) => article.id === result.id)) {
-               oldAllArticles.push(parseDataArticleLazyLoading(result));
-            }
-         });
-         dispatch(getAllArticles(oldAllArticles));
-         setArticleList(oldAllArticles);
-         setIsGetNextData(false);
-      } else {
-         setCurrentPage(1);
+      if (isGetNextData) {
+         return;
       }
-      setIsGetNextData(false);
+      setIsGetNextData(true);
+
+      try {
+         let res = await fetchArticlesByContenuToApi(
+            idOfTheContenuMother,
+            currentPage + 1
+         );
+         if (res.results?.length > 0) {
+            setCurrentPage(currentPage + 1);
+            setTotalPage(res.pages_count);
+            let oldAllArticles = [...articleList];
+            res.results?.map((result) => {
+               if (
+                  !oldAllArticles.find((article) => article.id === result.id)
+               ) {
+                  oldAllArticles.push(parseDataArticleLazyLoading(result));
+               }
+            });
+            dispatch(getAllArticles(oldAllArticles));
+            setArticleList(oldAllArticles);
+         } else {
+            setCurrentPage(totalPage || 1);
+         }
+      } catch (e) {
+         ToastAndroid.show(
+            langueActual === 'fr'
+               ? 'Erreur survenu au télechargement des données.'
+               : 'Nisy olana teo ampangalana ny angona.',
+            ToastAndroid.SHORT
+         );
+      } finally {
+         setIsGetNextData(false);
+      }
+   };
+
+   const handleLoadMore = async () => {
+      if (isConnectedToInternet && isNetworkActive) {
+         if (!isGetNextData && currentPage < totalPage) {
+            await getNextPageArticlesFromApi();
+         }
+      } else {
+         ToastAndroid.show(
+            `Pas de connexion, impossible d'obtenir des datas suppl!`,
+            ToastAndroid.SHORT
+         );
+         return;
+      }
    };
 
    //all effects
@@ -350,13 +379,13 @@ export default function ListingArticle({ navigation, route }) {
                }}
             />
          </View>
-         <SafeAreaView style={styles.container_safe}>
-            <FlatList
+         <View style={styles.container_safe}>
+            <FlashList
                data={articleList}
                key={'_'}
                keyExtractor={_idKeyExtractor}
                renderItem={_renderItem}
-               removeClippedSubviews={true}
+               estimatedItemSize={100}
                getItemLayout={(data, index) => ({
                   length: data.length,
                   offset: data.length * index,
@@ -388,19 +417,9 @@ export default function ListingArticle({ navigation, route }) {
                }
                extraData={articleList}
                onEndReachedThreshold={0.5}
-               onEndReached={async () => {
-                  if (isConnectedToInternet && isNetworkActive) {
-                     if (currentPage < totalPage) {
-                        setIsGetNextData(true);
-                        console.log('gte next e :');
-                        await getNextPageArticlesFromApi();
-                     }
-                  } else {
-                     ToastAndroid.show(
-                        `Pas de connexion, impossible d'obtenir des datas suppl!`,
-                        ToastAndroid.SHORT
-                     );
-                     return;
+               onEndReached={() => {
+                  if (!isGetNextData && currentPage < totalPage) {
+                     handleLoadMore();
                   }
                }}
                ListFooterComponent={
@@ -414,7 +433,7 @@ export default function ListingArticle({ navigation, route }) {
                   )
                }
             />
-         </SafeAreaView>
+         </View>
       </View>
    );
 }

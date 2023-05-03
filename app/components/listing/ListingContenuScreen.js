@@ -1,9 +1,7 @@
 import {
    View,
    Text,
-   FlatList,
    Dimensions,
-   SafeAreaView,
    ToastAndroid,
    ActivityIndicator,
    Platform,
@@ -11,6 +9,7 @@ import {
 } from 'react-native';
 import React, { useCallback, useState } from 'react';
 import ReactNativeBlobUtil from 'react-native-blob-util';
+import { FlashList } from '@shopify/flash-list';
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import {
@@ -191,6 +190,12 @@ export default function ListingContenu({ navigation }) {
          if (!isGetNextData && currentPage < totalPage) {
             await getNextPageContenusFromApi();
          }
+      } else {
+         ToastAndroid.show(
+            `Pas de connexion, impossible d'obtenir des datas suppl!`,
+            ToastAndroid.SHORT
+         );
+         return;
       }
    };
 
@@ -339,42 +344,33 @@ export default function ListingContenu({ navigation }) {
 
    return (
       <View style={styles.view_container}>
-         <SafeAreaView style={styles.container_safe}>
-            <FlatList
-               data={contenuList}
-               extraData={contenuList}
-               key={'_'}
-               keyExtractor={_idKeyExtractor}
-               renderItem={_renderItem}
-               removeClippedSubviews={false}
-               maxToRenderPerBatch={10}
-               updateCellsBatchingPeriod={50}
-               initialNumToRender={10}
-               windowSize={21}
-               getItemLayout={(data, index) => ({
-                  length: data.length,
-                  offset: data.length * index,
-                  index,
-               })}
-               contentContainerStyle={{ paddingBottom: 10 }}
-               onEndReachedThreshold={0.5}
-               onEndReached={() => {
-                  if (!isGetNextData && currentPage < totalPage) {
-                     handleLoadMore();
-                  }
-               }}
-               ListFooterComponent={
-                  isGetNextData && (
-                     <View style={styles.activity_indicator}>
-                        <ActivityIndicator
-                           size="large"
-                           color={Colors.greenAvg}
-                        />
-                     </View>
-                  )
+         <FlashList
+            data={contenuList}
+            extraData={contenuList}
+            key={'_'}
+            keyExtractor={_idKeyExtractor}
+            renderItem={_renderItem}
+            getItemLayout={(data, index) => ({
+               length: data.length,
+               offset: data.length * index,
+               index,
+            })}
+            contentContainerStyle={{ paddingBottom: 10 }}
+            onEndReachedThreshold={0.5}
+            estimatedItemSize={100}
+            onEndReached={() => {
+               if (!isGetNextData && currentPage < totalPage) {
+                  handleLoadMore();
                }
-            />
-         </SafeAreaView>
+            }}
+            ListFooterComponent={
+               isGetNextData && (
+                  <View style={styles.activity_indicator}>
+                     <ActivityIndicator size="large" color={Colors.greenAvg} />
+                  </View>
+               )
+            }
+         />
       </View>
    );
 }

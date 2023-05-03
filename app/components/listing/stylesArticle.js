@@ -35,6 +35,7 @@ export const styles = StyleSheet.create({
       marginHorizontal: Dimensions.get('window').width < 380 ? 30 : 50,
    },
    container_safe: {
-      marginBottom: 50,
+      //marginBottom: 50,
+      flex: 1,
    },
 });
