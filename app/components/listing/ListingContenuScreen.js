@@ -305,23 +305,28 @@ export default function ListingContenu({ navigation }) {
                         justifyContent: 'flex-end',
                      }}
                   >
-                     <Pressable
-                        activeOpacity={0.8}
-                        onPress={() => {
-                           downloadPdfFile(item, item.attachement?.slice(21));
-                           handleToogleIsDownloading(item.id);
-                        }}
-                     >
-                        <Icon
-                           name={
-                              item.isPdfDownloading
-                                 ? 'hourglass-top'
-                                 : 'file-download'
-                           }
-                           color={Colors.greenAvg}
-                           size={30}
-                        />
-                     </Pressable>
+                     {item.attachement !== null && (
+                        <Pressable
+                           activeOpacity={0.8}
+                           onPress={() => {
+                              downloadPdfFile(
+                                 item,
+                                 item.attachement?.slice(21)
+                              );
+                              handleToogleIsDownloading(item.id);
+                           }}
+                        >
+                           <Icon
+                              name={
+                                 item.isPdfDownloading
+                                    ? 'hourglass-top'
+                                    : 'file-download'
+                              }
+                              color={Colors.greenAvg}
+                              size={30}
+                           />
+                        </Pressable>
+                     )}
                   </View>
                </View>
             </View>
