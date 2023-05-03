@@ -7,7 +7,7 @@ import {
    ToastAndroid,
    ActivityIndicator,
    Platform,
-   TouchableOpacity,
+   Pressable,
 } from 'react-native';
 import React, { useCallback, useState } from 'react';
 import ReactNativeBlobUtil from 'react-native-blob-util';
@@ -151,29 +151,53 @@ export default function ListingContenu({ navigation }) {
    };
 
    const getNextPageContenusFromApi = async () => {
-      let res = await fetchContenusToApi(currentPage + 1);
-      if (res.results?.length > 0) {
-         setCurrentPage(currentPage + 1);
-         setTotalPage(res.pages_count);
-         let oldAllContenus = [...contenuList];
-         res.results.map((result) => {
-            if (!oldAllContenus.find((contenu) => contenu.id === result.id)) {
-               oldAllContenus.push(parseDataContenuLazyLoading(result));
-            }
-         });
-         dispatch(getAllContenus(oldAllContenus));
-         setContenuList(oldAllContenus);
-         setIsGetNextData(false);
-      } else {
-         setCurrentPage(1);
+      if (isGetNextData) {
+         return;
       }
-      setIsGetNextData(false);
+      setIsGetNextData(true);
+
+      try {
+         let res = await fetchContenusToApi(currentPage + 1);
+         if (res.results?.length > 0) {
+            setCurrentPage(currentPage + 1);
+            setTotalPage(res.pages_count);
+            let oldAllContenus = [...contenuList];
+            res.results.map((result) => {
+               if (
+                  !oldAllContenus.find((contenu) => contenu.id === result.id)
+               ) {
+                  oldAllContenus.push(parseDataContenuLazyLoading(result));
+               }
+            });
+            dispatch(getAllContenus(oldAllContenus));
+            setContenuList(oldAllContenus);
+         } else {
+            setCurrentPage(totalPage || 1);
+         }
+      } catch (e) {
+         ToastAndroid.show(
+            langueActual === 'fr'
+               ? 'Erreur survenu au télechargement des données.'
+               : 'Nisy olana teo ampangalana ny angona.',
+            ToastAndroid.SHORT
+         );
+      } finally {
+         setIsGetNextData(false);
+      }
+   };
+
+   const handleLoadMore = async () => {
+      if (isConnectedToInternet && isNetworkActive) {
+         if (!isGetNextData && currentPage < totalPage) {
+            await getNextPageContenusFromApi();
+         }
+      }
    };
 
    //all logics
    const _renderItem = useCallback(({ item }) => {
       return (
-         <TouchableOpacity
+         <Pressable
             activeOpacity={0.9}
             onPress={() => {
                navigation.navigate(nameNav.listArticle, {
@@ -281,7 +305,7 @@ export default function ListingContenu({ navigation }) {
                         justifyContent: 'flex-end',
                      }}
                   >
-                     <TouchableOpacity
+                     <Pressable
                         activeOpacity={0.8}
                         onPress={() => {
                            downloadPdfFile(item, item.attachement?.slice(21));
@@ -297,11 +321,11 @@ export default function ListingContenu({ navigation }) {
                            color={Colors.greenAvg}
                            size={30}
                         />
-                     </TouchableOpacity>
+                     </Pressable>
                   </View>
                </View>
             </View>
-         </TouchableOpacity>
+         </Pressable>
       );
    }, []);
 
@@ -317,7 +341,11 @@ export default function ListingContenu({ navigation }) {
                key={'_'}
                keyExtractor={_idKeyExtractor}
                renderItem={_renderItem}
-               removeClippedSubviews={true}
+               removeClippedSubviews={false}
+               maxToRenderPerBatch={10}
+               updateCellsBatchingPeriod={50}
+               initialNumToRender={10}
+               windowSize={21}
                getItemLayout={(data, index) => ({
                   length: data.length,
                   offset: data.length * index,
@@ -325,14 +353,9 @@ export default function ListingContenu({ navigation }) {
                })}
                contentContainerStyle={{ paddingBottom: 10 }}
                onEndReachedThreshold={0.5}
-               onEndReached={async () => {
-                  if (isConnectedToInternet && isNetworkActive) {
-                     if (currentPage < totalPage) {
-                        setIsGetNextData(true);
-                        await getNextPageContenusFromApi();
-                     }
-                  } else {
-                     return;
+               onEndReached={() => {
+                  if (!isGetNextData && currentPage < totalPage) {
+                     handleLoadMore;
                   }
                }}
                ListFooterComponent={
