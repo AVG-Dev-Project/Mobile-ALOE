@@ -62,7 +62,7 @@ const LabelCustomBottomSheet = ({ text, filterBy, reference }) => {
 };
 
 //filter global include search bar / filter by thematique and type
-const filterGlobal = (array, theme, type, query, tagChoice) => {
+const filterGlobal = (langue, array, theme, type, query, tagChoice) => {
    let res = theme === null && type === null && query === null ? [] : array;
 
    if (type === 'tout' || theme === 'tout') {
@@ -75,9 +75,57 @@ const filterGlobal = (array, theme, type, query, tagChoice) => {
       res = res.filter((_contenu) => _contenu.type_nom_fr === type);
    }
    if (query) {
-      res = res.filter((_contenu) =>
-         _contenu.objet_contenu_fr.toLowerCase().includes(query.toLowerCase())
-      );
+      if (langue === 'fr') {
+         res = res.filter(
+            (_contenu) =>
+               _contenu.objet_contenu_fr
+                  ?.toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _contenu.numero?.includes(query) ||
+               _contenu.date?.includes(query) ||
+               _contenu.en_tete_contenu_fr
+                  ?.toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _contenu.expose_des_motifs_contenu_fr
+                  ?.toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _contenu.etat_nom_fr
+                  ?.toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _contenu.note_contenu_fr
+                  ?.toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _contenu.organisme_nom_fr
+                  ?.toLowerCase()
+                  .includes(query.toLowerCase())
+         );
+      }
+
+      if (langue === 'mg') {
+         res = res.filter(
+            (_contenu) =>
+               _contenu.objet_contenu_mg
+                  ?.toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _contenu.numero?.includes(query) ||
+               _contenu.date?.includes(query) ||
+               _contenu.en_tete_contenu_mg
+                  ?.toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _contenu.expose_des_motifs_contenu_mg
+                  ?.toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _contenu.etat_nom_mg
+                  ?.toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _contenu.note_contenu_mg
+                  ?.toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _contenu.organisme_nom_mg
+                  ?.toLowerCase()
+                  .includes(query.toLowerCase())
+         );
+      }
    }
    if (tagChoice.length > 0) {
       res = res.filter((_contenu) => {
@@ -91,6 +139,7 @@ const filterGlobal = (array, theme, type, query, tagChoice) => {
 };
 
 const filterGlobalForDeepSearch = (
+   langue,
    arrayArticle,
    arrayContenu,
    theme,
@@ -111,18 +160,45 @@ const filterGlobalForDeepSearch = (
       res = res.filter((_contenu) => _contenu.type_nom_fr === type);
    }
    if (query) {
-      let allIdOfContenuContainArticle = arrayArticle
-         .filter((_article) =>
-            _article.contenu_fr
-               ?.split('________________')[0]
-               .toLowerCase()
-               .includes(query.toLowerCase())
-         )
-         .map((_article) => _article.contenu);
+      if (langue === 'fr') {
+         let allIdOfContenuContainArticle = arrayArticle
+            .filter(
+               (_article) =>
+                  _article.contenu_fr
+                     ?.split('________________')[0]
+                     .toLowerCase()
+                     .includes(query.toLowerCase()) ||
+                  _article.chapitre_titre_fr
+                     ?.toLowerCase()
+                     .includes(query.toLowerCase()) ||
+                  _article.titre_fr?.toLowerCase().includes(query.toLowerCase())
+            )
+            .map((_article) => _article.contenu);
 
-      res = res.filter((_contenu) =>
-         allIdOfContenuContainArticle.includes(_contenu.id)
-      );
+         res = res.filter((_contenu) =>
+            allIdOfContenuContainArticle.includes(_contenu.id)
+         );
+      }
+
+      if (langue === 'mg') {
+         let allIdOfContenuContainArticle = arrayArticle
+            .filter(
+               (_article) =>
+                  _article.contenu_mg
+                     ?.split('________________')[0]
+                     .toLowerCase()
+                     .includes(query.toLowerCase()) ||
+                  _article.chapitre_titre_mg
+                     ?.toLowerCase()
+                     .includes(query.toLowerCase()) ||
+                  _article.titre_mg?.toLowerCase().includes(query.toLowerCase())
+            )
+            .map((_article) => _article.contenu);
+
+         res = res.filter((_contenu) =>
+            allIdOfContenuContainArticle.includes(_contenu.id)
+         );
+      }
    }
    if (tagChoice.length > 0) {
       res = res.filter((_contenu) => {
@@ -204,6 +280,7 @@ export default function Recherche({ navigation, route }) {
          ) {
             setAllContenusFilter(
                filterGlobalForDeepSearch(
+                  langueActual,
                   allArticles,
                   allContenus,
                   thematiqueChecked,
@@ -226,6 +303,7 @@ export default function Recherche({ navigation, route }) {
          ) {
             setAllContenusFilter(
                filterGlobal(
+                  langueActual,
                   allContenus,
                   thematiqueChecked,
                   typeChecked,
@@ -546,27 +624,29 @@ export default function Recherche({ navigation, route }) {
                            justifyContent: 'flex-end',
                         }}
                      >
-                        <TouchableOpacity
-                           activeOpacity={0.8}
-                           onPress={() => {
-                              ToastAndroid.show(
-                                 langueActual === 'fr'
-                                    ? 'Télechargement en cours...'
-                                    : 'Andalam-pangalana ...',
-                                 ToastAndroid.SHORT
-                              );
-                              downloadPdfFile(
-                                 item,
-                                 item.attachement?.slice(21)
-                              );
-                           }}
-                        >
-                           <Icon
-                              name={'file-download'}
-                              color={Colors.greenAvg}
-                              size={30}
-                           />
-                        </TouchableOpacity>
+                        {item.attachement !== null && (
+                           <TouchableOpacity
+                              activeOpacity={0.8}
+                              onPress={() => {
+                                 ToastAndroid.show(
+                                    langueActual === 'fr'
+                                       ? 'Télechargement en cours...'
+                                       : 'Andalam-pangalana ...',
+                                    ToastAndroid.SHORT
+                                 );
+                                 downloadPdfFile(
+                                    item,
+                                    item.attachement?.slice(21)
+                                 );
+                              }}
+                           >
+                              <Icon
+                                 name={'file-download'}
+                                 color={Colors.greenAvg}
+                                 size={30}
+                              />
+                           </TouchableOpacity>
+                        )}
                      </View>
                   </View>
                </View>
@@ -640,7 +720,7 @@ export default function Recherche({ navigation, route }) {
                   placeholder={
                      langueActual === 'fr'
                         ? 'Entrer le mot de recherche ...'
-                        : 'Ampidiro ny teny hotadiavina...'
+                        : 'Teny hotadiavina...'
                   }
                   value={textFromInputSearch}
                   onChangeText={(text) => {

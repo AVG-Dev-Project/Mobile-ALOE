@@ -31,17 +31,27 @@ const filterGlobal = (langueActual, array, query) => {
    let res = array;
    if (query) {
       langueActual === 'fr'
-         ? (res = res.filter((_loi) =>
-              _loi.contenu_fr
-                 ?.split('________________')[0]
-                 .toLowerCase()
-                 .includes(query.toLowerCase())
+         ? (res = res.filter(
+              (_article) =>
+                 _article.contenu_fr
+                    ?.split('________________')[0]
+                    .toLowerCase()
+                    .includes(query.toLowerCase()) ||
+                 _article.chapitre_titre_fr
+                    ?.toLowerCase()
+                    .includes(query.toLowerCase()) ||
+                 _article.titre_fr?.toLowerCase().includes(query.toLowerCase())
            ))
-         : (res = res.filter((_loi) =>
-              _loi.contenu_mg
-                 ?.split('________________')[0]
-                 .toLowerCase()
-                 .includes(query.toLowerCase())
+         : (res = res.filter(
+              (_article) =>
+                 _article.contenu_mg
+                    ?.split('________________')[0]
+                    .toLowerCase()
+                    .includes(query.toLowerCase()) ||
+                 _article.chapitre_titre_mg
+                    ?.toLowerCase()
+                    .includes(query.toLowerCase()) ||
+                 _article.titre_mg?.toLowerCase().includes(query.toLowerCase())
            ));
    }
 
