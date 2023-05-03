@@ -1,15 +1,12 @@
 import {
    View,
    Text,
-   FlatList,
    Image,
    useWindowDimensions,
    StyleSheet,
-   SafeAreaView,
    ToastAndroid,
    TouchableOpacity,
 } from 'react-native';
-import RenderHtml from 'react-native-render-html';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
    nameStackNavigation as nameNav,
@@ -17,6 +14,7 @@ import {
 } from '_utils';
 import { styles } from './styles';
 import { Icon } from '@rneui/themed';
+import { FlashList } from '@shopify/flash-list';
 import { useSelector, useDispatch } from 'react-redux';
 import HeaderGlobal from '_components/header/HeaderGlobal';
 import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
@@ -208,95 +206,87 @@ export default function Favoris({ navigation, route }) {
 
    return (
       <View style={styles.view_container}>
-         <SafeAreaView>
-            <FlatList
-               ListHeaderComponent={
-                  <View>
-                     <View style={styles.head_content}>
-                        <HeaderGlobal
-                           navigation={navigation}
-                           bottomSheetRef={bottomSheetRef}
+         <FlashList
+            ListHeaderComponent={
+               <View>
+                  <View style={styles.head_content}>
+                     <HeaderGlobal
+                        navigation={navigation}
+                        bottomSheetRef={bottomSheetRef}
+                     />
+                  </View>
+
+                  <View style={styles.landing_screen}>
+                     <Text style={styles.text_landing_screen}>
+                        {langueActual === 'fr'
+                           ? 'Vos favoris'
+                           : 'Ireo ankafizinao'}
+                     </Text>
+                     <View style={styles.content_in_landing_screen}>
+                        <Image
+                           style={styles.icon_in_content_landing}
+                           source={require('_images/abstract_3.jpg')}
+                        />
+                        <View
+                           style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'flex-start',
+                           }}
+                        >
+                           <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                              {langueActual === 'fr' ? 'Favoris' : 'Ankafizina'}
+                           </Text>
+                           <Text>
+                              {langueActual === 'fr'
+                                 ? 'Regardez-les encore'
+                                 : 'Jereo ihany izy ireo'}{' '}
+                           </Text>
+                        </View>
+                        <Icon
+                           name={'favorite'}
+                           color={Colors.redError}
+                           size={38}
                         />
                      </View>
-
-                     <View style={styles.landing_screen}>
-                        <Text style={styles.text_landing_screen}>
-                           {langueActual === 'fr'
-                              ? 'Vos favoris'
-                              : 'Ireo ankafizinao'}
-                        </Text>
-                        <View style={styles.content_in_landing_screen}>
-                           <Image
-                              style={styles.icon_in_content_landing}
-                              source={require('_images/abstract_3.jpg')}
-                           />
-                           <View
-                              style={{
-                                 display: 'flex',
-                                 flexDirection: 'column',
-                                 alignItems: 'flex-start',
-                              }}
-                           >
-                              <Text
-                                 style={{ fontSize: 16, fontWeight: 'bold' }}
-                              >
-                                 {langueActual === 'fr'
-                                    ? 'Favoris'
-                                    : 'Ankafizina'}
-                              </Text>
-                              <Text>
-                                 {langueActual === 'fr'
-                                    ? 'Regardez-les encore'
-                                    : 'Jereo ihany izy ireo'}{' '}
-                              </Text>
-                           </View>
-                           <Icon
-                              name={'favorite'}
-                              color={Colors.redError}
-                              size={38}
-                           />
-                        </View>
-                     </View>
                   </View>
-               }
-               ListEmptyComponent={
-                  <View
+               </View>
+            }
+            ListEmptyComponent={
+               <View
+                  style={{
+                     display: 'flex',
+                     borderWidth: 1,
+                     borderRadius: 8,
+                     borderColor: Colors.redError,
+                     padding: 18,
+                     marginVertical: width < 370 ? 20 : 28,
+                  }}
+               >
+                  <Text
                      style={{
-                        display: 'flex',
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        borderColor: Colors.redError,
-                        padding: 18,
-                        marginVertical: width < 370 ? 20 : 28,
+                        textAlign: 'center',
+                        color: Colors.redError,
+                        fontSize: width < 370 ? 18 : 30,
                      }}
                   >
-                     <Text
-                        style={{
-                           textAlign: 'center',
-                           color: Colors.redError,
-                           fontSize: width < 370 ? 18 : 30,
-                        }}
-                     >
-                        {langueActual === 'fr'
-                           ? "Vous n'avez pas de favoris"
-                           : 'Tsy misy ny ankafizinao'}
-                     </Text>
-                  </View>
-               }
-               data={dataForFlatList}
-               key={'_'}
-               keyExtractor={_idKeyExtractor}
-               renderItem={_renderItem}
-               removeClippedSubviews={true}
-               getItemLayout={(data, index) => ({
-                  length: data.length,
-                  offset: data.length * index,
-                  index,
-               })}
-               initialNumToRender={5}
-               maxToRenderPerBatch={3}
-            />
-         </SafeAreaView>
+                     {langueActual === 'fr'
+                        ? "Vous n'avez pas de favoris"
+                        : 'Tsy misy ny ankafizinao'}
+                  </Text>
+               </View>
+            }
+            data={dataForFlatList}
+            key={'_'}
+            keyExtractor={_idKeyExtractor}
+            estimatedItemSize={100}
+            renderItem={_renderItem}
+            getItemLayout={(data, index) => ({
+               length: data.length,
+               offset: data.length * index,
+               index,
+            })}
+         />
          <BottomSheetCustom
             bottomSheetRef={bottomSheetRef}
             snapPoints={snapPoints}
