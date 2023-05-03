@@ -6,10 +6,13 @@ import {
    SafeAreaView,
    ToastAndroid,
    ActivityIndicator,
+   Platform,
    TouchableOpacity,
 } from 'react-native';
 import React, { useCallback, useState } from 'react';
 import ReactNativeBlobUtil from 'react-native-blob-util';
+import * as FileSystem from 'expo-file-system';
+import * as MediaLibrary from 'expo-media-library';
 import {
    nameStackNavigation as nameNav,
    fetchContenusToApi,
@@ -54,26 +57,56 @@ export default function ListingContenu({ navigation }) {
    const downloadPdfFile = async (contenu, linkPdf) => {
       try {
          if (isNetworkActive && isConnectedToInternet) {
-            ReactNativeBlobUtil.config({
-               fileCache: true,
-            })
-               .fetch('GET', urlApiAttachement + linkPdf)
-               .then(async (resp) => {
-                  await ReactNativeBlobUtil.MediaCollection.copyToMediaStore(
-                     {
-                        name:
+            if (Platform.Version >= 29) {
+               ReactNativeBlobUtil.config({
+                  fileCache: true,
+               })
+                  .fetch('GET', urlApiAttachement + linkPdf)
+                  .then(async (resp) => {
+                     await ReactNativeBlobUtil.MediaCollection.copyToMediaStore(
+                        {
+                           name:
+                              langueActual === 'fr'
+                                 ? `${contenu.type_nom_fr} n° ${contenu.numero}`
+                                 : `${
+                                      contenu.type_nom_mg ?? contenu.type_nom_fr
+                                   } faha ${contenu.numero}`,
+                           parentFolder: 'aloe/pdf',
+                           mimeType: 'application/pdf',
+                        },
+                        'Download',
+                        resp.path()
+                     );
+                     handleToogleIsDownloading(contenu.id);
+                     ToastAndroid.show(
+                        `${
                            langueActual === 'fr'
-                              ? `${contenu.type_nom_fr} n° ${contenu.numero}`
-                              : `${
-                                   contenu.type_nom_mg ?? contenu.type_nom_fr
-                                } faha ${contenu.numero}`,
-                        parentFolder: 'aloe/pdf',
-                        mimeType: 'application/pdf',
-                     },
-                     'Download',
-                     resp.path()
+                              ? contenu.type_nom_fr
+                              : contenu.type_nom_mg
+                        } n° ${
+                           contenu.numero
+                        } télecharger dans download/aloe/pdf.`,
+                        ToastAndroid.SHORT
+                     );
+                  });
+            }
+            if (Platform.Version < 29) {
+               const downloadResumable = FileSystem.createDownloadResumable(
+                  urlApiAttachement + linkPdf,
+                  FileSystem.documentDirectory + linkPdf?.slice(19)
+               );
+
+               const { uri } = await downloadResumable.downloadAsync();
+               const asset = await MediaLibrary.createAssetAsync(uri);
+               const album = await MediaLibrary.getAlbumAsync('Download');
+               if (album === null) {
+                  await MediaLibrary.createAlbumAsync('Download', asset, false);
+               } else {
+                  await MediaLibrary.addAssetsToAlbumAsync(
+                     [asset],
+                     album,
+                     false
                   );
-                  handleToogleIsDownloading(contenu.id);
                   ToastAndroid.show(
                      `${
                         langueActual === 'fr'
@@ -81,10 +114,12 @@ export default function ListingContenu({ navigation }) {
                            : contenu.type_nom_mg
                      } n° ${
                         contenu.numero
-                     } télecharger dans download/aloe/pdf.`,
+                     } télecharger dans le dossier download!`,
                      ToastAndroid.SHORT
                   );
-               });
+                  handleToogleIsDownloading(contenu.id);
+               }
+            }
          } else {
             ToastAndroid.show(
                `${

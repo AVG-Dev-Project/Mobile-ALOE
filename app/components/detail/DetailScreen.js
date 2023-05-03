@@ -4,6 +4,7 @@ import {
    StyleSheet,
    StatusBar,
    ImageBackground,
+   Platform,
    SafeAreaView,
    ScrollView,
    TouchableOpacity,
@@ -234,22 +235,40 @@ export default function Detail({ navigation, route }) {
 
    const saveToDownloadDirectory = async (uri) => {
       try {
-         const filename = `Article n° ${oneArticle.numero}/${
-            oneArticle.titre_fr ?? ''
-         }`;
-         await ReactNativeBlobUtil.MediaCollection.copyToMediaStore(
-            {
-               name: filename,
-               parentFolder: 'aloe/pdf',
-               mimeType: 'application/pdf',
-            },
-            'Download',
-            uri.replace('file://', '')
-         );
-         ToastAndroid.show(
-            `Article n° ${oneArticle.numero} télecharger dans download/aloe/pdf.`,
-            ToastAndroid.SHORT
-         );
+         //for version 10 and up
+         if (Platform.Version >= 29) {
+            const filename = `Article n° ${oneArticle.numero}/${
+               oneArticle.titre_fr ?? ''
+            }`;
+            await ReactNativeBlobUtil.MediaCollection.copyToMediaStore(
+               {
+                  name: filename,
+                  parentFolder: 'aloe/pdf',
+                  mimeType: 'application/pdf',
+               },
+               'Download',
+               uri.replace('file://', '')
+            );
+            ToastAndroid.show(
+               `Article n° ${oneArticle.numero} télecharger dans download/aloe/pdf.`,
+               ToastAndroid.SHORT
+            );
+         }
+
+         // for version 9 and down
+         if (Platform.Version < 29) {
+            const asset = await MediaLibrary.createAssetAsync(uri);
+            const album = await MediaLibrary.getAlbumAsync('Download');
+            if (album === null) {
+               await MediaLibrary.createAlbumAsync('Download', asset, false);
+            } else {
+               await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+               ToastAndroid.show(
+                  `Article n°${oneArticle.numero} télecharger dans le dossier download!`,
+                  ToastAndroid.SHORT
+               );
+            }
+         }
       } catch (e) {
          ToastAndroid.show(
             langueActual === 'fr'
