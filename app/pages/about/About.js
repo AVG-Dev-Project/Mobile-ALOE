@@ -27,9 +27,15 @@ export default function About({ navigation }) {
                </Text>
                <Text>
                   {langueActual === 'fr'
+                     ? 'Total des textes présents : '
+                     : "Totalin'ny lahatsoratra misy ato : "}{' '}
+                  {allArticles.length} / 100
+               </Text>
+               <Text>
+                  {langueActual === 'fr'
                      ? 'Total des articles présents : '
                      : "Totalin'ny lahatsoratra misy ato : "}{' '}
-                  {allArticles.length}
+                  {allArticles.length} / 3000
                </Text>
             </View>
 

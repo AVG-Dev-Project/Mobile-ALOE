@@ -12,6 +12,7 @@ import {
    CHECK_STATUS_DATA,
    UPDATE_LIST_TAG_CHOICE,
    HIDE_SHOW_TAB_BAR,
+   VALUE_FOR_DEEP_SEARCH,
 } from './action_names';
 
 export const getStarted = () => ({
@@ -80,5 +81,10 @@ export const updateTagsChoice = (tag) => ({
 
 export const hideShowTabBar = (value) => ({
    type: HIDE_SHOW_TAB_BAR,
+   payload: value,
+});
+
+export const passValueForDeepSearch = (value) => ({
+   type: VALUE_FOR_DEEP_SEARCH,
    payload: value,
 });

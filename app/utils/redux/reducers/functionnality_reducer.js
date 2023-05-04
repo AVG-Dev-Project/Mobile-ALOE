@@ -6,6 +6,7 @@ import {
    isConnectedToInternet,
    checktatusData,
    hideShowTabBar,
+   passValueForDeepSearch,
 } from '../actions/action_creators';
 
 const initialState = {
@@ -15,6 +16,7 @@ const initialState = {
    isConnectedToInternet: null,
    isDataAvailable: false,
    isTabBarHide: false,
+   valueForDeepSearch: null,
 };
 
 export const functionnalityReducer = (state = initialState, action) => {
@@ -42,6 +44,10 @@ export const functionnalityReducer = (state = initialState, action) => {
       case hideShowTabBar().type:
          return produce(state, (draft) => {
             draft.isTabBarHide = action.payload;
+         });
+      case passValueForDeepSearch().type:
+         return produce(state, (draft) => {
+            draft.valueForDeepSearch = action.payload;
          });
       default:
          return state;

@@ -78,6 +78,9 @@ export default function ListingArticle({ navigation, route }) {
    const allFavoriteIdFromStore = useSelector(
       (selector) => selector.loi.favoris
    );
+   const valueForDeepSearch = useSelector(
+      (selector) => selector.fonctionnality.valueForDeepSearch
+   );
    const idOfTheContenuMother = route.params.idOfThisContenu;
    const [isGetNextData, setIsGetNextData] = useState(false);
    const [articleList, setArticleList] = useState(
@@ -90,7 +93,9 @@ export default function ListingArticle({ navigation, route }) {
          }
       )
    );
-   const [valueForSearch, setValueForSearch] = useState('');
+   const [valueForSearch, setValueForSearch] = useState(
+      valueForDeepSearch || ''
+   );
 
    //all functions
    const handleToogleIsFavorite = (id) => {
@@ -176,6 +181,15 @@ export default function ListingArticle({ navigation, route }) {
             getNextPageArticlesFromApi();
          }
       }, [articleList])
+   );
+
+   //for deepSearch
+   useFocusEffect(
+      useCallback(() => {
+         if (valueForSearch !== null) {
+            setValueForSearch(valueForDeepSearch);
+         }
+      }, [valueForDeepSearch])
    );
 
    useEffect(() => {

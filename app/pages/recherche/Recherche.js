@@ -30,6 +30,7 @@ import { Colors } from '_theme/Colors';
 import {
    updateTagsChoice,
    hideShowTabBar,
+   passValueForDeepSearch,
 } from '_utils/redux/actions/action_creators';
 
 //component custom
@@ -248,6 +249,10 @@ export default function Recherche({ navigation, route }) {
          };
       })
    );
+   const valueForDeepSearch = useSelector(
+      (selector) => selector.fonctionnality.valueForDeepSearch
+   );
+
    const allTagsFromStore = useSelector((selector) => selector.loi.tagsChoice);
    //data from navigation
    let typeFromParams = route.params ? route.params.type : null;
@@ -272,6 +277,7 @@ export default function Recherche({ navigation, route }) {
 
    useEffect(() => {
       if (isUseDeepSearch) {
+         dispatch(passValueForDeepSearch(valueForSearch));
          if (
             typeChecked ||
             thematiqueChecked ||
@@ -326,14 +332,16 @@ export default function Recherche({ navigation, route }) {
    //necessary when we quit the page i.e rehefa miala amin'ilay page
    useFocusEffect(
       useCallback(() => {
+         setValueForSearch('');
+         setTextFromValueForSearch('');
+         setIsUseDeepSearch(false);
+         dispatch(passValueForDeepSearch(''));
          return () => {
             typeFromParams = null;
             thematiqueFromParams = null;
             setAllContenusFilter([]);
             setTypeChecked(null);
             setThematiqueChecked(null);
-            setValueForSearch('');
-            setTextFromValueForSearch('');
             dispatch(updateTagsChoice([]));
          };
       }, [])
