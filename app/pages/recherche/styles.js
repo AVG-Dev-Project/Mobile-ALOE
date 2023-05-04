@@ -79,7 +79,7 @@ export const styles = StyleSheet.create({
       elevation: 7,
    },
    view_flatlist: {
-      height: heightDevice < 700 ? heightDevice - 290 : 'auto',
+      height: heightDevice < 700 ? heightDevice - 290 : heightDevice - 280,
    },
    view_bottom_sheet: {
       backgroundColor: '#f2f2f2',
