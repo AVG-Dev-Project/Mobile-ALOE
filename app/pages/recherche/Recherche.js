@@ -364,6 +364,12 @@ export default function Recherche({ navigation, route }) {
       }, [allTags, langueActual])
    );
 
+   useFocusEffect(
+      useCallback(() => {
+         setOffset(0);
+      }, [])
+   );
+
    //Effect pour declancher la translation
    useEffect(() => {
       Voice.onSpeechError = onSpeechError;
