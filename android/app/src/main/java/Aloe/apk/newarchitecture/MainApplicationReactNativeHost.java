@@ -1,4 +1,4 @@
-package Aloe.apk.newarchitecture;
+package aloe.apk.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -20,9 +20,9 @@ import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import Aloe.apk.BuildConfig;
-import Aloe.apk.newarchitecture.components.MainComponentsRegistry;
-import Aloe.apk.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import aloe.apk.BuildConfig;
+import aloe.apk.newarchitecture.components.MainComponentsRegistry;
+import aloe.apk.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

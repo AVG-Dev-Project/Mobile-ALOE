@@ -23,6 +23,8 @@ import {
    parsingTags,
    parseDataArticleLazyLoading,
    parseDataContenuLazyLoading,
+   widthPercentageToDP,
+   heightPercentageToDP,
 } from './helper/functionHelpler';
 
 import {
@@ -65,4 +67,6 @@ export {
    fetchAllDataToLocalDatabase,
    fetchPartialDataForUpdating,
    filterArticleToListByContenu,
+   widthPercentageToDP,
+   heightPercentageToDP,
 };
