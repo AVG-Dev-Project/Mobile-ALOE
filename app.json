@@ -1,6 +1,6 @@
 {
    "expo": {
-      "name": "Aloe",
+      "name": "aloe",
       "slug": "aloe",
       "version": "1.0.0",
       "orientation": "portrait",
@@ -21,7 +21,7 @@
             "NSPhotoLibraryUsageDescription": "Allow $(ALOE) to access your photos.",
             "NSPhotoLibraryAddUsageDescription": "Allow $(ALOE) to save photos."
          },
-         "bundleIdentifier": "Aloe.apk"
+         "bundleIdentifier": "aloe.apk"
       },
       "android": {
          "softwareKeyboardLayoutMode": "pan",
@@ -29,7 +29,7 @@
             "foregroundImage": "./assets/adaptive-icon.png",
             "backgroundColor": "#ffffff"
          },
-         "package": "Aloe.apk",
+         "package": "aloe.apk",
          "config": {
             "googleMaps": {
                "apiKey": "AIzaSyCfeV-dI5JYOl39mJDqsyL8xtRykQHU29I"
