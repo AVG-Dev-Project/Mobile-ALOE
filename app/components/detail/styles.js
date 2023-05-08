@@ -12,21 +12,32 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
    },
    info_in_landing_detail: {
-      marginTop: heightDevice < 700 ? 50 : 60,
+      marginTop: 5,
       marginLeft: 28,
    },
    maskImageDetailArticle: {
       backgroundColor: 'rgba(0, 0, 0, 0.3)',
    },
+   view_header_nav: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '90%',
+   },
+   view_button_switch_article: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-evenly',
+   },
    description_section: {
       paddingHorizontal: 24,
-      height: heightDevice < 700 ? heightDevice - 230 : heightDevice - 260,
+      height: heightDevice < 800 ? heightDevice - 310 : heightDevice - 350,
       backgroundColor: Colors.white,
    },
    view_round_button_detail_article: {
       position: 'absolute',
-      top: -28,
-      right: 32,
+      top: -22,
+      right: 14,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
@@ -55,23 +66,18 @@ export const styles = StyleSheet.create({
       padding: 10,
       borderRadius: 52,
    },
-   all_button_in_detail_screen: {
-      marginTop: heightDevice < 700 ? 10 : 12,
-      marginBottom: heightDevice < 700 ? 0 : 26,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-around',
+   fab_button: {
+      height: 150,
+      flexDirection: 'column',
+      paddingVertical: 5,
+      flexGrow: 1,
    },
-   button_in_detail: {
-      textAlign: 'center',
-      backgroundColor: Colors.greenWhite,
-      paddingVertical: 10,
-      width: 90,
-      paddingHorizontal: 24,
-      color: Colors.greenAvg,
-      borderRadius: 20,
-      fontSize: 21,
-      fontWeight: '800',
+   view_content_fab_button: {
+      width: '90%',
+      marginTop: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-evenly',
    },
    view_bottom_sheet: {
       backgroundColor: '#f2f2f2',
@@ -88,5 +94,11 @@ export const styles = StyleSheet.create({
       display: 'flex',
       flexDirection: 'column',
       marginBottom: 8,
+   },
+   view_button_zoom: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'flex-end',
+      marginRight: 28,
    },
 });

@@ -1,11 +1,8 @@
 import { nameStackNavigation } from './constante/NameStackNavigation';
-import { ContexteProvider, Contexte } from './contexte/Contexte';
 import { LoiService } from './services/LoiService';
 import {
    storeDataToLocalStorage,
    getDataFromLocalStorage,
-   removeInLocalStorage,
-   getAllKeys,
    storeFavoriteIdToLocalStorage,
    getFavoriteFromLocalStorage,
 } from './storage/asyncStorage';
@@ -15,16 +12,19 @@ import {
    TypeSchema,
    ThematiqueSchema,
    DoleanceSchema,
+   TagSchema,
 } from './storage/database';
 import { insertOrUpdateToDBFunc } from './storage/querySqlite';
 import {
    parseStructureDataForArticle,
    parseStructureDataForContenu,
    filterArticleToListByContenu,
-   cutTextWithBalise,
    checkAndsendMailFromLocalDBToAPI,
+   parsingTags,
    parseDataArticleLazyLoading,
    parseDataContenuLazyLoading,
+   widthPercentageToDP,
+   heightPercentageToDP,
 } from './helper/functionHelpler';
 
 import {
@@ -32,19 +32,17 @@ import {
    fetchArticlesToApi,
    fetchArticlesByContenuToApi,
    fetchThematiquesToApi,
+   fetchTagsToApi,
    fetchContenusToApi,
    fetchAllDataToLocalDatabase,
+   fetchPartialDataForUpdating,
 } from './helper/functionFetching';
 
 export {
    nameStackNavigation,
-   ContexteProvider,
-   Contexte,
    LoiService,
    storeDataToLocalStorage,
    getDataFromLocalStorage,
-   removeInLocalStorage,
-   getAllKeys,
    storeFavoriteIdToLocalStorage,
    getFavoriteFromLocalStorage,
    ArticleSchema,
@@ -52,12 +50,14 @@ export {
    TypeSchema,
    ThematiqueSchema,
    DoleanceSchema,
+   TagSchema,
    insertOrUpdateToDBFunc,
    parseStructureDataForArticle,
    parseStructureDataForContenu,
-   cutTextWithBalise,
    checkAndsendMailFromLocalDBToAPI,
+   parsingTags,
    fetchTypesToApi,
+   fetchTagsToApi,
    parseDataArticleLazyLoading,
    parseDataContenuLazyLoading,
    fetchContenusToApi,
@@ -65,5 +65,8 @@ export {
    fetchArticlesByContenuToApi,
    fetchThematiquesToApi,
    fetchAllDataToLocalDatabase,
+   fetchPartialDataForUpdating,
    filterArticleToListByContenu,
+   widthPercentageToDP,
+   heightPercentageToDP,
 };

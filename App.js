@@ -10,13 +10,19 @@ import { Colors } from '_theme/Colors';
 import Navigation from '_components/navigation/navigation';
 import { Provider } from 'react-redux';
 import { store } from '_utils/redux/store';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function App() {
    return (
       <Provider store={store}>
          <SafeAreaProvider>
-            <StatusBar backgroundColor={Colors.greenAvg} />
-            <Navigation />
+            <GestureHandlerRootView style={{ flex: 1 }}>
+               <BottomSheetModalProvider>
+                  <StatusBar backgroundColor={Colors.greenAvg} />
+                  <Navigation />
+               </BottomSheetModalProvider>
+            </GestureHandlerRootView>
          </SafeAreaProvider>
       </Provider>
    );

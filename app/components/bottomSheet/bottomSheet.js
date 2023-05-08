@@ -1,14 +1,7 @@
-import React, { useEffect, useCallback } from 'react';
-import {
-   View,
-   Text,
-   StyleSheet,
-   TouchableOpacity,
-   useWindowDimensions,
-} from 'react-native';
+import React, { useCallback } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Icon } from '@rneui/themed';
-import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { useDispatch } from 'react-redux';
 import { changeLanguage } from '_utils/redux/actions/action_creators';
 import { Colors } from '_theme/Colors';
@@ -16,7 +9,6 @@ import { Colors } from '_theme/Colors';
 export default function BottomSheetCustom({ bottomSheetRef, snapPoints }) {
    const dispatch = useDispatch();
    const { i18n } = useTranslation();
-   const { height } = useWindowDimensions();
 
    //all functions
    const onHandleChangeLanguage = (langue) => {
@@ -25,9 +17,9 @@ export default function BottomSheetCustom({ bottomSheetRef, snapPoints }) {
    };
 
    //all efects
-   useEffect(() => {
-      bottomSheetRef.current.close();
-   }, []);
+   // useEffect(() => {
+   //    bottomSheetRef.current.close();
+   // }, []);
 
    //components
    const renderBackDrop = useCallback(
@@ -36,7 +28,7 @@ export default function BottomSheetCustom({ bottomSheetRef, snapPoints }) {
    );
 
    return (
-      <BottomSheet
+      <BottomSheetModal
          ref={bottomSheetRef}
          backdropComponent={renderBackDrop}
          index={1}
@@ -52,7 +44,10 @@ export default function BottomSheetCustom({ bottomSheetRef, snapPoints }) {
                   bottomSheetRef.current.close();
                }}
             >
-               <Icon name={'flag'} color={Colors.greenAvg} size={38} />
+               <Image
+                  style={styles.flagImg}
+                  source={require('_images/french.png')}
+               />
                <Text style={styles.text_bottomsheet}>Français</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -63,11 +58,14 @@ export default function BottomSheetCustom({ bottomSheetRef, snapPoints }) {
                   bottomSheetRef.current.close();
                }}
             >
-               <Icon name={'flag'} color={Colors.greenAvg} size={38} />
+               <Image
+                  style={styles.flagImg}
+                  source={require('_images/malagasy.png')}
+               />
                <Text style={styles.text_bottomsheet}>Malagasy</Text>
             </TouchableOpacity>
          </View>
-      </BottomSheet>
+      </BottomSheetModal>
    );
 }
 
@@ -95,5 +93,10 @@ const styles = StyleSheet.create({
       fontSize: 26,
       marginLeft: 13,
       fontWeight: 'bold',
+   },
+   flagImg: {
+      height: 30,
+      width: 30,
+      borderRadius: 28,
    },
 });

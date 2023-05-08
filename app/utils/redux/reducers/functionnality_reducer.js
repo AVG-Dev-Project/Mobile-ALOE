@@ -4,6 +4,9 @@ import {
    changeLanguage,
    isNetworkActive,
    isConnectedToInternet,
+   checktatusData,
+   hideShowTabBar,
+   passValueForDeepSearch,
 } from '../actions/action_creators';
 
 const initialState = {
@@ -11,6 +14,9 @@ const initialState = {
    langue: 'fr',
    isNetworkActive: null,
    isConnectedToInternet: null,
+   isDataAvailable: false,
+   isTabBarHide: false,
+   valueForDeepSearch: null,
 };
 
 export const functionnalityReducer = (state = initialState, action) => {
@@ -30,6 +36,18 @@ export const functionnalityReducer = (state = initialState, action) => {
       case isConnectedToInternet().type:
          return produce(state, (draft) => {
             draft.isConnectedToInternet = action.payload;
+         });
+      case checktatusData().type:
+         return produce(state, (draft) => {
+            draft.isDataAvailable = action.payload;
+         });
+      case hideShowTabBar().type:
+         return produce(state, (draft) => {
+            draft.isTabBarHide = action.payload;
+         });
+      case passValueForDeepSearch().type:
+         return produce(state, (draft) => {
+            draft.valueForDeepSearch = action.payload;
          });
       default:
          return state;

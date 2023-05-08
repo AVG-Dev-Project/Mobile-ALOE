@@ -1,16 +1,16 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Colors } from '_theme/Colors';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { styles } from './styles';
 import { nameStackNavigation as nameNav } from '_utils';
 
 export default function About({ navigation }) {
-   const dispatch = useDispatch();
-
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const allArticles = useSelector((selector) => selector.loi.articles);
+   const allContenus = useSelector((selector) => selector.loi.contenus);
 
    return (
       <KeyboardAwareScrollView style={{ backgroundColor: Colors.background }}>
@@ -25,6 +25,18 @@ export default function About({ navigation }) {
                />
                <Text>
                   {langueActual === 'fr' ? 'Version' : 'Fanovana'} 1.0.0
+               </Text>
+               <Text>
+                  {langueActual === 'fr'
+                     ? 'Total des textes présents : '
+                     : "Totalin'ny lahatsoratra misy ato : "}{' '}
+                  {allContenus.length} / 100
+               </Text>
+               <Text>
+                  {langueActual === 'fr'
+                     ? 'Total des articles présents : '
+                     : "Totalin'ny lahatsoratra misy ato : "}{' '}
+                  {allArticles.length} / 3000
                </Text>
             </View>
 
@@ -44,7 +56,7 @@ export default function About({ navigation }) {
                         : "Mombamomban'ny AVG"}
                   </Text>
                </TouchableOpacity>
-               <TouchableOpacity activeOpacity={0.6}>
+               {/*<TouchableOpacity activeOpacity={0.6}>
                   <Text
                      style={styles.button_link_about}
                      onPress={() =>
@@ -59,7 +71,7 @@ export default function About({ navigation }) {
                         ? "Conditions d'utilisation"
                         : "Fepetran'ny fampiasana"}
                   </Text>
-               </TouchableOpacity>
+                  </TouchableOpacity>*/}
                <TouchableOpacity
                   activeOpacity={0.6}
                   onPress={() =>

@@ -19,8 +19,8 @@ export class ArticleSchema extends BaseModel {
          id: { type: types.INTEGER, primary_key: true, not_null: true }, // For while only supports id as primary key
          contenu: { type: types.INTEGER, not_null: true },
          numero: { type: types.INTEGER, not_null: true },
-         titre_id: { type: types.INTEGER, not_null: true },
-         titre_numero: { type: types.INTEGER, not_null: true },
+         titre_id: { type: types.INTEGER },
+         titre_numero: { type: types.INTEGER },
          titre_fr: { type: types.TEXT },
          titre_mg: { type: types.TEXT },
          chapitre_id: { type: types.INTEGER },
@@ -77,6 +77,7 @@ export class ContenuSchema extends BaseModel {
          organisme_id: { type: types.INTEGER },
          organisme_nom_fr: { type: types.TEXT },
          organisme_nom_mg: { type: types.TEXT },
+         tag: { type: types.TEXT },
          signature: { type: types.TEXT },
          attachement: { type: types.TEXT },
       };
@@ -146,6 +147,28 @@ export class DoleanceSchema extends BaseModel {
          email: { type: types.TEXT, not_null: true },
          objet: { type: types.TEXT },
          contenu: { type: types.TEXT },
+      };
+   }
+}
+
+export class TagSchema extends BaseModel {
+   constructor(obj) {
+      super(obj);
+   }
+
+   static get database() {
+      return async () => SQLite.openDatabase('database.db');
+   }
+
+   static get tableName() {
+      return 'tag';
+   }
+
+   static get columnMapping() {
+      return {
+         id: { type: types.INTEGER, primary_key: true }, // For while only supports id as primary key
+         contenu_fr: { type: types.TEXT, not_null: true },
+         contenu_mg: { type: types.TEXT },
       };
    }
 }

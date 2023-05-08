@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
    Text,
    View,
@@ -15,12 +15,12 @@ import {
    getStarted,
    addFavoris,
    isNetworkActive,
+   checktatusData,
    isConnectedToInternet,
 } from '_utils/redux/actions/action_creators';
 import {
    nameStackNavigation as nameNav,
    getDataFromLocalStorage,
-   removeInLocalStorage,
    getFavoriteFromLocalStorage,
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
@@ -36,18 +36,15 @@ export default function Welcome({ navigation }) {
    const isUserNetworkActive = useSelector(
       (selector) => selector.fonctionnality.isNetworkActive
    );
-   const currentPageContenuApi = useSelector(
-      (selector) => selector.loi.currentPageContenu
-   );
-   const currentPageArticleApi = useSelector(
-      (selector) => selector.loi.currentPageArticle
+   const isDataAvailable = useSelector(
+      (selector) => selector.fonctionnality.isDataAvailable
    );
    const isUserConnectedToInternet = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
-   const [isAllDataAlsoUploaded, setIsAllDataAlsoUploaded] = useState(false);
+   /*const [isAllDataAlsoUploaded, setIsAllDataAlsoUploaded] = useState(false);
    const [isAllDataAlsoDownloaded, setIsAllDataAlsoDownloaded] =
-      useState(false);
+      useState(false);*/
    const [isDataLoaded, setIsDataLoaded] = useState(false);
 
    //functions
@@ -79,10 +76,16 @@ export default function Welcome({ navigation }) {
 
    useEffect(() => {
       getDataFromLocalStorage('isAllDataImported').then((res) => {
-         if (res === 'true') setIsAllDataAlsoUploaded(true);
+         if (res === 'true') {
+            //setIsAllDataAlsoUploaded(true);
+            dispatch(checktatusData(true));
+         }
       });
       getDataFromLocalStorage('isAllDataDownloaded').then((res) => {
-         if (res === 'true') setIsAllDataAlsoDownloaded(true);
+         if (res === 'true') {
+            //setIsAllDataAlsoDownloaded(true);
+            dispatch(checktatusData(true));
+         }
       });
    }, []);
 
@@ -125,7 +128,7 @@ export default function Welcome({ navigation }) {
                ici à Madagascar que vous pouvez consulter à tout moment. Avec ou
                sans internet, vous pouvez la consulter avec toute tranquilité.
             </Text>
-            {isAllDataAlsoUploaded || isAllDataAlsoDownloaded ? (
+            {isDataAvailable ? (
                <Text style={{ textAlign: 'center' }}>
                   Les lois sont prêts, vous pouvez commencer à lire. Vous pouvez
                   cliquer sur la flèche droite...
@@ -145,7 +148,7 @@ export default function Welcome({ navigation }) {
                justifyContent: 'space-evenly',
             }}
          >
-            <View style={styles.view_button_arrondi}>
+            {/*<View style={styles.view_button_arrondi}>
                <TouchableOpacity
                   style={styles.boutton_arrondi}
                   activeOpacity={0.8}
@@ -186,21 +189,63 @@ export default function Welcome({ navigation }) {
                      loading={isDataLoaded}
                   />
                </View>
+            )}*/}
+
+            {isDataAvailable ? (
+               <View style={styles.view_button_arrondi}>
+                  <Button
+                     icon={{
+                        name: 'arrow-forward',
+                        type: 'material',
+                        size: 34,
+                        color: Colors.white,
+                     }}
+                     titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
+                     buttonStyle={{
+                        backgroundColor: Colors.greenAvg,
+                        margin: 8,
+                        minWidth: width < 370 ? 70 : 70,
+                        minHeight: 70,
+                        borderRadius: 60,
+                     }}
+                     containerStyle={{}}
+                     onPress={() => {
+                        getOfflineDatas();
+                        setIsDataLoaded(true);
+                     }}
+                     loading={isDataLoaded}
+                  />
+               </View>
+            ) : (
+               <View style={styles.view_button_arrondi}>
+                  <TouchableOpacity
+                     style={styles.boutton_arrondi}
+                     activeOpacity={0.8}
+                     onPress={() => {
+                        navigation.navigate(nameNav.downloadData);
+                     }}
+                  >
+                     <Icon
+                        name={'cloud-download'}
+                        color={Colors.white}
+                        size={34}
+                     />
+                  </TouchableOpacity>
+               </View>
             )}
          </View>
          <View
             style={{
                display: 'flex',
                flexDirection: 'row',
+               alignItems: 'center',
+               justifyContent: 'center',
+               width: '100%',
             }}
          >
             <Image
                style={styles.logo_image}
-               source={require('_images/avg_logo.jpeg')}
-            />
-            <Image
-               style={styles.logo_image}
-               source={require('_images/usaid_logo.png')}
+               source={require('_images/usaid.png')}
             />
          </View>
       </View>

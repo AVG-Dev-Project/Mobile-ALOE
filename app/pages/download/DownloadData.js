@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import { Text, View, useWindowDimensions } from 'react-native';
+import { Text, View, useWindowDimensions, ToastAndroid } from 'react-native';
 import { Colors } from '_theme/Colors';
 import Lottie from 'lottie-react-native';
 import { Icon, Button } from '@rneui/themed';
@@ -12,25 +12,19 @@ import {
    isNetworkActive,
    addFavoris,
    isConnectedToInternet,
-   getCurrentPageContenuForApi,
-   getCurrentPageArticleForApi,
+   checktatusData,
 } from '_utils/redux/actions/action_creators';
 import {
-   ArticleSchema,
-   ContenuSchema,
-   TypeSchema,
-   ThematiqueSchema,
    insertOrUpdateToDBFunc,
    parseStructureDataForArticle,
    parseStructureDataForContenu,
    storeDataToLocalStorage,
    getDataFromLocalStorage,
    getFavoriteFromLocalStorage,
-   removeInLocalStorage,
-   getAllKeys,
    fetchTypesToApi,
    fetchArticlesToApi,
    fetchContenusToApi,
+   fetchTagsToApi,
    fetchThematiquesToApi,
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
@@ -42,26 +36,20 @@ export default function DownloadData({ navigation }) {
    const animation = useRef(null);
    const { width } = useWindowDimensions();
    const dispatch = useDispatch();
-   const langueActual = useSelector(
-      (selector) => selector.fonctionnality.langue
-   );
    const isUserNetworkActive = useSelector(
       (selector) => selector.fonctionnality.isNetworkActive
-   );
-   const currentPageContenuApi = useSelector(
-      (selector) => selector.loi.currentPageContenu
-   );
-   const currentPageArticleApi = useSelector(
-      (selector) => selector.loi.currentPageArticle
    );
    const isUserConnectedToInternet = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
+   const isDataAvailable = useSelector(
+      (selector) => selector.fonctionnality.isDataAvailable
+   );
    const [isFetchData, setIsFetchData] = useState(false);
    const [isUploadData, setIsUploadData] = useState(false);
-   const [isAllDataAlsoUploaded, setIsAllDataAlsoUploaded] = useState(false);
+   /*const [isAllDataAlsoUploaded, setIsAllDataAlsoUploaded] = useState(false);
    const [isAllDataAlsoDownloaded, setIsAllDataAlsoDownloaded] =
-      useState(false);
+      useState(false);*/
    const [buttonStartDisabled, setButtonStartDisabled] = useState(true);
    const [isDataLoaded, setIsDataLoaded] = useState(false);
    const [messageStatusInternet, setMessageStatusInternet] = useState('');
@@ -69,12 +57,27 @@ export default function DownloadData({ navigation }) {
    //all functions
    // functions selon disponibilité de isUserNetworkActive 1 pour démarrer tous les fonction fetch depuis API 2 pour importer les données depuis le fichier
    const getOnlineDatas = async () => {
-      await fetchContenusToApi(currentPageContenuApi, dispatch);
-      await fetchArticlesToApi(currentPageArticleApi, dispatch);
-      await fetchThematiquesToApi();
-      await fetchTypesToApi();
+      let resContenu = await fetchContenusToApi(1);
+      let resArticle = await fetchArticlesToApi(1);
+      let resTheme = await fetchThematiquesToApi();
+      let resTag = await fetchTagsToApi();
+      let resType = await fetchTypesToApi();
+      if (
+         resContenu.results?.length > 0 &&
+         resArticle.results?.length > 0 &&
+         resTheme.results?.length > 0 &&
+         resType.results?.length > 0 &&
+         resTag.results?.length > 0
+      ) {
+         storeDataToLocalStorage('isAllDataDownloaded', 'true');
+         dispatch(checktatusData(true));
+      } else {
+         ToastAndroid.show(
+            'Certain contenu ne sont pas disponible et non pas été télecharger.',
+            ToastAndroid.SHORT
+         );
+      }
       setIsFetchData(false);
-      storeDataToLocalStorage('isAllDataDownloaded', 'true');
    };
 
    const getOfflineDatas = () => {
@@ -89,12 +92,6 @@ export default function DownloadData({ navigation }) {
          dispatch(getStarted());
       }, 500);
    };
-
-   /*const showData = () => {
-      return ArticleSchema.query({ columns: '*' }).then((res) => {
-         console.log(res.length);
-      });
-   };*/
 
    const handleFileSelectionAndImportData = async () => {
       setIsUploadData(true);
@@ -129,6 +126,7 @@ export default function DownloadData({ navigation }) {
             );
             setIsUploadData(false);
             storeDataToLocalStorage('isAllDataImported', 'true');
+            dispatch(checktatusData(true));
          } else {
             setIsUploadData(false);
          }
@@ -174,20 +172,29 @@ export default function DownloadData({ navigation }) {
 
    useEffect(() => {
       getDataFromLocalStorage('isAllDataImported').then((res) => {
-         if (res === 'true') setIsAllDataAlsoUploaded(true);
+         if (res === 'true') {
+            //setIsAllDataAlsoUploaded(true);
+            dispatch(checktatusData(true));
+         }
       });
       getDataFromLocalStorage('isAllDataDownloaded').then((res) => {
-         if (res === 'true') setIsAllDataAlsoDownloaded(true);
+         if (res === 'true') {
+            //setIsAllDataAlsoDownloaded(true);
+            dispatch(checktatusData(true));
+         }
       });
    }, [isUploadData, isFetchData]);
 
    useEffect(() => {
-      if (isAllDataAlsoDownloaded || isAllDataAlsoUploaded) {
+      if (
+         /*isAllDataAlsoDownloaded || isAllDataAlsoUploaded*/ isDataAvailable
+      ) {
          return setButtonStartDisabled(false);
       }
    }, [
-      isAllDataAlsoDownloaded,
-      isAllDataAlsoUploaded,
+      /*isAllDataAlsoDownloaded,
+      isAllDataAlsoUploaded,*/
+      isDataAvailable,
       isUploadData,
       isFetchData,
    ]);
@@ -283,28 +290,6 @@ export default function DownloadData({ navigation }) {
                   onPress={() => handleFileSelectionAndImportData()}
                   loading={isUploadData}
                />
-
-               {/*<Button
-                  title="Show data"
-                  icon={{
-                     name: 'file-upload',
-                     type: 'material',
-                     size: 24,
-                     color: Colors.white,
-                  }}
-                  titleStyle={{ fontSize: 16 }}
-                  buttonStyle={{
-                     borderRadius: 15,
-                     backgroundColor: Colors.greenAvg,
-                  }}
-                  containerStyle={{
-                     width: 250,
-                     marginVertical: 5,
-                  }}
-                  onPress={() => {
-                     showData();
-                  }}
-               />*/}
             </View>
          </View>
          <View>
@@ -321,7 +306,7 @@ export default function DownloadData({ navigation }) {
                   borderRadius: 30,
                   backgroundColor: Colors.greenAvg,
                   paddingVertical: 24,
-                  width: width < 370 ? 160 : 180,
+                  width: width < 370 ? 170 : 190,
                }}
                containerStyle={{
                   marginVertical: 10,
