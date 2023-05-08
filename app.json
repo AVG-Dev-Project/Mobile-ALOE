@@ -2,7 +2,7 @@
    "expo": {
       "name": "aloe",
       "slug": "aloe",
-      "version": "1.0.2",
+      "version": "1.0.0",
       "orientation": "portrait",
       "icon": "./assets/icon.png",
       "userInterfaceStyle": "light",
@@ -16,9 +16,15 @@
       },
       "assetBundlePatterns": ["**/*"],
       "ios": {
-         "supportsTablet": true
+         "supportsTablet": true,
+         "infoPlist": {
+            "NSPhotoLibraryUsageDescription": "Allow $(ALOE) to access your photos.",
+            "NSPhotoLibraryAddUsageDescription": "Allow $(ALOE) to save photos."
+         },
+         "bundleIdentifier": "aloe.apk"
       },
       "android": {
+         "softwareKeyboardLayoutMode": "pan",
          "adaptiveIcon": {
             "foregroundImage": "./assets/adaptive-icon.png",
             "backgroundColor": "#ffffff"
@@ -28,7 +34,13 @@
             "googleMaps": {
                "apiKey": "AIzaSyCfeV-dI5JYOl39mJDqsyL8xtRykQHU29I"
             }
-         }
+         },
+         "permissions": [
+            "android.permission.RECORD_AUDIO",
+            "android.permission.READ_EXTERNAL_STORAGE",
+            "android.permission.WRITE_EXTERNAL_STORAGE",
+            "android.permission.ACCESS_MEDIA_LOCATION"
+         ]
       },
       "web": {
          "favicon": "./assets/favicon.png"

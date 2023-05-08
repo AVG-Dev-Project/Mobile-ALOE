@@ -2,24 +2,30 @@ import { Colors } from '_theme/Colors';
 import { StyleSheet, Dimensions } from 'react-native';
 
 const widthDevice = Dimensions.get('window').width;
+const heightDevice = Dimensions.get('window').height;
 export const styles = StyleSheet.create({
    view_container_search: {
-      flex: 1,
       marginTop: 8,
-      paddingBottom: 70,
+      paddingBottom: 0,
       paddingHorizontal: 15,
-      backgroundColor: Colors.baackground,
+      backgroundColor: Colors.background,
    },
    head_content: {
       marginTop: 10,
    },
+   labelTags: {
+      paddingBottom: 6,
+   },
+   view_carousel: {
+      width: '100%',
+      flexDirection: 'column',
+      //backgroundColor: Colors.greenWhite,
+   },
    view_for_filtre: {
-      backgroundColor: Colors.greenWhite,
-      padding: 10,
-      marginVertical: 4,
+      //backgroundColor: Colors.greenWhite,
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'space-evenly',
+      justifyContent: 'space-around',
       alignItems: 'center',
    },
    view_in_filtre: {
@@ -51,13 +57,15 @@ export const styles = StyleSheet.create({
       borderLeftWidth: 0,
    },
    view_render: {
-      height: widthDevice < 370 ? 130 : 160,
+      height: heightDevice < 800 ? 260 : 220,
       borderWidth: 1,
       borderRadius: 10,
       borderColor: Colors.greenWhite,
-      marginVertical: 5,
-      padding: 10,
+      marginVertical: 4,
+      paddingHorizontal: 10,
+      paddingVertical: 6,
       backgroundColor: Colors.greenWhite,
+      marginHorizontal: 8,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
@@ -69,6 +77,9 @@ export const styles = StyleSheet.create({
       shadowOpacity: 0.21,
       shadowRadius: 7.68,
       elevation: 7,
+   },
+   view_flatlist: {
+      height: heightDevice < 700 ? heightDevice - 290 : heightDevice - 280,
    },
    view_bottom_sheet: {
       backgroundColor: '#f2f2f2',
@@ -85,5 +96,19 @@ export const styles = StyleSheet.create({
       margin: 0,
       padding: 0,
       height: 46,
+   },
+   view_chips: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: 6,
+      borderRadius: 20,
+      borderWidth: 1,
+      borderColor: Colors.greenAvg,
+   },
+   item_chip: {
+      paddingVertical: 8,
+      paddingHorizontal: 12,
+      fontWeight: 'bold',
    },
 });

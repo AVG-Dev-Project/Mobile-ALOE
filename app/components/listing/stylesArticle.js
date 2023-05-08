@@ -7,13 +7,22 @@ export const styles = StyleSheet.create({
       paddingHorizontal: 8,
       backgroundColor: Colors.background,
    },
+   input: {
+      borderWidth: 1,
+      height: 40,
+      paddingHorizontal: 10,
+      borderRadius: 8,
+   },
+   view_search: {
+      marginBottom: 6,
+   },
    view_render: {
       marginVertical: 8,
       display: 'flex',
       flexDirection: 'row',
    },
    maskImageArticle: {
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: 'rgba(0, 0, 0, 0.2)',
       borderRadius: 18,
       height: 160,
       width: Dimensions.get('window').width < 380 ? 100 : 130,
@@ -24,5 +33,9 @@ export const styles = StyleSheet.create({
       fontSize: Dimensions.get('window').width < 380 ? 40 : 44,
       marginVertical: 50,
       marginHorizontal: Dimensions.get('window').width < 380 ? 30 : 50,
+   },
+   container_safe: {
+      //marginBottom: 50,
+      flex: 1,
    },
 });

@@ -6,7 +6,7 @@ import BottomBarTabs from '_components/navigation/tabs/BottomBarTabs';
 /*screen normal |screen indépendant à afficher|*/
 import { Welcome, Doleance, DownloadData } from '_pages';
 import { configStack } from './configStack';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ListingArticle from '_components/listing/ListingArticleScreen';
 import ListingContenu from '_components/listing/ListingContenuScreen';
 import Detail from '_components/detail/DetailScreen';
@@ -40,9 +40,7 @@ export default function StackNavigation() {
             />
          </Stack.Group>
 
-         <Stack.Group
-            screenOptions={configStack.screenOptionsForHeaderTransparent}
-         >
+         <Stack.Group screenOptions={configStack.screenOptionsForHeaderDisable}>
             <Stack.Screen
                name={nameNav.detailPage}
                component={Detail}
@@ -50,7 +48,11 @@ export default function StackNavigation() {
                   title: route.params.titleScreen,
                })}
             />
+         </Stack.Group>
 
+         <Stack.Group
+            screenOptions={configStack.screenOptionsForHeaderTransparent}
+         >
             <Stack.Screen
                name={nameNav.doleance}
                component={Doleance}

@@ -1,29 +1,20 @@
 import {
    View,
    Text,
-   FlatList,
    Image,
    useWindowDimensions,
    StyleSheet,
-   SafeAreaView,
    ToastAndroid,
    TouchableOpacity,
 } from 'react-native';
-import RenderHtml from 'react-native-render-html';
-import React, {
-   useCallback,
-   useEffect,
-   useState,
-   useMemo,
-   useRef,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
    nameStackNavigation as nameNav,
-   cutTextWithBalise,
    checkAndsendMailFromLocalDBToAPI,
 } from '_utils';
 import { styles } from './styles';
 import { Icon } from '@rneui/themed';
+import { FlashList } from '@shopify/flash-list';
 import { useSelector, useDispatch } from 'react-redux';
 import HeaderGlobal from '_components/header/HeaderGlobal';
 import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
@@ -44,6 +35,8 @@ export default function Favoris({ navigation, route }) {
    const isUserConnectedToInternet = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
+   const allContenus = useSelector((selector) => selector.loi.contenus);
+
    const snapPoints = useMemo(
       () => (height < 700 ? [0, '40%'] : [0, '28%']),
       []
@@ -51,6 +44,14 @@ export default function Favoris({ navigation, route }) {
    const dataForFlatList = allArticles.filter((article) =>
       listOfIdFavorites.includes(article.id)
    );
+
+   //all functions
+   const getOneContenuReferenceByIdFromArticle = (idCont) => {
+      const referenceContenu = allContenus.filter(
+         (contenu) => contenu.id === idCont
+      );
+      return referenceContenu[0];
+   };
 
    //all refs
    const bottomSheetRef = useRef(null);
@@ -71,7 +72,7 @@ export default function Favoris({ navigation, route }) {
          >
             <View style={styles.view_render}>
                <Image
-                  source={require('_images/book_loi.jpg')}
+                  source={require('_images/abstract.jpg')}
                   style={{
                      width: width < 380 ? 100 : 140,
                      height: 170,
@@ -102,6 +103,13 @@ export default function Favoris({ navigation, route }) {
                >
                   <View>
                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
+                        {getOneContenuReferenceByIdFromArticle(item.contenu)
+                           .type_nom_fr +
+                           ' ' +
+                           getOneContenuReferenceByIdFromArticle(item.contenu)
+                              .numero}
+                     </Text>
+                     <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
                         {langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '}{' '}
                         {item.numero}
                      </Text>
@@ -114,37 +122,21 @@ export default function Favoris({ navigation, route }) {
                      >
                         {langueActual === 'fr' ? item.titre_fr : item.titre_mg}
                      </Text>
-                     {item.chapitre_id && (
-                        <Text style={{ fontSize: 12 }}>
-                           {langueActual === 'fr'
-                              ? `Chapitre ${item.chapitre_numero ?? ''}`
-                              : `Lohateny ${item.chapitre_numero ?? ''}`}
-                           : {item.chapitre_titre_fr ?? ''}
-                        </Text>
-                     )}
                   </View>
                   <Text
                      style={{
-                        fontSize: width < 380 ? 8 : 16,
+                        fontSize: width < 380 ? 10 : 16,
                         flex: 2,
                         width: 210,
+                        marginTop: 8,
                      }}
                      numberOfLines={4}
                   >
-                     <Text
-                        style={{
-                           fontSize: width < 380 ? 10 : 16,
-                           flex: 2,
-                           width: 210,
-                        }}
-                        numberOfLines={4}
-                     >
-                        {langueActual === 'fr'
-                           ? item.contenu_fr?.split('________________')[0]
-                           : item.contenu_mg?.split('________________')[0] ??
-                             'Tsy misy dikan-teny malagasy ito lahatsoratra iray ito.'}
-                        {' ...'}
-                     </Text>
+                     {langueActual === 'fr'
+                        ? item.contenu_fr?.split('________________')[0]
+                        : item.contenu_mg?.split('________________')[0] ??
+                          'Tsy misy dikan-teny malagasy ito lahatsoratra iray ito.'}
+                     {' ...'}
                   </Text>
                   <View
                      style={{
@@ -195,25 +187,11 @@ export default function Favoris({ navigation, route }) {
    }, []);
 
    //all function
-   const sourceHTML = (data) => {
-      const source = {
-         html: data,
-      };
-      return source;
-   };
-
    const showToastFavorite = (id) => {
       ToastAndroid.show(
          `Vous avez enlevé l'article n° ${id} dans votre favoris`,
          ToastAndroid.SHORT
       );
-   };
-
-   const tagsStyles = {
-      p: {
-         width: '40%',
-         fontSize: width < 370 ? 12 : 14,
-      },
    };
 
    //all effects
@@ -228,95 +206,87 @@ export default function Favoris({ navigation, route }) {
 
    return (
       <View style={styles.view_container}>
-         <SafeAreaView>
-            <FlatList
-               ListHeaderComponent={
-                  <View>
-                     <View style={styles.head_content}>
-                        <HeaderGlobal
-                           navigation={navigation}
-                           bottomSheetRef={bottomSheetRef}
+         <FlashList
+            ListHeaderComponent={
+               <View>
+                  <View style={styles.head_content}>
+                     <HeaderGlobal
+                        navigation={navigation}
+                        bottomSheetRef={bottomSheetRef}
+                     />
+                  </View>
+
+                  <View style={styles.landing_screen}>
+                     <Text style={styles.text_landing_screen}>
+                        {langueActual === 'fr'
+                           ? 'Vos favoris'
+                           : 'Ireo ankafizinao'}
+                     </Text>
+                     <View style={styles.content_in_landing_screen}>
+                        <Image
+                           style={styles.icon_in_content_landing}
+                           source={require('_images/abstract_3.jpg')}
+                        />
+                        <View
+                           style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'flex-start',
+                           }}
+                        >
+                           <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                              {langueActual === 'fr' ? 'Favoris' : 'Ankafizina'}
+                           </Text>
+                           <Text>
+                              {langueActual === 'fr'
+                                 ? 'Regardez-les encore'
+                                 : 'Jereo ihany izy ireo'}{' '}
+                           </Text>
+                        </View>
+                        <Icon
+                           name={'favorite'}
+                           color={Colors.redError}
+                           size={38}
                         />
                      </View>
-
-                     <View style={styles.landing_screen}>
-                        <Text style={styles.text_landing_screen}>
-                           {langueActual === 'fr'
-                              ? 'Vos favoris'
-                              : 'Ireo ankafizinao'}
-                        </Text>
-                        <View style={styles.content_in_landing_screen}>
-                           <Image
-                              style={styles.icon_in_content_landing}
-                              source={require('_images/book_loi.jpg')}
-                           />
-                           <View
-                              style={{
-                                 display: 'flex',
-                                 flexDirection: 'column',
-                                 alignItems: 'flex-start',
-                              }}
-                           >
-                              <Text
-                                 style={{ fontSize: 16, fontWeight: 'bold' }}
-                              >
-                                 {langueActual === 'fr'
-                                    ? 'Favoris'
-                                    : 'Ankafizina'}
-                              </Text>
-                              <Text>
-                                 {langueActual === 'fr'
-                                    ? 'Regardez-les encore'
-                                    : 'Jereo ihany izy ireo'}{' '}
-                              </Text>
-                           </View>
-                           <Icon
-                              name={'favorite'}
-                              color={Colors.redError}
-                              size={38}
-                           />
-                        </View>
-                     </View>
                   </View>
-               }
-               ListEmptyComponent={
-                  <View
+               </View>
+            }
+            ListEmptyComponent={
+               <View
+                  style={{
+                     display: 'flex',
+                     borderWidth: 1,
+                     borderRadius: 8,
+                     borderColor: Colors.redError,
+                     padding: 18,
+                     marginVertical: width < 370 ? 20 : 28,
+                  }}
+               >
+                  <Text
                      style={{
-                        display: 'flex',
-                        borderWidth: 1,
-                        borderRadius: 8,
-                        borderColor: Colors.redError,
-                        padding: 18,
-                        marginVertical: width < 370 ? 20 : 28,
+                        textAlign: 'center',
+                        color: Colors.redError,
+                        fontSize: width < 370 ? 18 : 30,
                      }}
                   >
-                     <Text
-                        style={{
-                           textAlign: 'center',
-                           color: Colors.redError,
-                           fontSize: width < 370 ? 18 : 30,
-                        }}
-                     >
-                        {langueActual === 'fr'
-                           ? "Vous n'avez pas de favoris"
-                           : 'Tsy misy ny ankafizinao'}
-                     </Text>
-                  </View>
-               }
-               data={dataForFlatList}
-               key={'_'}
-               keyExtractor={_idKeyExtractor}
-               renderItem={_renderItem}
-               removeClippedSubviews={true}
-               getItemLayout={(data, index) => ({
-                  length: data.length,
-                  offset: data.length * index,
-                  index,
-               })}
-               initialNumToRender={5}
-               maxToRenderPerBatch={3}
-            />
-         </SafeAreaView>
+                     {langueActual === 'fr'
+                        ? "Vous n'avez pas de favoris"
+                        : 'Tsy misy ny ankafizinao'}
+                  </Text>
+               </View>
+            }
+            data={dataForFlatList}
+            key={'_'}
+            keyExtractor={_idKeyExtractor}
+            estimatedItemSize={100}
+            renderItem={_renderItem}
+            getItemLayout={(data, index) => ({
+               length: data.length,
+               offset: data.length * index,
+               index,
+            })}
+         />
          <BottomSheetCustom
             bottomSheetRef={bottomSheetRef}
             snapPoints={snapPoints}

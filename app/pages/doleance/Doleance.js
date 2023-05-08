@@ -2,11 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import {
    View,
    Text,
-   Image,
    TextInput,
    SafeAreaView,
    ToastAndroid,
-   TouchableOpacity,
 } from 'react-native';
 import { Colors } from '_theme/Colors';
 import Lottie from 'lottie-react-native';
@@ -23,7 +21,6 @@ import {
 export default function Doleance({ navigation }) {
    //all datas
    const animation = useRef(null);
-   const dispatch = useDispatch();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );

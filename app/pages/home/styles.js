@@ -25,14 +25,14 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
    },
    text_landing_screen: {
-      fontSize: 22,
+      fontSize: widthDevice < 400 ? 18 : 20,
       color: Colors.white,
       fontWeight: 'bold',
    },
    content_in_landing_screen: {
       display: 'flex',
       flexDirection: 'row',
-      alignContent: 'center',
+      alignItems: 'center',
       justifyContent: 'space-around',
       backgroundColor: Colors.greenWhite,
       width: '90%',
@@ -54,17 +54,20 @@ export const styles = StyleSheet.create({
    /*Thematique*/
    /*Types*/
    maskImageCatg: {
-      backgroundColor: 'rgba(0, 0, 0, 0.6)',
       borderRadius: 18,
-      height: 100,
+      height: 130,
       width: 230,
+      borderWidth: 2,
+      borderColor: Colors.greenAvg,
    },
 
-   view_container_renderItemType: {
+   view_container_renderItemThematique: {
       width: 230,
+      height: 130,
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
+      paddingHorizontal: 6,
    },
 
    view_carousel: {
@@ -75,18 +78,16 @@ export const styles = StyleSheet.create({
    text_descriptif_for_carousel: {
       fontWeight: 'bold',
       opacity: 0.9,
-      color: Colors.white,
-      marginHorizontal: 20,
+      color: Colors.black,
       fontSize: 20,
       flexWrap: 'wrap',
       textAlign: 'center',
-      top: 20,
    },
-   image_poster_style_type: {
-      height: 100,
+   /*image_poster_style_thematique: {
+      height: 130,
       width: 230,
       borderRadius: 15,
-   },
+   },*/
    view_bottom_sheet: {
       marginHorizontal: 6,
    },

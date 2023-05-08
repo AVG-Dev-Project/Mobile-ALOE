@@ -4,6 +4,7 @@ import {
    StyleSheet,
    StatusBar,
    ImageBackground,
+   Platform,
    SafeAreaView,
    ScrollView,
    TouchableOpacity,
@@ -11,44 +12,53 @@ import {
    useWindowDimensions,
 } from 'react-native';
 import * as Speech from 'expo-speech';
-import React, {
-   useState,
-   useEffect,
-   useMemo,
-   useRef,
-   useCallback,
-} from 'react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
+import { captureRef } from 'react-native-view-shot';
 import RenderHtml from 'react-native-render-html';
+import { useDispatch, useSelector } from 'react-redux';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import * as MediaLibrary from 'expo-media-library';
 import { styles } from './styles';
-import { Icon } from '@rneui/themed';
-import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import { Icon, FAB, Button } from '@rneui/themed';
+import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { printToFileAsync } from 'expo-print';
-import bgImage from '_images/bg_loi.jpg';
-import { useDispatch, useSelector } from 'react-redux';
+import bgImage from '_images/abstract.jpg';
 import { Colors } from '_theme/Colors';
-// import { addFavoris } from '_utils/redux/actions/action_creators';
-import { captureRef } from 'react-native-view-shot';
+import { addFavoris } from '_utils/redux/actions/action_creators';
+import { filterArticleToListByContenu, parsingTags } from '_utils';
 
 export default function Detail({ navigation, route }) {
    const [status, requestPermission] = MediaLibrary.usePermissions();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   const { width, height } = useWindowDimensions();
+   const { width } = useWindowDimensions();
    const dispatch = useDispatch();
    const [isSpeakPlay, setIsSpeakPlay] = useState(false);
    const allContenus = useSelector((selector) => selector.loi.contenus);
-   const oneArticle = route.params.articleToViewDetail;
+   const allArticles = useSelector((selector) => selector.loi.articles);
+   const [isFABshow, setIsFABshow] = useState(false);
+   const [oneArticle, setOneArticle] = useState(
+      route.params.articleToViewDetail
+   );
+   const [fontSizeDynamic, setFontSizeDynamic] = useState(
+      width < 380 ? 14 : 18
+   );
    const [contenuMother, setContenuMother] = useState(
       allContenus.filter((contenu) => contenu.id === oneArticle.contenu)
    );
-   const snapPoints = useMemo(
-      () => (height < 700 ? [0, '60%'] : [0, '60%']),
-      []
+   const [numberOfCurrentArticle, setNumberOfCurrentArticle] = useState(0);
+   const allArticlesRelatedToThisContenu = filterArticleToListByContenu(
+      oneArticle.contenu,
+      allArticles
    );
-   console.log(contenuMother);
+   const numberTotalOfArticleRelatedToThisContenu =
+      allArticlesRelatedToThisContenu.length - 1;
+
+   const allFavoriteIdFromStore = useSelector(
+      (selector) => selector.loi.favoris
+   );
+   const snapPoints = useMemo(() => [0, '60%', '90%'], []);
 
    //permission
    if (status === null) {
@@ -60,6 +70,43 @@ export default function Detail({ navigation, route }) {
    const imageRef = useRef();
 
    //all function
+   //next-previous article
+   const changeArticle = (actionName, currentArticleNumber) => {
+      let result = null;
+      switch (actionName) {
+         case 'previous':
+            if (currentArticleNumber - 1 < 0) {
+               result =
+                  allArticlesRelatedToThisContenu[
+                     numberTotalOfArticleRelatedToThisContenu
+                  ];
+               setNumberOfCurrentArticle(
+                  numberTotalOfArticleRelatedToThisContenu - 1
+               );
+            } else {
+               result =
+                  allArticlesRelatedToThisContenu[currentArticleNumber - 1];
+               setNumberOfCurrentArticle(numberOfCurrentArticle - 1);
+            }
+            break;
+         case 'next':
+            if (
+               currentArticleNumber + 1 >
+               numberTotalOfArticleRelatedToThisContenu
+            ) {
+               result = allArticlesRelatedToThisContenu[0];
+               setNumberOfCurrentArticle(0 + 1);
+            } else {
+               result =
+                  allArticlesRelatedToThisContenu[currentArticleNumber + 1];
+               setNumberOfCurrentArticle(numberOfCurrentArticle + 1);
+            }
+            break;
+         default:
+            break;
+      }
+      return setOneArticle(result);
+   };
 
    /*function to speach article*/
    const playPauseSpeak = (txt_to_say) => {
@@ -77,7 +124,7 @@ export default function Detail({ navigation, route }) {
    };
 
    const openBottomSheet = () => {
-      return bottomSheetRef.current.snapTo(1);
+      return bottomSheetRef.current.present();
    };
 
    const onSaveImageAsync = async () => {
@@ -112,18 +159,61 @@ export default function Detail({ navigation, route }) {
                <h1 style="text-align: center; color: ${Colors.greenAvg}">${
          langueActual === 'fr'
             ? contenuMother[0].type_nom_fr + ' n°'
-            : contenuMother[0].type_nom_mg ?? 'Votoantiny' + ' faha '
+            : contenuMother[0].type_nom_mg ??
+              contenuMother[0].type_nom_fr + ' n°'
       }
                ${contenuMother[0].numero}</h1>
-               <h2 style="text-align: center; color: ${
-                  Colors.greenAvg
-               }">Article n° ${oneArticle.numero}</h2>
-               <h3 style="text-align: center;">Titre : ${
+               <h3 style="text-align: left;">Date: <span style="font-weight: normal;">${
+                  contenuMother[0].date
+               }</span></h3>
+               <h3 style="text-align: left;">Numero: <span style="font-weight: normal;">${
+                  contenuMother[0].numero
+               }</span></h3>
+               <h3 style="text-align: left;">Type: <span style="font-weight: normal;">${
+                  langueActual === 'fr'
+                     ? contenuMother[0].type_nom_fr
+                     : contenuMother[0].type_nom_mg ??
+                       contenuMother[0].type_nom_fr
+               }</span></h3>
+               <h3 style="text-align: left;">Thematique: <span style="font-weight: normal;">${
+                  langueActual === 'fr'
+                     ? contenuMother[0].thematique_nom_fr
+                     : contenuMother[0].thematique_nom_mg ??
+                       contenuMother[0].thematique_nom_fr
+               }</span></h3>
+               <h3 style="text-align: left;">Objet: <span style="font-weight: normal;">${
+                  langueActual === 'fr'
+                     ? contenuMother[0].objet_contenu_fr ?? ' '
+                     : contenuMother[0].objet_contenu_mg ?? ' '
+               }</span></h3>
+               <h3 style="text-align: left;">Etat: <span style="font-weight: normal;">${
+                  langueActual === 'fr'
+                     ? contenuMother[0].etat_nom_fr ?? ' '
+                     : contenuMother[0].etat_nom_mg ?? ' '
+               }</span></h3>
+               <h3 style="text-align: left;">Organisme: <span style="font-weight: normal;">${
+                  langueActual === 'fr'
+                     ? contenuMother[0].organisme_nom_fr ?? ' '
+                     : contenuMother[0].organisme_nom_mg ?? ' '
+               }</span></h3>
+
+               <h3 style="text-align: left;">Titre : <span style="font-weight: normal;">${
                   langueActual === 'fr'
                      ? oneArticle.titre_fr
                      : oneArticle.titre_mg
-               }</h3>
-               <h3 style="text-decoration: underline">Contenu de l'article : </h3>
+               }</span></h3>
+               
+               <h4 style="text-align: left;">Tags: <span style="font-weight: normal;">${parsingTags(
+                  contenuMother[0].tag
+               ).map((tag) =>
+                  langueActual === 'fr'
+                     ? tag.contenu_fr + ', '
+                     : tag.contenu_mg + ', '
+               )}</span></h4>
+               
+               <h3 style="text-decoration: underline; color: ${
+                  Colors.greenAvg
+               }">Article n° ${oneArticle.numero}</h3>
                <p style="width: 90%">${
                   langueActual === 'fr'
                      ? oneArticle.contenu_fr?.split('________________')[0]
@@ -145,22 +235,40 @@ export default function Detail({ navigation, route }) {
 
    const saveToDownloadDirectory = async (uri) => {
       try {
-         const filename = `Article n° ${oneArticle.numero}/${
-            oneArticle.titre_fr ?? ''
-         }`;
-         await ReactNativeBlobUtil.MediaCollection.copyToMediaStore(
-            {
-               name: filename,
-               parentFolder: 'aloe/pdf',
-               mimeType: 'application/pdf',
-            },
-            'Download',
-            uri.replace('file://', '')
-         );
-         ToastAndroid.show(
-            `Article n° ${oneArticle.numero} télecharger dans download/aloe/pdf.`,
-            ToastAndroid.SHORT
-         );
+         //for version 10 and up
+         if (Platform.Version >= 29) {
+            const filename = `Article n° ${oneArticle.numero}/${
+               oneArticle.titre_fr ?? ''
+            }`;
+            await ReactNativeBlobUtil.MediaCollection.copyToMediaStore(
+               {
+                  name: filename,
+                  parentFolder: 'aloe/pdf',
+                  mimeType: 'application/pdf',
+               },
+               'Download',
+               uri.replace('file://', '')
+            );
+            ToastAndroid.show(
+               `Article n° ${oneArticle.numero} télecharger dans download/aloe/pdf.`,
+               ToastAndroid.SHORT
+            );
+         }
+
+         // for version 9 and down
+         if (Platform.Version < 29) {
+            const asset = await MediaLibrary.createAssetAsync(uri);
+            const album = await MediaLibrary.getAlbumAsync('Download');
+            if (album === null) {
+               await MediaLibrary.createAlbumAsync('Download', asset, false);
+            } else {
+               await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+               ToastAndroid.show(
+                  `Article n°${oneArticle.numero} télecharger dans le dossier download!`,
+                  ToastAndroid.SHORT
+               );
+            }
+         }
       } catch (e) {
          ToastAndroid.show(
             langueActual === 'fr'
@@ -171,14 +279,27 @@ export default function Detail({ navigation, route }) {
       }
    };
 
-   // const showToastFavorite = () => {
-   //    ToastAndroid.show('Vos favoris on été modifié', ToastAndroid.SHORT);
-   // };
+   const showToastFavorite = () => {
+      if (allFavoriteIdFromStore.includes(oneArticle.id)) {
+         ToastAndroid.show(
+            `Article n° ${oneArticle.numero} retiré dans vos favoris.`,
+            ToastAndroid.SHORT
+         );
+      } else {
+         ToastAndroid.show(
+            `Article n° ${oneArticle.numero} ajouté dans vos favoris.`,
+            ToastAndroid.SHORT
+         );
+      }
+   };
 
    const sourceHTML = (data) => {
       const source = {
          html:
-            data ?? '<p>Tsy misy dikan-teny malagasy ity lahatsoratra ity.</p>',
+            data ??
+            (langueActual === 'fr'
+               ? "<p>Le contenu de l'article n'est pas disponible</p>"
+               : "<p>Mbola tsy misy ny votoatin'ny lahatsoratra</p>"),
       };
       return source;
    };
@@ -187,16 +308,13 @@ export default function Detail({ navigation, route }) {
       () => ({
          p: {
             width: '100%',
-            fontSize: width < 380 ? 14 : 18,
+            fontSize: fontSizeDynamic,
          },
       }),
-      []
+      [fontSizeDynamic]
    );
 
    //all efects
-   useEffect(() => {
-      bottomSheetRef.current.close();
-   }, []);
 
    //all components
    const renderBackDrop = useCallback(
@@ -210,6 +328,7 @@ export default function Detail({ navigation, route }) {
          <SafeAreaView style={styles.container_safe}>
             <ImageBackground
                source={bgImage}
+               blurRadius={5}
                style={{
                   height: 230,
                }}
@@ -224,11 +343,18 @@ export default function Detail({ navigation, route }) {
                   ]}
                ></View>
                <View ref={imageRef} collapsable={false}>
-                  <View style={styles.info_in_landing_detail}>
+                  <View style={styles.view_header_nav}>
+                     <Button
+                        type="clear"
+                        size="md"
+                        onPress={() => navigation.goBack()}
+                     >
+                        <Icon name="arrow-back" color={Colors.white} />
+                     </Button>
                      <Text
                         style={{
                            fontWeight: 'bold',
-                           fontSize: width < 370 ? 18 : 24,
+                           fontSize: width < 370 ? 18 : 22,
                            textDecorationLine: 'underline',
                            marginBottom: 8,
                            textAlign: 'center',
@@ -242,6 +368,45 @@ export default function Detail({ navigation, route }) {
                              'Votoantiny' + ' faha '}{' '}
                         {contenuMother[0].numero}
                      </Text>
+                  </View>
+                  <View style={styles.view_button_switch_article}>
+                     <Button
+                        type="clear"
+                        size="sm"
+                        onPress={() =>
+                           changeArticle('previous', numberOfCurrentArticle)
+                        }
+                     >
+                        <Icon name="arrow-back-ios" color={Colors.greenWhite} />
+                     </Button>
+
+                     <Text
+                        style={{
+                           fontWeight: 'bold',
+                           fontSize: width < 370 ? 16 : 20,
+                           color: Colors.white,
+                        }}
+                     >
+                        {langueActual === 'fr'
+                           ? `Article n° ${oneArticle.numero}`
+                           : `Lalana faha ${oneArticle.numero}` ??
+                             `Article n° ${oneArticle.numero}`}
+                     </Text>
+
+                     <Button
+                        type="clear"
+                        size="sm"
+                        onPress={() =>
+                           changeArticle('next', numberOfCurrentArticle)
+                        }
+                     >
+                        <Icon
+                           name="arrow-forward-ios"
+                           color={Colors.greenWhite}
+                        />
+                     </Button>
+                  </View>
+                  <View style={styles.info_in_landing_detail}>
                      <Text
                         style={{
                            fontWeight: 'bold',
@@ -249,19 +414,21 @@ export default function Detail({ navigation, route }) {
                            width: '90%',
                            color: Colors.white,
                         }}
+                        numberOfLines={1}
                      >
                         {langueActual === 'fr'
                            ? oneArticle.titre_fr
                            : oneArticle.titre_mg ??
                              'Tsy misy dikan-teny malagasy.'}
                      </Text>
-                     {oneArticle.chapitre_id && (
+                     {oneArticle.chapitre_id ? (
                         <Text
                            style={{
                               fontSize: 13,
                               marginVertical: 4,
                               color: Colors.white,
                            }}
+                           numberOfLines={1}
                         >
                            {langueActual === 'fr'
                               ? `Chapitre n°${oneArticle.chapitre_numero}`
@@ -272,25 +439,42 @@ export default function Detail({ navigation, route }) {
                               : oneArticle.chapitre_titre_mg ??
                                 'Tsy misy ny dikan-teny malagasy.'}
                         </Text>
+                     ) : (
+                        <Text
+                           style={{
+                              fontSize: 13,
+                              marginVertical: 4,
+                              color: Colors.white,
+                           }}
+                           numberOfLines={1}
+                        >
+                           {' '}
+                        </Text>
                      )}
                   </View>
                   <View style={styles.description_section}>
                      <View style={styles.view_round_button_detail_article}>
-                        {/* <TouchableOpacity
-                        onPress={() => {
-                           dispatch(addFavoris(oneArticle.id));
-                           showToastFavorite();
-                        }}
-                        activeOpacity={0.7}
-                     >
-                        <Text style={styles.boutton_add_favorite}>
-                           <Icon
-                              name={'favorite'}
-                              color={Colors.greenAvg}
-                              size={32}
-                           />{' '}
-                        </Text>
-                     </TouchableOpacity> */}
+                        <TouchableOpacity
+                           onPress={() => {
+                              dispatch(addFavoris(oneArticle.id));
+                              showToastFavorite();
+                           }}
+                           activeOpacity={0.7}
+                        >
+                           <Text style={styles.boutton_add_favorite}>
+                              <Icon
+                                 name={
+                                    allFavoriteIdFromStore.includes(
+                                       oneArticle.id
+                                    )
+                                       ? 'favorite'
+                                       : 'favorite-border'
+                                 }
+                                 color={Colors.greenAvg}
+                                 size={32}
+                              />{' '}
+                           </Text>
+                        </TouchableOpacity>
 
                         <TouchableOpacity
                            activeOpacity={0.7}
@@ -306,107 +490,127 @@ export default function Detail({ navigation, route }) {
                         </TouchableOpacity>
                      </View>
 
-                     <Text
-                        style={{
-                           fontSize: 22,
-                           fontWeight: 'bold',
-                           marginTop: 18,
-                        }}
-                     >
-                        {langueActual === 'fr'
-                           ? "Contenu de l'article "
-                           : "Votoatin'ny lahatsoratra"}
-                     </Text>
-                     <ScrollView
-                        style={{
-                           paddingRight: 4,
-                        }}
-                     >
-                        {langueActual === 'fr' ? (
-                           <RenderHtml
-                              contentWidth={width}
-                              source={sourceHTML(
-                                 oneArticle.contenu_fr?.split(
-                                    '________________'
-                                 )[1]
-                              )}
-                              tagsStyles={tagsStyles}
-                           />
-                        ) : (
-                           <RenderHtml
-                              contentWidth={width}
-                              source={sourceHTML(
-                                 oneArticle.contenu_mg?.split(
-                                    '________________'
-                                 )[1]
-                              )}
-                              tagsStyles={tagsStyles}
-                           />
-                        )}
-                     </ScrollView>
+                     <View>
+                        <Text
+                           style={{
+                              fontSize: 22,
+                              fontWeight: 'bold',
+                              marginTop: 18,
+                           }}
+                        >
+                           {langueActual === 'fr'
+                              ? "Contenu de l'article "
+                              : "Votoatin'ny lahatsoratra"}
+                        </Text>
+                        <ScrollView
+                           style={{
+                              paddingRight: 4,
+                           }}
+                        >
+                           {langueActual === 'fr' ? (
+                              <RenderHtml
+                                 contentWidth={width}
+                                 source={sourceHTML(
+                                    oneArticle.contenu_fr?.split(
+                                       '________________'
+                                    )[1]
+                                 )}
+                                 tagsStyles={tagsStyles}
+                              />
+                           ) : (
+                              <RenderHtml
+                                 contentWidth={width}
+                                 source={sourceHTML(
+                                    oneArticle.contenu_mg?.split(
+                                       '________________'
+                                    )[1]
+                                 )}
+                                 tagsStyles={tagsStyles}
+                              />
+                           )}
+                        </ScrollView>
+                     </View>
                   </View>
                </View>
-               <View style={styles.all_button_in_detail_screen}>
-                  <TouchableOpacity
-                     onPress={() => {
-                        onSaveImageAsync();
-                     }}
-                  >
-                     <Text style={styles.button_in_detail}>
-                        {' '}
-                        <Icon
-                           name={'image'}
-                           size={34}
-                           color={Colors.greenAvg}
-                        />{' '}
-                     </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                     onPress={() => {
-                        downloadAsPdf();
-                     }}
-                  >
-                     <Text style={styles.button_in_detail}>
-                        {' '}
-                        <Icon
-                           name={'picture-as-pdf'}
-                           size={34}
-                           color={Colors.greenAvg}
-                        />{' '}
-                     </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                     onPress={() => {
-                        setIsSpeakPlay(!isSpeakPlay);
-                        if (langueActual === 'fr') {
-                           playPauseSpeak(
-                              oneArticle.contenu_fr
-                                 ?.split('________________')[0]
-                                 .substring(0, 4000)
-                           );
-                        } else {
-                           playPauseSpeak(
-                              oneArticle.contenu_mg
-                                 ?.split('________________')[0]
-                                 .substring(0, 4000)
-                           );
-                        }
-                     }}
-                  >
-                     <Text style={[styles.button_in_detail]}>
-                        {' '}
-                        <Icon
-                           name={isSpeakPlay ? 'stop' : 'play-circle-outline'}
-                           size={34}
-                           color={Colors.greenAvg}
-                        />{' '}
-                     </Text>
-                  </TouchableOpacity>
+               <View style={styles.fab_button}>
+                  <View style={styles.view_button_zoom}>
+                     <Button
+                        type="clear"
+                        size="sm"
+                        onPress={() => setFontSizeDynamic(fontSizeDynamic + 2)}
+                     >
+                        <Icon name="zoom-in" color={Colors.greenAvg} />
+                     </Button>
+                     <Button
+                        type="clear"
+                        size="sm"
+                        onPress={() => setFontSizeDynamic(fontSizeDynamic - 2)}
+                     >
+                        <Icon name="zoom-out" color={Colors.greenAvg} />
+                     </Button>
+                  </View>
+                  <View style={styles.view_content_fab_button}>
+                     <FAB
+                        visible={isFABshow}
+                        icon={{ name: 'image', color: 'white' }}
+                        color={Colors.greenAvg}
+                        onPress={() => {
+                           onSaveImageAsync();
+                        }}
+                     />
+                     <FAB
+                        visible={isFABshow}
+                        icon={{ name: 'picture-as-pdf', color: 'white' }}
+                        color={Colors.greenAvg}
+                        onPress={() => {
+                           downloadAsPdf();
+                        }}
+                     />
+                     <FAB
+                        visible={isFABshow}
+                        icon={{
+                           name: isSpeakPlay ? 'stop' : 'play-circle-outline',
+                           color: 'white',
+                        }}
+                        color={Colors.greenAvg}
+                        onPress={() => {
+                           setIsSpeakPlay(!isSpeakPlay);
+                           if (langueActual === 'fr') {
+                              playPauseSpeak(
+                                 oneArticle.contenu_fr
+                                    ?.split('________________')[0]
+                                    .substring(0, 4000)
+                              );
+                           } else {
+                              playPauseSpeak(
+                                 oneArticle.contenu_mg
+                                    ?.split('________________')[0]
+                                    .substring(0, 4000)
+                              );
+                           }
+                        }}
+                     />
+                  </View>
+
+                  <FAB
+                     visible={isFABshow}
+                     onPress={() => setIsFABshow(!isFABshow)}
+                     placement="right"
+                     icon={{ name: 'close', color: 'white' }}
+                     color={Colors.redError}
+                  />
+                  <FAB
+                     visible={!isFABshow}
+                     onPress={() => setIsFABshow(!isFABshow)}
+                     placement="right"
+                     icon={{ name: 'menu', color: 'white' }}
+                     color={Colors.greenAvg}
+                  />
                </View>
             </ImageBackground>
          </SafeAreaView>
 
-         <BottomSheet
+         <BottomSheetModal
             backdropComponent={renderBackDrop}
             ref={bottomSheetRef}
             index={1}
@@ -414,66 +618,126 @@ export default function Detail({ navigation, route }) {
             style={styles.view_bottom_sheet}
          >
             <ScrollView style={styles.view_in_bottomsheet}>
-               <View>
-                  <Text style={{ fontSize: 28, fontWeight: 'bold' }}>
-                     {langueActual === 'fr'
-                        ? 'Plus de détails :'
-                        : 'Fanampiny misimisy :'}{' '}
+               <Text style={{ fontSize: 28, fontWeight: 'bold' }}>
+                  {langueActual === 'fr'
+                     ? 'Plus de détails :'
+                     : 'Fanampiny misimisy :'}{' '}
+               </Text>
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Date ' : 'Daty '}{' '}
                   </Text>
-                  <View style={styles.view_one_item_in_bottomsheet}>
-                     <Text style={styles.label_info_article}>
-                        {langueActual === 'fr' ? 'Chapitre ' : 'Lohateny'}{' '}
-                     </Text>
-                     <Text style={styles.value_info_article}>
-                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                        {langueActual === 'fr'
-                           ? oneArticle.chapitre_titre_fr ?? ''
-                           : oneArticle.chapitre_titre_mg ??
-                             'Tsy misy dikan-teny malagasy.'}
-                     </Text>
-                  </View>
-                  <View style={styles.view_one_item_in_bottomsheet}>
-                     <Text style={styles.label_info_article}>
-                        {langueActual === 'fr' ? 'Contenu ' : 'Sokajy '}{' '}
-                     </Text>
-                     <Text style={styles.value_info_article}>
-                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                        {langueActual === 'fr'
-                           ? contenuMother[0].type_nom_fr + ' n°'
-                           : contenuMother[0].type_nom_mg ??
-                             'Votoantiny' + ' faha '}{' '}
-                        {contenuMother[0].numero}
-                     </Text>
-                  </View>
-
-                  <View style={styles.view_one_item_in_bottomsheet}>
-                     <Text style={styles.label_info_article}>
-                        {langueActual === 'fr' ? 'Thématique ' : 'Lohahevitra '}{' '}
-                     </Text>
-                     <Text style={styles.value_info_article}>
-                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                        {langueActual === 'fr'
-                           ? contenuMother[0].thematique_nom_fr
-                           : contenuMother[0].thematique_nom_mg ??
-                             contenuMother[0].thematique_nom_fr}
-                     </Text>
-                  </View>
-
-                  <View style={styles.view_one_item_in_bottomsheet}>
-                     <Text style={styles.label_info_article}>
-                        {langueActual === 'fr' ? 'Type ' : 'Sokajy '}{' '}
-                     </Text>
-                     <Text style={styles.value_info_article}>
-                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                        {langueActual === 'fr'
-                           ? contenuMother[0].type_nom_fr
-                           : contenuMother[0].type_nom_mg ??
-                             contenuMother[0].type_nom_fr}
-                     </Text>
-                  </View>
+                  <Text style={styles.value_info_article}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {contenuMother[0].date}
+                  </Text>
                </View>
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Chapitre ' : 'Lohateny'}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? oneArticle.chapitre_titre_fr ?? ''
+                        : oneArticle.chapitre_titre_mg ??
+                          'Tsy misy dikan-teny malagasy.'}
+                  </Text>
+               </View>
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Numero ' : 'Laharana '}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {contenuMother[0].numero}
+                  </Text>
+               </View>
+
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Objet ' : 'Objet '}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article} numberOfLines={2}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? contenuMother[0].objet_contenu_fr
+                        : contenuMother[0].objet_contenu_mg ??
+                          contenuMother[0].objet_contenu_fr}
+                  </Text>
+               </View>
+
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Thématique ' : 'Lohahevitra '}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? contenuMother[0].thematique_nom_fr
+                        : contenuMother[0].thematique_nom_mg ??
+                          contenuMother[0].thematique_nom_fr}
+                  </Text>
+               </View>
+
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Type ' : 'Sokajy '}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? contenuMother[0].type_nom_fr
+                        : contenuMother[0].type_nom_mg ??
+                          contenuMother[0].type_nom_fr}
+                  </Text>
+               </View>
+
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Etat ' : 'Fanjakana '}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article} numberOfLines={2}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? contenuMother[0].etat_nom_fr
+                        : contenuMother[0].etat_nom_mg ??
+                          contenuMother[0].etat_nom_fr}
+                  </Text>
+               </View>
+
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr'
+                        ? 'Organisme '
+                        : 'Filankevi-pitatanana '}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article} numberOfLines={2}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? contenuMother[0].organisme_nom_fr
+                        : contenuMother[0].organisme_nom_mg ??
+                          contenuMother[0].organisme_nom_fr}
+                  </Text>
+               </View>
+
+               {parsingTags(contenuMother[0].tag).length > 0 && (
+                  <View style={styles.view_one_item_in_bottomsheet}>
+                     <Text style={styles.label_info_article}>
+                        {langueActual === 'fr' ? 'Tags ' : 'Tagy '}{' '}
+                     </Text>
+                     <Text style={styles.value_info_article}>
+                        <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                        {parsingTags(contenuMother[0].tag).map((tag) =>
+                           langueActual === 'fr'
+                              ? tag.contenu_fr + ', '
+                              : tag.contenu_mg + ', '
+                        )}
+                     </Text>
+                  </View>
+               )}
             </ScrollView>
-         </BottomSheet>
+         </BottomSheetModal>
       </View>
    );
 }

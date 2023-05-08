@@ -1,10 +1,12 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo, useState } from 'react';
 import {
    View,
    Text,
    Image,
    SafeAreaView,
+   ActivityIndicator,
    useWindowDimensions,
+   ToastAndroid,
    StyleSheet,
    TouchableOpacity,
 } from 'react-native';
@@ -17,30 +19,26 @@ import HeaderGlobal from '_components/header/HeaderGlobal';
 import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
 import {
    nameStackNavigation as nameNav,
-   filterArticleToListByContenu,
-   fetchAllDataToLocalDatabase,
+   fetchPartialDataForUpdating,
 } from '_utils';
 import { styles } from './styles';
 import { Colors } from '_theme/Colors';
 import {
-   getFavoriteFromLocalStorage,
-   removeInLocalStorage,
    checkAndsendMailFromLocalDBToAPI,
-   ArticleSchema,
-   ContenuSchema,
+   fetchTypesToApi,
+   fetchTagsToApi,
+   fetchThematiquesToApi,
 } from '_utils';
 
 export default function Home({ navigation }) {
    //all states
    const dispatch = useDispatch();
    const isCarousel = React.useRef(null);
-   const { width, height } = useWindowDimensions();
+   const { height } = useWindowDimensions();
    const { t } = useTranslation();
-   const allArticles = useSelector((selector) => selector.loi.articles);
-   const allFavoris = useSelector((selector) => selector.loi.favoris);
    const allContenus = useSelector((selector) => selector.loi.contenus);
-   const allTypes = useSelector((selector) => selector.loi.types);
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
+   const [isFetchData, setIsFetchData] = useState(false);
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
@@ -54,15 +52,31 @@ export default function Home({ navigation }) {
       () => (height < 700 ? [0, '60%'] : [0, '50%']),
       []
    );
-
-   const fetchData = () => {
-      fetchAllDataToLocalDatabase(dispatch);
-   };
-
-   const showData = () => {
-      return ArticleSchema.query({ columns: '*' }).then((res) => {
-         console.log(res.length);
-      });
+   const updatingPartialData = async () => {
+      let resType = await fetchTypesToApi();
+      let resTag = await fetchTagsToApi();
+      let resTheme = await fetchThematiquesToApi();
+      fetchPartialDataForUpdating(dispatch);
+      if (
+         resType.results?.length > 0 &&
+         resTag.results?.length > 0 &&
+         resTheme.results?.length > 0
+      ) {
+         ToastAndroid.show(
+            langueActual === 'fr'
+               ? "Contenu de l'application mis à jour."
+               : "Votoatin'ny application nohavaozina.",
+            ToastAndroid.SHORT
+         );
+      } else {
+         ToastAndroid.show(
+            langueActual === 'fr'
+               ? "Certains contenu ne sont pas disponible et n'ont pas été mis à jour."
+               : "Misy votoatin'ny application maromaro tsy nohavaozina noho ny tsy fisian'izy ireo.",
+            ToastAndroid.SHORT
+         );
+      }
+      setIsFetchData(false);
    };
 
    //all refs
@@ -71,10 +85,6 @@ export default function Home({ navigation }) {
    //all functions
 
    //all efects
-   useEffect(() => {
-      bottomSheetRef.current.close();
-      //removeInLocalStorage('favorite');
-   }, []);
 
    useEffect(() => {
       if (isUserConnectedToInternet && isUserNetworkActive) {
@@ -99,7 +109,8 @@ export default function Home({ navigation }) {
             <View key={item.id} style={styles.view_container_renderItemArticle}>
                <Image
                   style={styles.image_poster_style_article}
-                  source={require('_images/book_loi.jpg')}
+                  source={require('_images/abstract_3.jpg')}
+                  blurRadius={6}
                />
 
                <Text
@@ -116,46 +127,7 @@ export default function Home({ navigation }) {
                <Text style={{ fontSize: 12 }} numberOfLines={1}>
                   {langueActual === 'fr'
                      ? item.objet_contenu_fr
-                     : item.objet_contenu_mg ?? 'Tsy misy dikan-teny malagasy.'}
-               </Text>
-            </View>
-         </TouchableOpacity>
-      );
-   };
-
-   const _renderItemType = ({ item }) => {
-      return (
-         <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => {
-               navigation.navigate('Recherche', {
-                  screen: 'Recherche',
-                  type: langueActual === 'fr' ? item.nom_fr : item.nom_mg,
-               });
-            }}
-         >
-            <View key={item.id} style={styles.view_container_renderItemType}>
-               <Image
-                  style={styles.image_poster_style_type}
-                  source={require('_images/book_loi.jpg')}
-               />
-               <View
-                  style={[StyleSheet.absoluteFillObject, styles.maskImageCatg]}
-               ></View>
-               <Text
-                  style={[
-                     StyleSheet.absoluteFillObject,
-                     styles.text_descriptif_for_carousel,
-                  ]}
-                  numberOfLines={3}
-               >
-                  {langueActual === 'fr'
-                     ? item.nom_fr?.length > 20
-                        ? item.nom_fr?.substring(0, 20) + '...'
-                        : item.nom_fr
-                     : item.nom_mg?.length > 20
-                     ? item.nom_mg?.substring(0, 20) + '...'
-                     : item.nom_mg ?? item.nom_fr?.substring(0, 20)}
+                     : item.objet_contenu_mg ?? item.objet_contenu_fr}
                </Text>
             </View>
          </TouchableOpacity>
@@ -169,26 +141,27 @@ export default function Home({ navigation }) {
             onPress={() => {
                navigation.navigate('Recherche', {
                   screen: 'Recherche',
-                  thematique: langueActual === 'fr' ? item.nom_fr : item.nom_mg,
+                  thematique:
+                     langueActual === 'fr'
+                        ? item.nom_fr
+                        : item.nom_mg ?? item.nom_fr,
                });
             }}
          >
-            <View key={item.id} style={styles.view_container_renderItemType}>
-               <Image
-                  style={styles.image_poster_style_type}
-                  source={require('_images/book_loi.jpg')}
-               />
+            <View
+               key={item.id}
+               style={styles.view_container_renderItemThematique}
+            >
                <View
                   style={[StyleSheet.absoluteFillObject, styles.maskImageCatg]}
                ></View>
                <Text
-                  style={[
-                     StyleSheet.absoluteFillObject,
-                     styles.text_descriptif_for_carousel,
-                  ]}
+                  style={[styles.text_descriptif_for_carousel]}
                   numberOfLines={4}
                >
-                  {langueActual === 'fr' ? item.nom_fr : item.nom_mg}
+                  {langueActual === 'fr'
+                     ? item.nom_fr
+                     : item.nom_mg ?? item.nom_fr}
                </Text>
             </View>
          </TouchableOpacity>
@@ -206,32 +179,32 @@ export default function Home({ navigation }) {
             </View>
 
             <View style={styles.landing_screen}>
-               <Text style={styles.text_landing_screen}>
+               <Text
+                  style={[styles.text_landing_screen, { textAlign: 'center' }]}
+               >
                   {t('txt_landing_home')}
                </Text>
                <View style={styles.content_in_landing_screen}>
                   <Image
                      style={styles.icon_in_content_landing}
-                     source={require('_images/book_loi.jpg')}
+                     source={require('_images/abstract_3.jpg')}
                   />
-                  <View
-                     style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'flex-start',
-                     }}
-                  >
-                     <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                        {t('allez_y')}
-                     </Text>
-                     <Text>{t('continue_de_lire')} </Text>
-                  </View>
-                  <Icon
-                     name={'autorenew'}
-                     color={Colors.white}
-                     size={38}
-                     onPress={() => showData()}
-                  />
+                  <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                     {t('renseignez')}
+                  </Text>
+                  {isFetchData ? (
+                     <ActivityIndicator size="large" color={Colors.greenAvg} />
+                  ) : (
+                     <Icon
+                        name={'autorenew'}
+                        color={Colors.white}
+                        size={38}
+                        onPress={() => {
+                           setIsFetchData(true);
+                           updatingPartialData();
+                        }}
+                     />
+                  )}
                </View>
             </View>
 
@@ -265,47 +238,6 @@ export default function Home({ navigation }) {
                            loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
                            //fin des props spéficifique au section annonce
                            renderItem={_renderItemThematique}
-                           sliderWidth={150}
-                           itemWidth={240}
-                           inactiveSlideOpacity={0.9} //on uniformise tous les opacity
-                           inactiveSlideScale={1} //on uniformise tous les hauteur
-                           useScrollView={true}
-                        />
-                     </View>
-                  </SafeAreaView>
-               </View>
-            </View>
-
-            <View>
-               <View
-                  style={{
-                     display: 'flex',
-                     flexDirection: 'row',
-                     justifyContent: 'space-between',
-                     alignItems: 'center',
-                     marginVertical: 25,
-                  }}
-               >
-                  <Text
-                     style={{
-                        fontSize: height < 700 ? 18 : 22,
-                        fontWeight: 'bold',
-                     }}
-                  >
-                     {t('les_types')}
-                  </Text>
-               </View>
-               <View>
-                  <SafeAreaView>
-                     <View style={styles.view_carousel}>
-                        <Carousel
-                           layout="default"
-                           ref={isCarousel}
-                           data={allTypes}
-                           loop={false}
-                           loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
-                           //fin des props spéficifique au section annonce
-                           renderItem={_renderItemType}
                            sliderWidth={150}
                            itemWidth={240}
                            inactiveSlideOpacity={0.9} //on uniformise tous les opacity

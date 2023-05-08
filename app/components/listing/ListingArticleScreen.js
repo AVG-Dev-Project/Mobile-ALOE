@@ -2,13 +2,15 @@ import {
    View,
    Text,
    StyleSheet,
-   FlatList,
    Image,
-   SafeAreaView,
+   TextInput,
+   ActivityIndicator,
    TouchableOpacity,
    ToastAndroid,
    useWindowDimensions,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { FlashList } from '@shopify/flash-list';
 import React, { useCallback, useEffect, useState } from 'react';
 import { nameStackNavigation as nameNav } from '_utils/constante/NameStackNavigation';
 import { styles } from './stylesArticle';
@@ -24,6 +26,37 @@ import {
    addFavoris,
    getAllArticles,
 } from '_utils/redux/actions/action_creators';
+
+const filterGlobal = (langueActual, array, query) => {
+   let res = array;
+   if (query) {
+      langueActual === 'fr'
+         ? (res = res.filter(
+              (_article) =>
+                 _article.contenu_fr
+                    ?.split('________________')[0]
+                    .toLowerCase()
+                    .includes(query.toLowerCase()) ||
+                 _article.chapitre_titre_fr
+                    ?.toLowerCase()
+                    .includes(query.toLowerCase()) ||
+                 _article.titre_fr?.toLowerCase().includes(query.toLowerCase())
+           ))
+         : (res = res.filter(
+              (_article) =>
+                 _article.contenu_mg
+                    ?.split('________________')[0]
+                    .toLowerCase()
+                    .includes(query.toLowerCase()) ||
+                 _article.chapitre_titre_mg
+                    ?.toLowerCase()
+                    .includes(query.toLowerCase()) ||
+                 _article.titre_mg?.toLowerCase().includes(query.toLowerCase())
+           ));
+   }
+
+   return res;
+};
 
 export default function ListingArticle({ navigation, route }) {
    //all data
@@ -45,7 +78,11 @@ export default function ListingArticle({ navigation, route }) {
    const allFavoriteIdFromStore = useSelector(
       (selector) => selector.loi.favoris
    );
+   const valueForDeepSearch = useSelector(
+      (selector) => selector.fonctionnality.valueForDeepSearch
+   );
    const idOfTheContenuMother = route.params.idOfThisContenu;
+   const [isGetNextData, setIsGetNextData] = useState(false);
    const [articleList, setArticleList] = useState(
       filterArticleToListByContenu(idOfTheContenuMother, allArticles).map(
          (item) => {
@@ -56,7 +93,11 @@ export default function ListingArticle({ navigation, route }) {
          }
       )
    );
+   const [valueForSearch, setValueForSearch] = useState(
+      valueForDeepSearch || ''
+   );
 
+   //all functions
    const handleToogleIsFavorite = (id) => {
       dispatch(addFavoris(id));
       // Mettre à jour la propriété isFavorite de l'article avec l'ID donné
@@ -68,23 +109,114 @@ export default function ListingArticle({ navigation, route }) {
    };
 
    const getNextPageArticlesFromApi = async () => {
-      let res = await fetchArticlesByContenuToApi(
-         idOfTheContenuMother,
-         currentPage + 1
-      );
-      setCurrentPage(currentPage + 1);
-      setTotalPage(res.pages_count);
-      let oldAllArticles = [...articleList];
-      res.results.map((result) => {
-         if (!oldAllArticles.find((article) => article.id === result.id)) {
-            oldAllArticles.push(parseDataArticleLazyLoading(result));
+      if (isGetNextData) {
+         return;
+      }
+      setIsGetNextData(true);
+
+      try {
+         let res = await fetchArticlesByContenuToApi(
+            idOfTheContenuMother,
+            currentPage + 1
+         );
+         if (res.results?.length > 0) {
+            setCurrentPage(currentPage + 1);
+            setTotalPage(res.pages_count);
+            let oldAllArticles = [...articleList];
+            res.results?.map((result) => {
+               if (
+                  !oldAllArticles.find((article) => article.id === result.id)
+               ) {
+                  oldAllArticles.push(parseDataArticleLazyLoading(result));
+               }
+            });
+            dispatch(getAllArticles(oldAllArticles));
+            setArticleList(oldAllArticles);
+         } else {
+            setCurrentPage(totalPage || 1);
          }
-      });
-      dispatch(getAllArticles(oldAllArticles));
-      setArticleList(oldAllArticles);
+      } catch (e) {
+         ToastAndroid.show(
+            langueActual === 'fr'
+               ? 'Erreur survenu au télechargement des données.'
+               : 'Nisy olana teo ampangalana ny angona.',
+            ToastAndroid.SHORT
+         );
+      } finally {
+         setIsGetNextData(false);
+      }
+   };
+
+   const handleLoadMore = async () => {
+      if (isConnectedToInternet && isNetworkActive) {
+         if (!isGetNextData && currentPage < totalPage) {
+            await getNextPageArticlesFromApi();
+         }
+      } else {
+         ToastAndroid.show(
+            `Pas de connexion, impossible d'obtenir des datas suppl!`,
+            ToastAndroid.SHORT
+         );
+         return;
+      }
    };
 
    //all effects
+   useFocusEffect(
+      useCallback(() => {
+         setArticleList((prevList) =>
+            prevList.map((item) => {
+               return {
+                  ...item,
+                  isFavorite: allFavoriteIdFromStore.includes(item.id),
+               };
+            })
+         );
+      }, [allFavoriteIdFromStore])
+   );
+
+   useFocusEffect(
+      useCallback(() => {
+         if (articleList.length <= 0) {
+            getNextPageArticlesFromApi();
+         }
+      }, [articleList])
+   );
+
+   //for deepSearch
+   useFocusEffect(
+      useCallback(() => {
+         if (valueForSearch !== null) {
+            setValueForSearch(valueForDeepSearch);
+         }
+      }, [valueForDeepSearch])
+   );
+
+   useEffect(() => {
+      if (valueForSearch) {
+         setArticleList(
+            filterGlobal(langueActual, articleList, valueForSearch).map(
+               (item) => {
+                  return {
+                     ...item,
+                     isFavorite: allFavoriteIdFromStore.includes(item.id),
+                  };
+               }
+            )
+         );
+      } else {
+         setArticleList(
+            filterArticleToListByContenu(idOfTheContenuMother, allArticles).map(
+               (item) => {
+                  return {
+                     ...item,
+                     isFavorite: allFavoriteIdFromStore.includes(item.id),
+                  };
+               }
+            )
+         );
+      }
+   }, [valueForSearch]);
 
    //all components
    const _renderItem = useCallback(({ item }) => {
@@ -102,7 +234,8 @@ export default function ListingArticle({ navigation, route }) {
          >
             <View style={styles.view_render}>
                <Image
-                  source={require('_images/book_loi.jpg')}
+                  source={require('_images/abstract.jpg')}
+                  blurRadius={5}
                   style={{
                      width: width < 380 ? 100 : 130,
                      height: 160,
@@ -125,7 +258,7 @@ export default function ListingArticle({ navigation, route }) {
                </Text>
                <View
                   style={{
-                     marginLeft: 12,
+                     marginLeft: 8,
                      display: 'flex',
                      flexDirection: 'column',
                      justifyContent: 'space-between',
@@ -142,30 +275,27 @@ export default function ListingArticle({ navigation, route }) {
                         style={{
                            fontSize: 12,
                            textDecorationLine: 'underline',
+                           width: width - 180,
                         }}
                         numberOfLines={1}
                      >
                         {langueActual === 'fr'
-                           ? width < 380
-                              ? item.titre_fr.substring(0, 20) + '...'
-                              : item.titre_fr
-                           : width < 380
-                           ? item.titre_mg.substring(0, 20) + '...'
-                           : item.titre_mg}
+                           ? item.titre_fr
+                           : item.titre_mg ?? item.titre_fr}
                      </Text>
                      {item.chapitre_id && (
-                        <Text style={{ fontSize: 12 }}>
+                        <Text
+                           style={{ fontSize: 12, width: width - 200 }}
+                           numberOfLines={1}
+                        >
                            {langueActual === 'fr'
                               ? `Chapitre ${item.chapitre_numero ?? ''}`
                               : `Lohateny ${item.chapitre_numero ?? ''}`}
                            :{' '}
                            {langueActual === 'fr'
-                              ? width < 380
-                                 ? item.chapitre_titre_fr?.substring(0, 15)
-                                 : item.chapitre_titre_mg
-                              : width < 380
-                              ? item.chapitre_titre_mg?.substring(0, 15)
-                              : item.chapitre_titre_mg}
+                              ? item.chapitre_titre_fr
+                              : item.chapitre_titre_mg ??
+                                item.chapitre_titre_fr}
                         </Text>
                      )}
                   </View>
@@ -258,13 +388,28 @@ export default function ListingArticle({ navigation, route }) {
 
    return (
       <View style={styles.view_container}>
-         <SafeAreaView style={styles.container_safe}>
-            <FlatList
+         <View style={styles.view_search}>
+            <TextInput
+               style={styles.input}
+               keyboardType="default"
+               placeholder={
+                  langueActual === 'fr'
+                     ? 'Entrer le mot de recherche ...'
+                     : 'Ampidiro ny teny hotadiavina...'
+               }
+               value={valueForSearch}
+               onChangeText={(text) => {
+                  setValueForSearch(text);
+               }}
+            />
+         </View>
+         <View style={styles.container_safe}>
+            <FlashList
                data={articleList}
                key={'_'}
                keyExtractor={_idKeyExtractor}
                renderItem={_renderItem}
-               removeClippedSubviews={true}
+               estimatedItemSize={100}
                getItemLayout={(data, index) => ({
                   length: data.length,
                   offset: data.length * index,
@@ -296,21 +441,23 @@ export default function ListingArticle({ navigation, route }) {
                }
                extraData={articleList}
                onEndReachedThreshold={0.5}
-               onEndReached={async () => {
-                  if (isConnectedToInternet && isNetworkActive) {
-                     if (currentPage < totalPage) {
-                        await getNextPageArticlesFromApi();
-                     }
-                  } else {
-                     ToastAndroid.show(
-                        `Pas de connexion, impossible d'obtenir des datas suppl!`,
-                        ToastAndroid.SHORT
-                     );
-                     return;
+               onEndReached={() => {
+                  if (!isGetNextData && currentPage < totalPage) {
+                     handleLoadMore();
                   }
                }}
+               ListFooterComponent={
+                  isGetNextData && (
+                     <View>
+                        <ActivityIndicator
+                           size="large"
+                           color={Colors.greenAvg}
+                        />
+                     </View>
+                  )
+               }
             />
-         </SafeAreaView>
+         </View>
       </View>
    );
 }

@@ -17,7 +17,7 @@ function sendMailToServ(mail, objet, contenu) {
 }
 
 function getArticlesFromServ(page) {
-   return RouteAxios.get(`/article?page=${page}`)
+   return RouteAxios.get(`/mobile/article?page=${page}`)
       .then((response) => {
          return response.data;
       })
@@ -26,8 +26,10 @@ function getArticlesFromServ(page) {
       });
 }
 
-function getArticlesByContenuFromServ(contenuId,page) {
-   return RouteAxios.get(`/article?contenu__id=${contenuId}&page=${page}`)
+function getArticlesByContenuFromServ(contenuId, page) {
+   return RouteAxios.get(
+      `/mobile/article?contenu__id=${contenuId}&page=${page}`
+   )
       .then((response) => {
          return response.data;
       })
@@ -49,7 +51,17 @@ function getContenusFromServ(page) {
 function getThematiqueFromServ() {
    return RouteAxios.get('/thematique')
       .then((response) => {
-         return response.data.results;
+         return response.data;
+      })
+      .catch((error) => {
+         return error.message;
+      });
+}
+
+function getTagFromServ() {
+   return RouteAxios.get('/tag')
+      .then((response) => {
+         return response.data;
       })
       .catch((error) => {
          return error.message;
@@ -59,7 +71,7 @@ function getThematiqueFromServ() {
 function getTypeFromServ() {
    return RouteAxios.get('/type')
       .then((response) => {
-         return response.data.results;
+         return response.data;
       })
       .catch((error) => {
          return error.message;
@@ -73,4 +85,5 @@ export const LoiService = {
    getTypeFromServ,
    getContenusFromServ,
    sendMailToServ,
+   getTagFromServ,
 };

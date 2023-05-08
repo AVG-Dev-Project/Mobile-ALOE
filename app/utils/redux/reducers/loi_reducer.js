@@ -5,9 +5,8 @@ import {
    getAllThematiques,
    getAllTypes,
    getAllContenus,
-   getCurrentPageArticleForApi,
-   getCurrentPageContenuForApi,
-   getTotalPageApi,
+   updateTagsChoice,
+   getAllTags,
 } from '../actions/action_creators';
 
 import { storeFavoriteIdToLocalStorage } from '../../storage/asyncStorage';
@@ -18,12 +17,8 @@ const initialState = {
    types: [],
    contenus: [],
    favoris: [],
-   currentPageContenu: 1,
-   currentPageArticle: 1,
-   totalPage: {
-      article: 0,
-      contenu: 0,
-   },
+   tagsChoice: [],
+   tags: [],
 };
 
 export const loiReducer = (state = initialState, action) => {
@@ -46,22 +41,9 @@ export const loiReducer = (state = initialState, action) => {
          return produce(state, (draft) => {
             draft.types = action.payload;
          });
-      case getCurrentPageContenuForApi().type:
+      case getAllTags().type:
          return produce(state, (draft) => {
-            draft.currentPageContenu = action.payload;
-         });
-      case getCurrentPageArticleForApi().type:
-         return produce(state, (draft) => {
-            draft.currentPageArticle = action.payload;
-         });
-      case getTotalPageApi().type:
-         return produce(state, (draft) => {
-            if (action.payload[0] === 'contenu') {
-               draft.totalPage.contenu = action.payload[1];
-            }
-            if (action.payload[0] === 'article') {
-               draft.totalPage.article = action.payload[1];
-            }
+            draft.tags = action.payload;
          });
       case getAllContenus().type:
          return produce(state, (draft) => {
@@ -88,6 +70,22 @@ export const loiReducer = (state = initialState, action) => {
                   draft.favoris.push(action.payload);
                }
                storeFavoriteIdToLocalStorage(draft.favoris);
+            });
+         }
+      case updateTagsChoice().type:
+         if (Array.isArray(action.payload)) {
+            return produce(state, (draft) => {
+               draft.tagsChoice = [];
+            });
+         } else {
+            return produce(state, (draft) => {
+               if (state.tagsChoice.includes(action.payload)) {
+                  draft.tagsChoice = draft.tagsChoice.filter(
+                     (tag) => tag !== action.payload
+                  );
+               } else {
+                  draft.tagsChoice.push(action.payload);
+               }
             });
          }
 

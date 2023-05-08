@@ -1,37 +1,30 @@
 import {
    View,
    Text,
-   StyleSheet,
-   FlatList,
-   Image,
    Dimensions,
-   SafeAreaView,
    ToastAndroid,
-   useWindowDimensions,
-   TouchableOpacity,
+   ActivityIndicator,
+   Platform,
+   Pressable,
 } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import ReactNativeBlobUtil from 'react-native-blob-util';
+import { FlashList } from '@shopify/flash-list';
+import * as FileSystem from 'expo-file-system';
+import * as MediaLibrary from 'expo-media-library';
 import {
    nameStackNavigation as nameNav,
    fetchContenusToApi,
    parseDataContenuLazyLoading,
+   parsingTags,
 } from '_utils';
 import { styles } from './stylesContenu';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
-import {
-   getAllArticles,
-   getAllThematiques,
-   getAllTypes,
-   getAllContenus,
-   getCurrentPageContenuForApi,
-   getCurrentPageArticleForApi,
-   getTotalPageApi,
-} from '_utils/redux/actions/action_creators';
+import { getAllContenus } from '_utils/redux/actions/action_creators';
 
-export default function ListingContenu({ navigation, route }) {
+export default function ListingContenu({ navigation }) {
    //all data
    const dispatch = useDispatch();
    const langueActual = useSelector(
@@ -43,11 +36,11 @@ export default function ListingContenu({ navigation, route }) {
    const isNetworkActive = useSelector(
       (selector) => selector.fonctionnality.isNetworkActive
    );
-   let { width } = useWindowDimensions();
    const allContenusFromStore = useSelector(
       (selector) => selector.loi.contenus
    );
    const urlApiAttachement = 'https://avg.e-commerce-mg.com';
+   const [isGetNextData, setIsGetNextData] = useState(false);
    const [contenuList, setContenuList] = useState(
       allContenusFromStore.map((item) => {
          return {
@@ -56,37 +49,63 @@ export default function ListingContenu({ navigation, route }) {
          };
       })
    );
-   const currentPage = useSelector(
-      (selector) => selector.loi.currentPageContenu
-   );
-   const totalPageContenu = useSelector(
-      (selector) => selector.loi.totalPage.contenu
-   );
+   const [totalPage, setTotalPage] = useState(1);
+   const [currentPage, setCurrentPage] = useState(0);
 
    //all functions
    const downloadPdfFile = async (contenu, linkPdf) => {
       try {
          if (isNetworkActive && isConnectedToInternet) {
-            ReactNativeBlobUtil.config({
-               fileCache: true,
-            })
-               .fetch('GET', urlApiAttachement + linkPdf)
-               .then(async (resp) => {
-                  await ReactNativeBlobUtil.MediaCollection.copyToMediaStore(
-                     {
-                        name:
+            if (Platform.Version >= 29) {
+               ReactNativeBlobUtil.config({
+                  fileCache: true,
+               })
+                  .fetch('GET', urlApiAttachement + linkPdf)
+                  .then(async (resp) => {
+                     await ReactNativeBlobUtil.MediaCollection.copyToMediaStore(
+                        {
+                           name:
+                              langueActual === 'fr'
+                                 ? `${contenu.type_nom_fr} n° ${contenu.numero}`
+                                 : `${
+                                      contenu.type_nom_mg ?? contenu.type_nom_fr
+                                   } faha ${contenu.numero}`,
+                           parentFolder: 'aloe/pdf',
+                           mimeType: 'application/pdf',
+                        },
+                        'Download',
+                        resp.path()
+                     );
+                     handleToogleIsDownloading(contenu.id);
+                     ToastAndroid.show(
+                        `${
                            langueActual === 'fr'
-                              ? `${contenu.type_nom_fr} n° ${contenu.numero}`
-                              : `${
-                                   contenu.type_nom_mg ?? contenu.type_nom_fr
-                                } faha ${contenu.numero}`,
-                        parentFolder: 'aloe/pdf',
-                        mimeType: 'application/pdf',
-                     },
-                     'Download',
-                     resp.path()
+                              ? contenu.type_nom_fr
+                              : contenu.type_nom_mg
+                        } n° ${
+                           contenu.numero
+                        } télecharger dans download/aloe/pdf.`,
+                        ToastAndroid.SHORT
+                     );
+                  });
+            }
+            if (Platform.Version < 29) {
+               const downloadResumable = FileSystem.createDownloadResumable(
+                  urlApiAttachement + linkPdf,
+                  FileSystem.documentDirectory + linkPdf?.slice(19)
+               );
+
+               const { uri } = await downloadResumable.downloadAsync();
+               const asset = await MediaLibrary.createAssetAsync(uri);
+               const album = await MediaLibrary.getAlbumAsync('Download');
+               if (album === null) {
+                  await MediaLibrary.createAlbumAsync('Download', asset, false);
+               } else {
+                  await MediaLibrary.addAssetsToAlbumAsync(
+                     [asset],
+                     album,
+                     false
                   );
-                  handleToogleIsDownloading(contenu.id);
                   ToastAndroid.show(
                      `${
                         langueActual === 'fr'
@@ -94,10 +113,12 @@ export default function ListingContenu({ navigation, route }) {
                            : contenu.type_nom_mg
                      } n° ${
                         contenu.numero
-                     } télecharger dans download/aloe/pdf.`,
+                     } télecharger dans le dossier download!`,
                      ToastAndroid.SHORT
                   );
-               });
+                  handleToogleIsDownloading(contenu.id);
+               }
+            }
          } else {
             ToastAndroid.show(
                `${
@@ -129,21 +150,59 @@ export default function ListingContenu({ navigation, route }) {
    };
 
    const getNextPageContenusFromApi = async () => {
-      let res = await fetchContenusToApi(currentPage, dispatch);
-      let oldAllContenus = [...contenuList];
-      res.results.map((result) => {
-         if (!oldAllContenus.find((contenu) => contenu.id === result.id)) {
-            oldAllContenus.push(parseDataContenuLazyLoading(result));
+      if (isGetNextData) {
+         return;
+      }
+      setIsGetNextData(true);
+
+      try {
+         let res = await fetchContenusToApi(currentPage + 1);
+         if (res.results?.length > 0) {
+            setCurrentPage(currentPage + 1);
+            setTotalPage(res.pages_count);
+            let oldAllContenus = [...contenuList];
+            res.results.map((result) => {
+               if (
+                  !oldAllContenus.find((contenu) => contenu.id === result.id)
+               ) {
+                  oldAllContenus.push(parseDataContenuLazyLoading(result));
+               }
+            });
+            dispatch(getAllContenus(oldAllContenus));
+            setContenuList(oldAllContenus);
+         } else {
+            setCurrentPage(totalPage || 1);
          }
-      });
-      dispatch(getAllContenus(oldAllContenus));
-      setContenuList(oldAllContenus);
+      } catch (e) {
+         ToastAndroid.show(
+            langueActual === 'fr'
+               ? 'Erreur survenu au télechargement des données.'
+               : 'Nisy olana teo ampangalana ny angona.',
+            ToastAndroid.SHORT
+         );
+      } finally {
+         setIsGetNextData(false);
+      }
+   };
+
+   const handleLoadMore = async () => {
+      if (isConnectedToInternet && isNetworkActive) {
+         if (!isGetNextData && currentPage < totalPage) {
+            await getNextPageContenusFromApi();
+         }
+      } else {
+         ToastAndroid.show(
+            `Pas de connexion, impossible d'obtenir des datas suppl!`,
+            ToastAndroid.SHORT
+         );
+         return;
+      }
    };
 
    //all logics
    const _renderItem = useCallback(({ item }) => {
       return (
-         <TouchableOpacity
+         <Pressable
             activeOpacity={0.9}
             onPress={() => {
                navigation.navigate(nameNav.listArticle, {
@@ -186,8 +245,9 @@ export default function ListingContenu({ navigation, route }) {
                   style={{
                      fontSize: Dimensions.get('window').height < 700 ? 14 : 16,
                      flex: 2,
+                     marginBottom: 18,
                   }}
-                  numberOfLines={2}
+                  numberOfLines={3}
                >
                   {langueActual === 'fr'
                      ? item.objet_contenu_fr
@@ -196,90 +256,86 @@ export default function ListingContenu({ navigation, route }) {
                <View
                   style={{
                      display: 'flex',
-                     flexDirection: 'row',
-                     justifyContent: 'space-between',
-                     alignItems: 'flex-end',
+                     flexDirection: 'column',
                   }}
                >
-                  <View
+                  <Text style={{ textDecorationLine: 'underline' }}>
+                     Thématique et Type
+                  </Text>
+                  <Text
                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
+                        fontSize: 14,
                      }}
+                     numberOfLines={2}
                   >
-                     <Text
-                        style={{
-                           fontSize: 14,
-                           marginLeft: 2,
-                        }}
-                     >
-                        {langueActual === 'fr'
-                           ? item.thematique_nom_fr?.length > 20
-                              ? item.thematique_nom_fr?.substring(
-                                   0,
-                                   width < 380 ? 15 : 25
-                                ) + '...'
-                              : item.thematique_nom_fr
-                           : item.thematique_nom_mg?.length > 20
-                           ? item.thematique_nom_mg?.substring(
-                                0,
-                                width < 380 ? 15 : 25
-                             ) + '...'
-                           : item.thematique_nom_mg ??
-                             `${
-                                item.thematique_nom_fr?.substring(
-                                   0,
-                                   width < 380 ? 15 : 25
-                                ) + '...'
-                             }`}
-                        {' / '}
-                        {langueActual === 'fr'
-                           ? item.type_nom_fr?.length > 20
-                              ? item.type_nom_fr?.substring(
-                                   0,
-                                   width < 380 ? 15 : 25
-                                ) + '...'
-                              : item.type_nom_fr
-                           : item.type_nom_mg?.substring(
-                                0,
-                                width < 380 ? 15 : 25
-                             ) ??
-                             `${item.type_nom_fr?.substring(
-                                0,
-                                width < 380 ? 15 : 25
-                             )}`}
-                     </Text>
-                  </View>
+                     *{' '}
+                     {langueActual === 'fr'
+                        ? item.thematique_nom_fr
+                        : item.thematique_nom_mg ?? item.thematique_nom_fr}
+                  </Text>
+                  <Text
+                     style={{
+                        fontSize: 14,
+                     }}
+                     numberOfLines={2}
+                  >
+                     *{' '}
+                     {langueActual === 'fr'
+                        ? item.type_nom_fr
+                        : item.type_nom_mg ?? item.type_nom_fr}
+                  </Text>
+
+                  {parsingTags(item.tag).length > 0 && (
+                     <View>
+                        <Text style={{ textDecorationLine: 'underline' }}>
+                           Tags
+                        </Text>
+                        <Text numberOfLines={2}>
+                           *{' '}
+                           {parsingTags(item.tag).map((tag) =>
+                              langueActual === 'fr'
+                                 ? tag.contenu_fr + ', '
+                                 : tag.contenu_mg ??
+                                   ', ' + tag.contenu_fr + ', '
+                           )}
+                        </Text>
+                     </View>
+                  )}
+               </View>
+               <View>
                   <View
                      style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        width: 108,
                         justifyContent: 'flex-end',
                      }}
                   >
-                     <TouchableOpacity
-                        activeOpacity={0.8}
-                        onPress={() => {
-                           downloadPdfFile(item, item.attachement?.slice(21));
-                           handleToogleIsDownloading(item.id);
-                        }}
-                     >
-                        <Icon
-                           name={
-                              item.isPdfDownloading
-                                 ? 'hourglass-top'
-                                 : 'file-download'
-                           }
-                           color={Colors.greenAvg}
-                           size={28}
-                        />
-                     </TouchableOpacity>
+                     {item.attachement !== null && (
+                        <Pressable
+                           activeOpacity={0.8}
+                           onPress={() => {
+                              downloadPdfFile(
+                                 item,
+                                 item.attachement?.slice(21)
+                              );
+                              handleToogleIsDownloading(item.id);
+                           }}
+                        >
+                           <Icon
+                              name={
+                                 item.isPdfDownloading
+                                    ? 'hourglass-top'
+                                    : 'file-download'
+                              }
+                              color={Colors.greenAvg}
+                              size={30}
+                           />
+                        </Pressable>
+                     )}
                   </View>
                </View>
             </View>
-         </TouchableOpacity>
+         </Pressable>
       );
    }, []);
 
@@ -288,32 +344,33 @@ export default function ListingContenu({ navigation, route }) {
 
    return (
       <View style={styles.view_container}>
-         <SafeAreaView style={styles.container_safe}>
-            <FlatList
-               data={contenuList}
-               extraData={contenuList}
-               key={'_'}
-               keyExtractor={_idKeyExtractor}
-               renderItem={_renderItem}
-               removeClippedSubviews={true}
-               getItemLayout={(data, index) => ({
-                  length: data.length,
-                  offset: data.length * index,
-                  index,
-               })}
-               contentContainerStyle={{ paddingBottom: 10 }}
-               onEndReachedThreshold={0.5}
-               onEndReached={async () => {
-                  if (isConnectedToInternet && isNetworkActive) {
-                     if (currentPage < totalPageContenu) {
-                        await getNextPageContenusFromApi();
-                     }
-                  } else {
-                     return;
-                  }
-               }}
-            />
-         </SafeAreaView>
+         <FlashList
+            data={contenuList}
+            extraData={contenuList}
+            key={'_'}
+            keyExtractor={_idKeyExtractor}
+            renderItem={_renderItem}
+            getItemLayout={(data, index) => ({
+               length: data.length,
+               offset: data.length * index,
+               index,
+            })}
+            contentContainerStyle={{ paddingBottom: 10 }}
+            onEndReachedThreshold={0.5}
+            estimatedItemSize={100}
+            onEndReached={() => {
+               if (!isGetNextData && currentPage < totalPage) {
+                  handleLoadMore();
+               }
+            }}
+            ListFooterComponent={
+               isGetNextData && (
+                  <View style={styles.activity_indicator}>
+                     <ActivityIndicator size="large" color={Colors.greenAvg} />
+                  </View>
+               )
+            }
+         />
       </View>
    );
 }
