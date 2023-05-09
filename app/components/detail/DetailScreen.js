@@ -721,6 +721,21 @@ export default function Detail({ navigation, route }) {
                   </Text>
                </View>
 
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr'
+                        ? 'Note '
+                        : 'Naoty'}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article} numberOfLines={2}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? contenuMother[0].note_contenu_fr
+                        : contenuMother[0].note_contenu_mg ??
+                          contenuMother[0].note_contenu_fr}
+                  </Text>
+               </View>
+
                {parsingTags(contenuMother[0].tag).length > 0 && (
                   <View style={styles.view_one_item_in_bottomsheet}>
                      <Text style={styles.label_info_article}>

@@ -13,6 +13,7 @@ import {
    addFavoris,
    isConnectedToInternet,
    checktatusData,
+   dataForStatistique,
 } from '_utils/redux/actions/action_creators';
 import {
    insertOrUpdateToDBFunc,
@@ -28,6 +29,7 @@ import {
    fetchThematiquesToApi,
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
+   storeStatistiqueToLocalStorage,
 } from '_utils';
 import styles from './styles';
 
@@ -62,6 +64,7 @@ export default function DownloadData({ navigation }) {
       let resTheme = await fetchThematiquesToApi();
       let resTag = await fetchTagsToApi();
       let resType = await fetchTypesToApi();
+      await storeStatistiqueToLocalStorage();
       if (
          resContenu.results?.length > 0 &&
          resArticle.results?.length > 0 &&
@@ -80,12 +83,22 @@ export default function DownloadData({ navigation }) {
       setIsFetchData(false);
    };
 
-   const getOfflineDatas = () => {
+   const fetchStatistique = () => {
+      getDataFromLocalStorage('articleTotalInServ').then((res) => {
+         dispatch(dataForStatistique({ statsFor: 'article', value: res ?? 0 }));
+      });
+      getDataFromLocalStorage('contenuTotalInServ').then((res) => {
+         dispatch(dataForStatistique({ statsFor: 'contenu', value: res ?? 0 }));
+      });
+   };
+
+   const getOfflineDatas = async () => {
       getFavoriteFromLocalStorage().then((res) => {
          if (res !== null) {
             dispatch(addFavoris(res));
          }
       });
+      fetchStatistique();
       fetchAllDataToLocalDatabase(dispatch);
       setTimeout(() => {
          setIsDataLoaded(false);
@@ -104,6 +117,15 @@ export default function DownloadData({ navigation }) {
             const parsedJSONData = JSON.parse(fileContent);
             const parsedJsonToArray = Object.values(parsedJSONData);
             let [type, thematique, article, contenu] = parsedJsonToArray;
+            //store total of article and contenu to storage
+            storeDataToLocalStorage(
+               'articleTotalInServ',
+               JSON.parse(article.length ?? 0)
+            );
+            storeDataToLocalStorage(
+               'contenuTotalInServ',
+               JSON.parse(contenu.length ?? 0)
+            );
 
             //type
             insertOrUpdateToDBFunc('database', 'type', type);

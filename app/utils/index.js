@@ -5,6 +5,7 @@ import {
    getDataFromLocalStorage,
    storeFavoriteIdToLocalStorage,
    getFavoriteFromLocalStorage,
+   storeStatistiqueToLocalStorage
 } from './storage/asyncStorage';
 import {
    ArticleSchema,
@@ -45,6 +46,7 @@ export {
    getDataFromLocalStorage,
    storeFavoriteIdToLocalStorage,
    getFavoriteFromLocalStorage,
+   storeStatistiqueToLocalStorage,
    ArticleSchema,
    ContenuSchema,
    TypeSchema,

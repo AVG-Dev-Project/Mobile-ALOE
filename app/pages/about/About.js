@@ -1,4 +1,6 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { Colors } from '_theme/Colors';
 import { useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -9,8 +11,31 @@ export default function About({ navigation }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
+   const totalArticleInServ = useSelector(
+      (selector) => selector.loi.statistique.article
+   );
+   const totalContenuInServ = useSelector(
+      (selector) => selector.loi.statistique.contenu
+   );
    const allArticles = useSelector((selector) => selector.loi.articles);
    const allContenus = useSelector((selector) => selector.loi.contenus);
+   const [statistique, setStatistique] = useState({
+      articleFromServ: totalArticleInServ,
+      contenuFromServ: totalContenuInServ,
+      articlePresent: allArticles.length,
+      contenuPresent: allContenus.length,
+   });
+
+   useFocusEffect(
+      useCallback(() => {
+         setStatistique({
+            articleFromServ: totalArticleInServ,
+            contenuFromServ: totalContenuInServ,
+            articlePresent: allArticles.length,
+            contenuPresent: allContenus.length,
+         });
+      }, [totalArticleInServ, totalContenuInServ, allArticles, allContenus])
+   );
 
    return (
       <KeyboardAwareScrollView style={{ backgroundColor: Colors.background }}>
@@ -30,13 +55,13 @@ export default function About({ navigation }) {
                   {langueActual === 'fr'
                      ? 'Total des textes présents : '
                      : "Totalin'ny lahatsoratra misy ato : "}{' '}
-                  {allContenus.length} / 100
+                  {statistique.contenuPresent} / {statistique.contenuPresent}
                </Text>
                <Text>
                   {langueActual === 'fr'
                      ? 'Total des articles présents : '
                      : "Totalin'ny lahatsoratra misy ato : "}{' '}
-                  {allArticles.length} / 3000
+                  {statistique.articlePresent} / {statistique.articleFromServ}
                </Text>
             </View>
 

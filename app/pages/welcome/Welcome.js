@@ -17,6 +17,7 @@ import {
    isNetworkActive,
    checktatusData,
    isConnectedToInternet,
+   dataForStatistique,
 } from '_utils/redux/actions/action_creators';
 import {
    nameStackNavigation as nameNav,
@@ -24,6 +25,7 @@ import {
    getFavoriteFromLocalStorage,
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
+   storeStatistiqueToLocalStorage,
 } from '_utils';
 
 export default function Welcome({ navigation }) {
@@ -47,16 +49,27 @@ export default function Welcome({ navigation }) {
       useState(false);*/
    const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-   //functions
-   //deux functions selon disponibilité de isUserNetworkActive (une pour fetcher 10 datas afin de peupler la base)
+   //function
+   const fetchStatistique = () => {
+      getDataFromLocalStorage('articleTotalInServ').then((res) => {
+         dispatch(dataForStatistique({ statsFor: 'article', value: res ?? 0 }));
+      });
+      getDataFromLocalStorage('contenuTotalInServ').then((res) => {
+         dispatch(dataForStatistique({ statsFor: 'contenu', value: res ?? 0 }));
+      });
+   };
 
    const getOfflineDatas = async () => {
+      if (isUserNetworkActive && isUserConnectedToInternet) {
+         await storeStatistiqueToLocalStorage();
+      }
       getFavoriteFromLocalStorage().then((res) => {
          if (res !== null) {
             dispatch(addFavoris(res));
          }
       });
       fetchAllDataToLocalDatabase(dispatch);
+      fetchStatistique();
       setTimeout(() => {
          setIsDataLoaded(false);
          dispatch(getStarted());

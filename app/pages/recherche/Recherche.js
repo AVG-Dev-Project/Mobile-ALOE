@@ -249,9 +249,6 @@ export default function Recherche({ navigation, route }) {
          };
       })
    );
-   const valueForDeepSearch = useSelector(
-      (selector) => selector.fonctionnality.valueForDeepSearch
-   );
 
    const allTagsFromStore = useSelector((selector) => selector.loi.tagsChoice);
    //data from navigation

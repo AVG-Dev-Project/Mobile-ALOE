@@ -13,6 +13,7 @@ import {
    UPDATE_LIST_TAG_CHOICE,
    HIDE_SHOW_TAB_BAR,
    VALUE_FOR_DEEP_SEARCH,
+   STATISTIQUE,
 } from './action_names';
 
 export const getStarted = () => ({
@@ -38,6 +39,11 @@ export const getAllTags = (tags) => ({
    type: GET_ALL_TAG,
    payload: tags,
 });
+
+export const dataForStatistique = (value) => ({
+   type: STATISTIQUE,
+   payload: value,
+})
 
 export const getAllTypes = (types) => ({
    type: GET_ALL_TYPES,
