@@ -23,11 +23,14 @@ import {
 } from '_utils';
 import { styles } from './styles';
 import { Colors } from '_theme/Colors';
+import { dataForStatistique } from '_utils/redux/actions/action_creators';
 import {
    checkAndsendMailFromLocalDBToAPI,
    fetchTypesToApi,
    fetchTagsToApi,
    fetchThematiquesToApi,
+   storeStatistiqueToLocalStorage,
+   getDataFromLocalStorage,
 } from '_utils';
 
 export default function Home({ navigation }) {
@@ -52,11 +55,24 @@ export default function Home({ navigation }) {
       () => (height < 700 ? [0, '60%'] : [0, '50%']),
       []
    );
+
+   //all functions
+   const fetchStatistique = () => {
+      getDataFromLocalStorage('articleTotalInServ').then((res) => {
+         dispatch(dataForStatistique({ statsFor: 'article', value: res ?? 0 }));
+      });
+      getDataFromLocalStorage('contenuTotalInServ').then((res) => {
+         dispatch(dataForStatistique({ statsFor: 'contenu', value: res ?? 0 }));
+      });
+   };
+
    const updatingPartialData = async () => {
+      await storeStatistiqueToLocalStorage();
       let resType = await fetchTypesToApi();
       let resTag = await fetchTagsToApi();
       let resTheme = await fetchThematiquesToApi();
       fetchPartialDataForUpdating(dispatch);
+      fetchStatistique();
       if (
          resType.results?.length > 0 &&
          resTag.results?.length > 0 &&
@@ -81,8 +97,6 @@ export default function Home({ navigation }) {
 
    //all refs
    const bottomSheetRef = useRef(null);
-
-   //all functions
 
    //all efects
 
