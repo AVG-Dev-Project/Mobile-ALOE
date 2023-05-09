@@ -13,6 +13,7 @@ import {
    addFavoris,
    isConnectedToInternet,
    checktatusData,
+   dataForStatistique
 } from '_utils/redux/actions/action_creators';
 import {
    insertOrUpdateToDBFunc,
@@ -63,6 +64,7 @@ export default function DownloadData({ navigation }) {
       let resTheme = await fetchThematiquesToApi();
       let resTag = await fetchTagsToApi();
       let resType = await fetchTypesToApi();
+      await storeStatistiqueToLocalStorage();
       if (
          resContenu.results?.length > 0 &&
          resArticle.results?.length > 0 &&
@@ -81,18 +83,27 @@ export default function DownloadData({ navigation }) {
       setIsFetchData(false);
    };
 
+   const fetchStatistique = () => {
+      getDataFromLocalStorage('articleTotalInServ').then((res) => {
+         dispatch(dataForStatistique({statsFor: 'article', value: res}));
+      })
+      getDataFromLocalStorage('contenuTotalInServ').then((res) => {
+         dispatch(dataForStatistique({statsFor: 'contenu', value: res}));
+      })
+   }
+
    const getOfflineDatas = async () => {
-      /*getFavoriteFromLocalStorage().then((res) => {
+      getFavoriteFromLocalStorage().then((res) => {
          if (res !== null) {
             dispatch(addFavoris(res));
          }
       });
+      fetchStatistique();
       fetchAllDataToLocalDatabase(dispatch);
       setTimeout(() => {
          setIsDataLoaded(false);
          dispatch(getStarted());
-      }, 500);*/
-      await storeStatistiqueToLocalStorage();
+      }, 500);
    };
 
    const handleFileSelectionAndImportData = async () => {

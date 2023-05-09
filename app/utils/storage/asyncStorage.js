@@ -39,14 +39,12 @@ export const getDataFromLocalStorage = async (key) => {
 export const storeStatistiqueToLocalStorage = async () => {
    try {
       const res = await LoiService.fetchStatistiqueFromServ();
-      /*let valueString = JSON.stringify(value);
-      if(item === 'article'){
-         await AsyncStorage.setItem(`@articleTotalInServ`, valueString);
+      if(res.article){
+         await AsyncStorage.setItem(`@articleTotalInServ`, JSON.stringify(res.article));
       }
-      if(item === 'contenu'){
-         await AsyncStorage.setItem(`@contenuTotalInServ`, valueString);
-      }*/
-      console.log(res);
+      if(res.contenu){
+         await AsyncStorage.setItem(`@contenuTotalInServ`, JSON.stringify(res.contenu));
+      }
    } catch (e) {
       console.log('error in function set async storage: ', e);
    }

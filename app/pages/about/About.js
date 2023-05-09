@@ -1,4 +1,8 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native';
+import React, {
+   useCallback,
+} from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { Colors } from '_theme/Colors';
 import { useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -9,8 +13,19 @@ export default function About({ navigation }) {
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
-   const allArticles = useSelector((selector) => selector.loi.articles);
-   const allContenus = useSelector((selector) => selector.loi.contenus);
+   const totalArticleInServ = useSelector(
+      (selector) => selector.loi.statistique.article
+   );
+   const totalContenuInServ = useSelector(
+      (selector) => selector.loi.statistique.contenu
+   );
+   let allArticles = useSelector((selector) => selector.loi.articles);
+   let allContenus = useSelector((selector) => selector.loi.contenus);
+
+   useFocusEffect(
+      useCallback(() => {
+      }, [])
+   )
 
    return (
       <KeyboardAwareScrollView style={{ backgroundColor: Colors.background }}>
@@ -30,13 +45,13 @@ export default function About({ navigation }) {
                   {langueActual === 'fr'
                      ? 'Total des textes présents : '
                      : "Totalin'ny lahatsoratra misy ato : "}{' '}
-                  {allContenus.length} / 100
+                  {allContenus.length} / {totalArticleInServ}
                </Text>
                <Text>
                   {langueActual === 'fr'
                      ? 'Total des articles présents : '
                      : "Totalin'ny lahatsoratra misy ato : "}{' '}
-                  {allArticles.length} / 3000
+                  {allArticles.length} / {totalContenuInServ}
                </Text>
             </View>
 

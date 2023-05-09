@@ -13,3 +13,4 @@ export const UPDATE_LIST_TAG_CHOICE = 'loi/update_list_tag_choice';
 export const GET_ALL_TAG = 'loi/get_all_tag';
 export const HIDE_SHOW_TAB_BAR = 'fonctionnality/hide_show_tab_bar';
 export const VALUE_FOR_DEEP_SEARCH = 'fonctionnality/value_for_deep_search';
+export const STATISTIQUE = 'loi/statistique';

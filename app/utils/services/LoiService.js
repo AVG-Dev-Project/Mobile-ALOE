@@ -81,7 +81,7 @@ function getTypeFromServ() {
 function fetchStatistiqueFromServ(){
    return RouteAxios.get('/statistique')
       .then((response) => {
-         return response;
+         return response.data;
       })
       .catch((error) => {
          return error.message;
