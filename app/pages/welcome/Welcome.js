@@ -24,6 +24,7 @@ import {
    getFavoriteFromLocalStorage,
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
+   storeStatistiqueToLocalStorage
 } from '_utils';
 
 export default function Welcome({ navigation }) {
@@ -51,7 +52,7 @@ export default function Welcome({ navigation }) {
    //deux functions selon disponibilité de isUserNetworkActive (une pour fetcher 10 datas afin de peupler la base)
 
    const getOfflineDatas = async () => {
-      getFavoriteFromLocalStorage().then((res) => {
+      /*getFavoriteFromLocalStorage().then((res) => {
          if (res !== null) {
             dispatch(addFavoris(res));
          }
@@ -60,7 +61,8 @@ export default function Welcome({ navigation }) {
       setTimeout(() => {
          setIsDataLoaded(false);
          dispatch(getStarted());
-      }, 2000);
+      }, 2000);*/
+      await storeStatistiqueToLocalStorage();
    };
 
    //all effects

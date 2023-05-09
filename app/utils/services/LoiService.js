@@ -78,6 +78,16 @@ function getTypeFromServ() {
       });
 }
 
+function fetchStatistiqueFromServ(){
+   return RouteAxios.get('/statistique')
+      .then((response) => {
+         return response;
+      })
+      .catch((error) => {
+         return error.message;
+      });
+}
+
 export const LoiService = {
    getArticlesFromServ,
    getArticlesByContenuFromServ,
@@ -86,4 +96,5 @@ export const LoiService = {
    getContenusFromServ,
    sendMailToServ,
    getTagFromServ,
+   fetchStatistiqueFromServ,
 };

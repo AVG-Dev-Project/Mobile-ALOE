@@ -28,6 +28,7 @@ import {
    fetchThematiquesToApi,
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
+   storeStatistiqueToLocalStorage
 } from '_utils';
 import styles from './styles';
 
@@ -80,8 +81,8 @@ export default function DownloadData({ navigation }) {
       setIsFetchData(false);
    };
 
-   const getOfflineDatas = () => {
-      getFavoriteFromLocalStorage().then((res) => {
+   const getOfflineDatas = async () => {
+      /*getFavoriteFromLocalStorage().then((res) => {
          if (res !== null) {
             dispatch(addFavoris(res));
          }
@@ -90,7 +91,8 @@ export default function DownloadData({ navigation }) {
       setTimeout(() => {
          setIsDataLoaded(false);
          dispatch(getStarted());
-      }, 500);
+      }, 500);*/
+      await storeStatistiqueToLocalStorage();
    };
 
    const handleFileSelectionAndImportData = async () => {
