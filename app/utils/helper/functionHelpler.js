@@ -3,9 +3,8 @@ import { LoiService } from '_utils/services/LoiService';
 import { DoleanceSchema } from '_utils/storage/database';
 import { Dimensions, PixelRatio } from 'react-native';
 
-// Retrieve initial screen's width & width for responsive
-let screenWidth = Dimensions.get('window').width;
-let screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 export const parseStructureDataForArticle = (data) => {
    return data.map((obj) => ({
@@ -140,19 +139,16 @@ export const parsingTags = (jsonContent) => {
    return res;
 };
 
-/**
- * Converts provided width percentage to independent pixel (dp).
- * @param  {string} widthPercent The percentage of screen's width that UI element should cover
- *                               along with the percentage symbol (%).
- * @return {number}              The calculated dp depending on current device's screen width.
- */
-export const widthPercentageToDP = widthPercent => {
-  // Parse string percentage input and convert it to number.
-  const elemWidth = typeof widthPercent === "number" ? widthPercent : parseFloat(widthPercent);
+export const widthPercentageToDP = (widthPercent) => {
+   // Parse string percentage input and convert it to number.
+   const elemWidth =
+      typeof widthPercent === 'number'
+         ? widthPercent
+         : parseFloat(widthPercent);
 
-  // Use PixelRatio.roundToNearestPixel method in order to round the layout
-  // size (dp) to the nearest one that correspons to an integer number of pixels.
-  return PixelRatio.roundToNearestPixel(screenWidth * elemWidth / 100);
+   // Use PixelRatio.roundToNearestPixel method in order to round the layout
+   // size (dp) to the nearest one that correspons to an integer number of pixels.
+   return PixelRatio.roundToNearestPixel((screenWidth * elemWidth) / 100);
 };
 
 /**
@@ -161,8 +157,11 @@ export const widthPercentageToDP = widthPercent => {
  *                                along with the percentage symbol (%).
  * @return {number}               The calculated dp depending on current device's screen height.
  */
-export const heightPercentageToDP = heightPercent => {
-  const elemHeight = typeof heightPercent === "number" ? heightPercent : parseFloat(heightPercent);
+export const heightPercentageToDP = (heightPercent) => {
+   const elemHeight =
+      typeof heightPercent === 'number'
+         ? heightPercent
+         : parseFloat(heightPercent);
 
-  return PixelRatio.roundToNearestPixel(screenHeight * elemHeight / 100);
+   return PixelRatio.roundToNearestPixel((screenHeight * elemHeight) / 100);
 };
