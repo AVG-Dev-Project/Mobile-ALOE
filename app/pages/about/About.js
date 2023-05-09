@@ -10,6 +10,7 @@ export default function About({ navigation }) {
       (selector) => selector.fonctionnality.langue
    );
    const allArticles = useSelector((selector) => selector.loi.articles);
+   const allContenus = useSelector((selector) => selector.loi.contenus);
 
    return (
       <KeyboardAwareScrollView style={{ backgroundColor: Colors.background }}>
@@ -29,7 +30,7 @@ export default function About({ navigation }) {
                   {langueActual === 'fr'
                      ? 'Total des textes présents : '
                      : "Totalin'ny lahatsoratra misy ato : "}{' '}
-                  {allArticles.length} / 100
+                  {allContenus.length} / 100
                </Text>
                <Text>
                   {langueActual === 'fr'

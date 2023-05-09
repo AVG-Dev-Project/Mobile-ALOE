@@ -19,8 +19,8 @@ export class ArticleSchema extends BaseModel {
          id: { type: types.INTEGER, primary_key: true, not_null: true }, // For while only supports id as primary key
          contenu: { type: types.INTEGER, not_null: true },
          numero: { type: types.INTEGER, not_null: true },
-         titre_id: { type: types.INTEGER, not_null: true },
-         titre_numero: { type: types.INTEGER, not_null: true },
+         titre_id: { type: types.INTEGER },
+         titre_numero: { type: types.INTEGER },
          titre_fr: { type: types.TEXT },
          titre_mg: { type: types.TEXT },
          chapitre_id: { type: types.INTEGER },
