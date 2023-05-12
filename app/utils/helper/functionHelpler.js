@@ -19,6 +19,9 @@ export const parseStructureDataForArticle = (data) => {
       chapitre_numero: obj.chapitre?.numero,
       chapitre_titre_fr: obj.chapitre?.titre_fr,
       chapitre_titre_mg: obj.chapitre?.titre_mg,
+      section_id: obj.section?.id,
+      section_titre_fr: obj.section?.titre_section_fr,
+      section_titre_mg: obj.section?.titre_section_mg,
       contenu_fr: obj.contenu_fr,
       contenu_mg: obj.contenu_mg,
    }));
@@ -73,6 +76,9 @@ export const parseDataArticleLazyLoading = (obj) => {
       chapitre_numero: obj.chapitre?.numero,
       chapitre_titre_fr: obj.chapitre?.titre_fr,
       chapitre_titre_mg: obj.chapitre?.titre_mg,
+      section_id: obj.section?.id,
+      section_titre_fr: obj.section?.titre_section_fr,
+      section_titre_mg: obj.section?.titre_section_mg,
       contenu_fr: obj.contenu_fr,
       contenu_mg: obj.contenu_mg,
    };
