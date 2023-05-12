@@ -1,6 +1,6 @@
 import Axios from 'axios';
 
-const uRI = 'https://avg.e-commerce-mg.com/api';
+const uRI = 'https://aloe.iteam-s.mg/api';
 
 const RouteAxios = Axios.create({
    baseURL: uRI,

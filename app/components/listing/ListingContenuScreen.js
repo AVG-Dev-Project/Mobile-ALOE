@@ -39,7 +39,7 @@ export default function ListingContenu({ navigation }) {
    const allContenusFromStore = useSelector(
       (selector) => selector.loi.contenus
    );
-   const urlApiAttachement = 'https://avg.e-commerce-mg.com';
+   const urlApiAttachement = 'https://aloe.iteam-s.mg';
    const [isGetNextData, setIsGetNextData] = useState(false);
    const [contenuList, setContenuList] = useState(
       allContenusFromStore.map((item) => {
