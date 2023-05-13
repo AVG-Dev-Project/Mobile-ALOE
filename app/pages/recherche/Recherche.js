@@ -237,7 +237,7 @@ export default function Recherche({ navigation, route }) {
    const allTypes = useSelector((selector) => selector.loi.types);
    const allThematiques = useSelector((selector) => selector.loi.thematiques);
    const allTags = useSelector((selector) => selector.loi.tags);
-   const urlApiAttachement = 'https://avg.e-commerce-mg.com';
+   const urlApiAttachement = 'https://aloe.iteam-s.mg';
    const [chips, setChips] = useState(
       allTags.map((tag) => {
          return {
