@@ -187,13 +187,7 @@ export default function Welcome({ navigation }) {
                         color: Colors.white,
                      }}
                      titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
-                     buttonStyle={{
-                        backgroundColor: Colors.greenAvg,
-                        margin: 8,
-                        minWidth: width < 370 ? 70 : 70,
-                        minHeight: 70,
-                        borderRadius: 60,
-                     }}
+                     buttonStyle={styles.bouttonStyle}
                      containerStyle={{}}
                      onPress={() => {
                         getOfflineDatas();
@@ -214,13 +208,7 @@ export default function Welcome({ navigation }) {
                         color: Colors.white,
                      }}
                      titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
-                     buttonStyle={{
-                        backgroundColor: Colors.greenAvg,
-                        margin: 8,
-                        minWidth: width < 370 ? 70 : 70,
-                        minHeight: 70,
-                        borderRadius: 60,
-                     }}
+                     buttonStyle={styles.bouttonStyle}
                      containerStyle={{}}
                      onPress={() => {
                         getOfflineDatas();
@@ -247,15 +235,10 @@ export default function Welcome({ navigation }) {
                </View>
             )}
          </View>
-         <View
-            style={{
-               display: 'flex',
-               flexDirection: 'row',
-               alignItems: 'center',
-               justifyContent: 'center',
-               width: '100%',
-            }}
-         >
+         <View style={styles.viewPartenaire}>
+            <Text style={styles.labelDescriptionLogoUsaid}>
+               Sous l'appui technique et financier de{' '}
+            </Text>
             <Image
                style={styles.logo_image}
                source={require('_images/usaid.png')}

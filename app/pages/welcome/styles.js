@@ -1,5 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import { Colors } from '_theme/Colors';
+import { widthPercentageToDP, heightPercentageToDP } from '_utils';
 
 const styles = StyleSheet.create({
    view_container_welcome: {
@@ -9,12 +10,12 @@ const styles = StyleSheet.create({
       alignItems: 'center',
    },
    images_welcome: {
-      height: Dimensions.get('window').height - 430,
-      width: Dimensions.get('window').width - 160,
+      height: heightPercentageToDP(40),
+      width: widthPercentageToDP(60),
    },
    logo_image: {
-      height: 50,
-      width: Dimensions.get('window').height < 700 ? 130 : 150,
+      height: heightPercentageToDP(8),
+      width: widthPercentageToDP(48),
    },
    view_button_arrondi: {
       borderWidth: 2,
@@ -22,12 +23,30 @@ const styles = StyleSheet.create({
       borderRadius: 60,
       marginVertical: 20,
    },
+   bouttonStyle: {
+      backgroundColor: Colors.greenAvg,
+      margin: 8,
+      minWidth: widthPercentageToDP(18),
+      minHeight: heightPercentageToDP(9),
+      borderRadius: 60,
+   },
    boutton_arrondi: {
       backgroundColor: Colors.greenAvg,
       padding: 20,
       margin: 6,
       borderRadius: 60,
       minWidth: 34,
+   },
+   viewPartenaire: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%',
+   },
+   labelDescriptionLogoUsaid: {
+      fontSize: 12,
+      fontWeight: 'bold',
    },
 });
 
