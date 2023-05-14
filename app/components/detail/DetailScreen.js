@@ -25,7 +25,11 @@ import { printToFileAsync } from 'expo-print';
 import bgImage from '_images/abstract.jpg';
 import { Colors } from '_theme/Colors';
 import { addFavoris } from '_utils/redux/actions/action_creators';
-import { filterArticleToListByContenu, parsingTags } from '_utils';
+import {
+   filterArticleToListByContenu,
+   parsingTags,
+   heightPercentageToDP,
+} from '_utils';
 
 export default function Detail({ navigation, route }) {
    const [status, requestPermission] = MediaLibrary.usePermissions();
@@ -618,7 +622,12 @@ export default function Detail({ navigation, route }) {
             style={styles.view_bottom_sheet}
          >
             <ScrollView style={styles.view_in_bottomsheet}>
-               <Text style={{ fontSize: 28, fontWeight: 'bold' }}>
+               <Text
+                  style={{
+                     fontSize: heightPercentageToDP(3.5),
+                     fontWeight: 'bold',
+                  }}
+               >
                   {langueActual === 'fr'
                      ? 'Plus de détails :'
                      : 'Fanampiny misimisy :'}{' '}
@@ -677,6 +686,19 @@ export default function Detail({ navigation, route }) {
                         ? contenuMother[0].thematique_nom_fr
                         : contenuMother[0].thematique_nom_mg ??
                           contenuMother[0].thematique_nom_fr}
+                  </Text>
+               </View>
+
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Section ' : 'Section '}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? contenuMother[0].section_titre_fr
+                        : contenuMother[0].section_titre_mg ??
+                          contenuMother[0].section_titre_fr}
                   </Text>
                </View>
 

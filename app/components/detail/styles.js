@@ -1,5 +1,6 @@
 import { Colors } from '_theme/Colors';
 import { StyleSheet, Dimensions } from 'react-native';
+import { heightPercentageToDP, widthPercentageToDP } from '_utils';
 
 let widthDevice = Dimensions.get('window').width;
 let heightDevice = Dimensions.get('window').height;
@@ -67,9 +68,9 @@ export const styles = StyleSheet.create({
       borderRadius: 52,
    },
    fab_button: {
-      height: 150,
+      height: heightPercentageToDP(22),
       flexDirection: 'column',
-      paddingVertical: 5,
+      paddingVertical: heightPercentageToDP(0),
       flexGrow: 1,
    },
    view_content_fab_button: {
@@ -99,6 +100,6 @@ export const styles = StyleSheet.create({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'flex-end',
-      marginRight: 28,
+      marginRight: widthPercentageToDP(6.5),
    },
 });
