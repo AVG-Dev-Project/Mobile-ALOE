@@ -4,6 +4,7 @@ import {
    View,
    Image,
    TouchableOpacity,
+   ScrollView,
    useWindowDimensions,
 } from 'react-native';
 import styles from './styles';
@@ -26,6 +27,7 @@ import {
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
    storeStatistiqueToLocalStorage,
+   s,
 } from '_utils';
 
 export default function Welcome({ navigation }) {
@@ -109,15 +111,15 @@ export default function Welcome({ navigation }) {
    }, [isUserNetworkActive, isUserConnectedToInternet]);
 
    return (
-      <View style={styles.view_container_welcome}>
-         <Image
-            style={styles.images_welcome}
-            source={require('_images/aloe.png')}
-         />
-         <View>
+      <ScrollView style={styles.view_container_welcome}>
+         <View style={{ alignItems: 'center' }}>
+            <Image
+               style={styles.images_welcome}
+               source={require('_images/aloe.png')}
+            />
             <Text
                style={{
-                  fontSize: width < 370 ? 28 : 34,
+                  fontSize: width < 370 ? 20 : 30,
                   fontWeight: 'bold',
                   textAlign: 'center',
                }}
@@ -126,7 +128,7 @@ export default function Welcome({ navigation }) {
                   ? 'Bienvenue sur ALOE'
                   : "Tongasoa eto amin'ny ALOE"}
             </Text>
-            <Text style={{ textAlign: 'center', marginVertical: 10 }}>
+            <Text style={{ textAlign: 'center', marginVertical: 5 }}>
                ALOE ou{' '}
                <Text
                   style={{
@@ -244,6 +246,6 @@ export default function Welcome({ navigation }) {
                source={require('_images/usaid.png')}
             />
          </View>
-      </View>
+      </ScrollView>
    );
 }

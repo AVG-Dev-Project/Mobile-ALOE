@@ -6,11 +6,9 @@ const styles = StyleSheet.create({
    view_container_welcome: {
       flex: 1,
       backgroundColor: Colors.white,
-      paddingHorizontal: 20,
-      alignItems: 'center',
    },
    images_welcome: {
-      height: heightPercentageToDP(40),
+      height: heightPercentageToDP(38),
       width: widthPercentageToDP(60),
    },
    logo_image: {
@@ -35,7 +33,7 @@ const styles = StyleSheet.create({
       padding: 20,
       margin: 6,
       borderRadius: 60,
-      minWidth: 34,
+      minWidth: widthPercentageToDP(12),
    },
    viewPartenaire: {
       display: 'flex',
