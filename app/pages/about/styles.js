@@ -1,8 +1,7 @@
 import { Colors } from '_theme/Colors';
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { widthPercentageToDP, heightPercentageToDP } from '_utils';
 
-const heightDevice = Dimensions.get('window').height;
-const widthDevice = Dimensions.get('window').width;
 export const styles = StyleSheet.create({
    view_container: {
       flex: 1,
@@ -17,8 +16,8 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
    },
    banniere_image: {
-      width: widthDevice - 150,
-      height: heightDevice - 400,
+      width: widthPercentageToDP(40),
+      height: heightPercentageToDP(35),
    },
    view_content_about: {
       marginVertical: 20,
