@@ -54,15 +54,7 @@ export default function Information() {
                      borderRadius: 60,
                   }}
                />
-               <View
-                  style={{
-                     display: 'flex',
-                     flexDirection: 'column',
-                     marginLeft: 20,
-                     justifyContent: 'center',
-                     alignItems: 'flex-start',
-                  }}
-               >
+               <View style={styles.info_header}>
                   <Text
                      style={{
                         fontWeight: 'bold',
