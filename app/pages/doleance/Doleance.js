@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { Colors } from '_theme/Colors';
 import Lottie from 'lottie-react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Icon, Input, Button } from '@rneui/themed';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { styles } from './styles';
@@ -16,6 +16,7 @@ import {
    insertOrUpdateToDBFunc,
    LoiService,
    checkAndsendMailFromLocalDBToAPI,
+   heightPercentageToDP,
 } from '_utils';
 
 export default function Doleance({ navigation }) {
@@ -69,7 +70,6 @@ export default function Doleance({ navigation }) {
    const sendMail = () => {
       setIsLoadSendingMail(true);
       if (isUserNetworkActive && isUserConnectedToInternet) {
-         console.log('mis connex iz d afk ');
          sendMailToAPI(
             emailContent.email,
             emailContent.objet,
@@ -81,7 +81,6 @@ export default function Doleance({ navigation }) {
             message: '',
          });
       } else {
-         console.log('tss connex e');
          sendMailToLocalDB(
             emailContent.email,
             emailContent.objet,
@@ -143,9 +142,8 @@ export default function Doleance({ navigation }) {
                   />
                   <Text
                      style={{
-                        fontSize: 16,
+                        fontSize: heightPercentageToDP(2),
                         color: Colors.redError,
-                        marginVertical: 12,
                         textAlign: 'center',
                      }}
                   >
