@@ -661,7 +661,7 @@ export default function Detail({ navigation, route }) {
                   <Text style={styles.value_info_article} numberOfLines={2}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
                      {langueActual === 'fr'
-                        ? contenuMother[0].objet_contenu_fr
+                        ? contenuMother[0].objet_contenu_fr ?? ''
                         : contenuMother[0].objet_contenu_mg ??
                           contenuMother[0].objet_contenu_fr}
                   </Text>
@@ -687,7 +687,7 @@ export default function Detail({ navigation, route }) {
                   <Text style={styles.value_info_article}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
                      {langueActual === 'fr'
-                        ? contenuMother[0]?.type_nom_fr
+                        ? contenuMother[0].type_nom_fr ?? ''
                         : contenuMother[0].type_nom_mg ??
                           contenuMother[0].type_nom_fr}
                   </Text>
@@ -700,7 +700,7 @@ export default function Detail({ navigation, route }) {
                   <Text style={styles.value_info_article} numberOfLines={2}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
                      {langueActual === 'fr'
-                        ? contenuMother[0].etat_nom_fr
+                        ? contenuMother[0].etat_nom_fr ?? ''
                         : contenuMother[0].etat_nom_mg ??
                           contenuMother[0].etat_nom_fr}
                   </Text>
@@ -715,7 +715,7 @@ export default function Detail({ navigation, route }) {
                   <Text style={styles.value_info_article} numberOfLines={2}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
                      {langueActual === 'fr'
-                        ? contenuMother[0].organisme_nom_fr
+                        ? contenuMother[0].organisme_nom_fr ?? ''
                         : contenuMother[0].organisme_nom_mg ??
                           contenuMother[0].organisme_nom_fr}
                   </Text>
@@ -728,7 +728,7 @@ export default function Detail({ navigation, route }) {
                   <Text style={styles.value_info_article} numberOfLines={2}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
                      {langueActual === 'fr'
-                        ? contenuMother[0].note_contenu_fr
+                        ? contenuMother[0].note_contenu_fr ?? ''
                         : contenuMother[0].note_contenu_mg ??
                           contenuMother[0].note_contenu_fr}
                   </Text>
@@ -741,7 +741,7 @@ export default function Detail({ navigation, route }) {
                      </Text>
                      <Text style={styles.value_info_article}>
                         <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                        {parsingTags(contenuMother[0].tag).map((tag) =>
+                        {parsingTags(contenuMother[0].tag)?.map((tag) =>
                            langueActual === 'fr'
                               ? tag.contenu_fr + ', '
                               : tag.contenu_mg + ', '

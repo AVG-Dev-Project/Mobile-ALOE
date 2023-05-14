@@ -55,7 +55,7 @@ export default function About({ navigation }) {
                   {langueActual === 'fr'
                      ? 'Total des textes présents : '
                      : "Totalin'ny lahatsoratra misy ato : "}{' '}
-                  {statistique.contenuPresent} / {statistique.contenuPresent}
+                  {statistique.contenuPresent} / {statistique.contenuFromServ}
                </Text>
                <Text>
                   {langueActual === 'fr'

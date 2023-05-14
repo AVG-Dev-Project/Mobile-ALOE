@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
       backgroundColor: Colors.greenAvg,
       margin: 8,
       minWidth: widthPercentageToDP(18),
-      minHeight: heightPercentageToDP(10),
+      minHeight: heightPercentageToDP(9),
       borderRadius: 60,
    },
    boutton_arrondi: {
