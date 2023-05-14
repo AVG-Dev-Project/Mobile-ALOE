@@ -872,7 +872,7 @@ export default function Recherche({ navigation, route }) {
                key={'_'}
                keyExtractor={_idKeyExtractorChip}
                showsHorizontalScrollIndicator={false}
-               estimatedItemSize={100}
+               estimatedItemSize={80}
                renderItem={_renderItemChips}
                getItemLayout={(data, index) => ({
                   length: data.length,
