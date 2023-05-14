@@ -687,7 +687,7 @@ export default function Detail({ navigation, route }) {
                   <Text style={styles.value_info_article}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
                      {langueActual === 'fr'
-                        ? contenuMother[0].type_nom_fr
+                        ? contenuMother[0]?.type_nom_fr
                         : contenuMother[0].type_nom_mg ??
                           contenuMother[0].type_nom_fr}
                   </Text>
@@ -723,9 +723,7 @@ export default function Detail({ navigation, route }) {
 
                <View style={styles.view_one_item_in_bottomsheet}>
                   <Text style={styles.label_info_article}>
-                     {langueActual === 'fr'
-                        ? 'Note '
-                        : 'Naoty'}{' '}
+                     {langueActual === 'fr' ? 'Note ' : 'Naoty'}{' '}
                   </Text>
                   <Text style={styles.value_info_article} numberOfLines={2}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
