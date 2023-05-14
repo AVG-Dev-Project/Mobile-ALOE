@@ -1,5 +1,6 @@
 import { Colors } from '_theme/Colors';
 import { StyleSheet, Dimensions } from 'react-native';
+import { heightPercentageToDP, widthPercentageToDP } from '_utils';
 
 const widthDevice = Dimensions.get('window').width;
 export const styles = StyleSheet.create({
@@ -7,7 +8,7 @@ export const styles = StyleSheet.create({
       flex: 1,
       paddingTop: 20,
       marginBottom: 70,
-      paddingHorizontal: 15,
+      paddingHorizontal: 5,
       backgroundColor: Colors.background,
    },
    view_render: {
@@ -21,7 +22,7 @@ export const styles = StyleSheet.create({
    },
    landing_screen: {
       marginTop: 8,
-      height: widthDevice < 370 ? 160 : 200,
+      height: heightPercentageToDP(25),
       borderRadius: 25,
       backgroundColor: Colors.greenAvg,
       display: 'flex',
