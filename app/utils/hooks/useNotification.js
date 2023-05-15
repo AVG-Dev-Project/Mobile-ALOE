@@ -43,7 +43,7 @@ async function registerForPushNotificationsAsync() {
   return token;
 }
 
-export default function App() {
+export default function useNotification() {
   /*const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();*/
