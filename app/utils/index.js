@@ -5,8 +5,9 @@ import {
    getDataFromLocalStorage,
    storeFavoriteIdToLocalStorage,
    getFavoriteFromLocalStorage,
-   storeStatistiqueToLocalStorage
+   storeStatistiqueToLocalStorage,
 } from './storage/asyncStorage';
+import { useNotification } from './hooks/useNotification';
 import {
    ArticleSchema,
    ContenuSchema,
@@ -41,6 +42,7 @@ import {
 
 export {
    nameStackNavigation,
+   useNotification,
    LoiService,
    storeDataToLocalStorage,
    getDataFromLocalStorage,
