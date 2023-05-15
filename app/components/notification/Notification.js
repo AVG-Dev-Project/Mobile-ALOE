@@ -3,16 +3,15 @@ import { Text, View, Button, Platform } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 
-
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
-    shouldPlaySound: true,
+    shouldPlaySound: false,
     shouldSetBadge: false,
   }),
 });
 
-const registerForPushNotificationsAsync = async () => {
+async function registerForPushNotificationsAsync() {
   let token;
 
   if (Platform.OS === 'android') {
@@ -38,33 +37,33 @@ const registerForPushNotificationsAsync = async () => {
     token = (await Notifications.getExpoPushTokenAsync()).data;
     console.log(token);
   } else {
-    alert("L'affichage du notification semble avoir un problème avec votre télephone");
+    alert("Votre télephone ne supporte pas l'affichage des notifications.");
   }
 
   return token;
 }
 
-export default function Notification({title, body, data}) {
-  const [expoPushToken, setExpoPushToken] = useState('');
-  const [notification, setNotification] = useState(false);
+export default function App() {
+  /*const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
-  const responseListener = useRef();
+  const responseListener = useRef();*/
 
-  const schedulePushNotification = async () => {
-    await Notifications.scheduleNotificationAsync({
-        content: {
-        title: title,
-        body: body,
-        data: { data: data },
-        },
-        trigger: { seconds: 3 },
-    });
-  }
+  //all functions
+  const schedulePushNotification = async (title, body, data) => {
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: title,
+      body: body,
+      data: { data: data ?? "" },
+    },
+    trigger: { seconds: 2 },
+  });
+}
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+    registerForPushNotificationsAsync();
 
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+    /*notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification);
     });
 
@@ -75,29 +74,11 @@ export default function Notification({title, body, data}) {
     return () => {
       Notifications.removeNotificationSubscription(notificationListener.current);
       Notifications.removeNotificationSubscription(responseListener.current);
-    };
+    };*/
   }, []);
 
-  return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'space-around',
-      }}>
-      <Text>Your expo push token: {expoPushToken}</Text>
-      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Title: {notification && notification.request.content.title} </Text>
-        <Text>Body: {notification && notification.request.content.body}</Text>
-        <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
-      </View>
-      <Button
-        title="Press to schedule a notification"
-        onPress={async () => {
-          await schedulePushNotification();
-        }}
-      />
-    </View>
-  );
+  return {schedulePushNotification};
 }
+
+
 
