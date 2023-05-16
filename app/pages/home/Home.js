@@ -30,6 +30,7 @@ import {
    fetchThematiquesToApi,
    storeStatistiqueToLocalStorage,
    getDataFromLocalStorage,
+   checkIfUserHasAllData,
 } from '_utils';
 
 export default function Home({ navigation }) {
@@ -56,6 +57,7 @@ export default function Home({ navigation }) {
    );
 
    //all functions
+   checkIfUserHasAllData(useSelector);
    const fetchStatistique = () => {
       getDataFromLocalStorage('articleTotalInServ').then((res) => {
          dispatch(dataForStatistique({ statsFor: 'article', value: res ?? 0 }));

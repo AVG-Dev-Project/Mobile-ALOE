@@ -27,7 +27,8 @@ import {
    parseDataContenuLazyLoading,
    widthPercentageToDP,
    heightPercentageToDP,
-   pushNotification
+   pushNotification,
+   checkIfUserHasAllData,
 } from './helper/functionHelpler';
 
 import {
@@ -45,6 +46,7 @@ export {
    nameStackNavigation,
    useNotification,
    pushNotification,
+   checkIfUserHasAllData,
    LoiService,
    storeDataToLocalStorage,
    getDataFromLocalStorage,
