@@ -17,14 +17,13 @@ import Carousel from 'react-native-snap-carousel';
 import { useSelector, useDispatch } from 'react-redux';
 import HeaderGlobal from '_components/header/HeaderGlobal';
 import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
-import {
-   nameStackNavigation as nameNav,
-   fetchPartialDataForUpdating,
-} from '_utils';
 import { styles } from './styles';
 import { Colors } from '_theme/Colors';
 import { dataForStatistique } from '_utils/redux/actions/action_creators';
 import {
+   nameStackNavigation as nameNav,
+   fetchPartialDataForUpdating,
+   pushNotification,
    checkAndsendMailFromLocalDBToAPI,
    fetchTypesToApi,
    fetchTagsToApi,
@@ -99,7 +98,6 @@ export default function Home({ navigation }) {
    const bottomSheetRef = useRef(null);
 
    //all efects
-
    useEffect(() => {
       if (isUserConnectedToInternet && isUserNetworkActive) {
          checkAndsendMailFromLocalDBToAPI();
