@@ -58,6 +58,7 @@ export default function Home({ navigation }) {
 
    //all functions
    checkIfUserHasAllData(useSelector);
+   
    const fetchStatistique = () => {
       getDataFromLocalStorage('articleTotalInServ').then((res) => {
          dispatch(dataForStatistique({ statsFor: 'article', value: res ?? 0 }));
