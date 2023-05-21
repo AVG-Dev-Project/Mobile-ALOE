@@ -1,5 +1,11 @@
 import { useRef, useEffect, useState } from 'react';
-import { Text, View, useWindowDimensions, ToastAndroid } from 'react-native';
+import {
+   Text,
+   ScrollView,
+   View,
+   useWindowDimensions,
+   ToastAndroid,
+} from 'react-native';
 import { Colors } from '_theme/Colors';
 import Lottie from 'lottie-react-native';
 import { Icon, Button } from '@rneui/themed';
@@ -222,7 +228,7 @@ export default function DownloadData({ navigation }) {
    ]);
 
    return (
-      <View style={styles.view_container_download}>
+      <ScrollView style={styles.view_container_download}>
          <Lottie
             autoPlay
             ref={animation}
@@ -341,6 +347,6 @@ export default function DownloadData({ navigation }) {
                disabled={buttonStartDisabled}
             />
          </View>
-      </View>
+      </ScrollView>
    );
 }
