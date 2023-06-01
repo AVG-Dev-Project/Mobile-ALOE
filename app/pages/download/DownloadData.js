@@ -122,7 +122,7 @@ export default function DownloadData({ navigation }) {
             const fileContent = await FileSystem.readAsStringAsync(file.uri);
             const parsedJSONData = JSON.parse(fileContent);
             const parsedJsonToArray = Object.values(parsedJSONData);
-            let [type, thematique, article, contenu] = parsedJsonToArray;
+            let [type, thematique, article, contenu, tag] = parsedJsonToArray;
             //store total of article and contenu to storage
             storeDataToLocalStorage(
                'articleTotalInServ',
@@ -138,6 +138,9 @@ export default function DownloadData({ navigation }) {
 
             //thematique
             insertOrUpdateToDBFunc('database', 'thematique', thematique);
+
+            //tag
+            insertOrUpdateToDBFunc('database', 'tag', tag);
 
             //article
             insertOrUpdateToDBFunc(
