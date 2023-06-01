@@ -203,7 +203,7 @@ export const checkIfUserHasAllData = (selector) => {
             'Ressources incomplet',
             `contenu : ${contenuPresent.length}/${totalContenuInServ} et article ${articlePresent.length}/${totalArticleInServ}`
          );
-      }, 900000);
+      }, 1800000);
    } else {
       clearInterval(intervalId);
    }
