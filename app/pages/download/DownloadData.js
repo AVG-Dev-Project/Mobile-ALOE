@@ -228,48 +228,83 @@ export default function DownloadData({ navigation }) {
    ]);
 
    return (
-      <ScrollView style={styles.view_container_download}>
-         <Lottie
-            autoPlay
-            ref={animation}
-            style={styles.images_welcome}
-            source={require('_images/upload.json')}
-         />
-         <View style={styles.view_instruction}>
-            <View style={styles.view_status_connexion}>
-               <Text
-                  style={{
-                     fontSize: 16,
-                     fontWeight: 'bold',
-                     textAlign: 'center',
-                  }}
-               >
-                  Status :{' '}
-                  {isUserNetworkActive && isUserConnectedToInternet
-                     ? 'Vous êtes connectés à internet'
-                     : "Vous n'êtes pas connectés"}
+      <ScrollView>
+         <View style={styles.view_container_download}>
+            <Lottie
+               autoPlay
+               ref={animation}
+               style={styles.images_welcome}
+               source={require('_images/upload.json')}
+            />
+            <View style={styles.view_instruction}>
+               <View style={styles.view_status_connexion}>
+                  <Text
+                     style={{
+                        fontSize: 16,
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                     }}
+                  >
+                     Status :{' '}
+                     {isUserNetworkActive && isUserConnectedToInternet
+                        ? 'Vous êtes connectés à internet'
+                        : "Vous n'êtes pas connectés"}
+                  </Text>
+                  {isUserNetworkActive && isUserConnectedToInternet ? (
+                     <Icon
+                        name={'sentiment-satisfied-alt'}
+                        color={Colors.greenAvg}
+                        size={24}
+                     />
+                  ) : (
+                     <Icon
+                        name={'sentiment-very-dissatisfied'}
+                        color={Colors.redError}
+                        size={24}
+                     />
+                  )}
+               </View>
+               <Text style={{ textAlign: 'center' }}>
+                  {messageStatusInternet}
                </Text>
-               {isUserNetworkActive && isUserConnectedToInternet ? (
-                  <Icon
-                     name={'sentiment-satisfied-alt'}
-                     color={Colors.greenAvg}
-                     size={24}
-                  />
-               ) : (
-                  <Icon
-                     name={'sentiment-very-dissatisfied'}
-                     color={Colors.redError}
-                     size={24}
-                  />
-               )}
-            </View>
-            <Text style={{ textAlign: 'center' }}>{messageStatusInternet}</Text>
-            <View style={styles.view_for_button}>
-               {isUserNetworkActive && isUserConnectedToInternet && (
+               <View style={styles.view_for_button}>
+                  {isUserNetworkActive && isUserConnectedToInternet && (
+                     <Button
+                        title="Télecharger les datas"
+                        icon={{
+                           name: 'file-download',
+                           type: 'material',
+                           size: 24,
+                           color: Colors.white,
+                        }}
+                        titleStyle={{ fontSize: 16 }}
+                        buttonStyle={{
+                           borderRadius: 15,
+                           backgroundColor: Colors.greenAvg,
+                        }}
+                        containerStyle={{
+                           width: 250,
+                           marginVertical: 5,
+                        }}
+                        onPress={() => {
+                           setIsFetchData(true);
+                           getOnlineDatas();
+                        }}
+                        loading={isFetchData}
+                     />
+                  )}
+
+                  {isUserNetworkActive && isUserConnectedToInternet && (
+                     <Text style={{ textAlign: 'center', fontSize: 18 }}>
+                        {' '}
+                        ou{' '}
+                     </Text>
+                  )}
+
                   <Button
-                     title="Télecharger les datas"
+                     title="Importer le fichier"
                      icon={{
-                        name: 'file-download',
+                        name: 'file-upload',
                         type: 'material',
                         size: 24,
                         color: Colors.white,
@@ -283,69 +318,38 @@ export default function DownloadData({ navigation }) {
                         width: 250,
                         marginVertical: 5,
                      }}
-                     onPress={() => {
-                        setIsFetchData(true);
-                        getOnlineDatas();
-                     }}
-                     loading={isFetchData}
+                     onPress={() => handleFileSelectionAndImportData()}
+                     loading={isUploadData}
                   />
-               )}
-
-               {isUserNetworkActive && isUserConnectedToInternet && (
-                  <Text style={{ textAlign: 'center', fontSize: 18 }}>
-                     {' '}
-                     ou{' '}
-                  </Text>
-               )}
-
+               </View>
+            </View>
+            <View>
                <Button
-                  title="Importer le fichier"
+                  title="Commencer"
                   icon={{
-                     name: 'file-upload',
+                     name: 'double-arrow',
                      type: 'material',
                      size: 24,
                      color: Colors.white,
                   }}
-                  titleStyle={{ fontSize: 16 }}
+                  titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
                   buttonStyle={{
-                     borderRadius: 15,
+                     borderRadius: 30,
                      backgroundColor: Colors.greenAvg,
+                     paddingVertical: 24,
+                     width: width < 370 ? 170 : 190,
                   }}
                   containerStyle={{
-                     width: 250,
-                     marginVertical: 5,
+                     marginVertical: 10,
                   }}
-                  onPress={() => handleFileSelectionAndImportData()}
-                  loading={isUploadData}
+                  onPress={() => {
+                     setIsDataLoaded(true);
+                     getOfflineDatas();
+                  }}
+                  loading={isDataLoaded}
+                  disabled={buttonStartDisabled}
                />
             </View>
-         </View>
-         <View>
-            <Button
-               title="Commencer"
-               icon={{
-                  name: 'double-arrow',
-                  type: 'material',
-                  size: 24,
-                  color: Colors.white,
-               }}
-               titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
-               buttonStyle={{
-                  borderRadius: 30,
-                  backgroundColor: Colors.greenAvg,
-                  paddingVertical: 24,
-                  width: width < 370 ? 170 : 190,
-               }}
-               containerStyle={{
-                  marginVertical: 10,
-               }}
-               onPress={() => {
-                  setIsDataLoaded(true);
-                  getOfflineDatas();
-               }}
-               loading={isDataLoaded}
-               disabled={buttonStartDisabled}
-            />
          </View>
       </ScrollView>
    );
