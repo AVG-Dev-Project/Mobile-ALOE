@@ -23,7 +23,6 @@ import { dataForStatistique } from '_utils/redux/actions/action_creators';
 import {
    nameStackNavigation as nameNav,
    fetchPartialDataForUpdating,
-   pushNotification,
    checkAndsendMailFromLocalDBToAPI,
    fetchTypesToApi,
    fetchTagsToApi,
@@ -58,7 +57,7 @@ export default function Home({ navigation }) {
 
    //all functions
    checkIfUserHasAllData(useSelector);
-   
+
    const fetchStatistique = () => {
       getDataFromLocalStorage('articleTotalInServ').then((res) => {
          dispatch(dataForStatistique({ statsFor: 'article', value: res ?? 0 }));
