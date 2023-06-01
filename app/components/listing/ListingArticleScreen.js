@@ -20,6 +20,8 @@ import { Colors } from '_theme/Colors';
 import {
    parseDataArticleLazyLoading,
    filterArticleToListByContenu,
+   widthPercentageToDP,
+   heightPercentageToDP,
    fetchArticlesByContenuToApi,
 } from '_utils';
 import {
@@ -301,9 +303,9 @@ export default function ListingArticle({ navigation, route }) {
                   </View>
                   <Text
                      style={{
-                        fontSize: width < 380 ? 10 : 16,
+                        fontSize: heightPercentageToDP(2),
                         flex: 2,
-                        width: 210,
+                        width: widthPercentageToDP(50),
                      }}
                      numberOfLines={4}
                   >
@@ -343,7 +345,7 @@ export default function ListingArticle({ navigation, route }) {
                         {item.isFavorite ? (
                            <Text
                               style={{
-                                 fontSize: 14,
+                                 fontSize: widthPercentageToDP(3.5),
                                  marginLeft: 2,
                               }}
                            >
@@ -352,7 +354,7 @@ export default function ListingArticle({ navigation, route }) {
                         ) : (
                            <Text
                               style={{
-                                 fontSize: 14,
+                                 fontSize: widthPercentageToDP(3.5),
                                  marginLeft: 2,
                               }}
                            >

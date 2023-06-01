@@ -28,6 +28,7 @@ import { addFavoris } from '_utils/redux/actions/action_creators';
 import {
    filterArticleToListByContenu,
    parsingTags,
+   widthPercentageToDP,
    heightPercentageToDP,
 } from '_utils';
 
@@ -199,6 +200,11 @@ export default function Detail({ navigation, route }) {
                   langueActual === 'fr'
                      ? contenuMother[0].organisme_nom_fr ?? ' '
                      : contenuMother[0].organisme_nom_mg ?? ' '
+               }</span></h3>
+               <h3 style="text-align: left;">Note: <span style="font-weight: normal;">${
+                  langueActual === 'fr'
+                     ? contenuMother[0].note_contenu_fr ?? ' '
+                     : contenuMother[0].note_contenu_mg ?? ' '
                }</span></h3>
 
                <h3 style="text-align: left;">Titre : <span style="font-weight: normal;">${
@@ -414,7 +420,7 @@ export default function Detail({ navigation, route }) {
                      <Text
                         style={{
                            fontWeight: 'bold',
-                           fontSize: width < 370 ? 16 : 18,
+                           fontSize: widthPercentageToDP(4),
                            width: '90%',
                            color: Colors.white,
                         }}
@@ -428,7 +434,7 @@ export default function Detail({ navigation, route }) {
                      {oneArticle.chapitre_id ? (
                         <Text
                            style={{
-                              fontSize: 13,
+                              fontSize: widthPercentageToDP(3),
                               marginVertical: 4,
                               color: Colors.white,
                            }}
@@ -588,8 +594,12 @@ export default function Detail({ navigation, route }) {
                            } else {
                               playPauseSpeak(
                                  oneArticle.contenu_mg
-                                    ?.split('________________')[0]
-                                    .substring(0, 4000)
+                                    ? oneArticle.contenu_mg
+                                         ?.split('________________')[0]
+                                         .substring(0, 4000)
+                                    : oneArticle.contenu_fr
+                                         ?.split('________________')[0]
+                                         .substring(0, 4000)
                               );
                            }
                         }}

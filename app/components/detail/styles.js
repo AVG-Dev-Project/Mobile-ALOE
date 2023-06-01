@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
    },
    view_round_button_detail_article: {
       position: 'absolute',
-      top: -22,
+      top: heightPercentageToDP(-3.5),
       right: 14,
       display: 'flex',
       flexDirection: 'row',
@@ -70,12 +70,11 @@ export const styles = StyleSheet.create({
    fab_button: {
       height: heightPercentageToDP(22),
       flexDirection: 'column',
-      paddingVertical: heightPercentageToDP(0),
       flexGrow: 1,
    },
    view_content_fab_button: {
-      width: '90%',
-      marginTop: 10,
+      width: widthPercentageToDP(90),
+      marginTop: heightPercentageToDP(5.5),
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-evenly',
