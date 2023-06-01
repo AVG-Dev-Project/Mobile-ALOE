@@ -1,6 +1,7 @@
 import { CardStyleInterpolators } from '@react-navigation/stack';
 import { Easing } from 'react-native';
 import { Colors } from '_theme/Colors';
+import { widthPercentageToDP } from '_utils';
 
 //config for transitionSpec
 const transitionConfig = {
@@ -28,7 +29,8 @@ export const configStack = {
       },
       headerTitleStyle: {
          fontWeight: 'bold',
-         fontSize: 24,
+         fontSize: widthPercentageToDP(5.5),
+         width: widthPercentageToDP(55),
       },
       cardStyle: {
          backgroundColor: Colors.white,

@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
    },
    text_landing_screen: {
-      fontSize: widthDevice < 400 ? 18 : 20,
+      fontSize: widthPercentageToDP(5),
       color: Colors.white,
       fontWeight: 'bold',
    },
@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'space-around',
       backgroundColor: Colors.greenWhite,
-      width: '90%',
+      width: widthPercentageToDP(90),
       paddingHorizontal: 0,
       paddingVertical: 20,
       borderRadius: 25,
@@ -80,15 +80,10 @@ export const styles = StyleSheet.create({
       fontWeight: 'bold',
       opacity: 0.9,
       color: Colors.black,
-      fontSize: 20,
+      fontSize: widthPercentageToDP(4.5),
       flexWrap: 'wrap',
       textAlign: 'center',
    },
-   /*image_poster_style_thematique: {
-      height: 130,
-      width: 230,
-      borderRadius: 15,
-   },*/
    view_bottom_sheet: {
       marginHorizontal: 6,
    },

@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Colors } from '_theme/Colors';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { widthPercentageToDP } from '_utils';
 
 export default function HeaderGlobal({ bottomSheetRef }) {
    //all data
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
    },
    titre_salutation: {
       color: Colors.black,
-      fontSize: 26,
+      fontSize: widthPercentageToDP(7),
       fontWeight: 'bold',
    },
    flagImg: {

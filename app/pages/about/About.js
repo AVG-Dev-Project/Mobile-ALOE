@@ -5,7 +5,7 @@ import { Colors } from '_theme/Colors';
 import { useSelector } from 'react-redux';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { styles } from './styles';
-import { nameStackNavigation as nameNav } from '_utils';
+import { nameStackNavigation as nameNav, widthPercentageToDP } from '_utils';
 
 export default function About({ navigation }) {
    const langueActual = useSelector(
@@ -41,23 +41,36 @@ export default function About({ navigation }) {
       <KeyboardAwareScrollView style={{ backgroundColor: Colors.background }}>
          <View style={styles.view_container}>
             <View style={styles.head_banniere}>
-               <Text style={{ fontSize: 32, fontWeight: 'bold' }}>
+               <Text
+                  style={{
+                     fontSize: widthPercentageToDP(6),
+                     fontWeight: 'bold',
+                  }}
+               >
                   {langueActual === 'fr' ? 'A propos' : 'Mombamomba'}
                </Text>
                <Image
                   style={styles.banniere_image}
                   source={require('_images/aloe.png')}
                />
-               <Text>
+               <Text style={{ fontSize: widthPercentageToDP(3.5) }}>
                   {langueActual === 'fr' ? 'Version' : 'Fanovana'} 1.0.0
                </Text>
-               <Text>
+               <Text
+                  style={{
+                     fontSize: widthPercentageToDP(3.5),
+                  }}
+               >
                   {langueActual === 'fr'
                      ? 'Total des textes présents : '
                      : "Totalin'ny lahatsoratra misy ato : "}{' '}
                   {statistique.contenuPresent} / {statistique.contenuFromServ}
                </Text>
-               <Text>
+               <Text
+                  style={{
+                     fontSize: widthPercentageToDP(3.5),
+                  }}
+               >
                   {langueActual === 'fr'
                      ? 'Total des articles présents : '
                      : "Totalin'ny lahatsoratra misy ato : "}{' '}
@@ -81,22 +94,6 @@ export default function About({ navigation }) {
                         : "Mombamomban'ny AVG"}
                   </Text>
                </TouchableOpacity>
-               {/*<TouchableOpacity activeOpacity={0.6}>
-                  <Text
-                     style={styles.button_link_about}
-                     onPress={() =>
-                        alert(
-                           langueActual === 'fr'
-                              ? "Conditions d'utilisation"
-                              : "Fepetran'ny fampiasana"
-                        )
-                     }
-                  >
-                     {langueActual === 'fr'
-                        ? "Conditions d'utilisation"
-                        : "Fepetran'ny fampiasana"}
-                  </Text>
-                  </TouchableOpacity>*/}
                <TouchableOpacity
                   activeOpacity={0.6}
                   onPress={() =>

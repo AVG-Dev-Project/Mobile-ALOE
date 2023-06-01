@@ -10,6 +10,8 @@ import {
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
    nameStackNavigation as nameNav,
+   widthPercentageToDP,
+   heightPercentageToDP,
    checkAndsendMailFromLocalDBToAPI,
 } from '_utils';
 import { styles } from './styles';
@@ -113,22 +115,27 @@ export default function Favoris({ navigation, route }) {
                         {langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '}{' '}
                         {item.numero}
                      </Text>
-                     <Text
-                        style={{
-                           fontSize: width < 370 ? 10 : 14,
-                           textDecorationLine: 'underline',
-                        }}
-                        numberOfLines={1}
-                     >
-                        {langueActual === 'fr' ? item.titre_fr : item.titre_mg}
-                     </Text>
+                     {item.titre_fr && (
+                        <Text
+                           style={{
+                              fontSize: heightPercentageToDP(1.5),
+                              textDecorationLine: 'underline',
+                              width: widthPercentageToDP(50),
+                           }}
+                           numberOfLines={1}
+                        >
+                           {langueActual === 'fr'
+                              ? item.titre_fr
+                              : item.titre_mg}
+                        </Text>
+                     )}
                   </View>
                   <Text
                      style={{
-                        fontSize: width < 380 ? 10 : 16,
-                        flex: 2,
-                        width: 210,
                         marginTop: 8,
+                        fontSize: heightPercentageToDP(2),
+                        flex: 2,
+                        width: widthPercentageToDP(50),
                      }}
                      numberOfLines={4}
                   >
@@ -159,7 +166,7 @@ export default function Favoris({ navigation, route }) {
                         />
                         <Text
                            style={{
-                              fontSize: 14,
+                              fontSize: widthPercentageToDP(3.5),
                               marginLeft: 2,
                            }}
                         >

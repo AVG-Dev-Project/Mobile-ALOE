@@ -30,6 +30,7 @@ import {
    storeStatistiqueToLocalStorage,
    getDataFromLocalStorage,
    checkIfUserHasAllData,
+   widthPercentageToDP,
 } from '_utils';
 
 export default function Home({ navigation }) {
@@ -170,7 +171,7 @@ export default function Home({ navigation }) {
                   style={[StyleSheet.absoluteFillObject, styles.maskImageCatg]}
                ></View>
                <Text
-                  style={[styles.text_descriptif_for_carousel]}
+                  style={styles.text_descriptif_for_carousel}
                   numberOfLines={4}
                >
                   {langueActual === 'fr'
@@ -203,7 +204,12 @@ export default function Home({ navigation }) {
                      style={styles.icon_in_content_landing}
                      source={require('_images/abstract_3.jpg')}
                   />
-                  <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                  <Text
+                     style={{
+                        fontSize: widthPercentageToDP(3.5),
+                        fontWeight: 'bold',
+                     }}
+                  >
                      {t('renseignez')}
                   </Text>
                   {isFetchData ? (
