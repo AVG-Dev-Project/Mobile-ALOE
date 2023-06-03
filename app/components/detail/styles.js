@@ -68,7 +68,6 @@ export const styles = StyleSheet.create({
       borderRadius: 52,
    },
    fab_button: {
-      height: heightPercentageToDP(22),
       flexDirection: 'column',
       flexGrow: 1,
    },
@@ -76,7 +75,7 @@ export const styles = StyleSheet.create({
       width: widthPercentageToDP(90),
       marginTop: heightPercentageToDP(5.5),
       flexDirection: 'row',
-      alignItems: 'center',
+      alignItems: 'flex-end',
       justifyContent: 'space-evenly',
    },
    view_bottom_sheet: {
