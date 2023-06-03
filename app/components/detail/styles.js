@@ -68,14 +68,15 @@ export const styles = StyleSheet.create({
       borderRadius: 52,
    },
    fab_button: {
+      height: heightPercentageToDP(18),
       flexDirection: 'column',
       flexGrow: 1,
    },
    view_content_fab_button: {
       width: widthPercentageToDP(90),
-      marginTop: heightPercentageToDP(5.5),
+      marginTop: heightPercentageToDP(1.5),
       flexDirection: 'row',
-      alignItems: 'flex-end',
+      alignItems: 'center',
       justifyContent: 'space-evenly',
    },
    view_bottom_sheet: {
