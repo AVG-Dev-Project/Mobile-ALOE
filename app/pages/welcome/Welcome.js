@@ -163,43 +163,6 @@ export default function Welcome({ navigation }) {
                justifyContent: 'space-evenly',
             }}
          >
-            {/*<View style={styles.view_button_arrondi}>
-               <TouchableOpacity
-                  style={styles.boutton_arrondi}
-                  activeOpacity={0.8}
-                  onPress={() => {
-                     navigation.navigate(nameNav.downloadData);
-                  }}
-               >
-                  <Icon
-                     name={'cloud-download'}
-                     color={Colors.white}
-                     size={34}
-                  />
-               </TouchableOpacity>
-            </View>
-
-            {(isAllDataAlsoUploaded || isAllDataAlsoDownloaded) && (
-               <View style={styles.view_button_arrondi}>
-                  <Button
-                     icon={{
-                        name: 'arrow-forward',
-                        type: 'material',
-                        size: 34,
-                        color: Colors.white,
-                     }}
-                     titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
-                     buttonStyle={styles.bouttonStyle}
-                     containerStyle={{}}
-                     onPress={() => {
-                        getOfflineDatas();
-                        setIsDataLoaded(true);
-                     }}
-                     loading={isDataLoaded}
-                  />
-               </View>
-            )}*/}
-
             {isDataAvailable ? (
                <View style={styles.view_button_arrondi}>
                   <Button

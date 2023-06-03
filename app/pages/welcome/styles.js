@@ -23,10 +23,11 @@ const styles = StyleSheet.create({
    },
    bouttonStyle: {
       backgroundColor: Colors.greenAvg,
-      margin: 8,
-      minWidth: widthPercentageToDP(18),
-      minHeight: heightPercentageToDP(9),
+      padding: 20,
+      margin: 6,
       borderRadius: 60,
+      width: widthPercentageToDP(18),
+      height: 75,
    },
    boutton_arrondi: {
       backgroundColor: Colors.greenAvg,
