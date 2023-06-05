@@ -68,13 +68,16 @@ export const styles = StyleSheet.create({
       borderRadius: 52,
    },
    fab_button: {
-      height: heightPercentageToDP(18),
       flexDirection: 'column',
       flexGrow: 1,
+      width: widthPercentageToDP(100),
    },
    view_content_fab_button: {
       width: widthPercentageToDP(90),
-      marginTop: heightPercentageToDP(1.5),
+      marginBottom:
+         heightDevice < 800
+            ? heightPercentageToDP(2.5)
+            : heightPercentageToDP(2),
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-evenly',
@@ -100,5 +103,6 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'flex-end',
       marginRight: widthPercentageToDP(6.5),
+      marginBottom: heightPercentageToDP(2),
    },
 });
