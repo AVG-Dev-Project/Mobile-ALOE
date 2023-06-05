@@ -17,6 +17,8 @@ import {
    fetchContenusToApi,
    parseDataContenuLazyLoading,
    parsingTags,
+   widthPercentageToDP,
+   heightPercentageToDP,
 } from '_utils';
 import { styles } from './stylesContenu';
 import { Icon } from '@rneui/themed';
@@ -230,8 +232,7 @@ export default function ListingContenu({ navigation }) {
                   </Text>
                   <Text
                      style={{
-                        fontSize:
-                           Dimensions.get('window').height < 700 ? 10 : 12,
+                        fontSize: heightPercentageToDP(1.5),
                         textTransform: 'lowercase',
                      }}
                   >
@@ -243,7 +244,7 @@ export default function ListingContenu({ navigation }) {
                </View>
                <Text
                   style={{
-                     fontSize: Dimensions.get('window').height < 700 ? 14 : 16,
+                     fontSize: heightPercentageToDP(2),
                      flex: 2,
                      marginBottom: 18,
                   }}
