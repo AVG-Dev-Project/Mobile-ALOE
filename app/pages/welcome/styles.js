@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
       padding: 20,
       margin: 6,
       borderRadius: 60,
-      width: widthPercentageToDP(18),
+      width: 75,
       height: 75,
    },
    boutton_arrondi: {
