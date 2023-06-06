@@ -431,7 +431,7 @@ export default function Detail({ navigation, route }) {
                            : oneArticle.titre_mg ??
                              'Tsy misy dikan-teny malagasy.'}
                      </Text>
-                     {oneArticle.chapitre_id ? (
+                     {oneArticle.chapitre_titre_fr ? (
                         <Text
                            style={{
                               fontSize: widthPercentageToDP(3),

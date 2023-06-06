@@ -222,15 +222,16 @@ export default function Favoris({ navigation }) {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        marginTop: 8,
+                        marginTop: 12,
+                        marginBottom: 8,
                      }}
                   >
-                     <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
+                     <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
                         {t('favoris.title_page')}
                      </Text>
                   </View>
 
-                  <View style={styles.landing_screen}>
+                  {/*<View style={styles.landing_screen}>
                      <Text style={styles.text_landing_screen}>
                         {t('favoris.header_landing')}
                      </Text>
@@ -254,7 +255,7 @@ export default function Favoris({ navigation }) {
                            size={38}
                         />
                      </View>
-                  </View>
+                        </View>*/}
                </View>
             }
             ListEmptyComponent={
