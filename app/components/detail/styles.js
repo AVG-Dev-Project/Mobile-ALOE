@@ -12,6 +12,12 @@ export const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
    },
+   content_article_view: {
+      height:
+         heightDevice < 800
+            ? heightPercentageToDP(75)
+            : heightPercentageToDP(80),
+   },
    info_in_landing_detail: {
       marginTop: 5,
       marginLeft: 28,
@@ -32,7 +38,7 @@ export const styles = StyleSheet.create({
    },
    description_section: {
       paddingHorizontal: 24,
-      height: heightDevice < 800 ? heightDevice - 310 : heightDevice - 350,
+      height: heightDevice - 280,
       backgroundColor: Colors.white,
    },
    view_round_button_detail_article: {

@@ -354,7 +354,11 @@ export default function Detail({ navigation, route }) {
                      styles.maskImageDetailArticle,
                   ]}
                ></View>
-               <View ref={imageRef} collapsable={false}>
+               <View
+                  ref={imageRef}
+                  collapsable={false}
+                  style={styles.content_article_view}
+               >
                   <View style={styles.view_header_nav}>
                      <Button
                         type="clear"
