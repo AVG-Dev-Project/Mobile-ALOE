@@ -6,5 +6,10 @@
    "thematique": "Lohahevitra",
    "les_types": "karazana",
    "contenu": "Lahatsoratra",
-   "mot_publie_home": "Nivoaka ny "
+   "mot_publie_home": "Nivoaka ny ",
+   "favoris": {
+      "title_page": "Ankafizina",
+      "header_landing": "Ho itanao ato ireo andininy nankafizinao",
+      "text_landing": "Jereo foana izy ireo"
+   }
 }

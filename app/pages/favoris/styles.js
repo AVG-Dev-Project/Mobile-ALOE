@@ -2,11 +2,9 @@ import { Colors } from '_theme/Colors';
 import { StyleSheet, Dimensions } from 'react-native';
 import { heightPercentageToDP, widthPercentageToDP } from '_utils';
 
-const widthDevice = Dimensions.get('window').width;
 export const styles = StyleSheet.create({
    view_container: {
       flex: 1,
-      paddingTop: 20,
       marginBottom: 70,
       paddingHorizontal: 5,
       backgroundColor: Colors.background,
@@ -31,7 +29,7 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
    },
    text_landing_screen: {
-      fontSize: widthDevice < 370 ? 18 : 22,
+      fontSize: widthPercentageToDP(5),
       color: Colors.white,
       fontWeight: 'bold',
    },

@@ -6,5 +6,10 @@
    "thematique": "Thématique",
    "les_types": "Types",
    "contenu": "Textes",
-   "mot_publie_home": "Publié le "
+   "mot_publie_home": "Publié le ",
+   "favoris": {
+      "title_page": "Favoris",
+      "header_landing": "Tous vos articles favoris seront ici",
+      "text_landing": "Regardez-les encore"
+   }
 }

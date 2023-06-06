@@ -15,15 +15,16 @@ import {
    checkAndsendMailFromLocalDBToAPI,
 } from '_utils';
 import { styles } from './styles';
+import { useTranslation } from 'react-i18next';
 import { Icon } from '@rneui/themed';
 import { FlashList } from '@shopify/flash-list';
 import { useSelector, useDispatch } from 'react-redux';
-import HeaderGlobal from '_components/header/HeaderGlobal';
 import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
 import { Colors } from '_theme/Colors';
 import { addFavoris } from '_utils/redux/actions/action_creators';
 
-export default function Favoris({ navigation, route }) {
+export default function Favoris({ navigation }) {
+   const { t } = useTranslation();
    const listOfIdFavorites = useSelector((selector) => selector.loi.favoris);
    const allArticles = useSelector((selector) => selector.loi.articles);
    const dispatch = useDispatch();
@@ -216,18 +217,22 @@ export default function Favoris({ navigation, route }) {
          <FlashList
             ListHeaderComponent={
                <View>
-                  <View style={styles.head_content}>
-                     <HeaderGlobal
-                        navigation={navigation}
-                        bottomSheetRef={bottomSheetRef}
-                     />
+                  <View
+                     style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        marginTop: 8,
+                     }}
+                  >
+                     <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
+                        {t('favoris.title_page')}
+                     </Text>
                   </View>
 
                   <View style={styles.landing_screen}>
                      <Text style={styles.text_landing_screen}>
-                        {langueActual === 'fr'
-                           ? 'Vos favoris'
-                           : 'Ireo ankafizinao'}
+                        {t('favoris.header_landing')}
                      </Text>
                      <View style={styles.content_in_landing_screen}>
                         <Image
@@ -238,17 +243,10 @@ export default function Favoris({ navigation, route }) {
                            style={{
                               display: 'flex',
                               flexDirection: 'column',
-                              alignItems: 'flex-start',
+                              justifyContent: 'center',
                            }}
                         >
-                           <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                              {langueActual === 'fr' ? 'Favoris' : 'Ankafizina'}
-                           </Text>
-                           <Text>
-                              {langueActual === 'fr'
-                                 ? 'Regardez-les encore'
-                                 : 'Jereo ihany izy ireo'}{' '}
-                           </Text>
+                           <Text>{t('favoris.text_landing')}</Text>
                         </View>
                         <Icon
                            name={'favorite'}
