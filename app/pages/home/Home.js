@@ -6,12 +6,12 @@ import {
    SafeAreaView,
    ActivityIndicator,
    useWindowDimensions,
+   ScrollView,
    ToastAndroid,
    StyleSheet,
    TouchableOpacity,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Icon } from '@rneui/themed';
 import Carousel from 'react-native-snap-carousel';
 import { useSelector, useDispatch } from 'react-redux';
@@ -184,14 +184,12 @@ export default function Home({ navigation }) {
    };
 
    return (
-      <KeyboardAwareScrollView style={{ backgroundColor: Colors.background }}>
+      <ScrollView style={{ backgroundColor: Colors.background }}>
          <View style={styles.view_container}>
-            <View style={styles.head_content}>
-               <HeaderGlobal
-                  navigation={navigation}
-                  bottomSheetRef={bottomSheetRef}
-               />
-            </View>
+            <HeaderGlobal
+               navigation={navigation}
+               bottomSheetRef={bottomSheetRef}
+            />
 
             <View style={styles.landing_screen}>
                <Text
@@ -327,6 +325,6 @@ export default function Home({ navigation }) {
             bottomSheetRef={bottomSheetRef}
             snapPoints={snapPoints}
          />
-      </KeyboardAwareScrollView>
+      </ScrollView>
    );
 }

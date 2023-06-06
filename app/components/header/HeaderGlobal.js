@@ -40,7 +40,9 @@ export default function HeaderGlobal({ bottomSheetRef }) {
 
 const styles = StyleSheet.create({
    container: {
-      marginVertical: 5,
+      height: 30,
+      marginTop: 5,
+      marginBottom: 10,
       marginHorizontal: 10,
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
    },
    titre_salutation: {
       color: Colors.black,
-      fontSize: widthPercentageToDP(7),
+      fontSize: widthPercentageToDP(6.5),
       fontWeight: 'bold',
    },
    flagImg: {

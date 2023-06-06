@@ -10,12 +10,7 @@ export const styles = StyleSheet.create({
       paddingHorizontal: 5,
       backgroundColor: Colors.background,
    },
-   head_content: {
-      height: 45,
-      marginTop: 10,
-   },
    landing_screen: {
-      marginTop: 10,
       height: heightPercentageToDP(28),
       borderRadius: 25,
       backgroundColor: Colors.greenAvg,

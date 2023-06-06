@@ -130,7 +130,11 @@ export default function Doleance({ navigation }) {
    }, [isUserNetworkActive, isUserConnectedToInternet]);
 
    return (
-      <KeyboardAwareScrollView style={{ backgroundColor: Colors.background }}>
+      <KeyboardAwareScrollView
+         enableOnAndroid={true}
+         enableAutomaticScroll={Platform.OS === 'ios'}
+         style={{ backgroundColor: Colors.background }}
+      >
          <SafeAreaView>
             <View style={styles.view_container}>
                <View style={styles.head_banniere}>
