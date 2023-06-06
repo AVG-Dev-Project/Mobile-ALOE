@@ -18,6 +18,7 @@ import React, {
 } from 'react';
 import { styles } from './styles';
 import Voice from '@react-native-voice/voice';
+import { useTranslation } from 'react-i18next';
 import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { FlashList } from '@shopify/flash-list';
 import { useDispatch, useSelector } from 'react-redux';
@@ -215,6 +216,7 @@ const filterGlobalForDeepSearch = (
 export default function Recherche({ navigation, route }) {
    //all data
    const dispatch = useDispatch();
+   const { t } = useTranslation();
    const [valueForSearch, setValueForSearch] = useState('');
    const [textFromInputSearch, setTextFromValueForSearch] = useState('');
    const { width, height } = useWindowDimensions();
@@ -722,27 +724,20 @@ export default function Recherche({ navigation, route }) {
                }}
             >
                <Text style={{ fontSize: 22, fontWeight: 'bold' }}>
-                  Recherche
+                  {t('recherche.title_page')}
                </Text>
             </View>
 
             <View style={styles.view_for_input_search}>
                <Input
-                  placeholder={
-                     langueActual === 'fr'
-                        ? 'Entrer le mot de recherche ...'
-                        : 'Teny hotadiavina...'
-                  }
+                  placeholder={t('recherche.placeholder_input_search')}
                   value={textFromInputSearch}
                   onChangeText={(text) => {
                      onHandleSearchByValue(text);
                      setTextFromValueForSearch(text);
                   }}
                   errorMessage={
-                     isUseDeepSearch &&
-                     (langueActual === 'fr'
-                        ? 'Vous utilisez la recherche approfondie!'
-                        : 'Mampiasa ny fikarohana lalina ianao.')
+                     isUseDeepSearch && t('recherche.text_for_deep_search')
                   }
                   errorStyle={{ color: Colors.greenAvg }}
                   leftIcon={
@@ -813,7 +808,7 @@ export default function Recherche({ navigation, route }) {
                            marginTop: 10,
                         }}
                      >
-                        {langueActual === 'fr' ? 'Type' : 'Karazana'}
+                        {t('recherche.type_title')}
                      </Text>
                      <Text>
                         {typeChecked ? typeChecked?.substring(0, 15) : ''}
@@ -850,7 +845,7 @@ export default function Recherche({ navigation, route }) {
                            marginTop: 10,
                         }}
                      >
-                        {langueActual === 'fr' ? 'Théme' : 'Lohahevitra'}
+                        {t('recherche.thematique_title')}
                      </Text>
                      <Text>
                         {thematiqueChecked
@@ -864,7 +859,7 @@ export default function Recherche({ navigation, route }) {
             </View>
          </View>
          <View style={styles.view_carousel}>
-            <Text style={styles.labelTags}>Tags : </Text>
+            <Text style={styles.labelTags}>{t('recherche.tag_title')} : </Text>
             <FlashList
                data={chips}
                horizontal={true}
@@ -884,10 +879,7 @@ export default function Recherche({ navigation, route }) {
          <View style={styles.view_for_result}>
             {allContenusFilter?.length > 0 && (
                <Text style={{ textAlign: 'center' }}>
-                  {allContenusFilter?.length}{' '}
-                  {langueActual === 'fr'
-                     ? ' résultats trouvés'
-                     : ' ny valiny hita'}
+                  {t('recherche.number_of_result_found', { allContenusFilter })}
                </Text>
             )}
          </View>
@@ -912,9 +904,7 @@ export default function Recherche({ navigation, route }) {
                            fontSize: width < 370 ? 16 : 22,
                         }}
                      >
-                        {langueActual === 'fr'
-                           ? 'pas de résultat'
-                           : 'tsy misy ny valiny'}
+                        {t('recherche.no_result')}
                      </Text>
                   </View>
                }
