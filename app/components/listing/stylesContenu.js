@@ -4,14 +4,18 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
    view_container: {
       flex: 1,
-      paddingHorizontal: 8,
+      paddingHorizontal: 10,
       backgroundColor: Colors.background,
+   },
+   view_flatList: {
+      height: '100%',
    },
    view_render: {
       borderWidth: 1,
       borderRadius: 10,
       borderColor: Colors.greenWhite,
-      marginVertical: 4,
+      marginTop: 8,
+      marginBottom: 4,
       paddingHorizontal: 10,
       paddingVertical: 6,
       backgroundColor: Colors.greenWhite,

@@ -501,20 +501,10 @@ export default function Detail({ navigation, route }) {
                      </View>
 
                      <View>
-                        <Text
-                           style={{
-                              fontSize: 22,
-                              fontWeight: 'bold',
-                              marginTop: 18,
-                           }}
-                        >
-                           {langueActual === 'fr'
-                              ? "Contenu de l'article "
-                              : "Votoatin'ny lahatsoratra"}
-                        </Text>
                         <ScrollView
                            style={{
                               paddingRight: 4,
+                              marginTop: 18,
                            }}
                         >
                            {langueActual === 'fr' ? (
@@ -644,25 +634,17 @@ export default function Detail({ navigation, route }) {
                </Text>
                <View style={styles.view_one_item_in_bottomsheet}>
                   <Text style={styles.label_info_article}>
-                     {langueActual === 'fr' ? 'Date ' : 'Daty '}{' '}
-                  </Text>
-                  <Text style={styles.value_info_article}>
-                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                     {contenuMother[0].date}
-                  </Text>
-               </View>
-               <View style={styles.view_one_item_in_bottomsheet}>
-                  <Text style={styles.label_info_article}>
-                     {langueActual === 'fr' ? 'Chapitre ' : 'Lohateny'}{' '}
+                     {langueActual === 'fr' ? 'Type ' : 'Sokajy '}{' '}
                   </Text>
                   <Text style={styles.value_info_article}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
                      {langueActual === 'fr'
-                        ? oneArticle.chapitre_titre_fr ?? ''
-                        : oneArticle.chapitre_titre_mg ??
-                          'Tsy misy dikan-teny malagasy.'}
+                        ? contenuMother[0].type_nom_fr ?? ''
+                        : contenuMother[0].type_nom_mg ??
+                          contenuMother[0].type_nom_fr}
                   </Text>
                </View>
+
                <View style={styles.view_one_item_in_bottomsheet}>
                   <Text style={styles.label_info_article}>
                      {langueActual === 'fr' ? 'Numero ' : 'Laharana '}{' '}
@@ -677,12 +659,22 @@ export default function Detail({ navigation, route }) {
                   <Text style={styles.label_info_article}>
                      {langueActual === 'fr' ? 'Objet ' : 'Objet '}{' '}
                   </Text>
-                  <Text style={styles.value_info_article} numberOfLines={2}>
+                  <Text style={styles.value_info_article}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
                      {langueActual === 'fr'
                         ? contenuMother[0].objet_contenu_fr ?? ''
                         : contenuMother[0].objet_contenu_mg ??
                           contenuMother[0].objet_contenu_fr}
+                  </Text>
+               </View>
+
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Date ' : 'Daty '}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {contenuMother[0].date}
                   </Text>
                </View>
 
@@ -701,6 +693,32 @@ export default function Detail({ navigation, route }) {
 
                <View style={styles.view_one_item_in_bottomsheet}>
                   <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Titre ' : 'Lohateny '}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? contenuMother[0].titre_fr
+                        : contenuMother[0].titre_mg ??
+                          contenuMother[0].titre_fr}
+                  </Text>
+               </View>
+
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
+                     {langueActual === 'fr' ? 'Chapitre ' : 'Lohateny'}{' '}
+                  </Text>
+                  <Text style={styles.value_info_article}>
+                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
+                     {langueActual === 'fr'
+                        ? oneArticle.chapitre_titre_fr ?? ''
+                        : oneArticle.chapitre_titre_mg ??
+                          'Tsy misy dikan-teny malagasy.'}
+                  </Text>
+               </View>
+
+               <View style={styles.view_one_item_in_bottomsheet}>
+                  <Text style={styles.label_info_article}>
                      {langueActual === 'fr' ? 'Section ' : 'Section '}{' '}
                   </Text>
                   <Text style={styles.value_info_article}>
@@ -709,60 +727,6 @@ export default function Detail({ navigation, route }) {
                         ? contenuMother[0].section_titre_fr
                         : contenuMother[0].section_titre_mg ??
                           contenuMother[0].section_titre_fr}
-                  </Text>
-               </View>
-
-               <View style={styles.view_one_item_in_bottomsheet}>
-                  <Text style={styles.label_info_article}>
-                     {langueActual === 'fr' ? 'Type ' : 'Sokajy '}{' '}
-                  </Text>
-                  <Text style={styles.value_info_article}>
-                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                     {langueActual === 'fr'
-                        ? contenuMother[0].type_nom_fr ?? ''
-                        : contenuMother[0].type_nom_mg ??
-                          contenuMother[0].type_nom_fr}
-                  </Text>
-               </View>
-
-               <View style={styles.view_one_item_in_bottomsheet}>
-                  <Text style={styles.label_info_article}>
-                     {langueActual === 'fr' ? 'Etat ' : 'Fanjakana '}{' '}
-                  </Text>
-                  <Text style={styles.value_info_article} numberOfLines={2}>
-                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                     {langueActual === 'fr'
-                        ? contenuMother[0].etat_nom_fr ?? ''
-                        : contenuMother[0].etat_nom_mg ??
-                          contenuMother[0].etat_nom_fr}
-                  </Text>
-               </View>
-
-               <View style={styles.view_one_item_in_bottomsheet}>
-                  <Text style={styles.label_info_article}>
-                     {langueActual === 'fr'
-                        ? 'Organisme '
-                        : 'Filankevi-pitatanana '}{' '}
-                  </Text>
-                  <Text style={styles.value_info_article} numberOfLines={2}>
-                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                     {langueActual === 'fr'
-                        ? contenuMother[0].organisme_nom_fr ?? ''
-                        : contenuMother[0].organisme_nom_mg ??
-                          contenuMother[0].organisme_nom_fr}
-                  </Text>
-               </View>
-
-               <View style={styles.view_one_item_in_bottomsheet}>
-                  <Text style={styles.label_info_article}>
-                     {langueActual === 'fr' ? 'Note ' : 'Naoty'}{' '}
-                  </Text>
-                  <Text style={styles.value_info_article} numberOfLines={2}>
-                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                     {langueActual === 'fr'
-                        ? contenuMother[0].note_contenu_fr ?? ''
-                        : contenuMother[0].note_contenu_mg ??
-                          contenuMother[0].note_contenu_fr}
                   </Text>
                </View>
 

@@ -3,6 +3,7 @@ import {
    Text,
    Dimensions,
    ToastAndroid,
+   TouchableOpacity,
    ActivityIndicator,
    Platform,
    Pressable,
@@ -204,7 +205,7 @@ export default function ListingContenu({ navigation }) {
    //all logics
    const _renderItem = useCallback(({ item }) => {
       return (
-         <Pressable
+         <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => {
                navigation.navigate(nameNav.listArticle, {
@@ -336,7 +337,7 @@ export default function ListingContenu({ navigation }) {
                   </View>
                </View>
             </View>
-         </Pressable>
+         </TouchableOpacity>
       );
    }, []);
 
@@ -356,7 +357,6 @@ export default function ListingContenu({ navigation }) {
                offset: data.length * index,
                index,
             })}
-            contentContainerStyle={{ paddingBottom: 10 }}
             onEndReachedThreshold={0.5}
             estimatedItemSize={100}
             onEndReached={() => {
