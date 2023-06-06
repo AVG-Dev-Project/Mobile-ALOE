@@ -52,7 +52,9 @@ export default function Detail({ navigation, route }) {
    const [contenuMother, setContenuMother] = useState(
       allContenus.filter((contenu) => contenu.id === oneArticle.contenu)
    );
-   const [numberOfCurrentArticle, setNumberOfCurrentArticle] = useState(0);
+   const [numberOfCurrentArticle, setNumberOfCurrentArticle] = useState(
+      oneArticle.numero - 1
+   );
    const allArticlesRelatedToThisContenu = filterArticleToListByContenu(
       oneArticle.contenu,
       allArticles
@@ -86,7 +88,7 @@ export default function Detail({ navigation, route }) {
                      numberTotalOfArticleRelatedToThisContenu
                   ];
                setNumberOfCurrentArticle(
-                  numberTotalOfArticleRelatedToThisContenu - 1
+                  numberTotalOfArticleRelatedToThisContenu
                );
             } else {
                result =
@@ -100,7 +102,7 @@ export default function Detail({ navigation, route }) {
                numberTotalOfArticleRelatedToThisContenu
             ) {
                result = allArticlesRelatedToThisContenu[0];
-               setNumberOfCurrentArticle(0 + 1);
+               setNumberOfCurrentArticle(0);
             } else {
                result =
                   allArticlesRelatedToThisContenu[currentArticleNumber + 1];
