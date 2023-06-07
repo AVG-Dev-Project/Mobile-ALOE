@@ -129,7 +129,13 @@ export default function Welcome({ navigation }) {
                   : "Tongasoa eto amin'ny ALOE"}
             </Text>
             <Text style={{ textAlign: 'center', marginVertical: 5 }}>
-               ALOE ou{' '}
+               Inspiré par le Ministère de la Justice et le Ministère de
+               l'environnement et du développement durable, il a été confirmé
+               qu'il est indispensable de donner à tous les acteurs de la Chaine
+               de Justice environnementale, des outils de travail.
+            </Text>
+            <Text style={{ textAlign: 'center', marginVertical: 5 }}>
+               Dans cette optique, ALOE ou{' '}
                <Text
                   style={{
                      fontSize: 16,
@@ -139,9 +145,10 @@ export default function Welcome({ navigation }) {
                >
                   Accès sur les LOis Environnementales
                </Text>{' '}
-               est application mobile où vous trouverez tous les lois forêstiers
-               ici à Madagascar que vous pouvez consulter à tout moment. Avec ou
-               sans internet, vous pouvez la consulter avec toute tranquilité.
+               est une application mobile, accessible avec ou sans Internet, qui
+               regroupe les textes de lois environnementales et anticorruption
+               pour contribuer à la réduction du trafic d'espèces sauvages afin
+               d'améliorer la gouvernance des ressources naturelles.
             </Text>
             {isDataAvailable ? (
                <Text style={{ textAlign: 'center' }}>
@@ -150,8 +157,8 @@ export default function Welcome({ navigation }) {
                </Text>
             ) : (
                <Text style={{ textAlign: 'center' }}>
-                  Pour commencer cliquez sur le bouton ci-dessous pour
-                  télecharger ou importer les données
+                  Pour démarrer, cliquez sur le bouton suivant pour télecharger
+                  ou importer les données.
                </Text>
             )}
          </View>

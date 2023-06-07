@@ -1,27 +1,26 @@
 {
    "______bienvenu text home__________________": "header partie_____________________",
-   "bienvenue_header_text": "Bienvenue sur Aloe",
-   "txt_landing_home": "Les lois environnementales à portée de main,",
+   "bienvenue_header_text": "Bienvenue sur ALOE",
+   "txt_landing_home": "Les lois environnementales et anticorruption à portée de main",
    "renseignez": "Renseignez-vous ici!",
    "thematique": "Thématique",
-   "les_types": "Types",
-   "contenu": "Textes",
+   "contenu": "Textes juridiques",
    "mot_publie_home": "Publié le ",
    "favoris": {
       "title_page": "Favoris",
       "header_landing": "Tous vos articles favoris seront ici",
-      "text_landing": "Regardez-les encore",
-      "no_favorite": "Pas de favoris"
+      "text_landing": "Accédez rapidement à vos favoris",
+      "no_favorite": "Aucun favoris"
    },
    "recherche": {
       "title_page": "Recherche",
-      "placeholder_input_search": "Entrer le mot de recherche",
+      "placeholder_input_search": "Entrer un mot-clé",
       "text_for_deep_search_off": "Cochez la case à gauche pour utiliser la recherche approfondie.",
       "text_for_deep_search_in_use": "Vous utilisez la recherche approfondie!",
       "type_title": "Type",
       "thematique_title": "Thème",
-      "tag_title": "Tag",
-      "no_result": "Pas de résultat",
+      "tag_title": "Catégorie",
+      "no_result": "Aucun résultat trouvé",
       "number_of_result_found": "{{allContenusFilter.length}} résultats trouvés"
    }
 }

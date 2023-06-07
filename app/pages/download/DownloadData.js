@@ -181,7 +181,7 @@ export default function DownloadData({ navigation }) {
    useEffect(() => {
       if (isUserConnectedToInternet && isUserNetworkActive) {
          setMessageStatusInternet(
-            'Comme vous êtes connecté à internet, vous pouvez soit télechargés les datas via votre connexion soit uploader le fichier datas'
+            'Vous pouvez soit télécharger les données via votre connexion, soit charger le fichier de données.'
          );
          checkAndsendMailFromLocalDBToAPI();
       }
@@ -191,12 +191,12 @@ export default function DownloadData({ navigation }) {
             isUserConnectedToInternet === null)
       ) {
          setMessageStatusInternet(
-            'Votre connexion ne peut pas accéder à internet. Vous pouvez quand même importer le fichier datas depuis votre appareil.'
+            'Votre connexion ne peut pas accéder à internet. Vous pouvez quand même charger le fichier de données.'
          );
       }
       if (isNetworkActive === false || isNetworkActive === null) {
          setMessageStatusInternet(
-            "Vous n'êtes pas connecté à internet. Vous pouvez importer le fichier datas depuis votre appareil."
+            "Vous n'êtes pas connecté à internet. Vous pouvez charger le fichier de données."
          );
       }
    }, [isUserConnectedToInternet, isUserNetworkActive]);
@@ -273,7 +273,7 @@ export default function DownloadData({ navigation }) {
                <View style={styles.view_for_button}>
                   {isUserNetworkActive && isUserConnectedToInternet && (
                      <Button
-                        title="Télecharger les datas"
+                        title="Télecharger les données"
                         icon={{
                            name: 'file-download',
                            type: 'material',

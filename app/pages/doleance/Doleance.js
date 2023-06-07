@@ -50,8 +50,8 @@ export default function Doleance({ navigation }) {
       });
       return showToastDoleance(
          langueActual === 'fr'
-            ? 'Votre mail a été bien et belle envoyé. Merci beaucoup.'
-            : 'Lasa ny mailaka anao. Misaotra tompoko.'
+            ? 'Votre doléance a bien été envoyée. Merci beaucoup.'
+            : 'Lasa ny fitarainanao. Misaotra tompoko.'
       );
    };
    const sendMailToLocalDB = async (email, obj, message) => {
@@ -63,7 +63,7 @@ export default function Doleance({ navigation }) {
       await insertOrUpdateToDBFunc('database', 'doleance', [newMail]);
       setIsLoadSendingMail(false);
       return showToastDoleance(
-         "Comme vous n'avez pas de connexion, votre mail a été stocké et envoyer automatiquement plutard lorsque votre connexion est activé."
+         "Comme vous n'avez pas de connexion, votre doléance a été stocké et envoyer automatiquement plutard lorsque votre connexion est activé."
       );
    };
 
@@ -152,8 +152,8 @@ export default function Doleance({ navigation }) {
                      }}
                   >
                      {langueActual === 'fr'
-                        ? 'NB : Veuillez renseigner tous les champs de cette formulaire pour procéder à votre doléance!'
-                        : "NB : Miangavy mba fenky daholo ny fampidiran-teny alohan'ny handefasanao ny fitarainanao."}
+                        ? 'Veuillez remplir tous les champs du présent formulaire pour déposer une plainte.'
+                        : 'Fenoy daholo ireto fampidiran-teny manaraka ireto raha te hametraka fitarainana.'}
                   </Text>
                </View>
                <View style={styles.content_form}>

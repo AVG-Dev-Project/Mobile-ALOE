@@ -19,7 +19,7 @@ export default function HeaderGlobal({ bottomSheetRef }) {
    return (
       <View style={styles.container}>
          <Text style={styles.titre_salutation}>
-            {t('bienvenue_header_text')} !
+            {t('bienvenue_header_text')}
          </Text>
          <TouchableOpacity
             activeOpacity={0.7}

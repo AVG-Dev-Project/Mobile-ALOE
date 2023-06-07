@@ -90,8 +90,8 @@ export default function About({ navigation }) {
                >
                   <Text style={styles.button_link_about}>
                      {langueActual === 'fr'
-                        ? "A propos de l'AVG"
-                        : "Mombamomban'ny AVG"}
+                        ? "A propos de l'Alliance Voahary Gasy"
+                        : "Mombamomban'ny Alliance Voahary Gasy"}
                   </Text>
                </TouchableOpacity>
                <TouchableOpacity
@@ -99,7 +99,9 @@ export default function About({ navigation }) {
                   onPress={() =>
                      navigation.navigate(nameNav.doleance, {
                         titleScreen:
-                           langueActual === 'fr' ? 'Doléance' : 'Fitarainana',
+                           langueActual === 'fr'
+                              ? 'Envoi de doléance'
+                              : 'Handefa fitarainana',
                      })
                   }
                >
@@ -110,7 +112,7 @@ export default function About({ navigation }) {
                      ]}
                   >
                      {langueActual === 'fr'
-                        ? 'Envoyer doléance'
+                        ? 'Envoi de doléance'
                         : 'Handefa fitarainana'}
                   </Text>
                </TouchableOpacity>
