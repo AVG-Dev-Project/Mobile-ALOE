@@ -134,7 +134,7 @@ export default function Welcome({ navigation }) {
                qu'il est indispensable de donner à tous les acteurs de la Chaine
                de Justice environnementale, des outils de travail.
             </Text>
-            <Text style={{ textAlign: 'center', marginVertical: 5 }}>
+            <Text style={{ textAlign: 'center', marginBottom: 5 }}>
                Dans cette optique, ALOE ou{' '}
                <Text
                   style={{
@@ -181,7 +181,6 @@ export default function Welcome({ navigation }) {
                      }}
                      titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
                      buttonStyle={styles.bouttonStyle}
-                     containerStyle={{}}
                      onPress={() => {
                         getOfflineDatas();
                         setIsDataLoaded(true);

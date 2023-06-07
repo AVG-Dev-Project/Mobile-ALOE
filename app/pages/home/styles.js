@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
       backgroundColor: Colors.background,
    },
    landing_screen: {
-      height: heightPercentageToDP(28),
+      height: heightPercentageToDP(25),
       borderRadius: 25,
       backgroundColor: Colors.greenAvg,
       display: 'flex',
@@ -23,6 +23,8 @@ export const styles = StyleSheet.create({
       fontSize: widthPercentageToDP(5),
       color: Colors.white,
       fontWeight: 'bold',
+      textAlign: 'center',
+      marginHorizontal: 3,
    },
    content_in_landing_screen: {
       display: 'flex',
@@ -31,7 +33,6 @@ export const styles = StyleSheet.create({
       justifyContent: 'space-around',
       backgroundColor: Colors.greenWhite,
       width: widthPercentageToDP(90),
-      paddingHorizontal: 0,
       paddingVertical: 20,
       borderRadius: 25,
    },

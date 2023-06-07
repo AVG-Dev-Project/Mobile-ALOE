@@ -6,10 +6,11 @@ const styles = StyleSheet.create({
    view_container_welcome: {
       flex: 1,
       backgroundColor: Colors.white,
+      paddingHorizontal: 4,
    },
    images_welcome: {
-      height: heightPercentageToDP(38),
-      width: widthPercentageToDP(60),
+      height: heightPercentageToDP(30),
+      width: widthPercentageToDP(50),
    },
    logo_image: {
       height: heightPercentageToDP(8),
