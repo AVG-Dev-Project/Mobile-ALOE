@@ -15,13 +15,6 @@ const transitionConfig = {
 export const configStack = {
    screenOptionsForHeaderShown: {
       headerShown: true,
-      gestureEnabled: true,
-      //CardStyleInterpolators est utile pour regler la transition durant le changement de screen, gestureEnabled doit être activé | gestureDirection peut aussi le faire|
-      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, //on utilise la transition par défaut de IOS
-      transitionSpec: {
-         open: transitionConfig,
-         close: transitionConfig,
-      },
       headerTintColor: Colors.blueWelcome,
       headerTitleAlign: 'center',
       headerStyle: {
@@ -58,13 +51,6 @@ export const configStack = {
    },
    screenOptionsForHeaderDisable: {
       headerShown: false,
-      gestureEnabled: true,
-      //CardStyleInterpolators est utile pour regler la transition durant le changement de screen, gestureEnabled doit être activé | gestureDirection peut aussi le faire|
-      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, //on utilise la transition par défaut de IOS
-      transitionSpec: {
-         open: transitionConfig,
-         close: transitionConfig,
-      },
       headerTintColor: Colors.white,
       headerTitleAlign: 'center',
       headerStyle: {
