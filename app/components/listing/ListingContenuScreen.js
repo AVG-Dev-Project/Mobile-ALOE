@@ -351,6 +351,8 @@ export default function ListingContenu({ navigation }) {
             extraData={contenuList}
             key={'_'}
             keyExtractor={_idKeyExtractor}
+            removeClippedSubviews={true}
+            nestedScrollEnabled={true}
             renderItem={_renderItem}
             getItemLayout={(data, index) => ({
                length: data.length,
