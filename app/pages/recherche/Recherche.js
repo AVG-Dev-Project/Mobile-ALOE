@@ -737,7 +737,9 @@ export default function Recherche({ navigation, route }) {
                      setTextFromValueForSearch(text);
                   }}
                   errorMessage={
-                     isUseDeepSearch && t('recherche.text_for_deep_search')
+                     isUseDeepSearch
+                        ? t('recherche.text_for_deep_search_in_use')
+                        : t('recherche.text_for_deep_search_off')
                   }
                   errorStyle={{ color: Colors.greenAvg }}
                   leftIcon={

@@ -16,7 +16,8 @@
    "recherche": {
       "title_page": "Mitady",
       "placeholder_input_search": "Teny hotediavina",
-      "text_for_deep_search": "Mampiasa ny fitadiavana lalina ianao!",
+      "text_for_deep_search_off": "Mariho ny boribory avia raha te hampiasa ny fitadiavana lalina.",
+      "text_for_deep_search_in_use": "Mampiasa ny fitadiavana lalina ianao!",
       "type_title": "Sokajy",
       "thematique_title": "Lohahevitra",
       "tag_title": "Tagy",
