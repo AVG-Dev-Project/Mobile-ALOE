@@ -92,9 +92,6 @@ export const styles = StyleSheet.create({
       backgroundColor: '#f2f2f2',
    },
    view_in_bottomsheet: {
-      display: 'flex',
-      flexDirection: 'column',
-      flex: 1,
       backgroundColor: '#f2f2f2',
       marginHorizontal: 8,
       paddingHorizontal: 18,

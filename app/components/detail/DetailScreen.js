@@ -11,6 +11,7 @@ import {
    ToastAndroid,
    useWindowDimensions,
 } from 'react-native';
+import { ScrollView as ScrollViewBottomSheet } from 'react-native-gesture-handler';
 import * as Speech from 'expo-speech';
 import React, { useState, useMemo, useRef, useCallback } from 'react';
 import { captureRef } from 'react-native-view-shot';
@@ -20,7 +21,11 @@ import ReactNativeBlobUtil from 'react-native-blob-util';
 import * as MediaLibrary from 'expo-media-library';
 import { styles } from './styles';
 import { Icon, FAB, Button } from '@rneui/themed';
-import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import {
+   BottomSheetModal,
+   BottomSheetBackdrop,
+   BottomSheetScrollView,
+} from '@gorhom/bottom-sheet';
 import { printToFileAsync } from 'expo-print';
 import bgImage from '_images/abstract.jpg';
 import { Colors } from '_theme/Colors';
@@ -627,7 +632,7 @@ export default function Detail({ navigation, route }) {
             snapPoints={snapPoints}
             style={styles.view_bottom_sheet}
          >
-            <ScrollView style={styles.view_in_bottomsheet}>
+            <ScrollViewBottomSheet style={styles.view_in_bottomsheet}>
                <Text
                   style={{
                      fontSize: heightPercentageToDP(3.5),
@@ -751,7 +756,7 @@ export default function Detail({ navigation, route }) {
                      </Text>
                   </View>
                )}
-            </ScrollView>
+            </ScrollViewBottomSheet>
          </BottomSheetModal>
       </View>
    );
