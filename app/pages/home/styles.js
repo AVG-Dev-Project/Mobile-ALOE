@@ -48,13 +48,11 @@ export const styles = StyleSheet.create({
    },
    /*Thematique*/
    /*Types*/
-   maskImageCatg: {
+   /*maskImageCatg: {
       borderRadius: 18,
       height: 130,
       width: 230,
-      borderWidth: 2,
-      borderColor: Colors.greenAvg,
-   },
+   },*/
 
    view_container_renderItemThematique: {
       width: 230,
@@ -73,7 +71,7 @@ export const styles = StyleSheet.create({
    text_descriptif_for_carousel: {
       fontWeight: 'bold',
       opacity: 0.9,
-      color: Colors.black,
+      color: Colors.white,
       fontSize: widthPercentageToDP(4.5),
       flexWrap: 'wrap',
       textAlign: 'center',

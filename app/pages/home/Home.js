@@ -8,6 +8,7 @@ import {
    useWindowDimensions,
    ScrollView,
    ToastAndroid,
+   ImageBackground,
    StyleSheet,
    TouchableOpacity,
 } from 'react-native';
@@ -18,6 +19,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import HeaderGlobal from '_components/header/HeaderGlobal';
 import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
 import { styles } from './styles';
+import bgImage from '_images/abstract.jpg';
 import { Colors } from '_theme/Colors';
 import { dataForStatistique } from '_utils/redux/actions/action_creators';
 import {
@@ -163,22 +165,38 @@ export default function Home({ navigation }) {
                });
             }}
          >
-            <View
-               key={item.id}
-               style={styles.view_container_renderItemThematique}
+            <ImageBackground
+               source={bgImage}
+               blurRadius={8}
+               style={{
+                  height: 130,
+                  width: 230,
+               }}
+               imageStyle={{
+                  resizeMode: 'cover',
+                  borderRadius: 18,
+               }}
             >
                <View
-                  style={[StyleSheet.absoluteFillObject, styles.maskImageCatg]}
-               ></View>
-               <Text
-                  style={styles.text_descriptif_for_carousel}
-                  numberOfLines={4}
+                  key={item.id}
+                  style={styles.view_container_renderItemThematique}
                >
-                  {langueActual === 'fr'
-                     ? item.nom_fr
-                     : item.nom_mg ?? item.nom_fr}
-               </Text>
-            </View>
+                  {/*<View
+                     style={[
+                        StyleSheet.absoluteFillObject,
+                        styles.maskImageCatg,
+                     ]}
+                  ></View>*/}
+                  <Text
+                     style={styles.text_descriptif_for_carousel}
+                     numberOfLines={4}
+                  >
+                     {langueActual === 'fr'
+                        ? item.nom_fr
+                        : item.nom_mg ?? item.nom_fr}
+                  </Text>
+               </View>
+            </ImageBackground>
          </TouchableOpacity>
       );
    };
