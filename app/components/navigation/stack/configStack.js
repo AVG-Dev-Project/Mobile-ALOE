@@ -22,7 +22,7 @@ export const configStack = {
       },
       headerTitleStyle: {
          fontWeight: 'bold',
-         fontSize: widthPercentageToDP(5.5),
+         fontSize: widthPercentageToDP(4.5),
          width: widthPercentageToDP(55),
       },
       cardStyle: {
