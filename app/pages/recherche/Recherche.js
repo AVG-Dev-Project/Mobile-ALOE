@@ -342,6 +342,8 @@ export default function Recherche({ navigation, route }) {
             setTypeChecked(null);
             setThematiqueChecked(null);
             dispatch(updateTagsChoice([]));
+            dispatch(hideShowTabBar(false));
+            setOffset(0);
          };
       }, [])
    );
@@ -366,6 +368,7 @@ export default function Recherche({ navigation, route }) {
    useFocusEffect(
       useCallback(() => {
          setOffset(0);
+         dispatch(hideShowTabBar(false));
       }, [])
    );
 
