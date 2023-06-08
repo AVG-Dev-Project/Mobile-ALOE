@@ -386,7 +386,7 @@ export default function Detail({ navigation, route }) {
                         {langueActual === 'fr'
                            ? contenuMother[0].type_nom_fr + ' n°'
                            : contenuMother[0].type_nom_mg ??
-                             'Votoantiny' + ' faha '}{' '}
+                             'Lalàna' + ' faha '}{' '}
                         {contenuMother[0].numero}
                      </Text>
                   </View>
@@ -410,7 +410,7 @@ export default function Detail({ navigation, route }) {
                      >
                         {langueActual === 'fr'
                            ? `Article n° ${oneArticle.numero}`
-                           : `Lalana faha ${oneArticle.numero}` ??
+                           : `Lalàna faha ${oneArticle.numero}` ??
                              `Article n° ${oneArticle.numero}`}
                      </Text>
 
@@ -439,8 +439,7 @@ export default function Detail({ navigation, route }) {
                      >
                         {langueActual === 'fr'
                            ? oneArticle.titre_fr
-                           : oneArticle.titre_mg ??
-                             'Tsy misy dikan-teny malagasy.'}
+                           : oneArticle.titre_mg ?? oneArticle.titre_fr}
                      </Text>
                      {oneArticle.chapitre_titre_fr ? (
                         <Text
@@ -453,12 +452,12 @@ export default function Detail({ navigation, route }) {
                         >
                            {langueActual === 'fr'
                               ? `Chapitre n°${oneArticle.chapitre_numero}`
-                              : `Lohateny faha ${oneArticle.chapitre_numero}`}{' '}
+                              : `Toko faha ${oneArticle.chapitre_numero}`}{' '}
                            :{' '}
                            {langueActual === 'fr'
                               ? oneArticle.chapitre_titre_fr
                               : oneArticle.chapitre_titre_mg ??
-                                'Tsy misy ny dikan-teny malagasy.'}
+                                oneArticle.chapitre_titre_fr}
                         </Text>
                      ) : (
                         <Text
@@ -645,7 +644,7 @@ export default function Detail({ navigation, route }) {
                </Text>
                <View style={styles.view_one_item_in_bottomsheet}>
                   <Text style={styles.label_info_article}>
-                     {langueActual === 'fr' ? 'Type ' : 'Sokajy '}{' '}
+                     {langueActual === 'fr' ? 'Type ' : 'Karazana '}{' '}
                   </Text>
                   <Text style={styles.value_info_article}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
@@ -668,7 +667,7 @@ export default function Detail({ navigation, route }) {
 
                <View style={styles.view_one_item_in_bottomsheet}>
                   <Text style={styles.label_info_article}>
-                     {langueActual === 'fr' ? 'Objet ' : 'Objet '}{' '}
+                     {langueActual === 'fr' ? 'Objet ' : 'Votoatiny '}{' '}
                   </Text>
                   <Text style={styles.value_info_article}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
@@ -681,7 +680,7 @@ export default function Detail({ navigation, route }) {
 
                <View style={styles.view_one_item_in_bottomsheet}>
                   <Text style={styles.label_info_article}>
-                     {langueActual === 'fr' ? 'Date ' : 'Daty '}{' '}
+                     {langueActual === 'fr' ? 'Date ' : 'Marikandro '}{' '}
                   </Text>
                   <Text style={styles.value_info_article}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
@@ -717,7 +716,7 @@ export default function Detail({ navigation, route }) {
 
                <View style={styles.view_one_item_in_bottomsheet}>
                   <Text style={styles.label_info_article}>
-                     {langueActual === 'fr' ? 'Chapitre ' : 'Lohateny'}{' '}
+                     {langueActual === 'fr' ? 'Chapitre ' : 'Toko'}{' '}
                   </Text>
                   <Text style={styles.value_info_article}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
@@ -730,7 +729,7 @@ export default function Detail({ navigation, route }) {
 
                <View style={styles.view_one_item_in_bottomsheet}>
                   <Text style={styles.label_info_article}>
-                     {langueActual === 'fr' ? 'Section ' : 'Section '}{' '}
+                     {langueActual === 'fr' ? 'Section ' : 'Sampana '}{' '}
                   </Text>
                   <Text style={styles.value_info_article}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
@@ -744,7 +743,7 @@ export default function Detail({ navigation, route }) {
                {parsingTags(contenuMother[0].tag).length > 0 && (
                   <View style={styles.view_one_item_in_bottomsheet}>
                      <Text style={styles.label_info_article}>
-                        {langueActual === 'fr' ? 'Tags ' : 'Tagy '}{' '}
+                        {langueActual === 'fr' ? 'Catégorie ' : 'Sokajy '}{' '}
                      </Text>
                      <Text style={styles.value_info_article}>
                         <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}

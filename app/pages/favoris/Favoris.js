@@ -67,7 +67,7 @@ export default function Favoris({ navigation }) {
             onPress={() => {
                navigation.navigate(nameNav.detailPage, {
                   titleScreen: `${
-                     langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '
+                     langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra faha'
                   } ${item.numero}`,
                   articleToViewDetail: item,
                });
@@ -113,7 +113,9 @@ export default function Favoris({ navigation }) {
                               .numero}
                      </Text>
                      <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
-                        {langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '}{' '}
+                        {langueActual === 'fr'
+                           ? 'Article n°'
+                           : 'Lahatsoratra faha'}{' '}
                         {item.numero}
                      </Text>
                      {item.titre_fr && (
@@ -276,9 +278,7 @@ export default function Favoris({ navigation }) {
                         fontSize: width < 370 ? 18 : 30,
                      }}
                   >
-                     {langueActual === 'fr'
-                        ? "Vous n'avez pas de favoris"
-                        : 'Tsy misy ny ankafizinao'}
+                     {t('favoris.no_favorite')}
                   </Text>
                </View>
             }

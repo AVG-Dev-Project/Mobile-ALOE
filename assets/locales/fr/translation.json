@@ -6,11 +6,15 @@
    "thematique": "Thématique",
    "contenu": "Textes juridiques",
    "mot_publie_home": "Publié le ",
+   "listing": {
+      "theme_and_type": "Thématique et Type",
+      "categorie": "Catégorie(s)"
+   },
    "favoris": {
       "title_page": "Favoris",
       "header_landing": "Tous vos articles favoris seront ici",
       "text_landing": "Accédez rapidement à vos favoris",
-      "no_favorite": "Aucun favoris"
+      "no_favorite": "Vous n'avez pas de favoris"
    },
    "recherche": {
       "title_page": "Recherche",

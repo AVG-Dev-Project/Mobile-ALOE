@@ -26,10 +26,12 @@ import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
 import { getAllContenus } from '_utils/redux/actions/action_creators';
+import { useTranslation } from 'react-i18next';
 
 export default function ListingContenu({ navigation }) {
    //all data
    const dispatch = useDispatch();
+   const { t } = useTranslation();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
@@ -262,7 +264,7 @@ export default function ListingContenu({ navigation }) {
                   }}
                >
                   <Text style={{ textDecorationLine: 'underline' }}>
-                     Thématique et Type
+                     {t('listing.theme_and_type')}
                   </Text>
                   <Text
                      style={{
@@ -290,7 +292,7 @@ export default function ListingContenu({ navigation }) {
                   {parsingTags(item.tag).length > 0 && (
                      <View>
                         <Text style={{ textDecorationLine: 'underline' }}>
-                           Tags
+                           {t('listing.categorie')}
                         </Text>
                         <Text numberOfLines={2}>
                            *{' '}

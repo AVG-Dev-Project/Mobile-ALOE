@@ -1,26 +1,30 @@
 {
    "______bienvenu text home__________________": "header partie_____________________",
-   "bienvenue_header_text": "Tongasoa eto @ ALOE",
-   "txt_landing_home": "Ny fananàna ny lalàna momba ny tontolo iainana,",
+   "bienvenue_header_text": "Tongasoa eto amin'ny ALOE",
+   "txt_landing_home": "Ireo lalàna momba ny tontolo iainana sy miady amin'ny kolikoly eo am-pelatananao",
    "renseignez": "Fantaro izao!",
    "thematique": "Lohahevitra",
-   "contenu": "Lahatsoratra",
+   "contenu": "Didy aman-dalàna",
    "mot_publie_home": "Nivoaka ny ",
+   "listing": {
+      "theme_and_type": "Lohahevitra sy karazana",
+      "categorie": "Sokajy"
+   },
    "favoris": {
-      "title_page": "Ankafizina",
+      "title_page": "Safidy",
       "header_landing": "Ho itanao ato ireo andininy nankafizinao",
       "text_landing": "Ahitanao haingana ireo nosafidinao",
-      "no_favorite": "Tsy misy ankafizina"
+      "no_favorite": "Tsy misy safidy"
    },
    "recherche": {
       "title_page": "Mitady",
-      "placeholder_input_search": "Teny hotediavina",
-      "text_for_deep_search_off": "Mariho ny boribory avia raha te hampiasa ny fitadiavana lalina.",
-      "text_for_deep_search_in_use": "Mampiasa ny fitadiavana lalina ianao!",
+      "placeholder_input_search": "Teny hotadiavina",
+      "text_for_deep_search_off": "Mariho ny boribory avia raha te hampiasa ny fikarohana lalina.",
+      "text_for_deep_search_in_use": "Mampiasa ny fikarohana lalina ianao!",
       "type_title": "Sokajy",
       "thematique_title": "Lohahevitra",
       "tag_title": "Sokajy",
-      "no_result": "Tsy misy valiny hita",
+      "no_result": "Tsy misy safidy",
       "number_of_result_found": "{{allContenusFilter.length}} valiny hita."
    }
 }

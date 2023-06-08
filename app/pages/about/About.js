@@ -63,7 +63,7 @@ export default function About({ navigation }) {
                >
                   {langueActual === 'fr'
                      ? 'Total des textes présents : '
-                     : "Totalin'ny lahatsoratra misy ato : "}{' '}
+                     : "Isan'ny didy aman-dalàna voarakitra : "}{' '}
                   {statistique.contenuPresent} / {statistique.contenuFromServ}
                </Text>
                <Text
@@ -73,7 +73,7 @@ export default function About({ navigation }) {
                >
                   {langueActual === 'fr'
                      ? 'Total des articles présents : '
-                     : "Totalin'ny lahatsoratra misy ato : "}{' '}
+                     : "Isan'ny andininy voarakitra : "}{' '}
                   {statistique.articlePresent} / {statistique.articleFromServ}
                </Text>
             </View>

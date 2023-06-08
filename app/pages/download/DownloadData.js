@@ -191,12 +191,12 @@ export default function DownloadData({ navigation }) {
             isUserConnectedToInternet === null)
       ) {
          setMessageStatusInternet(
-            'Votre connexion ne peut pas accéder à internet. Vous pouvez quand même charger le fichier de données.'
+            "Vous n'avez pas accès à Internet. Vous pouvez tout de même importer les fichiers de données à partir de votre appareil."
          );
       }
       if (isNetworkActive === false || isNetworkActive === null) {
          setMessageStatusInternet(
-            "Vous n'êtes pas connecté à internet. Vous pouvez charger le fichier de données."
+            "Vous n'avez pas accès à Internet. Vous pouvez tout de même importer les fichiers de données à partir de votre appareil."
          );
       }
    }, [isUserConnectedToInternet, isUserNetworkActive]);
@@ -250,8 +250,8 @@ export default function DownloadData({ navigation }) {
                   >
                      Status :{' '}
                      {isUserNetworkActive && isUserConnectedToInternet
-                        ? 'Vous êtes connectés à internet'
-                        : "Vous n'êtes pas connectés"}
+                        ? 'Vous avez accès à Internet'
+                        : "Vous n'avez pas accès à Internet"}
                   </Text>
                   {isUserNetworkActive && isUserConnectedToInternet ? (
                      <Icon

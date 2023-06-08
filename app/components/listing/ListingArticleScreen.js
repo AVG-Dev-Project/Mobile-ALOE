@@ -156,7 +156,7 @@ export default function ListingArticle({ navigation, route }) {
          }
       } else {
          ToastAndroid.show(
-            `Pas de connexion, impossible d'obtenir des datas suppl!`,
+            `Pas de connexion, impossible d'obtenir des données supplémentaire`,
             ToastAndroid.SHORT
          );
          return;
@@ -228,7 +228,7 @@ export default function ListingArticle({ navigation, route }) {
             onPress={() => {
                navigation.navigate(nameNav.detailPage, {
                   titleScreen: `${
-                     langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '
+                     langueActual === 'fr' ? 'Article n°' : 'Andininy faha '
                   } ${item.numero}`,
                   articleToViewDetail: item,
                });
@@ -268,9 +268,7 @@ export default function ListingArticle({ navigation, route }) {
                >
                   <View>
                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
-                        {langueActual === 'fr'
-                           ? 'Article n°'
-                           : 'Lahatsoratra faha'}{' '}
+                        {langueActual === 'fr' ? 'Article n°' : 'Andininy faha'}{' '}
                         {item.numero}
                      </Text>
                      <Text
@@ -292,7 +290,7 @@ export default function ListingArticle({ navigation, route }) {
                         >
                            {langueActual === 'fr'
                               ? `Chapitre ${item.chapitre_numero ?? ''}`
-                              : `Lohateny ${item.chapitre_numero ?? ''}`}
+                              : `Toko faha ${item.chapitre_numero ?? ''}`}
                            :{' '}
                            {langueActual === 'fr'
                               ? item.chapitre_titre_fr
@@ -312,7 +310,7 @@ export default function ListingArticle({ navigation, route }) {
                      {langueActual === 'fr'
                         ? item.contenu_fr?.split('________________')[0]
                         : item.contenu_mg?.split('________________')[0] ??
-                          'Tsy misy dikan-teny malagasy ito lahatsoratra iray ito.'}
+                          'Tsy misy dikan-teny malagasy ito andininy iray ito.'}
                      {' ...'}
                   </Text>
                   <View
@@ -349,7 +347,7 @@ export default function ListingArticle({ navigation, route }) {
                                  marginLeft: 2,
                               }}
                            >
-                              {langueActual === 'fr' ? 'Favoris' : 'Ankafizina'}
+                              {langueActual === 'fr' ? 'Favoris' : 'Safidy'}
                            </Text>
                         ) : (
                            <Text
@@ -360,7 +358,7 @@ export default function ListingArticle({ navigation, route }) {
                            >
                               {langueActual === 'fr'
                                  ? 'Pas dans favoris'
-                                 : 'Tsy mbola anaty ankafizina'}
+                                 : 'Tsy safidy'}
                            </Text>
                         )}
                      </View>
@@ -396,8 +394,8 @@ export default function ListingArticle({ navigation, route }) {
                keyboardType="default"
                placeholder={
                   langueActual === 'fr'
-                     ? 'Entrer le mot de recherche ...'
-                     : 'Ampidiro ny teny hotadiavina...'
+                     ? 'Entrer un mot-clé...'
+                     : 'Teny hotadiavina...'
                }
                value={valueForSearch}
                onChangeText={(text) => {
@@ -436,8 +434,8 @@ export default function ListingArticle({ navigation, route }) {
                         }}
                      >
                         {langueActual === 'fr'
-                           ? "Pas d'articles"
-                           : 'Tsy misy lahatsoratra'}
+                           ? 'Aucun article'
+                           : 'Tsy misy andininy'}
                      </Text>
                   </View>
                }

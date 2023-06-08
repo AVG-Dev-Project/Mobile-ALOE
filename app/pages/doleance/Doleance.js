@@ -51,7 +51,7 @@ export default function Doleance({ navigation }) {
       return showToastDoleance(
          langueActual === 'fr'
             ? 'Votre doléance a bien été envoyée. Merci beaucoup.'
-            : 'Lasa ny fitarainanao. Misaotra tompoko.'
+            : 'Nalefa ny fitarainanao. Misaotra tompoko.'
       );
    };
    const sendMailToLocalDB = async (email, obj, message) => {
@@ -63,7 +63,7 @@ export default function Doleance({ navigation }) {
       await insertOrUpdateToDBFunc('database', 'doleance', [newMail]);
       setIsLoadSendingMail(false);
       return showToastDoleance(
-         "Comme vous n'avez pas de connexion, votre doléance a été stocké et envoyer automatiquement plutard lorsque votre connexion est activé."
+         "Comme vous n'avez pas accès à Internet, votre doléance est stocké et sera envoyer automatiquement plutard quand vous avezz accès à Internet."
       );
    };
 
@@ -152,8 +152,8 @@ export default function Doleance({ navigation }) {
                      }}
                   >
                      {langueActual === 'fr'
-                        ? 'Veuillez remplir tous les champs du présent formulaire pour déposer une plainte.'
-                        : 'Fenoy daholo ireto fampidiran-teny manaraka ireto raha te hametraka fitarainana.'}
+                        ? 'Veuillez remplir tous les champs du présent formulaire pour déposer votre doléance.'
+                        : 'Fenoy azafady ny saha rehetra mba hametrahana ny fitarainana.'}
                   </Text>
                </View>
                <View style={styles.content_form}>
@@ -177,8 +177,8 @@ export default function Doleance({ navigation }) {
                      value={emailContent.objet}
                      placeholder={
                         langueActual === 'fr'
-                           ? "Objet de l'email : "
-                           : 'Foto-dresaka ny mailakao : '
+                           ? 'Objet de doléance : '
+                           : 'Foto-dresaka : '
                      }
                      onChangeText={(text) =>
                         handleChangeEmailContent('objet', text)

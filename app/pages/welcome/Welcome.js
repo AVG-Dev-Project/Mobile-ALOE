@@ -34,9 +34,6 @@ export default function Welcome({ navigation }) {
    //all datas
    const { width } = useWindowDimensions();
    const dispatch = useDispatch();
-   const langueActual = useSelector(
-      (selector) => selector.fonctionnality.langue
-   );
    const isUserNetworkActive = useSelector(
       (selector) => selector.fonctionnality.isNetworkActive
    );
@@ -124,36 +121,57 @@ export default function Welcome({ navigation }) {
                   textAlign: 'center',
                }}
             >
-               {langueActual === 'fr'
-                  ? 'Bienvenue sur ALOE'
-                  : "Tongasoa eto amin'ny ALOE"}
-            </Text>
-            <Text style={{ textAlign: 'center', marginVertical: 5 }}>
-               Inspiré par le Ministère de la Justice et le Ministère de
-               l'environnement et du développement durable, il a été confirmé
-               qu'il est indispensable de donner à tous les acteurs de la Chaine
-               de Justice environnementale, des outils de travail.
-            </Text>
-            <Text style={{ textAlign: 'center', marginBottom: 5 }}>
-               Dans cette optique, ALOE ou{' '}
-               <Text
-                  style={{
-                     fontSize: 16,
-                     fontWeight: 'bold',
-                     color: Colors.greenAvg,
-                  }}
-               >
-                  Accès sur les LOis Environnementales
-               </Text>{' '}
-               est une application mobile, accessible avec ou sans Internet, qui
-               regroupe les textes de lois environnementales et anticorruption
-               pour contribuer à la réduction du trafic d'espèces sauvages afin
-               d'améliorer la gouvernance des ressources naturelles.
+               Bienvenue sur ALOE
             </Text>
             {isDataAvailable ? (
+               <Text style={{ textAlign: 'center', marginVertical: 5 }}>
+                  ALOE ou{' '}
+                  <Text
+                     style={{
+                        fontSize: 16,
+                        fontWeight: 'bold',
+                        color: Colors.greenAvg,
+                     }}
+                  >
+                     Accès sur les LOis Environnementales
+                  </Text>{' '}
+                  est une application mobile, accessible avec ou sans internet,
+                  qui regroupe les textes de lois environnementales et
+                  anticorruption pour contribuer à la réduction du trafic
+                  d'espèces sauvages afin d'améliorer la gouvernance des
+                  ressources naturelles.
+               </Text>
+            ) : (
+               <>
+                  <Text style={{ textAlign: 'center', marginVertical: 5 }}>
+                     Inspiré par le Ministère de la Justice et le Ministère de
+                     l'environnement et du développement durable, il a été
+                     confirmé qu'il est indispensable de donner à tous les
+                     acteurs de la Chaine de Justice environnementale, des
+                     outils de travail.
+                  </Text>
+                  <Text style={{ textAlign: 'center', marginBottom: 5 }}>
+                     Dans cette optique, ALOE ou{' '}
+                     <Text
+                        style={{
+                           fontSize: 16,
+                           fontWeight: 'bold',
+                           color: Colors.greenAvg,
+                        }}
+                     >
+                        Accès sur les LOis Environnementales
+                     </Text>{' '}
+                     est une application mobile, accessible avec ou sans
+                     Internet, qui regroupe les textes de lois environnementales
+                     et anticorruption pour contribuer à la réduction du trafic
+                     d'espèces sauvages afin d'améliorer la gouvernance des
+                     ressources naturelles.
+                  </Text>
+               </>
+            )}
+            {isDataAvailable ? (
                <Text style={{ textAlign: 'center' }}>
-                  Les lois sont prêts, vous pouvez commencer à lire. Vous pouvez
-                  cliquer sur la flèche droite...
+                  Cliquez sur la flèche droite pour démarrer.
                </Text>
             ) : (
                <Text style={{ textAlign: 'center' }}>
