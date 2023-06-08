@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
    },
    text_landing_screen: {
-      fontSize: widthPercentageToDP(5),
+      fontSize: widthPercentageToDP(4),
       color: Colors.white,
       fontWeight: 'bold',
       textAlign: 'center',

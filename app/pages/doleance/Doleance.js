@@ -4,6 +4,7 @@ import {
    Text,
    TextInput,
    SafeAreaView,
+   Image,
    ToastAndroid,
 } from 'react-native';
 import { Colors } from '_theme/Colors';
@@ -138,17 +139,16 @@ export default function Doleance({ navigation }) {
          <SafeAreaView>
             <View style={styles.view_container}>
                <View style={styles.head_banniere}>
-                  <Lottie
-                     autoPlay
-                     ref={animation}
+                  <Image
                      style={styles.banniere_image}
-                     source={require('_images/mail.json')}
+                     source={require('_images/affiche512.png')}
                   />
                   <Text
                      style={{
                         fontSize: heightPercentageToDP(2),
                         color: Colors.redError,
                         textAlign: 'center',
+                        marginTop: 8,
                      }}
                   >
                      {langueActual === 'fr'
