@@ -31,33 +31,36 @@ import {
 } from '_utils/redux/actions/action_creators';
 
 const filterGlobal = (langueActual, array, query) => {
-   let res = array;
+   let res = query === null ? [] : array;
    if (query) {
-      langueActual === 'fr'
-         ? (res = res.filter(
-              (_article) =>
-                 _article.contenu_fr
-                    ?.split('________________')[0]
-                    .toLowerCase()
-                    .includes(query.toLowerCase()) ||
-                 _article.chapitre_titre_fr
-                    ?.toLowerCase()
-                    .includes(query.toLowerCase()) ||
-                 _article.titre_fr?.toLowerCase().includes(query.toLowerCase())
-           ))
-         : (res = res.filter(
-              (_article) =>
-                 _article.contenu_mg
-                    ?.split('________________')[0]
-                    .toLowerCase()
-                    .includes(query.toLowerCase()) ||
-                 _article.chapitre_titre_mg
-                    ?.toLowerCase()
-                    .includes(query.toLowerCase()) ||
-                 _article.titre_mg?.toLowerCase().includes(query.toLowerCase())
-           ));
+      if (langueActual === 'fr') {
+         res = array.filter(
+            (_article) =>
+               _article.contenu_fr
+                  ?.split('________________')[0]
+                  .toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _article.chapitre_titre_fr
+                  ?.toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _article.titre_fr?.toLowerCase().includes(query.toLowerCase())
+         );
+      }
+      if (langueActual === 'mg') {
+         res = array.filter(
+            (_article) =>
+               _article.contenu_mg
+                  ?.split('________________')[0]
+                  .toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _article.chapitre_titre_mg
+                  ?.toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _article.titre_mg?.toLowerCase().includes(query.toLowerCase())
+         );
+      }
    }
-
+   console.log('res : ', res);
    return res;
 };
 
@@ -220,6 +223,7 @@ export default function ListingArticle({ navigation, route }) {
          );
       }
    }, [valueForSearch]);
+   console.log('valueForSearch : ', valueForSearch);
 
    //all components
    const _renderItem = useCallback(({ item }) => {
