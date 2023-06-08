@@ -8,6 +8,7 @@ import {
    TouchableOpacity,
    ToastAndroid,
    useWindowDimensions,
+   ImageBackground,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { FlashList } from '@shopify/flash-list';
@@ -235,29 +236,21 @@ export default function ListingArticle({ navigation, route }) {
             }}
          >
             <View style={styles.view_render}>
-               <Image
+               <ImageBackground
                   source={require('_images/abstract_3.jpg')}
                   blurRadius={5}
                   style={{
                      width: width < 380 ? 100 : 130,
                      height: 160,
+                  }}
+                  imageStyle={{
                      borderRadius: 16,
                   }}
-               />
-               <View
-                  style={[
-                     StyleSheet.absoluteFillObject,
-                     styles.maskImageArticle,
-                  ]}
-               ></View>
-               <Text
-                  style={[
-                     StyleSheet.absoluteFillObject,
-                     styles.number_of_article,
-                  ]}
                >
-                  {item.numero}
-               </Text>
+                  <View style={styles.maskImageArticle}>
+                     <Text style={styles.number_of_article}>{item.numero}</Text>
+                  </View>
+               </ImageBackground>
                <View
                   style={{
                      marginLeft: 8,
@@ -275,7 +268,7 @@ export default function ListingArticle({ navigation, route }) {
                         style={{
                            fontSize: 12,
                            textDecorationLine: 'underline',
-                           width: width - 180,
+                           width: widthPercentageToDP(60),
                         }}
                         numberOfLines={1}
                      >
@@ -303,7 +296,7 @@ export default function ListingArticle({ navigation, route }) {
                      style={{
                         fontSize: heightPercentageToDP(2),
                         flex: 2,
-                        width: widthPercentageToDP(50),
+                        width: widthPercentageToDP(60),
                      }}
                      numberOfLines={4}
                   >

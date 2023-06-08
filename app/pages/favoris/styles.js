@@ -50,16 +50,16 @@ export const styles = StyleSheet.create({
       borderRadius: 62,
    },
    maskImageArticle: {
+      flex: 1,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
       backgroundColor: 'rgba(0, 0, 0, 0.2)',
       borderRadius: 18,
-      height: 170,
-      width: Dimensions.get('window').width < 380 ? 100 : 140,
    },
    number_of_article: {
       fontWeight: 'bold',
       color: Colors.white,
       fontSize: Dimensions.get('window').width < 380 ? 40 : 44,
-      marginVertical: 50,
-      marginHorizontal: Dimensions.get('window').width < 380 ? 30 : 50,
    },
 });

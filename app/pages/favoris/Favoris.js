@@ -6,6 +6,7 @@ import {
    StyleSheet,
    ToastAndroid,
    TouchableOpacity,
+   ImageBackground,
 } from 'react-native';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
@@ -74,28 +75,21 @@ export default function Favoris({ navigation }) {
             }}
          >
             <View style={styles.view_render}>
-               <Image
+               <ImageBackground
                   source={require('_images/abstract_3.jpg')}
+                  blurRadius={5}
                   style={{
-                     width: width < 380 ? 100 : 140,
-                     height: 170,
+                     width: width < 380 ? 100 : 130,
+                     height: 160,
+                  }}
+                  imageStyle={{
                      borderRadius: 16,
                   }}
-               />
-               <View
-                  style={[
-                     StyleSheet.absoluteFillObject,
-                     styles.maskImageArticle,
-                  ]}
-               ></View>
-               <Text
-                  style={[
-                     StyleSheet.absoluteFillObject,
-                     styles.number_of_article,
-                  ]}
                >
-                  {item.numero}
-               </Text>
+                  <View style={styles.maskImageArticle}>
+                     <Text style={styles.number_of_article}>{item.numero}</Text>
+                  </View>
+               </ImageBackground>
                <View
                   style={{
                      marginLeft: 12,
@@ -123,7 +117,7 @@ export default function Favoris({ navigation }) {
                            style={{
                               fontSize: heightPercentageToDP(1.5),
                               textDecorationLine: 'underline',
-                              width: widthPercentageToDP(50),
+                              width: widthPercentageToDP(60),
                            }}
                            numberOfLines={1}
                         >
@@ -138,7 +132,7 @@ export default function Favoris({ navigation }) {
                         marginTop: 8,
                         fontSize: heightPercentageToDP(2),
                         flex: 2,
-                        width: widthPercentageToDP(50),
+                        width: widthPercentageToDP(60),
                      }}
                      numberOfLines={4}
                   >
