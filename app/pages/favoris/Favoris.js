@@ -75,7 +75,7 @@ export default function Favoris({ navigation }) {
          >
             <View style={styles.view_render}>
                <Image
-                  source={require('_images/abstract.jpg')}
+                  source={require('_images/abstract_3.jpg')}
                   style={{
                      width: width < 380 ? 100 : 140,
                      height: 170,

@@ -27,7 +27,7 @@ import {
    BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
 import { printToFileAsync } from 'expo-print';
-import bgImage from '_images/abstract.jpg';
+import bgImage from '_images/abstract_3.jpg';
 import { Colors } from '_theme/Colors';
 import { addFavoris } from '_utils/redux/actions/action_creators';
 import {

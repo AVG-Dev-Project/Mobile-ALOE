@@ -19,7 +19,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import HeaderGlobal from '_components/header/HeaderGlobal';
 import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
 import { styles } from './styles';
-import bgImage from '_images/abstract.jpg';
+import bgImageThematique from '_images/thematique.jpg';
 import { Colors } from '_theme/Colors';
 import { dataForStatistique } from '_utils/redux/actions/action_creators';
 import {
@@ -117,7 +117,9 @@ export default function Home({ navigation }) {
             onPress={() => {
                navigation.navigate(nameNav.listArticle, {
                   titleScreen: `${
-                     langueActual === 'fr' ? 'Loi n°' : 'Lalana faha '
+                     langueActual === 'fr'
+                        ? `${item.type_nom_fr} n° `
+                        : `${item.type_nom_mg} faha `
                   } ${item.numero}`,
                   idOfThisContenu: item.id,
                });
@@ -126,8 +128,8 @@ export default function Home({ navigation }) {
             <View key={item.id} style={styles.view_container_renderItemArticle}>
                <Image
                   style={styles.image_poster_style_article}
-                  source={require('_images/abstract_3.jpg')}
-                  blurRadius={6}
+                  source={require('_images/contenu.jpg')}
+                  blurRadius={2}
                />
 
                <Text
@@ -138,7 +140,9 @@ export default function Home({ navigation }) {
                      fontSize: height < 700 ? 13 : 17,
                   }}
                >
-                  {langueActual === 'fr' ? 'Loi n° ' : 'Lalana faha '}
+                  {langueActual === 'fr'
+                     ? `${item.type_nom_fr} n° `
+                     : `${item.type_nom_mg} faha `}
                   {langueActual === 'fr' ? item.numero : item.numero}
                </Text>
                <Text style={{ fontSize: 12 }} numberOfLines={1}>
@@ -166,8 +170,8 @@ export default function Home({ navigation }) {
             }}
          >
             <ImageBackground
-               source={bgImage}
-               blurRadius={8}
+               source={bgImageThematique}
+               blurRadius={5}
                style={{
                   height: 130,
                   width: 230,
@@ -181,12 +185,6 @@ export default function Home({ navigation }) {
                   key={item.id}
                   style={styles.view_container_renderItemThematique}
                >
-                  {/*<View
-                     style={[
-                        StyleSheet.absoluteFillObject,
-                        styles.maskImageCatg,
-                     ]}
-                  ></View>*/}
                   <Text
                      style={styles.text_descriptif_for_carousel}
                      numberOfLines={4}
@@ -216,7 +214,7 @@ export default function Home({ navigation }) {
                <View style={styles.content_in_landing_screen}>
                   <Image
                      style={styles.icon_in_content_landing}
-                     source={require('_images/abstract_3.jpg')}
+                     source={require('_images/contenu.jpg')}
                   />
                   <Text
                      style={{

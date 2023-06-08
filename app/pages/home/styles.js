@@ -57,11 +57,13 @@ export const styles = StyleSheet.create({
 
    view_container_renderItemThematique: {
       width: 230,
-      height: 130,
+      borderRadius: 18,
+      flex: 1,
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
       paddingHorizontal: 6,
+      backgroundColor: 'rgba(0,0,0,0.4)',
    },
 
    view_carousel: {
