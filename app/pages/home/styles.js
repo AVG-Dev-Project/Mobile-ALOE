@@ -11,9 +11,8 @@ export const styles = StyleSheet.create({
       backgroundColor: Colors.background,
    },
    container_header: {
-      height: 30,
-      marginTop: 5,
-      marginBottom: 10,
+      height: heightPercentageToDP(3.5),
+      marginBottom: 5,
       marginHorizontal: 10,
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -21,7 +20,7 @@ export const styles = StyleSheet.create({
    },
    titre_salutation: {
       color: Colors.black,
-      fontSize: widthPercentageToDP(6.5),
+      fontSize: heightPercentageToDP(3),
       fontWeight: 'bold',
    },
    flagImg: {
@@ -31,6 +30,7 @@ export const styles = StyleSheet.create({
    },
    landing_screen: {
       height: heightPercentageToDP(25),
+      marginTop: 5,
       borderRadius: 25,
       backgroundColor: Colors.greenAvg,
       display: 'flex',
