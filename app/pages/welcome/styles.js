@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { Colors } from '_theme/Colors';
 import { widthPercentageToDP, heightPercentageToDP } from '_utils';
 
@@ -9,8 +9,14 @@ const styles = StyleSheet.create({
       paddingHorizontal: 4,
    },
    images_welcome: {
-      height: heightPercentageToDP(30),
-      width: widthPercentageToDP(50),
+      height:
+         Dimensions.get('window').height < 800
+            ? heightPercentageToDP(30)
+            : heightPercentageToDP(40),
+      width:
+         Dimensions.get('window').width < 800
+            ? widthPercentageToDP(50)
+            : widthPercentageToDP(60),
    },
    logo_image: {
       height: heightPercentageToDP(8),

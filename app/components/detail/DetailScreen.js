@@ -312,11 +312,7 @@ export default function Detail({ navigation, route }) {
 
    const sourceHTML = (data) => {
       const source = {
-         html:
-            data ??
-            (langueActual === 'fr'
-               ? "<p>Le contenu de l'article n'est pas disponible</p>"
-               : "<p>Mbola tsy misy ny votoatin'ny lahatsoratra</p>"),
+         html: data,
       };
       return source;
    };
@@ -410,8 +406,9 @@ export default function Detail({ navigation, route }) {
                      >
                         {langueActual === 'fr'
                            ? `Article n° ${oneArticle.numero}`
-                           : `Lalàna faha ${oneArticle.numero}` ??
-                             `Article n° ${oneArticle.numero}`}
+                           : `Andininy ${
+                                oneArticle.numero === 1 ? '' : 'faha'
+                             } ${oneArticle.numero}`}
                      </Text>
 
                      <Button
@@ -533,7 +530,10 @@ export default function Detail({ navigation, route }) {
                                  source={sourceHTML(
                                     oneArticle.contenu_mg?.split(
                                        '________________'
-                                    )[1]
+                                    )[1] ??
+                                       oneArticle.contenu_fr?.split(
+                                          '________________'
+                                       )[1]
                                  )}
                                  tagsStyles={tagsStyles}
                               />

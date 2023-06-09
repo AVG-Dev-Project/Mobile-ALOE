@@ -554,7 +554,8 @@ export default function Recherche({ navigation, route }) {
                      >
                         {langueActual === 'fr'
                            ? item.type_nom_fr + ' n°'
-                           : item.type_nom_mg ?? 'Votoantiny' + ' faha '}{' '}
+                           : item.type_nom_mg ??
+                             item.type_nom_fr + ' faha '}{' '}
                         {item.numero}
                      </Text>
                      <Text
@@ -590,7 +591,7 @@ export default function Recherche({ navigation, route }) {
                      }}
                   >
                      <Text style={{ textDecorationLine: 'underline' }}>
-                        Thématique et Type
+                        {t('listing.theme_and_type')}
                      </Text>
                      <Text
                         style={{

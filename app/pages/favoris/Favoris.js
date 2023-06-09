@@ -68,7 +68,7 @@ export default function Favoris({ navigation }) {
             onPress={() => {
                navigation.navigate(nameNav.detailPage, {
                   titleScreen: `${
-                     langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra faha'
+                     langueActual === 'fr' ? 'Article n°' : 'Andininy faha'
                   } ${item.numero}`,
                   articleToViewDetail: item,
                });
@@ -109,7 +109,9 @@ export default function Favoris({ navigation }) {
                      <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
                         {langueActual === 'fr'
                            ? 'Article n°'
-                           : 'Lahatsoratra faha'}{' '}
+                           : `Andininy ${
+                                item.numero === 1 ? '' : 'faha '
+                             }`}{' '}
                         {item.numero}
                      </Text>
                      {item.titre_fr && (
@@ -139,8 +141,7 @@ export default function Favoris({ navigation }) {
                      {langueActual === 'fr'
                         ? item.contenu_fr?.split('________________')[0]
                         : item.contenu_mg?.split('________________')[0] ??
-                          'Tsy misy dikan-teny malagasy ito lahatsoratra iray ito.'}
-                     {' ...'}
+                          item.contenu_fr?.split('________________')[0]}
                   </Text>
                   <View
                      style={{

@@ -43,7 +43,7 @@ export const styles = StyleSheet.create({
    },
    view_round_button_detail_article: {
       position: 'absolute',
-      top: heightPercentageToDP(-3.5),
+      top: heightPercentageToDP(-4.5),
       right: 14,
       display: 'flex',
       flexDirection: 'row',
@@ -80,10 +80,7 @@ export const styles = StyleSheet.create({
    },
    view_content_fab_button: {
       width: widthPercentageToDP(90),
-      marginBottom:
-         heightDevice < 800
-            ? heightPercentageToDP(2.5)
-            : heightPercentageToDP(2),
+      marginBottom: heightPercentageToDP(2.5),
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-evenly',
@@ -106,6 +103,6 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'flex-end',
       marginRight: widthPercentageToDP(6.5),
-      marginBottom: heightPercentageToDP(2),
+      marginBottom: heightPercentageToDP(1),
    },
 });

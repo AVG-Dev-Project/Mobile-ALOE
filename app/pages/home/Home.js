@@ -141,7 +141,7 @@ export default function Home({ navigation }) {
                >
                   {langueActual === 'fr'
                      ? `${item.type_nom_fr} n° `
-                     : `${item.type_nom_mg} faha `}
+                     : `${item.type_nom_mg ?? item.type_nom_fr} faha `}
                   {langueActual === 'fr' ? item.numero : item.numero}
                </Text>
                <Text style={{ fontSize: 12 }} numberOfLines={1}>
