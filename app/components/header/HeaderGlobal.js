@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+/*import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Colors } from '_theme/Colors';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +17,7 @@ export default function HeaderGlobal({ bottomSheetRef }) {
    };
 
    return (
-      <View style={styles.container}>
+      <View style={styles.container_header}>
          <Text style={styles.titre_salutation}>
             {t('bienvenue_header_text')}
          </Text>
@@ -39,7 +39,7 @@ export default function HeaderGlobal({ bottomSheetRef }) {
 }
 
 const styles = StyleSheet.create({
-   container: {
+   container_header: {
       height: 30,
       marginTop: 5,
       marginBottom: 10,
@@ -59,3 +59,4 @@ const styles = StyleSheet.create({
       borderRadius: 30,
    },
 });
+*/

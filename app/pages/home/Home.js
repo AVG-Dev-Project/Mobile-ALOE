@@ -69,6 +69,10 @@ export default function Home({ navigation }) {
       });
    };
 
+   const openBottomSheet = () => {
+      return bottomSheetRef.current?.present();
+   };
+
    const updatingPartialData = async () => {
       await storeStatistiqueToLocalStorage();
       let resType = await fetchTypesToApi();
@@ -201,10 +205,24 @@ export default function Home({ navigation }) {
    return (
       <ScrollView style={{ backgroundColor: Colors.background }}>
          <View style={styles.view_container}>
-            <HeaderGlobal
-               navigation={navigation}
-               bottomSheetRef={bottomSheetRef}
-            />
+            <View style={styles.container_header}>
+               <Text style={styles.titre_salutation}>
+                  {t('bienvenue_header_text')}
+               </Text>
+               <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => openBottomSheet()}
+               >
+                  <Image
+                     style={styles.flagImg}
+                     source={
+                        langueActual === 'fr'
+                           ? require('_images/french.png')
+                           : require('_images/malagasy.png')
+                     }
+                  />
+               </TouchableOpacity>
+            </View>
 
             <View style={styles.landing_screen}>
                <Text style={styles.text_landing_screen}>

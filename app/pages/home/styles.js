@@ -10,6 +10,25 @@ export const styles = StyleSheet.create({
       paddingHorizontal: 5,
       backgroundColor: Colors.background,
    },
+   container_header: {
+      height: 30,
+      marginTop: 5,
+      marginBottom: 10,
+      marginHorizontal: 10,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-end',
+   },
+   titre_salutation: {
+      color: Colors.black,
+      fontSize: widthPercentageToDP(6.5),
+      fontWeight: 'bold',
+   },
+   flagImg: {
+      height: 30,
+      width: 30,
+      borderRadius: 30,
+   },
    landing_screen: {
       height: heightPercentageToDP(25),
       borderRadius: 25,
