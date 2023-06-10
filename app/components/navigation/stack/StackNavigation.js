@@ -4,7 +4,7 @@ import { nameStackNavigation as nameNav } from '_utils';
 /*tab Navitation (top and bottom both)*/
 import BottomBarTabs from '_components/navigation/tabs/BottomBarTabs';
 /*screen normal |screen indépendant à afficher|*/
-import { Welcome, Doleance, DownloadData } from '_pages';
+import { Welcome, Doleance, DownloadData, ImportedData } from '_pages';
 import { configStack } from './configStack';
 import { useSelector } from 'react-redux';
 import ListingArticle from '_components/listing/ListingArticleScreen';
@@ -47,6 +47,10 @@ export default function StackNavigation() {
                options={({ route }) => ({
                   title: route.params.titleScreen,
                })}
+            />
+            <Stack.Screen
+               name={nameNav.importedData}
+               component={ImportedData}
             />
          </Stack.Group>
 
