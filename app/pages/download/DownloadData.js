@@ -44,16 +44,10 @@ export default function DownloadData({ navigation }) {
    const isUserConnectedToInternet = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
-   const isDataAvailable = useSelector(
-      (selector) => selector.fonctionnality.isDataAvailable
-   );
-   const [isFetchData, setIsFetchData] = useState(false);
    const [isUploadData, setIsUploadData] = useState(false);
    /*const [isAllDataAlsoUploaded, setIsAllDataAlsoUploaded] = useState(false);
    const [isAllDataAlsoDownloaded, setIsAllDataAlsoDownloaded] =
       useState(false);*/
-   const [buttonStartDisabled, setButtonStartDisabled] = useState(true);
-   const [isDataLoaded, setIsDataLoaded] = useState(false);
    const [messageStatusInternet, setMessageStatusInternet] = useState('');
 
    //all functions
@@ -121,8 +115,6 @@ export default function DownloadData({ navigation }) {
                'contenu',
                parseStructureDataForContenu(contenus)
             );
-            storeDataToLocalStorage('isAllDataImported', 'true');
-            dispatch(checktatusData(true));
             await getOfflineDatas();
             setIsUploadData(false);
          } else {
@@ -167,35 +159,6 @@ export default function DownloadData({ navigation }) {
          );
       }
    }, [isUserConnectedToInternet, isUserNetworkActive]);
-
-   useEffect(() => {
-      getDataFromLocalStorage('isAllDataImported').then((res) => {
-         if (res === 'true') {
-            //setIsAllDataAlsoUploaded(true);
-            dispatch(checktatusData(true));
-         }
-      });
-      getDataFromLocalStorage('isAllDataDownloaded').then((res) => {
-         if (res === 'true') {
-            //setIsAllDataAlsoDownloaded(true);
-            dispatch(checktatusData(true));
-         }
-      });
-   }, [isUploadData, isFetchData]);
-
-   useEffect(() => {
-      if (
-         /*isAllDataAlsoDownloaded || isAllDataAlsoUploaded*/ isDataAvailable
-      ) {
-         return setButtonStartDisabled(false);
-      }
-   }, [
-      /*isAllDataAlsoDownloaded,
-      isAllDataAlsoUploaded,*/
-      isDataAvailable,
-      isUploadData,
-      isFetchData,
-   ]);
 
    return (
       <ScrollView>
@@ -277,8 +240,6 @@ export default function DownloadData({ navigation }) {
                   onPress={() => {
                      navigation.goBack();
                   }}
-                  loading={isDataLoaded}
-                  disabled={buttonStartDisabled}
                />
             </View>
          </View>

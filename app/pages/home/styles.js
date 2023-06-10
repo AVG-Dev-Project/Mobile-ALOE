@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
       marginHorizontal: 10,
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'flex-end',
+      alignItems: 'center',
    },
    titre_salutation: {
       color: Colors.black,
