@@ -48,6 +48,10 @@ export default function StackNavigation() {
                   title: route.params.titleScreen,
                })}
             />
+            <Stack.Screen
+               name={nameNav.downloadData}
+               component={DownloadData}
+            />
          </Stack.Group>
 
          <Stack.Group

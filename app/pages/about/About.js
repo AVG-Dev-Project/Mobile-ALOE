@@ -116,6 +116,28 @@ export default function About({ navigation }) {
                         : 'Handefa fitarainana'}
                   </Text>
                </TouchableOpacity>
+               <TouchableOpacity
+                  activeOpacity={0.6}
+                  onPress={() =>
+                     navigation.navigate(nameNav.downloadData, {
+                        titleScreen:
+                           langueActual === 'fr'
+                              ? 'Importer le fichier'
+                              : 'Hampiditra ny rakitra',
+                     })
+                  }
+               >
+                  <Text
+                     style={[
+                        styles.button_link_download,
+                        { borderBottomWidth: 1 },
+                     ]}
+                  >
+                     {langueActual === 'fr'
+                        ? 'Importer le fichier'
+                        : 'Hampiditra ny rakitra'}
+                  </Text>
+               </TouchableOpacity>
             </View>
          </View>
       </KeyboardAwareScrollView>

@@ -28,14 +28,8 @@ import {
    storeDataToLocalStorage,
    getDataFromLocalStorage,
    getFavoriteFromLocalStorage,
-   fetchTypesToApi,
-   fetchArticlesToApi,
-   fetchContenusToApi,
-   fetchTagsToApi,
-   fetchThematiquesToApi,
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
-   storeStatistiqueToLocalStorage,
 } from '_utils';
 import styles from './styles';
 
@@ -64,31 +58,6 @@ export default function DownloadData({ navigation }) {
 
    //all functions
    // functions selon disponibilité de isUserNetworkActive 1 pour démarrer tous les fonction fetch depuis API 2 pour importer les données depuis le fichier
-   const getOnlineDatas = async () => {
-      let resContenu = await fetchContenusToApi(1);
-      let resArticle = await fetchArticlesToApi(1);
-      let resTheme = await fetchThematiquesToApi();
-      let resTag = await fetchTagsToApi();
-      let resType = await fetchTypesToApi();
-      await storeStatistiqueToLocalStorage();
-      if (
-         resContenu.results?.length > 0 &&
-         resArticle.results?.length > 0 &&
-         resTheme.results?.length > 0 &&
-         resType.results?.length > 0 &&
-         resTag.results?.length > 0
-      ) {
-         storeDataToLocalStorage('isAllDataDownloaded', 'true');
-         dispatch(checktatusData(true));
-      } else {
-         ToastAndroid.show(
-            'Certain contenu ne sont pas disponible et non pas été télecharger.',
-            ToastAndroid.SHORT
-         );
-      }
-      setIsFetchData(false);
-   };
-
    const fetchStatistique = () => {
       getDataFromLocalStorage('articleTotalInServ').then((res) => {
          dispatch(dataForStatistique({ statsFor: 'article', value: res ?? 0 }));
@@ -106,10 +75,6 @@ export default function DownloadData({ navigation }) {
       });
       fetchStatistique();
       fetchAllDataToLocalDatabase(dispatch);
-      setTimeout(() => {
-         setIsDataLoaded(false);
-         dispatch(getStarted());
-      }, 500);
    };
 
    const handleFileSelectionAndImportData = async () => {
@@ -156,9 +121,10 @@ export default function DownloadData({ navigation }) {
                'contenu',
                parseStructureDataForContenu(contenus)
             );
-            setIsUploadData(false);
             storeDataToLocalStorage('isAllDataImported', 'true');
             dispatch(checktatusData(true));
+            await getOfflineDatas();
+            setIsUploadData(false);
          } else {
             setIsUploadData(false);
          }
@@ -182,7 +148,7 @@ export default function DownloadData({ navigation }) {
    useEffect(() => {
       if (isUserConnectedToInternet && isUserNetworkActive) {
          setMessageStatusInternet(
-            'Vous pouvez soit télécharger les données via votre connexion, soit charger le fichier de données.'
+            'Vous pouvez importer les fichiers de données à partir de votre appareil.'
          );
          checkAndsendMailFromLocalDBToAPI();
       }
@@ -192,12 +158,12 @@ export default function DownloadData({ navigation }) {
             isUserConnectedToInternet === null)
       ) {
          setMessageStatusInternet(
-            "Vous n'avez pas accès à Internet. Vous pouvez tout de même importer les fichiers de données à partir de votre appareil."
+            'Vous pouvez importer les fichiers de données à partir de votre appareil.'
          );
       }
       if (isNetworkActive === false || isNetworkActive === null) {
          setMessageStatusInternet(
-            "Vous n'avez pas accès à Internet. Vous pouvez tout de même importer les fichiers de données à partir de votre appareil."
+            'Vous pouvez importer les fichiers de données à partir de votre appareil.'
          );
       }
    }, [isUserConnectedToInternet, isUserNetworkActive]);
@@ -272,39 +238,6 @@ export default function DownloadData({ navigation }) {
                   {messageStatusInternet}
                </Text>
                <View style={styles.view_for_button}>
-                  {isUserNetworkActive && isUserConnectedToInternet && (
-                     <Button
-                        title="Télecharger les données"
-                        icon={{
-                           name: 'file-download',
-                           type: 'material',
-                           size: 24,
-                           color: Colors.white,
-                        }}
-                        titleStyle={{ fontSize: 16 }}
-                        buttonStyle={{
-                           borderRadius: 15,
-                           backgroundColor: Colors.greenAvg,
-                        }}
-                        containerStyle={{
-                           width: 250,
-                           marginVertical: 5,
-                        }}
-                        onPress={() => {
-                           setIsFetchData(true);
-                           getOnlineDatas();
-                        }}
-                        loading={isFetchData}
-                     />
-                  )}
-
-                  {isUserNetworkActive && isUserConnectedToInternet && (
-                     <Text style={{ textAlign: 'center', fontSize: 18 }}>
-                        {' '}
-                        ou{' '}
-                     </Text>
-                  )}
-
                   <Button
                      title="Importer le fichier"
                      icon={{
@@ -317,6 +250,7 @@ export default function DownloadData({ navigation }) {
                      buttonStyle={{
                         borderRadius: 15,
                         backgroundColor: Colors.greenAvg,
+                        paddingVertical: 12,
                      }}
                      containerStyle={{
                         width: 250,
@@ -329,26 +263,19 @@ export default function DownloadData({ navigation }) {
             </View>
             <View>
                <Button
-                  title="Commencer"
-                  icon={{
-                     name: 'double-arrow',
-                     type: 'material',
-                     size: 24,
-                     color: Colors.white,
-                  }}
+                  title="Retour"
                   titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
                   buttonStyle={{
                      borderRadius: 30,
                      backgroundColor: Colors.greenAvg,
-                     paddingVertical: 24,
-                     width: width < 370 ? 170 : 190,
+                     paddingVertical: 16,
+                     width: width < 370 ? 150 : 170,
                   }}
                   containerStyle={{
                      marginVertical: 10,
                   }}
                   onPress={() => {
-                     setIsDataLoaded(true);
-                     getOfflineDatas();
+                     navigation.goBack();
                   }}
                   loading={isDataLoaded}
                   disabled={buttonStartDisabled}

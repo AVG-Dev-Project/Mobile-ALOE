@@ -29,4 +29,10 @@ export const styles = StyleSheet.create({
       fontSize: 16,
       borderColor: Colors.grey,
    },
+   button_link_download: {
+      paddingVertical: 20,
+      marginHorizontal: 8,
+      fontSize: 16,
+      borderColor: Colors.grey,
+   },
 });
