@@ -3,7 +3,8 @@ import {
    Text,
    View,
    Image,
-   TouchableOpacity,
+   ToastAndroid,
+   ActivityIndicator,
    ScrollView,
    useWindowDimensions,
 } from 'react-native';
@@ -20,17 +21,22 @@ import {
    isConnectedToInternet,
    dataForStatistique,
 } from '_utils/redux/actions/action_creators';
+import data from '_files/data.json';
 import {
    nameStackNavigation as nameNav,
+   insertOrUpdateToDBFunc,
    getDataFromLocalStorage,
    getFavoriteFromLocalStorage,
+   parseStructureDataForArticle,
+   parseStructureDataForContenu,
+   storeDataToLocalStorage,
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
    storeStatistiqueToLocalStorage,
    s,
 } from '_utils';
 
-export default function Welcome({ navigation }) {
+export default function Welcome() {
    //all datas
    const { width } = useWindowDimensions();
    const dispatch = useDispatch();
@@ -75,6 +81,51 @@ export default function Welcome({ navigation }) {
       }, 2000);
    };
 
+   const importedAllDataFromJson = async () => {
+      try {
+         let { articles, contenus, types, thematiques, tags } = data;
+         //store total of article and contenu to storage
+         storeDataToLocalStorage(
+            'articleTotalInServ',
+            JSON.stringify(articles.length ?? 0)
+         );
+         storeDataToLocalStorage(
+            'contenuTotalInServ',
+            JSON.stringify(contenus.length ?? 0)
+         );
+
+         //type
+         insertOrUpdateToDBFunc('database', 'type', types);
+
+         //thematique
+         insertOrUpdateToDBFunc('database', 'thematique', thematiques);
+
+         //tag
+         insertOrUpdateToDBFunc('database', 'tag', tags);
+
+         //article
+         insertOrUpdateToDBFunc(
+            'database',
+            'article',
+            parseStructureDataForArticle(articles)
+         );
+
+         //contenu
+         await insertOrUpdateToDBFunc(
+            'database',
+            'contenu',
+            parseStructureDataForContenu(contenus)
+         );
+         storeDataToLocalStorage('isAllDataImported', 'true');
+         dispatch(checktatusData(true));
+      } catch (e) {
+         ToastAndroid.show(
+            `Il y a une erreur survenu à l'importation des données.`,
+            ToastAndroid.SHORT
+         );
+      }
+   };
+
    //all effects
    /*effect pour ecouter quand l'user active sa isUserNetworkActive*/
    useEffect(() => {
@@ -93,12 +144,18 @@ export default function Welcome({ navigation }) {
             dispatch(checktatusData(true));
          }
       });
-      getDataFromLocalStorage('isAllDataDownloaded').then((res) => {
+      getDataFromLocalStorage('isAllDataImported').then((res) => {
          if (res === 'true') {
-            //setIsAllDataAlsoDownloaded(true);
+            //setIsAllDataAlsoUploaded(true);
             dispatch(checktatusData(true));
          }
       });
+   }, []);
+
+   useEffect(() => {
+      if (!isDataAvailable) {
+         importedAllDataFromJson();
+      }
    }, []);
 
    useEffect(() => {
@@ -207,20 +264,11 @@ export default function Welcome({ navigation }) {
                   />
                </View>
             ) : (
-               <View style={styles.view_button_arrondi}>
-                  <TouchableOpacity
-                     style={styles.boutton_arrondi}
-                     activeOpacity={0.8}
-                     onPress={() => {
-                        navigation.navigate(nameNav.downloadData);
-                     }}
-                  >
-                     <Icon
-                        name={'cloud-download'}
-                        color={Colors.white}
-                        size={34}
-                     />
-                  </TouchableOpacity>
+               <View style={styles.view_button_indicator}>
+                  <ActivityIndicator size="large" color={Colors.greenAvg} />
+                  <Text style={styles.label_indicator}>
+                     Importation des données ...
+                  </Text>
                </View>
             )}
          </View>

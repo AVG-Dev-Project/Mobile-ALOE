@@ -122,38 +122,39 @@ export default function DownloadData({ navigation }) {
             const fileContent = await FileSystem.readAsStringAsync(file.uri);
             const parsedJSONData = JSON.parse(fileContent);
             const parsedJsonToArray = Object.values(parsedJSONData);
-            let [type, thematique, article, contenu, tag] = parsedJsonToArray;
+            let [types, thematiques, articles, contenus, tags] =
+               parsedJsonToArray;
             //store total of article and contenu to storage
             storeDataToLocalStorage(
                'articleTotalInServ',
-               JSON.parse(article.length ?? 0)
+               JSON.stringify(articles.length ?? 0)
             );
             storeDataToLocalStorage(
                'contenuTotalInServ',
-               JSON.parse(contenu.length ?? 0)
+               JSON.stringify(contenus.length ?? 0)
             );
 
             //type
-            insertOrUpdateToDBFunc('database', 'type', type);
+            insertOrUpdateToDBFunc('database', 'type', types);
 
             //thematique
-            insertOrUpdateToDBFunc('database', 'thematique', thematique);
+            insertOrUpdateToDBFunc('database', 'thematique', thematiques);
 
             //tag
-            insertOrUpdateToDBFunc('database', 'tag', tag);
+            insertOrUpdateToDBFunc('database', 'tag', tags);
 
             //article
             insertOrUpdateToDBFunc(
                'database',
                'article',
-               parseStructureDataForArticle(article)
+               parseStructureDataForArticle(articles)
             );
 
             //contenu
             await insertOrUpdateToDBFunc(
                'database',
                'contenu',
-               parseStructureDataForContenu(contenu)
+               parseStructureDataForContenu(contenus)
             );
             setIsUploadData(false);
             storeDataToLocalStorage('isAllDataImported', 'true');

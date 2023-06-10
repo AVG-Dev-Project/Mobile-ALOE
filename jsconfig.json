@@ -5,6 +5,7 @@
       "paths": {
          "_components": ["app/components"],
          "_images": ["app/images"],
+         "_files": ["app/files"],
          "_pages": ["app/images"],
          "_theme": ["app/theme"],
          "_utils": ["app/utils"]

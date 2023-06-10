@@ -28,6 +28,16 @@ const styles = StyleSheet.create({
       borderRadius: 60,
       marginVertical: 20,
    },
+   view_button_indicator: {
+      marginVertical: 20,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+   },
+   label_indicator: {
+      fontSize: 11,
+      color: Colors.greenAvg,
+   },
    bouttonStyle: {
       backgroundColor: Colors.greenAvg,
       padding: 20,

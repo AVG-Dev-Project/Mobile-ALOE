@@ -25,6 +25,7 @@ module.exports = function (api) {
                   _pages: './app/pages',
                   _theme: './app/theme',
                   _utils: './app/utils',
+                  _files: './app/files',
                },
             },
          ],
