@@ -7,7 +7,12 @@
             "simulator": true
          }
       },
-      "preview": {
+      "preview_without_data": {
+         "android": {
+            "buildType": "apk"
+         }
+      },
+      "preview_with_data": {
          "android": {
             "buildType": "apk"
          }
