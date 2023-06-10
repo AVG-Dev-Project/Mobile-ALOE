@@ -14,11 +14,9 @@ import NetInfo from '@react-native-community/netinfo';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import {
-   getStarted,
    isNetworkActive,
    addFavoris,
    isConnectedToInternet,
-   checktatusData,
    dataForStatistique,
 } from '_utils/redux/actions/action_creators';
 import {
@@ -121,7 +119,10 @@ export default function DownloadData({ navigation }) {
             setIsUploadData(false);
          }
       } catch (error) {
-         console.log(error);
+         ToastAndroid.show(
+            "Erreur survenu à l'import du fichier.",
+            ToastAndroid.SHORT
+         );
          setIsUploadData(false);
       }
    };
