@@ -280,11 +280,11 @@ export default function Detail({ navigation, route }) {
                await MediaLibrary.createAlbumAsync('Download', asset, false);
             } else {
                await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-               ToastAndroid.show(
-                  `Article n°${oneArticle.numero} télecharger dans le dossier download!`,
-                  ToastAndroid.SHORT
-               );
             }
+            ToastAndroid.show(
+               `Article n°${oneArticle.numero} télecharger dans le dossier download!`,
+               ToastAndroid.SHORT
+            );
          }
       } catch (e) {
          ToastAndroid.show(

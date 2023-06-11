@@ -11,11 +11,10 @@ import {
    ImageBackground,
    TouchableOpacity,
 } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '@rneui/themed';
-import Carousel from 'react-native-snap-carousel';
 import { useSelector, useDispatch } from 'react-redux';
-import HeaderGlobal from '_components/header/HeaderGlobal';
 import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
 import { styles } from './styles';
 import bgImageThematique from '_images/thematique.jpg';
@@ -30,7 +29,6 @@ import {
    fetchThematiquesToApi,
    storeStatistiqueToLocalStorage,
    getDataFromLocalStorage,
-   checkIfUserHasAllData,
    widthPercentageToDP,
 } from '_utils';
 
@@ -58,7 +56,6 @@ export default function Home({ navigation }) {
    );
 
    //all functions
-   checkIfUserHasAllData(useSelector);
 
    const fetchStatistique = () => {
       getDataFromLocalStorage('articleTotalInServ').then((res) => {
@@ -112,6 +109,13 @@ export default function Home({ navigation }) {
       }
    }, [isUserNetworkActive, isUserConnectedToInternet]);
 
+   //all keys
+   const _idKeyExtractorThematique = (item, index) =>
+      item?.id == null ? index.toString() : item.id.toString();
+
+   const _idKeyExtractorContenu = (item, index) =>
+      item?.id == null ? index.toString() : item.id.toString();
+
    //all components
    const _renderItemContenu = ({ item }) => {
       return (
@@ -148,7 +152,7 @@ export default function Home({ navigation }) {
                      : `${item.type_nom_mg ?? item.type_nom_fr} faha `}
                   {langueActual === 'fr' ? item.numero : item.numero}
                </Text>
-               <Text style={{ fontSize: 12 }} numberOfLines={1}>
+               <Text style={{ fontSize: 12, width: 220 }} numberOfLines={1}>
                   {langueActual === 'fr'
                      ? item.objet_contenu_fr
                      : item.objet_contenu_mg ?? item.objet_contenu_fr}
@@ -176,6 +180,7 @@ export default function Home({ navigation }) {
                source={bgImageThematique}
                blurRadius={5}
                style={{
+                  marginHorizontal: 4,
                   height: 130,
                   width: 230,
                }}
@@ -279,19 +284,19 @@ export default function Home({ navigation }) {
                <View>
                   <SafeAreaView>
                      <View style={styles.view_carousel}>
-                        <Carousel
-                           layout="default"
-                           ref={isCarousel}
+                        <FlashList
+                           horizontal={true}
+                           showHorizontalScrollIndicator={false}
                            data={allThematiques}
-                           loop={false}
-                           loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
-                           //fin des props spéficifique au section annonce
+                           key={'_'}
+                           keyExtractor={_idKeyExtractorThematique}
                            renderItem={_renderItemThematique}
-                           sliderWidth={150}
-                           itemWidth={240}
-                           inactiveSlideOpacity={0.9} //on uniformise tous les opacity
-                           inactiveSlideScale={1} //on uniformise tous les hauteur
-                           useScrollView={true}
+                           estimatedItemSize={20}
+                           getItemLayout={(data, index) => ({
+                              length: data.length,
+                              offset: data.length * index,
+                              index,
+                           })}
                         />
                      </View>
                   </SafeAreaView>
@@ -333,19 +338,19 @@ export default function Home({ navigation }) {
                <View>
                   <SafeAreaView>
                      <View style={styles.view_carousel}>
-                        <Carousel
-                           layout="default"
-                           ref={isCarousel}
+                        <FlashList
+                           horizontal={true}
+                           showHorizontalScrollIndicator={false}
                            data={allContenus}
-                           loop={true}
-                           loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
-                           //fin des props spéficifique au section annonce
+                           key={'_'}
+                           keyExtractor={_idKeyExtractorContenu}
                            renderItem={_renderItemContenu}
-                           sliderWidth={150}
-                           itemWidth={240}
-                           inactiveSlideOpacity={0.9} //on uniformise tous les opacity
-                           inactiveSlideScale={1} //on uniformise tous les hauteur
-                           useScrollView={true}
+                           estimatedItemSize={20}
+                           getItemLayout={(data, index) => ({
+                              length: data.length,
+                              offset: data.length * index,
+                              index,
+                           })}
                         />
                      </View>
                   </SafeAreaView>

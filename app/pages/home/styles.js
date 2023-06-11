@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
       backgroundColor: Colors.background,
    },
    container_header: {
-      height: heightPercentageToDP(3.5),
+      height: 45,
       marginBottom: 5,
       marginHorizontal: 10,
       flexDirection: 'row',
@@ -66,13 +66,6 @@ export const styles = StyleSheet.create({
       width: 230,
       borderRadius: 15,
    },
-   /*Thematique*/
-   /*Types*/
-   /*maskImageCatg: {
-      borderRadius: 18,
-      height: 130,
-      width: 230,
-   },*/
 
    view_container_renderItemThematique: {
       width: 230,
@@ -83,6 +76,9 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
       paddingHorizontal: 6,
       backgroundColor: 'rgba(0,0,0,0.4)',
+   },
+   view_container_renderItemArticle: {
+      marginHorizontal: 4,
    },
 
    view_carousel: {
