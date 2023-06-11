@@ -1,8 +1,6 @@
 import {
    View,
    Text,
-   StyleSheet,
-   Image,
    TextInput,
    ActivityIndicator,
    TouchableOpacity,

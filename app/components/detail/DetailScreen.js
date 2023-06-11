@@ -270,6 +270,7 @@ export default function Detail({ navigation, route }) {
                `Article n° ${oneArticle.numero} télecharger dans download/aloe/pdf.`,
                ToastAndroid.SHORT
             );
+            console.log('vita > 9');
          }
 
          // for version 9 and down
@@ -285,6 +286,7 @@ export default function Detail({ navigation, route }) {
                   ToastAndroid.SHORT
                );
             }
+            console.log('vita < 9');
          }
       } catch (e) {
          ToastAndroid.show(
