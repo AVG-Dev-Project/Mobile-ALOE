@@ -15,7 +15,6 @@ import { useTranslation } from 'react-i18next';
 import { Icon } from '@rneui/themed';
 import Carousel from 'react-native-snap-carousel';
 import { useSelector, useDispatch } from 'react-redux';
-import HeaderGlobal from '_components/header/HeaderGlobal';
 import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
 import { styles } from './styles';
 import bgImageThematique from '_images/thematique.jpg';
