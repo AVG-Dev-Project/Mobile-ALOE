@@ -30,7 +30,6 @@ import {
    fetchThematiquesToApi,
    storeStatistiqueToLocalStorage,
    getDataFromLocalStorage,
-   checkIfUserHasAllData,
    widthPercentageToDP,
 } from '_utils';
 
@@ -58,7 +57,6 @@ export default function Home({ navigation }) {
    );
 
    //all functions
-   checkIfUserHasAllData(useSelector);
 
    const fetchStatistique = () => {
       getDataFromLocalStorage('articleTotalInServ').then((res) => {

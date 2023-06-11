@@ -7,7 +7,6 @@ import {
    getFavoriteFromLocalStorage,
    storeStatistiqueToLocalStorage,
 } from './storage/asyncStorage';
-import { useNotification } from './hooks/useNotification';
 import {
    ArticleSchema,
    ContenuSchema,
@@ -27,8 +26,6 @@ import {
    parseDataContenuLazyLoading,
    widthPercentageToDP,
    heightPercentageToDP,
-   pushNotification,
-   checkIfUserHasAllData,
 } from './helper/functionHelpler';
 
 import {
@@ -44,9 +41,6 @@ import {
 
 export {
    nameStackNavigation,
-   useNotification,
-   pushNotification,
-   checkIfUserHasAllData,
    LoiService,
    storeDataToLocalStorage,
    getDataFromLocalStorage,

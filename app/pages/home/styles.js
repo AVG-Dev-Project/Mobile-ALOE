@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
       backgroundColor: Colors.background,
    },
    container_header: {
-      height: heightPercentageToDP(3.5),
+      height: 45,
       marginBottom: 5,
       marginHorizontal: 10,
       flexDirection: 'row',
