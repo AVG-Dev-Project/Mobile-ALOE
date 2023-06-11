@@ -1,5 +1,6 @@
 import { Colors } from '_theme/Colors';
 import { StyleSheet, Dimensions } from 'react-native';
+import { heightPercentageToDP } from '_utils';
 
 const widthDevice = Dimensions.get('window').width;
 const heightDevice = Dimensions.get('window').height;
@@ -80,6 +81,7 @@ export const styles = StyleSheet.create({
    },
    view_flatlist: {
       height: heightDevice < 700 ? heightDevice - 290 : heightDevice - 280,
+      paddingBottom: heightDevice < 700 ? heightPercentageToDP(5) : 0,
    },
    view_bottom_sheet: {
       backgroundColor: '#f2f2f2',

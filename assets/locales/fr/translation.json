@@ -19,7 +19,7 @@
    "recherche": {
       "title_page": "Recherche",
       "placeholder_input_search": "Entrer un mot-clé",
-      "text_for_deep_search_off": "Cochez la case à gauche pour utiliser la recherche approfondie.",
+      "text_for_deep_search_off": "Cochez la case en haut à gauche pour utiliser la recherche approfondie.",
       "text_for_deep_search_in_use": "Vous utilisez la recherche approfondie!",
       "type_title": "Type",
       "thematique_title": "Thème",
