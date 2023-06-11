@@ -58,7 +58,6 @@ const filterGlobal = (langueActual, array, query) => {
          );
       }
    }
-   console.log('res : ', res);
    return res;
 };
 
@@ -221,7 +220,6 @@ export default function ListingArticle({ navigation, route }) {
          );
       }
    }, [valueForSearch]);
-   console.log('valueForSearch : ', valueForSearch);
 
    //all components
    const _renderItem = useCallback(({ item }) => {

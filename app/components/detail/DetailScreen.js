@@ -21,11 +21,7 @@ import ReactNativeBlobUtil from 'react-native-blob-util';
 import * as MediaLibrary from 'expo-media-library';
 import { styles } from './styles';
 import { Icon, FAB, Button } from '@rneui/themed';
-import {
-   BottomSheetModal,
-   BottomSheetBackdrop,
-   BottomSheetScrollView,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { printToFileAsync } from 'expo-print';
 import bgImage from '_images/abstract_3.jpg';
 import { Colors } from '_theme/Colors';
@@ -270,7 +266,6 @@ export default function Detail({ navigation, route }) {
                `Article n° ${oneArticle.numero} télecharger dans download/aloe/pdf.`,
                ToastAndroid.SHORT
             );
-            console.log('vita > 9');
          }
 
          // for version 9 and down
@@ -286,7 +281,6 @@ export default function Detail({ navigation, route }) {
                   ToastAndroid.SHORT
                );
             }
-            console.log('vita < 9');
          }
       } catch (e) {
          ToastAndroid.show(

@@ -121,7 +121,10 @@ export default function ImportedData({ navigation }) {
             setIsUploadData(false);
          }
       } catch (error) {
-         console.log(error);
+         ToastAndroid.show(
+            `Erreur survenu à l'importation du fichier.`,
+            ToastAndroid.SHORT
+         );
          setIsUploadData(false);
       }
    };

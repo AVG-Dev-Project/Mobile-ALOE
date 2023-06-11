@@ -135,7 +135,6 @@ export const checkAndsendMailFromLocalDBToAPI = async () => {
          LoiService.sendMailToServ(mail.email, mail.objet, mail.contenu);
          return DoleanceSchema.destroy(mail.id);
       });
-      console.log('Mail envoyé en background');
    }
    return;
 };

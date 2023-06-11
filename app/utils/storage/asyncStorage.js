@@ -5,7 +5,7 @@ export const storeDataToLocalStorage = async (key, value) => {
    try {
       await AsyncStorage.setItem(`@${key}`, value);
    } catch (e) {
-      console.log('error in function set async storage: ', e);
+      return;
    }
 };
 
@@ -14,7 +14,7 @@ export const storeFavoriteIdToLocalStorage = async (value) => {
       let valueString = JSON.stringify(value);
       await AsyncStorage.setItem(`@favorite`, valueString);
    } catch (e) {
-      console.log('error in function set async storage: ', e);
+      return;
    }
 };
 
@@ -23,7 +23,7 @@ export const getFavoriteFromLocalStorage = async () => {
       const value = await AsyncStorage.getItem(`@favorite`);
       return JSON.parse(value);
    } catch (e) {
-      console.log('error in function get from async storage: ', e);
+      return;
    }
 };
 
@@ -32,7 +32,7 @@ export const getDataFromLocalStorage = async (key) => {
       const value = await AsyncStorage.getItem(`@${key}`);
       return value;
    } catch (e) {
-      console.log('error in function get from async storage: ', e);
+      return;
    }
 };
 
@@ -52,6 +52,6 @@ export const storeStatistiqueToLocalStorage = async () => {
          );
       }
    } catch (e) {
-      console.log('error in function set async storage: ', e);
+      return;
    }
 };
