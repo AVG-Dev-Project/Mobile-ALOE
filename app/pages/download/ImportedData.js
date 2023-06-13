@@ -26,7 +26,6 @@ import {
    parseStructureDataForContenu,
    storeDataToLocalStorage,
    getDataFromLocalStorage,
-   getFavoriteFromLocalStorage,
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
    storeStatistiqueToLocalStorage,
@@ -66,20 +65,15 @@ export default function ImportedData({ navigation }) {
    const getOfflineDatas = async () => {
       //EXCEPTION THIS CODE it need connection internet
       if (isUserNetworkActive && isUserConnectedToInternet) {
-         await storeStatistiqueToLocalStorage();
+         storeStatistiqueToLocalStorage();
       }
-      getFavoriteFromLocalStorage().then((res) => {
-         if (res !== null) {
-            dispatch(addFavoris(res));
-         }
-      });
       fetchStatistique();
-      fetchAllDataToLocalDatabase(dispatch);
-      setIsDataLoaded(false);
+      await fetchAllDataToLocalDatabase(dispatch);
       ToastAndroid.show(
          `Contenu de l'application mis à jour.`,
          ToastAndroid.SHORT
       );
+      setIsDataLoaded(false);
    };
 
    const handleFileSelectionAndImportData = async () => {
@@ -123,6 +117,10 @@ export default function ImportedData({ navigation }) {
                'database',
                'contenu',
                parseStructureDataForContenu(contenus)
+            );
+            ToastAndroid.show(
+               `Les données sont importées et insérées avec succès.`,
+               ToastAndroid.SHORT
             );
             setIsUploadData(false);
          } else {

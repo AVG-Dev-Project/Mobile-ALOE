@@ -83,7 +83,7 @@ export const fetchTypesToApi = async () => {
 };
 
 //offline
-export const fetchAllDataToLocalDatabase = (dispatcher) => {
+export const fetchAllDataToLocalDatabase = async (dispatcher) => {
    //article
    ArticleSchema.query({ columns: '*', order: 'id ASC' }).then((results) => {
       dispatcher(getAllArticles(results));
@@ -103,7 +103,7 @@ export const fetchAllDataToLocalDatabase = (dispatcher) => {
       dispatcher(getAllTypes(results));
    });
    //tag
-   TagSchema.query({ columns: '*' }).then((results) => {
+   await TagSchema.query({ columns: '*' }).then((results) => {
       dispatcher(getAllTags(results));
    });
 };
