@@ -122,7 +122,7 @@ export default function About({ navigation }) {
                      navigation.navigate(nameNav.downloadData, {
                         titleScreen:
                            langueActual === 'fr'
-                              ? 'Importer le fichier'
+                              ? 'Importer les données'
                               : 'Hampiditra ny rakitra',
                      })
                   }
