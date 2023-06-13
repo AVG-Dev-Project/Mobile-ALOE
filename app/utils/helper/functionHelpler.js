@@ -171,3 +171,22 @@ export const heightPercentageToDP = (heightPercent) => {
 
    return PixelRatio.roundToNearestPixel((screenHeight * elemHeight) / 100);
 };
+
+export const isAloeFile = (file) => {
+   if (!file) {
+      return;
+   }
+
+   if (file.mimeType !== 'application/octet-stream') {
+      return false;
+   }
+
+   let lastDotIndex = file.name?.lastIndexOf('.');
+   let extensionOfFile = file.name?.slice(lastDotIndex + 1); //for delete "." and conserve aloe
+
+   if (extensionOfFile === 'aloe') {
+      return true;
+   }
+
+   return false;
+};

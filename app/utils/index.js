@@ -26,6 +26,7 @@ import {
    parseDataContenuLazyLoading,
    widthPercentageToDP,
    heightPercentageToDP,
+   isAloeFile,
    pushNotification,
 } from './helper/functionHelpler';
 
@@ -73,4 +74,5 @@ export {
    filterArticleToListByContenu,
    widthPercentageToDP,
    heightPercentageToDP,
+   isAloeFile,
 };

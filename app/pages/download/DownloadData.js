@@ -28,6 +28,8 @@ import {
    getFavoriteFromLocalStorage,
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
+   isAloeFile,
+   storeStatistiqueToLocalStorage,
 } from '_utils';
 import styles from './styles';
 
@@ -43,6 +45,7 @@ export default function DownloadData({ navigation }) {
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
    const [isUploadData, setIsUploadData] = useState(false);
+   const [isDataLoaded, setIsDataLoaded] = useState(false);
    /*const [isAllDataAlsoUploaded, setIsAllDataAlsoUploaded] = useState(false);
    const [isAllDataAlsoDownloaded, setIsAllDataAlsoDownloaded] =
       useState(false);*/
@@ -59,7 +62,11 @@ export default function DownloadData({ navigation }) {
       });
    };
 
-   const getOfflineDatas = async () => {
+   const getOfflineDatas = () => {
+      //EXCEPTION THIS CODE it need connection internet
+      if (isUserNetworkActive && isUserConnectedToInternet) {
+         storeStatistiqueToLocalStorage();
+      }
       getFavoriteFromLocalStorage().then((res) => {
          if (res !== null) {
             dispatch(addFavoris(res));
@@ -67,20 +74,23 @@ export default function DownloadData({ navigation }) {
       });
       fetchStatistique();
       fetchAllDataToLocalDatabase(dispatch);
+      setIsDataLoaded(false);
+      ToastAndroid.show(
+         `Contenu de l'application mis à jour.`,
+         ToastAndroid.SHORT
+      );
    };
 
    const handleFileSelectionAndImportData = async () => {
-      setIsUploadData(true);
       try {
          const file = await DocumentPicker.getDocumentAsync({
-            type: 'application/json',
+            type: 'application/octet-stream',
          });
-         if (file.type === 'success') {
+         if (isAloeFile(file) && file.type === 'success') {
             const fileContent = await FileSystem.readAsStringAsync(file.uri);
             const parsedJSONData = JSON.parse(fileContent);
-            const parsedJsonToArray = Object.values(parsedJSONData);
-            let [types, thematiques, articles, contenus, tags] =
-               parsedJsonToArray;
+            let { types, thematiques, articles, contenus, tags } =
+               parsedJSONData;
             //store total of article and contenu to storage
             storeDataToLocalStorage(
                'articleTotalInServ',
@@ -113,14 +123,18 @@ export default function DownloadData({ navigation }) {
                'contenu',
                parseStructureDataForContenu(contenus)
             );
-            await getOfflineDatas();
             setIsUploadData(false);
          } else {
+            ToastAndroid.show(
+               `Impossible d'importer ce genre de fichier, importer seulement les fichiers .aloe!`,
+               ToastAndroid.SHORT
+            );
             setIsUploadData(false);
          }
       } catch (error) {
+         console.log(error);
          ToastAndroid.show(
-            "Erreur survenu à l'import du fichier.",
+            `Erreur survenu à l'importation du fichier.`,
             ToastAndroid.SHORT
          );
          setIsUploadData(false);
@@ -220,7 +234,10 @@ export default function DownloadData({ navigation }) {
                         width: 250,
                         marginVertical: 5,
                      }}
-                     onPress={() => handleFileSelectionAndImportData()}
+                     onPress={async () => {
+                        setIsUploadData(true);
+                        await handleFileSelectionAndImportData();
+                     }}
                      loading={isUploadData}
                   />
                </View>
@@ -239,8 +256,11 @@ export default function DownloadData({ navigation }) {
                      marginVertical: 10,
                   }}
                   onPress={() => {
-                     navigation.goBack();
+                     setIsDataLoaded(true);
+                     getOfflineDatas();
+                     navigation.navigate('About');
                   }}
+                  loading={isDataLoaded}
                />
             </View>
          </View>
