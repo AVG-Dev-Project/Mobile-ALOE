@@ -111,7 +111,7 @@ export default function BottomBarTabs() {
             }}
          />
          <Tab.Screen
-            name="A propos"
+            name="About"
             component={About}
             options={{
                tabBarLabel: ({ focused }) => (

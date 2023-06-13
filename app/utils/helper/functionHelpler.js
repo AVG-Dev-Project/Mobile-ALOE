@@ -144,6 +144,25 @@ export const parsingTags = (jsonContent) => {
    return res;
 };
 
+export const isAloeFile = (file) => {
+   if (!file) {
+      return;
+   }
+
+   if (file.mimeType !== 'application/octet-stream') {
+      return false;
+   }
+
+   let lastDotIndex = file.name?.lastIndexOf('.');
+   let extensionOfFile = file.name?.slice(lastDotIndex + 1); //for delete "." and conserve aloe
+
+   if (extensionOfFile === 'aloe') {
+      return true;
+   }
+
+   return false;
+};
+
 export const widthPercentageToDP = (widthPercent) => {
    // Parse string percentage input and convert it to number.
    const elemWidth =

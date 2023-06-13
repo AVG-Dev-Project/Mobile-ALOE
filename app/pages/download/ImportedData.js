@@ -29,6 +29,8 @@ import {
    getFavoriteFromLocalStorage,
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
+   storeStatistiqueToLocalStorage,
+   isAloeFile,
 } from '_utils';
 import styles from './styles';
 
@@ -44,10 +46,10 @@ export default function ImportedData({ navigation }) {
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
    const [isUploadData, setIsUploadData] = useState(false);
+   const [isDataLoaded, setIsDataLoaded] = useState(false);
    /*const [isAllDataAlsoUploaded, setIsAllDataAlsoUploaded] = useState(false);
    const [isAllDataAlsoDownloaded, setIsAllDataAlsoDownloaded] =
       useState(false);*/
-   const [isDataLoaded, setIsDataLoaded] = useState(false);
    const [messageStatusInternet, setMessageStatusInternet] = useState('');
 
    //all functions
@@ -62,6 +64,10 @@ export default function ImportedData({ navigation }) {
    };
 
    const getOfflineDatas = async () => {
+      //EXCEPTION THIS CODE it need connection internet
+      if (isUserNetworkActive && isUserConnectedToInternet) {
+         await storeStatistiqueToLocalStorage();
+      }
       getFavoriteFromLocalStorage().then((res) => {
          if (res !== null) {
             dispatch(addFavoris(res));
@@ -69,28 +75,31 @@ export default function ImportedData({ navigation }) {
       });
       fetchStatistique();
       fetchAllDataToLocalDatabase(dispatch);
+      setIsDataLoaded(false);
+      ToastAndroid.show(
+         `Contenu de l'application mis à jour.`,
+         ToastAndroid.SHORT
+      );
    };
 
    const handleFileSelectionAndImportData = async () => {
-      setIsUploadData(true);
       try {
          const file = await DocumentPicker.getDocumentAsync({
-            type: 'application/json',
+            type: 'application/octet-stream',
          });
-         if (file.type === 'success') {
+         if (isAloeFile(file) && file.type === 'success') {
             const fileContent = await FileSystem.readAsStringAsync(file.uri);
             const parsedJSONData = JSON.parse(fileContent);
-            const parsedJsonToArray = Object.values(parsedJSONData);
-            let [types, thematiques, articles, contenus, tags] =
-               parsedJsonToArray;
+            let { types, thematiques, articles, contenus, tags } =
+               parsedJSONData;
             //store total of article and contenu to storage
             storeDataToLocalStorage(
                'articleTotalInServ',
-               JSON.parse(articles.length ?? 0)
+               JSON.stringify(articles.length ?? 0)
             );
             storeDataToLocalStorage(
                'contenuTotalInServ',
-               JSON.parse(contenus.length ?? 0)
+               JSON.stringify(contenus.length ?? 0)
             );
 
             //type
@@ -115,12 +124,16 @@ export default function ImportedData({ navigation }) {
                'contenu',
                parseStructureDataForContenu(contenus)
             );
-            await getOfflineDatas();
             setIsUploadData(false);
          } else {
+            ToastAndroid.show(
+               `Impossible d'importer ce genre de fichier, importer seulement les fichiers .aloe!`,
+               ToastAndroid.SHORT
+            );
             setIsUploadData(false);
          }
       } catch (error) {
+         console.log(error);
          ToastAndroid.show(
             `Erreur survenu à l'importation du fichier.`,
             ToastAndroid.SHORT
@@ -222,7 +235,10 @@ export default function ImportedData({ navigation }) {
                         width: 250,
                         marginVertical: 5,
                      }}
-                     onPress={() => handleFileSelectionAndImportData()}
+                     onPress={async () => {
+                        setIsUploadData(true);
+                        await handleFileSelectionAndImportData();
+                     }}
                      loading={isUploadData}
                   />
                </View>
@@ -240,8 +256,10 @@ export default function ImportedData({ navigation }) {
                   containerStyle={{
                      marginVertical: 10,
                   }}
-                  onPress={() => {
-                     navigation.goBack();
+                  onPress={async () => {
+                     setIsDataLoaded(true);
+                     await getOfflineDatas();
+                     navigation.navigate('About');
                   }}
                   loading={isDataLoaded}
                />

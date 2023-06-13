@@ -36,6 +36,7 @@ import {
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
    storeStatistiqueToLocalStorage,
+   isAloeFile,
 } from '_utils';
 import styles from './styles';
 
@@ -116,55 +117,60 @@ export default function DownloadData({ navigation }) {
       setIsUploadData(true);
       try {
          const file = await DocumentPicker.getDocumentAsync({
-            type: 'application/json',
+            type: 'application/octet-stream',
          });
-         if (file.type === 'success') {
+
+         if (isAloeFile(file) && file.type === 'success') {
             const fileContent = await FileSystem.readAsStringAsync(file.uri);
             const parsedJSONData = JSON.parse(fileContent);
-            const parsedJsonToArray = Object.values(parsedJSONData);
-            let [type, thematique, article, contenu, tag] = parsedJsonToArray;
+            let { types, thematiques, articles, contenus, tags } =
+               parsedJSONData;
             //store total of article and contenu to storage
             storeDataToLocalStorage(
                'articleTotalInServ',
-               JSON.parse(article.length ?? 0)
+               JSON.stringify(articles.length ?? 0)
             );
             storeDataToLocalStorage(
                'contenuTotalInServ',
-               JSON.parse(contenu.length ?? 0)
+               JSON.stringify(contenus.length ?? 0)
             );
 
             //type
-            insertOrUpdateToDBFunc('database', 'type', type);
+            insertOrUpdateToDBFunc('database', 'type', types);
 
             //thematique
-            insertOrUpdateToDBFunc('database', 'thematique', thematique);
+            insertOrUpdateToDBFunc('database', 'thematique', thematiques);
 
             //tag
-            insertOrUpdateToDBFunc('database', 'tag', tag);
+            insertOrUpdateToDBFunc('database', 'tag', tags);
 
             //article
             insertOrUpdateToDBFunc(
                'database',
                'article',
-               parseStructureDataForArticle(article)
+               parseStructureDataForArticle(articles)
             );
 
             //contenu
             await insertOrUpdateToDBFunc(
                'database',
                'contenu',
-               parseStructureDataForContenu(contenu)
+               parseStructureDataForContenu(contenus)
             );
             setIsUploadData(false);
             storeDataToLocalStorage('isAllDataImported', 'true');
             dispatch(checktatusData(true));
          } else {
+            ToastAndroid.show(
+               `Impossible d'importer ce genre de fichier, importer seulement les fichiers .aloe!`,
+               ToastAndroid.SHORT
+            );
             setIsUploadData(false);
          }
       } catch (error) {
          ToastAndroid.show(
             `Erreur survenu à l'importation du fichier.`,
-            ToastAndroid.SHORT
+            ToastAndroid.LONG
          );
          setIsUploadData(false);
       }
