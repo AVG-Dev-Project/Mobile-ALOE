@@ -67,7 +67,7 @@ export default function Welcome({ navigation }) {
             dispatch(addFavoris(res));
          }
       });
-      fetchAllDataToLocalDatabase(dispatch);
+      await fetchAllDataToLocalDatabase(dispatch);
       fetchStatistique();
       setTimeout(() => {
          setIsDataLoaded(false);
@@ -199,9 +199,9 @@ export default function Welcome({ navigation }) {
                      }}
                      titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
                      buttonStyle={styles.bouttonStyle}
-                     onPress={() => {
-                        getOfflineDatas();
+                     onPress={async () => {
                         setIsDataLoaded(true);
+                        await getOfflineDatas();
                      }}
                      loading={isDataLoaded}
                   />

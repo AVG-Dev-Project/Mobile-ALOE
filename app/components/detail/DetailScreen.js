@@ -704,9 +704,8 @@ export default function Detail({ navigation, route }) {
                   <Text style={styles.value_info_article}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
                      {langueActual === 'fr'
-                        ? contenuMother[0].titre_fr
-                        : contenuMother[0].titre_mg ??
-                          contenuMother[0].titre_fr}
+                        ? oneArticle.titre_fr
+                        : oneArticle.titre_mg ?? oneArticle.titre_fr}
                   </Text>
                </View>
 
@@ -730,9 +729,9 @@ export default function Detail({ navigation, route }) {
                   <Text style={styles.value_info_article}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
                      {langueActual === 'fr'
-                        ? contenuMother[0].section_titre_fr
-                        : contenuMother[0].section_titre_mg ??
-                          contenuMother[0].section_titre_fr}
+                        ? oneArticle.section_titre_fr
+                        : oneArticle.section_titre_mg ??
+                          oneArticle.section_titre_fr}
                   </Text>
                </View>
 

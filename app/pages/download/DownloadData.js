@@ -106,7 +106,7 @@ export default function DownloadData({ navigation }) {
          }
       });
       fetchStatistique();
-      fetchAllDataToLocalDatabase(dispatch);
+      await fetchAllDataToLocalDatabase(dispatch);
       setTimeout(() => {
          setIsDataLoaded(false);
          dispatch(getStarted());
@@ -354,9 +354,9 @@ export default function DownloadData({ navigation }) {
                   containerStyle={{
                      marginVertical: 10,
                   }}
-                  onPress={() => {
+                  onPress={async () => {
                      setIsDataLoaded(true);
-                     getOfflineDatas();
+                     await getOfflineDatas();
                   }}
                   loading={isDataLoaded}
                   disabled={buttonStartDisabled}

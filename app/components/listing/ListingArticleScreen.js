@@ -276,7 +276,7 @@ export default function ListingArticle({ navigation, route }) {
                            ? item.titre_fr
                            : item.titre_mg ?? item.titre_fr}
                      </Text>
-                     {item.chapitre_id && (
+                     {item.chapitre_titre_fr && (
                         <Text
                            style={{ fontSize: 12, width: width - 200 }}
                            numberOfLines={1}
