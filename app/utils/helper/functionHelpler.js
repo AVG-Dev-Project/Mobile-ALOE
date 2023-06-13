@@ -2,7 +2,6 @@
 import { LoiService } from '_utils/services/LoiService';
 import { DoleanceSchema } from '_utils/storage/database';
 import { Dimensions, PixelRatio } from 'react-native';
-import * as Notifications from 'expo-notifications';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -171,40 +170,4 @@ export const heightPercentageToDP = (heightPercent) => {
          : parseFloat(heightPercent);
 
    return PixelRatio.roundToNearestPixel((screenHeight * elemHeight) / 100);
-};
-
-export const pushNotification = async (title, body, data) => {
-   await Notifications.scheduleNotificationAsync({
-      content: {
-         title: title,
-         body: body,
-         data: { data: data ?? '' },
-      },
-      trigger: { seconds: 1 },
-   });
-};
-
-export const checkIfUserHasAllData = (selector) => {
-   const totalArticleInServ = selector(
-      (selector) => selector.loi.statistique.article
-   );
-   const totalContenuInServ = selector(
-      (selector) => selector.loi.statistique.contenu
-   );
-   const articlePresent = selector((selector) => selector.loi.articles);
-   const contenuPresent = selector((selector) => selector.loi.contenus);
-   let intervalId = null;
-   if (
-      contenuPresent.length < totalContenuInServ ||
-      articlePresent.length < totalArticleInServ
-   ) {
-      intervalId = setInterval(() => {
-         pushNotification(
-            'Ressources incomplet',
-            `contenu : ${contenuPresent.length}/${totalContenuInServ} et article ${articlePresent.length}/${totalArticleInServ}`
-         );
-      }, 1800000);
-   } else {
-      clearInterval(intervalId);
-   }
 };
