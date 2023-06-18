@@ -241,20 +241,20 @@ export default function ListingContenu({ navigation }) {
                            : item.type_nom_mg ?? 'Votoantiny' + ' faha '}{' '}
                         {item.numero}
                      </Text>
-                     {item.attachement !== null && (
-                        <Pressable
-                           activeOpacity={0.5}
-                           onPress={() => {
-                              console.log('coucou');
-                           }}
-                        >
-                           <Icon
-                              name="visibility"
-                              color={Colors.greenAvg}
-                              size={25}
-                           />
-                        </Pressable>
-                     )}
+                     <Pressable
+                        activeOpacity={0.5}
+                        onPress={() => {
+                           navigation.navigate(nameNav.overview, {
+                              titleScreen: `Overview`,
+                           });
+                        }}
+                     >
+                        <Icon
+                           name="visibility"
+                           color={Colors.greenAvg}
+                           size={25}
+                        />
+                     </Pressable>
                   </View>
                   <Text
                      style={{
