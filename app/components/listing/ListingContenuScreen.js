@@ -222,38 +222,17 @@ export default function ListingContenu({ navigation }) {
          >
             <View style={styles.view_render}>
                <View>
-                  <View
+                  <Text
                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
+                        fontWeight: 'bold',
+                        fontSize: 18,
                      }}
                   >
-                     <Text
-                        style={{
-                           fontWeight: 'bold',
-                           fontSize: 18,
-                        }}
-                     >
-                        {langueActual === 'fr'
-                           ? item.type_nom_fr + ' n°'
-                           : item.type_nom_mg ?? 'Votoantiny' + ' faha '}{' '}
-                        {item.numero}
-                     </Text>
-                     <Pressable
-                        activeOpacity={0.5}
-                        onPress={() => {
-                           console.log('coucou');
-                        }}
-                     >
-                        <Icon
-                           name="visibility"
-                           color={Colors.greenAvg}
-                           size={25}
-                        />
-                     </Pressable>
-                  </View>
+                     {langueActual === 'fr'
+                        ? item.type_nom_fr + ' n°'
+                        : item.type_nom_mg ?? 'Votoantiny' + ' faha '}{' '}
+                     {item.numero}
+                  </Text>
                   <Text
                      style={{
                         fontSize: heightPercentageToDP(1.5),
