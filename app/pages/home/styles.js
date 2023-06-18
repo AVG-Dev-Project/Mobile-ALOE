@@ -24,9 +24,9 @@ export const styles = StyleSheet.create({
       fontWeight: 'bold',
    },
    flagImg: {
-      height: 30,
-      width: 30,
-      borderRadius: 30,
+      height: 40,
+      width: 40,
+      borderRadius: 50,
    },
    landing_screen: {
       height: heightPercentageToDP(25),

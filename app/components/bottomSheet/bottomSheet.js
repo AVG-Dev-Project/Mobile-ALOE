@@ -90,13 +90,13 @@ const styles = StyleSheet.create({
       justifyContent: 'flex-start',
    },
    text_bottomsheet: {
-      fontSize: 26,
+      fontSize: 24,
       marginLeft: 13,
       fontWeight: 'bold',
    },
    flagImg: {
-      height: 30,
-      width: 30,
-      borderRadius: 28,
+      height: 40,
+      width: 40,
+      borderRadius: 40,
    },
 });
