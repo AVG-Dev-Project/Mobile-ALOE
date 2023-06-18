@@ -4,11 +4,12 @@ import {
    Text,
    TextInput,
    SafeAreaView,
+   Image,
    ToastAndroid,
 } from 'react-native';
 import { Colors } from '_theme/Colors';
 import Lottie from 'lottie-react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Icon, Input, Button } from '@rneui/themed';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { styles } from './styles';
@@ -16,6 +17,7 @@ import {
    insertOrUpdateToDBFunc,
    LoiService,
    checkAndsendMailFromLocalDBToAPI,
+   heightPercentageToDP,
 } from '_utils';
 
 export default function Doleance({ navigation }) {
@@ -49,8 +51,8 @@ export default function Doleance({ navigation }) {
       });
       return showToastDoleance(
          langueActual === 'fr'
-            ? 'Votre mail a été bien et belle envoyé. Merci beaucoup.'
-            : 'Lasa ny mailaka anao. Misaotra tompoko.'
+            ? 'Votre doléance a bien été envoyée. Merci beaucoup.'
+            : 'Nalefa ny fitarainanao. Misaotra tompoko.'
       );
    };
    const sendMailToLocalDB = async (email, obj, message) => {
@@ -62,14 +64,13 @@ export default function Doleance({ navigation }) {
       await insertOrUpdateToDBFunc('database', 'doleance', [newMail]);
       setIsLoadSendingMail(false);
       return showToastDoleance(
-         "Comme vous n'avez pas de connexion, votre mail a été stocké et envoyer automatiquement plutard lorsque votre connexion est activé."
+         "Comme vous n'avez pas accès à Internet, votre doléance est stocké et sera envoyer automatiquement plutard quand vous avezz accès à Internet."
       );
    };
 
    const sendMail = () => {
       setIsLoadSendingMail(true);
       if (isUserNetworkActive && isUserConnectedToInternet) {
-         console.log('mis connex iz d afk ');
          sendMailToAPI(
             emailContent.email,
             emailContent.objet,
@@ -81,7 +82,6 @@ export default function Doleance({ navigation }) {
             message: '',
          });
       } else {
-         console.log('tss connex e');
          sendMailToLocalDB(
             emailContent.email,
             emailContent.objet,
@@ -131,27 +131,29 @@ export default function Doleance({ navigation }) {
    }, [isUserNetworkActive, isUserConnectedToInternet]);
 
    return (
-      <KeyboardAwareScrollView style={{ backgroundColor: Colors.background }}>
+      <KeyboardAwareScrollView
+         enableOnAndroid={true}
+         enableAutomaticScroll={Platform.OS === 'ios'}
+         style={{ backgroundColor: Colors.background }}
+      >
          <SafeAreaView>
             <View style={styles.view_container}>
                <View style={styles.head_banniere}>
-                  <Lottie
-                     autoPlay
-                     ref={animation}
+                  <Image
                      style={styles.banniere_image}
-                     source={require('_images/mail.json')}
+                     source={require('_images/affiche512.png')}
                   />
                   <Text
                      style={{
-                        fontSize: 16,
+                        fontSize: heightPercentageToDP(2),
                         color: Colors.redError,
-                        marginVertical: 12,
                         textAlign: 'center',
+                        marginTop: 8,
                      }}
                   >
                      {langueActual === 'fr'
-                        ? 'NB : Veuillez renseigner tous les champs de cette formulaire pour procéder à votre doléance!'
-                        : "NB : Miangavy mba fenky daholo ny fampidiran-teny alohan'ny handefasanao ny fitarainanao."}
+                        ? 'Veuillez remplir tous les champs du présent formulaire pour déposer votre doléance.'
+                        : 'Fenoy azafady ny saha rehetra mba hametrahana ny fitarainana.'}
                   </Text>
                </View>
                <View style={styles.content_form}>
@@ -175,8 +177,8 @@ export default function Doleance({ navigation }) {
                      value={emailContent.objet}
                      placeholder={
                         langueActual === 'fr'
-                           ? "Objet de l'email : "
-                           : 'Foto-dresaka ny mailakao : '
+                           ? 'Objet de doléance : '
+                           : 'Foto-dresaka : '
                      }
                      onChangeText={(text) =>
                         handleChangeEmailContent('objet', text)

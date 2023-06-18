@@ -1,13 +1,12 @@
 import {
    View,
    Text,
-   StyleSheet,
-   Image,
    TextInput,
    ActivityIndicator,
    TouchableOpacity,
    ToastAndroid,
    useWindowDimensions,
+   ImageBackground,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { FlashList } from '@shopify/flash-list';
@@ -20,6 +19,8 @@ import { Colors } from '_theme/Colors';
 import {
    parseDataArticleLazyLoading,
    filterArticleToListByContenu,
+   widthPercentageToDP,
+   heightPercentageToDP,
    fetchArticlesByContenuToApi,
 } from '_utils';
 import {
@@ -28,33 +29,35 @@ import {
 } from '_utils/redux/actions/action_creators';
 
 const filterGlobal = (langueActual, array, query) => {
-   let res = array;
+   let res = query === null ? [] : array;
    if (query) {
-      langueActual === 'fr'
-         ? (res = res.filter(
-              (_article) =>
-                 _article.contenu_fr
-                    ?.split('________________')[0]
-                    .toLowerCase()
-                    .includes(query.toLowerCase()) ||
-                 _article.chapitre_titre_fr
-                    ?.toLowerCase()
-                    .includes(query.toLowerCase()) ||
-                 _article.titre_fr?.toLowerCase().includes(query.toLowerCase())
-           ))
-         : (res = res.filter(
-              (_article) =>
-                 _article.contenu_mg
-                    ?.split('________________')[0]
-                    .toLowerCase()
-                    .includes(query.toLowerCase()) ||
-                 _article.chapitre_titre_mg
-                    ?.toLowerCase()
-                    .includes(query.toLowerCase()) ||
-                 _article.titre_mg?.toLowerCase().includes(query.toLowerCase())
-           ));
+      if (langueActual === 'fr') {
+         res = array.filter(
+            (_article) =>
+               _article.contenu_fr
+                  ?.split('________________')[0]
+                  .toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _article.chapitre_titre_fr
+                  ?.toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _article.titre_fr?.toLowerCase().includes(query.toLowerCase())
+         );
+      }
+      if (langueActual === 'mg') {
+         res = array.filter(
+            (_article) =>
+               _article.contenu_mg
+                  ?.split('________________')[0]
+                  .toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _article.chapitre_titre_mg
+                  ?.toLowerCase()
+                  .includes(query.toLowerCase()) ||
+               _article.titre_mg?.toLowerCase().includes(query.toLowerCase())
+         );
+      }
    }
-
    return res;
 };
 
@@ -154,7 +157,7 @@ export default function ListingArticle({ navigation, route }) {
          }
       } else {
          ToastAndroid.show(
-            `Pas de connexion, impossible d'obtenir des datas suppl!`,
+            `Pas de connexion, impossible d'obtenir des données supplémentaire`,
             ToastAndroid.SHORT
          );
          return;
@@ -226,36 +229,28 @@ export default function ListingArticle({ navigation, route }) {
             onPress={() => {
                navigation.navigate(nameNav.detailPage, {
                   titleScreen: `${
-                     langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '
+                     langueActual === 'fr' ? 'Article n°' : 'Andininy faha '
                   } ${item.numero}`,
                   articleToViewDetail: item,
                });
             }}
          >
             <View style={styles.view_render}>
-               <Image
-                  source={require('_images/abstract.jpg')}
+               <ImageBackground
+                  source={require('_images/abstract_3.jpg')}
                   blurRadius={5}
                   style={{
                      width: width < 380 ? 100 : 130,
                      height: 160,
+                  }}
+                  imageStyle={{
                      borderRadius: 16,
                   }}
-               />
-               <View
-                  style={[
-                     StyleSheet.absoluteFillObject,
-                     styles.maskImageArticle,
-                  ]}
-               ></View>
-               <Text
-                  style={[
-                     StyleSheet.absoluteFillObject,
-                     styles.number_of_article,
-                  ]}
                >
-                  {item.numero}
-               </Text>
+                  <View style={styles.maskImageArticle}>
+                     <Text style={styles.number_of_article}>{item.numero}</Text>
+                  </View>
+               </ImageBackground>
                <View
                   style={{
                      marginLeft: 8,
@@ -266,16 +261,14 @@ export default function ListingArticle({ navigation, route }) {
                >
                   <View>
                      <Text style={{ fontWeight: 'bold', fontSize: 18 }}>
-                        {langueActual === 'fr'
-                           ? 'Article n°'
-                           : 'Lahatsoratra faha'}{' '}
+                        {langueActual === 'fr' ? 'Article n°' : 'Andininy faha'}{' '}
                         {item.numero}
                      </Text>
                      <Text
                         style={{
                            fontSize: 12,
                            textDecorationLine: 'underline',
-                           width: width - 180,
+                           width: widthPercentageToDP(60),
                         }}
                         numberOfLines={1}
                      >
@@ -283,14 +276,14 @@ export default function ListingArticle({ navigation, route }) {
                            ? item.titre_fr
                            : item.titre_mg ?? item.titre_fr}
                      </Text>
-                     {item.chapitre_id && (
+                     {item.chapitre_titre_fr && (
                         <Text
                            style={{ fontSize: 12, width: width - 200 }}
                            numberOfLines={1}
                         >
                            {langueActual === 'fr'
                               ? `Chapitre ${item.chapitre_numero ?? ''}`
-                              : `Lohateny ${item.chapitre_numero ?? ''}`}
+                              : `Toko faha ${item.chapitre_numero ?? ''}`}
                            :{' '}
                            {langueActual === 'fr'
                               ? item.chapitre_titre_fr
@@ -301,16 +294,16 @@ export default function ListingArticle({ navigation, route }) {
                   </View>
                   <Text
                      style={{
-                        fontSize: width < 380 ? 10 : 16,
+                        fontSize: heightPercentageToDP(2),
                         flex: 2,
-                        width: 210,
+                        width: widthPercentageToDP(60),
                      }}
                      numberOfLines={4}
                   >
                      {langueActual === 'fr'
                         ? item.contenu_fr?.split('________________')[0]
                         : item.contenu_mg?.split('________________')[0] ??
-                          'Tsy misy dikan-teny malagasy ito lahatsoratra iray ito.'}
+                          'Tsy misy dikan-teny malagasy ito andininy iray ito.'}
                      {' ...'}
                   </Text>
                   <View
@@ -343,22 +336,22 @@ export default function ListingArticle({ navigation, route }) {
                         {item.isFavorite ? (
                            <Text
                               style={{
-                                 fontSize: 14,
+                                 fontSize: widthPercentageToDP(3.5),
                                  marginLeft: 2,
                               }}
                            >
-                              {langueActual === 'fr' ? 'Favoris' : 'Ankafizina'}
+                              {langueActual === 'fr' ? 'Favoris' : 'Safidy'}
                            </Text>
                         ) : (
                            <Text
                               style={{
-                                 fontSize: 14,
+                                 fontSize: widthPercentageToDP(3.5),
                                  marginLeft: 2,
                               }}
                            >
                               {langueActual === 'fr'
                                  ? 'Pas dans favoris'
-                                 : 'Tsy mbola anaty ankafizina'}
+                                 : 'Tsy safidy'}
                            </Text>
                         )}
                      </View>
@@ -394,8 +387,8 @@ export default function ListingArticle({ navigation, route }) {
                keyboardType="default"
                placeholder={
                   langueActual === 'fr'
-                     ? 'Entrer le mot de recherche ...'
-                     : 'Ampidiro ny teny hotadiavina...'
+                     ? 'Entrer un mot-clé...'
+                     : 'Teny hotadiavina...'
                }
                value={valueForSearch}
                onChangeText={(text) => {
@@ -434,8 +427,8 @@ export default function ListingArticle({ navigation, route }) {
                         }}
                      >
                         {langueActual === 'fr'
-                           ? "Pas d'articles"
-                           : 'Tsy misy lahatsoratra'}
+                           ? 'Aucun article'
+                           : 'Tsy misy andininy'}
                      </Text>
                   </View>
                }

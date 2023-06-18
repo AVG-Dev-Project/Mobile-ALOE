@@ -1,7 +1,8 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+/*import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Colors } from '_theme/Colors';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { widthPercentageToDP } from '_utils';
 
 export default function HeaderGlobal({ bottomSheetRef }) {
    //all data
@@ -16,9 +17,9 @@ export default function HeaderGlobal({ bottomSheetRef }) {
    };
 
    return (
-      <View style={styles.container}>
+      <View style={styles.container_header}>
          <Text style={styles.titre_salutation}>
-            {t('bienvenue_header_text')} !
+            {t('bienvenue_header_text')}
          </Text>
          <TouchableOpacity
             activeOpacity={0.7}
@@ -38,8 +39,10 @@ export default function HeaderGlobal({ bottomSheetRef }) {
 }
 
 const styles = StyleSheet.create({
-   container: {
-      marginVertical: 5,
+   container_header: {
+      height: 30,
+      marginTop: 5,
+      marginBottom: 10,
       marginHorizontal: 10,
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -47,7 +50,7 @@ const styles = StyleSheet.create({
    },
    titre_salutation: {
       color: Colors.black,
-      fontSize: 26,
+      fontSize: widthPercentageToDP(6.5),
       fontWeight: 'bold',
    },
    flagImg: {
@@ -56,3 +59,4 @@ const styles = StyleSheet.create({
       borderRadius: 30,
    },
 });
+*/

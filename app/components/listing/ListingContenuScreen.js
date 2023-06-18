@@ -3,6 +3,7 @@ import {
    Text,
    Dimensions,
    ToastAndroid,
+   TouchableOpacity,
    ActivityIndicator,
    Platform,
    Pressable,
@@ -17,16 +18,20 @@ import {
    fetchContenusToApi,
    parseDataContenuLazyLoading,
    parsingTags,
+   widthPercentageToDP,
+   heightPercentageToDP,
 } from '_utils';
 import { styles } from './stylesContenu';
 import { Icon } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
 import { getAllContenus } from '_utils/redux/actions/action_creators';
+import { useTranslation } from 'react-i18next';
 
 export default function ListingContenu({ navigation }) {
    //all data
    const dispatch = useDispatch();
+   const { t } = useTranslation();
    const langueActual = useSelector(
       (selector) => selector.fonctionnality.langue
    );
@@ -202,7 +207,7 @@ export default function ListingContenu({ navigation }) {
    //all logics
    const _renderItem = useCallback(({ item }) => {
       return (
-         <Pressable
+         <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => {
                navigation.navigate(nameNav.listArticle, {
@@ -230,8 +235,7 @@ export default function ListingContenu({ navigation }) {
                   </Text>
                   <Text
                      style={{
-                        fontSize:
-                           Dimensions.get('window').height < 700 ? 10 : 12,
+                        fontSize: heightPercentageToDP(1.5),
                         textTransform: 'lowercase',
                      }}
                   >
@@ -243,7 +247,7 @@ export default function ListingContenu({ navigation }) {
                </View>
                <Text
                   style={{
-                     fontSize: Dimensions.get('window').height < 700 ? 14 : 16,
+                     fontSize: heightPercentageToDP(2),
                      flex: 2,
                      marginBottom: 18,
                   }}
@@ -260,7 +264,7 @@ export default function ListingContenu({ navigation }) {
                   }}
                >
                   <Text style={{ textDecorationLine: 'underline' }}>
-                     Thématique et Type
+                     {t('listing.theme_and_type')}
                   </Text>
                   <Text
                      style={{
@@ -288,7 +292,7 @@ export default function ListingContenu({ navigation }) {
                   {parsingTags(item.tag).length > 0 && (
                      <View>
                         <Text style={{ textDecorationLine: 'underline' }}>
-                           Tags
+                           {t('listing.categorie')}
                         </Text>
                         <Text numberOfLines={2}>
                            *{' '}
@@ -335,7 +339,7 @@ export default function ListingContenu({ navigation }) {
                   </View>
                </View>
             </View>
-         </Pressable>
+         </TouchableOpacity>
       );
    }, []);
 
@@ -349,13 +353,14 @@ export default function ListingContenu({ navigation }) {
             extraData={contenuList}
             key={'_'}
             keyExtractor={_idKeyExtractor}
+            removeClippedSubviews={true}
+            nestedScrollEnabled={true}
             renderItem={_renderItem}
             getItemLayout={(data, index) => ({
                length: data.length,
                offset: data.length * index,
                index,
             })}
-            contentContainerStyle={{ paddingBottom: 10 }}
             onEndReachedThreshold={0.5}
             estimatedItemSize={100}
             onEndReached={() => {

@@ -135,7 +135,6 @@ export const checkAndsendMailFromLocalDBToAPI = async () => {
          LoiService.sendMailToServ(mail.email, mail.objet, mail.contenu);
          return DoleanceSchema.destroy(mail.id);
       });
-      console.log('Mail envoyé en background');
    }
    return;
 };
@@ -143,6 +142,25 @@ export const checkAndsendMailFromLocalDBToAPI = async () => {
 export const parsingTags = (jsonContent) => {
    let res = JSON.parse(jsonContent);
    return res;
+};
+
+export const isAloeFile = (file) => {
+   if (!file) {
+      return;
+   }
+
+   if (file.mimeType !== 'application/octet-stream') {
+      return false;
+   }
+
+   let lastDotIndex = file.name?.lastIndexOf('.');
+   let extensionOfFile = file.name?.slice(lastDotIndex + 1); //for delete "." and conserve aloe
+
+   if (extensionOfFile === 'aloe') {
+      return true;
+   }
+
+   return false;
 };
 
 export const widthPercentageToDP = (widthPercent) => {

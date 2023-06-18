@@ -1,5 +1,6 @@
 import { Colors } from '_theme/Colors';
 import { StyleSheet, Dimensions } from 'react-native';
+import { widthPercentageToDP, heightPercentageToDP } from '_utils';
 
 export const styles = StyleSheet.create({
    view_container: {
@@ -8,17 +9,21 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
       backgroundColor: Colors.background,
    },
+   info_header: {
+      display: 'flex',
+      flexDirection: 'column',
+      marginLeft: 20,
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+   },
    map: {
-      width: Dimensions.get('window').width - 50,
-      height:
-         Dimensions.get('window').height < 700
-            ? Dimensions.get('window').height - 450
-            : Dimensions.get('window').height - 600,
+      width: widthPercentageToDP(85),
+      height: heightPercentageToDP(30),
    },
    view_head_information: {
       display: 'flex',
       flexDirection: 'row',
-      marginTop: Dimensions.get('window').width < 370 ? 60 : 80,
+      marginTop: heightPercentageToDP(10),
       marginBottom: 30,
    },
    view_adresse: {

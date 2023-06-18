@@ -4,6 +4,7 @@ import {
    View,
    Image,
    TouchableOpacity,
+   ScrollView,
    useWindowDimensions,
 } from 'react-native';
 import styles from './styles';
@@ -26,15 +27,13 @@ import {
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
    storeStatistiqueToLocalStorage,
+   s,
 } from '_utils';
 
 export default function Welcome({ navigation }) {
    //all datas
    const { width } = useWindowDimensions();
    const dispatch = useDispatch();
-   const langueActual = useSelector(
-      (selector) => selector.fonctionnality.langue
-   );
    const isUserNetworkActive = useSelector(
       (selector) => selector.fonctionnality.isNetworkActive
    );
@@ -68,7 +67,7 @@ export default function Welcome({ navigation }) {
             dispatch(addFavoris(res));
          }
       });
-      fetchAllDataToLocalDatabase(dispatch);
+      await fetchAllDataToLocalDatabase(dispatch);
       fetchStatistique();
       setTimeout(() => {
          setIsDataLoaded(false);
@@ -109,47 +108,75 @@ export default function Welcome({ navigation }) {
    }, [isUserNetworkActive, isUserConnectedToInternet]);
 
    return (
-      <View style={styles.view_container_welcome}>
-         <Image
-            style={styles.images_welcome}
-            source={require('_images/aloe.png')}
-         />
-         <View>
+      <ScrollView style={styles.view_container_welcome}>
+         <View style={{ alignItems: 'center' }}>
+            <Image
+               style={styles.images_welcome}
+               source={require('_images/aloe.png')}
+            />
             <Text
                style={{
-                  fontSize: width < 370 ? 28 : 34,
+                  fontSize: width < 370 ? 20 : 30,
                   fontWeight: 'bold',
                   textAlign: 'center',
                }}
             >
-               {langueActual === 'fr'
-                  ? 'Bienvenue sur ALOE'
-                  : "Tongasoa eto amin'ny ALOE"}
-            </Text>
-            <Text style={{ textAlign: 'center', marginVertical: 10 }}>
-               ALOE ou{' '}
-               <Text
-                  style={{
-                     fontSize: 16,
-                     fontWeight: 'bold',
-                     color: Colors.greenAvg,
-                  }}
-               >
-                  Accès sur les LOis Environnementales
-               </Text>{' '}
-               est application mobile où vous trouverez tous les lois forêstiers
-               ici à Madagascar que vous pouvez consulter à tout moment. Avec ou
-               sans internet, vous pouvez la consulter avec toute tranquilité.
+               Bienvenue sur ALOE
             </Text>
             {isDataAvailable ? (
+               <Text style={{ textAlign: 'center', marginVertical: 5 }}>
+                  ALOE ou{' '}
+                  <Text
+                     style={{
+                        fontSize: 16,
+                        fontWeight: 'bold',
+                        color: Colors.greenAvg,
+                     }}
+                  >
+                     Accès sur les LOis Environnementales
+                  </Text>{' '}
+                  est une application mobile, accessible avec ou sans internet,
+                  qui regroupe les textes de lois environnementales et
+                  anticorruption pour contribuer à la réduction du trafic
+                  d'espèces sauvages afin d'améliorer la gouvernance des
+                  ressources naturelles.
+               </Text>
+            ) : (
+               <>
+                  <Text style={{ textAlign: 'center', marginVertical: 5 }}>
+                     Inspiré par le Ministère de la Justice et le Ministère de
+                     l'environnement et du développement durable, il a été
+                     confirmé qu'il est indispensable de donner à tous les
+                     acteurs de la Chaine de Justice environnementale, des
+                     outils de travail.
+                  </Text>
+                  <Text style={{ textAlign: 'center', marginBottom: 5 }}>
+                     Dans cette optique, ALOE ou{' '}
+                     <Text
+                        style={{
+                           fontSize: 16,
+                           fontWeight: 'bold',
+                           color: Colors.greenAvg,
+                        }}
+                     >
+                        Accès sur les LOis Environnementales
+                     </Text>{' '}
+                     est une application mobile, accessible avec ou sans
+                     Internet, qui regroupe les textes de lois environnementales
+                     et anticorruption pour contribuer à la réduction du trafic
+                     d'espèces sauvages afin d'améliorer la gouvernance des
+                     ressources naturelles.
+                  </Text>
+               </>
+            )}
+            {isDataAvailable ? (
                <Text style={{ textAlign: 'center' }}>
-                  Les lois sont prêts, vous pouvez commencer à lire. Vous pouvez
-                  cliquer sur la flèche droite...
+                  Cliquez sur la flèche droite pour démarrer.
                </Text>
             ) : (
                <Text style={{ textAlign: 'center' }}>
-                  Pour commencer cliquez sur le bouton ci-dessous pour
-                  télecharger ou importer les données
+                  Pour démarrer, cliquez sur le bouton suivant pour télecharger
+                  ou importer les données.
                </Text>
             )}
          </View>
@@ -161,49 +188,6 @@ export default function Welcome({ navigation }) {
                justifyContent: 'space-evenly',
             }}
          >
-            {/*<View style={styles.view_button_arrondi}>
-               <TouchableOpacity
-                  style={styles.boutton_arrondi}
-                  activeOpacity={0.8}
-                  onPress={() => {
-                     navigation.navigate(nameNav.downloadData);
-                  }}
-               >
-                  <Icon
-                     name={'cloud-download'}
-                     color={Colors.white}
-                     size={34}
-                  />
-               </TouchableOpacity>
-            </View>
-
-            {(isAllDataAlsoUploaded || isAllDataAlsoDownloaded) && (
-               <View style={styles.view_button_arrondi}>
-                  <Button
-                     icon={{
-                        name: 'arrow-forward',
-                        type: 'material',
-                        size: 34,
-                        color: Colors.white,
-                     }}
-                     titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
-                     buttonStyle={{
-                        backgroundColor: Colors.greenAvg,
-                        margin: 8,
-                        minWidth: width < 370 ? 70 : 70,
-                        minHeight: 70,
-                        borderRadius: 60,
-                     }}
-                     containerStyle={{}}
-                     onPress={() => {
-                        getOfflineDatas();
-                        setIsDataLoaded(true);
-                     }}
-                     loading={isDataLoaded}
-                  />
-               </View>
-            )}*/}
-
             {isDataAvailable ? (
                <View style={styles.view_button_arrondi}>
                   <Button
@@ -214,17 +198,10 @@ export default function Welcome({ navigation }) {
                         color: Colors.white,
                      }}
                      titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
-                     buttonStyle={{
-                        backgroundColor: Colors.greenAvg,
-                        margin: 8,
-                        minWidth: width < 370 ? 70 : 70,
-                        minHeight: 70,
-                        borderRadius: 60,
-                     }}
-                     containerStyle={{}}
-                     onPress={() => {
-                        getOfflineDatas();
+                     buttonStyle={styles.bouttonStyle}
+                     onPress={async () => {
                         setIsDataLoaded(true);
+                        await getOfflineDatas();
                      }}
                      loading={isDataLoaded}
                   />
@@ -247,20 +224,15 @@ export default function Welcome({ navigation }) {
                </View>
             )}
          </View>
-         <View
-            style={{
-               display: 'flex',
-               flexDirection: 'row',
-               alignItems: 'center',
-               justifyContent: 'center',
-               width: '100%',
-            }}
-         >
+         <View style={styles.viewPartenaire}>
+            <Text style={styles.labelDescriptionLogoUsaid}>
+               Sous l'appui technique et financier de{' '}
+            </Text>
             <Image
                style={styles.logo_image}
                source={require('_images/usaid.png')}
             />
          </View>
-      </View>
+      </ScrollView>
    );
 }

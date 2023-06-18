@@ -1,5 +1,6 @@
 import { Colors } from '_theme/Colors';
 import { StyleSheet, Dimensions } from 'react-native';
+import { heightPercentageToDP, widthPercentageToDP } from '_utils';
 
 let widthDevice = Dimensions.get('window').width;
 let heightDevice = Dimensions.get('window').height;
@@ -10,6 +11,12 @@ export const styles = StyleSheet.create({
    image_bg_detail: {
       flex: 1,
       justifyContent: 'center',
+   },
+   content_article_view: {
+      height:
+         heightDevice < 800
+            ? heightPercentageToDP(75)
+            : heightPercentageToDP(80),
    },
    info_in_landing_detail: {
       marginTop: 5,
@@ -31,12 +38,12 @@ export const styles = StyleSheet.create({
    },
    description_section: {
       paddingHorizontal: 24,
-      height: heightDevice < 800 ? heightDevice - 310 : heightDevice - 350,
+      height: heightDevice - 280,
       backgroundColor: Colors.white,
    },
    view_round_button_detail_article: {
       position: 'absolute',
-      top: -22,
+      top: heightPercentageToDP(-4.5),
       right: 14,
       display: 'flex',
       flexDirection: 'row',
@@ -67,14 +74,13 @@ export const styles = StyleSheet.create({
       borderRadius: 52,
    },
    fab_button: {
-      height: 150,
       flexDirection: 'column',
-      paddingVertical: 5,
       flexGrow: 1,
+      width: widthPercentageToDP(100),
    },
    view_content_fab_button: {
-      width: '90%',
-      marginTop: 10,
+      width: widthPercentageToDP(90),
+      marginBottom: heightPercentageToDP(2.5),
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-evenly',
@@ -83,9 +89,6 @@ export const styles = StyleSheet.create({
       backgroundColor: '#f2f2f2',
    },
    view_in_bottomsheet: {
-      display: 'flex',
-      flexDirection: 'column',
-      flex: 1,
       backgroundColor: '#f2f2f2',
       marginHorizontal: 8,
       paddingHorizontal: 18,
@@ -99,6 +102,7 @@ export const styles = StyleSheet.create({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'flex-end',
-      marginRight: 28,
+      marginRight: widthPercentageToDP(6.5),
+      marginBottom: heightPercentageToDP(1),
    },
 });

@@ -1,20 +1,26 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import { Colors } from '_theme/Colors';
+import { widthPercentageToDP, heightPercentageToDP } from '_utils';
 
 const styles = StyleSheet.create({
    view_container_welcome: {
       flex: 1,
       backgroundColor: Colors.white,
-      paddingHorizontal: 20,
-      alignItems: 'center',
+      paddingHorizontal: 4,
    },
    images_welcome: {
-      height: Dimensions.get('window').height - 430,
-      width: Dimensions.get('window').width - 160,
+      height:
+         Dimensions.get('window').height < 800
+            ? heightPercentageToDP(30)
+            : heightPercentageToDP(40),
+      width:
+         Dimensions.get('window').width < 800
+            ? widthPercentageToDP(50)
+            : widthPercentageToDP(60),
    },
    logo_image: {
-      height: 50,
-      width: Dimensions.get('window').height < 700 ? 130 : 150,
+      height: heightPercentageToDP(8),
+      width: widthPercentageToDP(48),
    },
    view_button_arrondi: {
       borderWidth: 2,
@@ -22,12 +28,31 @@ const styles = StyleSheet.create({
       borderRadius: 60,
       marginVertical: 20,
    },
+   bouttonStyle: {
+      backgroundColor: Colors.greenAvg,
+      padding: 20,
+      margin: 6,
+      borderRadius: 60,
+      width: 75,
+      height: 75,
+   },
    boutton_arrondi: {
       backgroundColor: Colors.greenAvg,
       padding: 20,
       margin: 6,
       borderRadius: 60,
-      minWidth: 34,
+      minWidth: widthPercentageToDP(12),
+   },
+   viewPartenaire: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%',
+   },
+   labelDescriptionLogoUsaid: {
+      fontSize: 12,
+      fontWeight: 'bold',
    },
 });
 

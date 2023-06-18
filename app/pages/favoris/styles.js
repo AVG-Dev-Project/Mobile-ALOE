@@ -1,13 +1,12 @@
 import { Colors } from '_theme/Colors';
 import { StyleSheet, Dimensions } from 'react-native';
+import { heightPercentageToDP, widthPercentageToDP } from '_utils';
 
-const widthDevice = Dimensions.get('window').width;
 export const styles = StyleSheet.create({
    view_container: {
       flex: 1,
-      paddingTop: 20,
       marginBottom: 70,
-      paddingHorizontal: 15,
+      paddingHorizontal: 5,
       backgroundColor: Colors.background,
    },
    view_render: {
@@ -21,7 +20,7 @@ export const styles = StyleSheet.create({
    },
    landing_screen: {
       marginTop: 8,
-      height: widthDevice < 370 ? 160 : 200,
+      height: heightPercentageToDP(25),
       borderRadius: 25,
       backgroundColor: Colors.greenAvg,
       display: 'flex',
@@ -30,7 +29,7 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
    },
    text_landing_screen: {
-      fontSize: widthDevice < 370 ? 18 : 22,
+      fontSize: widthPercentageToDP(5),
       color: Colors.white,
       fontWeight: 'bold',
    },
@@ -51,16 +50,16 @@ export const styles = StyleSheet.create({
       borderRadius: 62,
    },
    maskImageArticle: {
+      flex: 1,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
       backgroundColor: 'rgba(0, 0, 0, 0.2)',
       borderRadius: 18,
-      height: 170,
-      width: Dimensions.get('window').width < 380 ? 100 : 140,
    },
    number_of_article: {
       fontWeight: 'bold',
       color: Colors.white,
       fontSize: Dimensions.get('window').width < 380 ? 40 : 44,
-      marginVertical: 50,
-      marginHorizontal: Dimensions.get('window').width < 380 ? 30 : 50,
    },
 });

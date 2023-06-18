@@ -7,7 +7,7 @@ import {
    getAllContenus,
    updateTagsChoice,
    getAllTags,
-   dataForStatistique
+   dataForStatistique,
 } from '../actions/action_creators';
 
 import { storeFavoriteIdToLocalStorage } from '../../storage/asyncStorage';
@@ -22,8 +22,8 @@ const initialState = {
    tags: [],
    statistique: {
       article: 0,
-      contenu: 0
-   }
+      contenu: 0,
+   },
 };
 
 export const loiReducer = (state = initialState, action) => {
@@ -95,13 +95,13 @@ export const loiReducer = (state = initialState, action) => {
          }
       case dataForStatistique().type:
          return produce(state, (draft) => {
-            if(action.payload.statsFor === 'article'){
+            if (action.payload.statsFor === 'article') {
                draft.statistique.article = action.payload.value;
             }
-            if(action.payload.statsFor === 'contenu'){
+            if (action.payload.statsFor === 'contenu') {
                draft.statistique.contenu = action.payload.value;
             }
-         })
+         });
 
       default:
          return state;

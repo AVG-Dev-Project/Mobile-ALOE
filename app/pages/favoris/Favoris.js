@@ -6,22 +6,26 @@ import {
    StyleSheet,
    ToastAndroid,
    TouchableOpacity,
+   ImageBackground,
 } from 'react-native';
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
    nameStackNavigation as nameNav,
+   widthPercentageToDP,
+   heightPercentageToDP,
    checkAndsendMailFromLocalDBToAPI,
 } from '_utils';
 import { styles } from './styles';
+import { useTranslation } from 'react-i18next';
 import { Icon } from '@rneui/themed';
 import { FlashList } from '@shopify/flash-list';
 import { useSelector, useDispatch } from 'react-redux';
-import HeaderGlobal from '_components/header/HeaderGlobal';
 import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
 import { Colors } from '_theme/Colors';
 import { addFavoris } from '_utils/redux/actions/action_creators';
 
-export default function Favoris({ navigation, route }) {
+export default function Favoris({ navigation }) {
+   const { t } = useTranslation();
    const listOfIdFavorites = useSelector((selector) => selector.loi.favoris);
    const allArticles = useSelector((selector) => selector.loi.articles);
    const dispatch = useDispatch();
@@ -64,35 +68,28 @@ export default function Favoris({ navigation, route }) {
             onPress={() => {
                navigation.navigate(nameNav.detailPage, {
                   titleScreen: `${
-                     langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '
+                     langueActual === 'fr' ? 'Article n°' : 'Andininy faha'
                   } ${item.numero}`,
                   articleToViewDetail: item,
                });
             }}
          >
             <View style={styles.view_render}>
-               <Image
-                  source={require('_images/abstract.jpg')}
+               <ImageBackground
+                  source={require('_images/abstract_3.jpg')}
+                  blurRadius={5}
                   style={{
-                     width: width < 380 ? 100 : 140,
-                     height: 170,
+                     width: width < 380 ? 100 : 130,
+                     height: 160,
+                  }}
+                  imageStyle={{
                      borderRadius: 16,
                   }}
-               />
-               <View
-                  style={[
-                     StyleSheet.absoluteFillObject,
-                     styles.maskImageArticle,
-                  ]}
-               ></View>
-               <Text
-                  style={[
-                     StyleSheet.absoluteFillObject,
-                     styles.number_of_article,
-                  ]}
                >
-                  {item.numero}
-               </Text>
+                  <View style={styles.maskImageArticle}>
+                     <Text style={styles.number_of_article}>{item.numero}</Text>
+                  </View>
+               </ImageBackground>
                <View
                   style={{
                      marginLeft: 12,
@@ -110,33 +107,41 @@ export default function Favoris({ navigation, route }) {
                               .numero}
                      </Text>
                      <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
-                        {langueActual === 'fr' ? 'Article n°' : 'Lahatsoratra '}{' '}
+                        {langueActual === 'fr'
+                           ? 'Article n°'
+                           : `Andininy ${
+                                item.numero === 1 ? '' : 'faha '
+                             }`}{' '}
                         {item.numero}
                      </Text>
-                     <Text
-                        style={{
-                           fontSize: width < 370 ? 10 : 14,
-                           textDecorationLine: 'underline',
-                        }}
-                        numberOfLines={1}
-                     >
-                        {langueActual === 'fr' ? item.titre_fr : item.titre_mg}
-                     </Text>
+                     {item.titre_fr && (
+                        <Text
+                           style={{
+                              fontSize: heightPercentageToDP(1.5),
+                              textDecorationLine: 'underline',
+                              width: widthPercentageToDP(60),
+                           }}
+                           numberOfLines={1}
+                        >
+                           {langueActual === 'fr'
+                              ? item.titre_fr
+                              : item.titre_mg}
+                        </Text>
+                     )}
                   </View>
                   <Text
                      style={{
-                        fontSize: width < 380 ? 10 : 16,
-                        flex: 2,
-                        width: 210,
                         marginTop: 8,
+                        fontSize: heightPercentageToDP(2),
+                        flex: 2,
+                        width: widthPercentageToDP(60),
                      }}
                      numberOfLines={4}
                   >
                      {langueActual === 'fr'
                         ? item.contenu_fr?.split('________________')[0]
                         : item.contenu_mg?.split('________________')[0] ??
-                          'Tsy misy dikan-teny malagasy ito lahatsoratra iray ito.'}
-                     {' ...'}
+                          item.contenu_fr?.split('________________')[0]}
                   </Text>
                   <View
                      style={{
@@ -159,7 +164,7 @@ export default function Favoris({ navigation, route }) {
                         />
                         <Text
                            style={{
-                              fontSize: 14,
+                              fontSize: widthPercentageToDP(3.5),
                               marginLeft: 2,
                            }}
                         >
@@ -209,18 +214,23 @@ export default function Favoris({ navigation, route }) {
          <FlashList
             ListHeaderComponent={
                <View>
-                  <View style={styles.head_content}>
-                     <HeaderGlobal
-                        navigation={navigation}
-                        bottomSheetRef={bottomSheetRef}
-                     />
+                  <View
+                     style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        marginTop: 12,
+                        marginBottom: 8,
+                     }}
+                  >
+                     <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+                        {t('favoris.title_page')}
+                     </Text>
                   </View>
 
-                  <View style={styles.landing_screen}>
+                  {/*<View style={styles.landing_screen}>
                      <Text style={styles.text_landing_screen}>
-                        {langueActual === 'fr'
-                           ? 'Vos favoris'
-                           : 'Ireo ankafizinao'}
+                        {t('favoris.header_landing')}
                      </Text>
                      <View style={styles.content_in_landing_screen}>
                         <Image
@@ -231,17 +241,10 @@ export default function Favoris({ navigation, route }) {
                            style={{
                               display: 'flex',
                               flexDirection: 'column',
-                              alignItems: 'flex-start',
+                              justifyContent: 'center',
                            }}
                         >
-                           <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                              {langueActual === 'fr' ? 'Favoris' : 'Ankafizina'}
-                           </Text>
-                           <Text>
-                              {langueActual === 'fr'
-                                 ? 'Regardez-les encore'
-                                 : 'Jereo ihany izy ireo'}{' '}
-                           </Text>
+                           <Text>{t('favoris.text_landing')}</Text>
                         </View>
                         <Icon
                            name={'favorite'}
@@ -249,7 +252,7 @@ export default function Favoris({ navigation, route }) {
                            size={38}
                         />
                      </View>
-                  </View>
+                        </View>*/}
                </View>
             }
             ListEmptyComponent={
@@ -270,9 +273,7 @@ export default function Favoris({ navigation, route }) {
                         fontSize: width < 370 ? 18 : 30,
                      }}
                   >
-                     {langueActual === 'fr'
-                        ? "Vous n'avez pas de favoris"
-                        : 'Tsy misy ny ankafizinao'}
+                     {t('favoris.no_favorite')}
                   </Text>
                </View>
             }

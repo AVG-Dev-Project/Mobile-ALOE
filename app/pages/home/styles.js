@@ -1,22 +1,36 @@
 import { Colors } from '_theme/Colors';
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { heightPercentageToDP, widthPercentageToDP } from '_utils';
 
-let widthDevice = Dimensions.get('window').width;
 export const styles = StyleSheet.create({
    view_container: {
       flex: 1,
       marginTop: 8,
-      marginBottom: 80,
+      marginBottom: heightPercentageToDP(12),
       paddingHorizontal: 5,
       backgroundColor: Colors.background,
    },
-   head_content: {
+   container_header: {
       height: 45,
-      marginVertical: 10,
+      marginBottom: 5,
+      marginHorizontal: 10,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+   },
+   titre_salutation: {
+      color: Colors.black,
+      fontSize: heightPercentageToDP(3),
+      fontWeight: 'bold',
+   },
+   flagImg: {
+      height: 30,
+      width: 30,
+      borderRadius: 30,
    },
    landing_screen: {
-      marginTop: 20,
-      height: 200,
+      height: heightPercentageToDP(25),
+      marginTop: 5,
       borderRadius: 25,
       backgroundColor: Colors.greenAvg,
       display: 'flex',
@@ -25,9 +39,11 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
    },
    text_landing_screen: {
-      fontSize: widthDevice < 400 ? 18 : 20,
+      fontSize: widthPercentageToDP(4),
       color: Colors.white,
       fontWeight: 'bold',
+      textAlign: 'center',
+      marginHorizontal: 3,
    },
    content_in_landing_screen: {
       display: 'flex',
@@ -35,8 +51,7 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'space-around',
       backgroundColor: Colors.greenWhite,
-      width: '90%',
-      paddingHorizontal: 0,
+      width: widthPercentageToDP(90),
       paddingVertical: 20,
       borderRadius: 25,
    },
@@ -51,23 +66,19 @@ export const styles = StyleSheet.create({
       width: 230,
       borderRadius: 15,
    },
-   /*Thematique*/
-   /*Types*/
-   maskImageCatg: {
-      borderRadius: 18,
-      height: 130,
-      width: 230,
-      borderWidth: 2,
-      borderColor: Colors.greenAvg,
-   },
 
    view_container_renderItemThematique: {
       width: 230,
-      height: 130,
+      borderRadius: 18,
+      flex: 1,
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
       paddingHorizontal: 6,
+      backgroundColor: 'rgba(0,0,0,0.4)',
+   },
+   view_container_renderItemArticle: {
+      marginHorizontal: 4,
    },
 
    view_carousel: {
@@ -78,16 +89,11 @@ export const styles = StyleSheet.create({
    text_descriptif_for_carousel: {
       fontWeight: 'bold',
       opacity: 0.9,
-      color: Colors.black,
-      fontSize: 20,
+      color: Colors.white,
+      fontSize: widthPercentageToDP(4.5),
       flexWrap: 'wrap',
       textAlign: 'center',
    },
-   /*image_poster_style_thematique: {
-      height: 130,
-      width: 230,
-      borderRadius: 15,
-   },*/
    view_bottom_sheet: {
       marginHorizontal: 6,
    },

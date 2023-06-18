@@ -22,17 +22,17 @@ export const styles = StyleSheet.create({
       flexDirection: 'row',
    },
    maskImageArticle: {
-      backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      flex: 1,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.4)',
       borderRadius: 18,
-      height: 160,
-      width: Dimensions.get('window').width < 380 ? 100 : 130,
    },
    number_of_article: {
       fontWeight: 'bold',
       color: Colors.white,
       fontSize: Dimensions.get('window').width < 380 ? 40 : 44,
-      marginVertical: 50,
-      marginHorizontal: Dimensions.get('window').width < 380 ? 30 : 50,
    },
    container_safe: {
       //marginBottom: 50,

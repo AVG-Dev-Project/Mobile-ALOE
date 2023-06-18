@@ -6,5 +6,15 @@ import Recherche from '_pages/recherche/Recherche';
 import Favoris from '_pages/favoris/Favoris';
 import Doleance from '_pages/doleance/Doleance';
 import DownloadData from '_pages/download/DownloadData';
+import ImportedData from '_pages/download/ImportedData';
 
-export { Home, About, Welcome, Recherche, Favoris, Doleance, DownloadData };
+export {
+   Home,
+   About,
+   Welcome,
+   Recherche,
+   Favoris,
+   Doleance,
+   DownloadData,
+   ImportedData,
+};

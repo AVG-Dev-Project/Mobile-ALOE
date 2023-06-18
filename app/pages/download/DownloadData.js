@@ -1,5 +1,11 @@
 import { useRef, useEffect, useState } from 'react';
-import { Text, View, useWindowDimensions, ToastAndroid } from 'react-native';
+import {
+   Text,
+   ScrollView,
+   View,
+   useWindowDimensions,
+   ToastAndroid,
+} from 'react-native';
 import { Colors } from '_theme/Colors';
 import Lottie from 'lottie-react-native';
 import { Icon, Button } from '@rneui/themed';
@@ -30,6 +36,7 @@ import {
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
    storeStatistiqueToLocalStorage,
+   isAloeFile,
 } from '_utils';
 import styles from './styles';
 
@@ -99,7 +106,7 @@ export default function DownloadData({ navigation }) {
          }
       });
       fetchStatistique();
-      fetchAllDataToLocalDatabase(dispatch);
+      await fetchAllDataToLocalDatabase(dispatch);
       setTimeout(() => {
          setIsDataLoaded(false);
          dispatch(getStarted());
@@ -110,50 +117,61 @@ export default function DownloadData({ navigation }) {
       setIsUploadData(true);
       try {
          const file = await DocumentPicker.getDocumentAsync({
-            type: 'application/json',
+            type: 'application/octet-stream',
          });
-         if (file.type === 'success') {
+
+         if (isAloeFile(file) && file.type === 'success') {
             const fileContent = await FileSystem.readAsStringAsync(file.uri);
             const parsedJSONData = JSON.parse(fileContent);
-            const parsedJsonToArray = Object.values(parsedJSONData);
-            let [type, thematique, article, contenu] = parsedJsonToArray;
+            let { types, thematiques, articles, contenus, tags } =
+               parsedJSONData;
             //store total of article and contenu to storage
             storeDataToLocalStorage(
                'articleTotalInServ',
-               JSON.parse(article.length ?? 0)
+               JSON.stringify(articles.length ?? 0)
             );
             storeDataToLocalStorage(
                'contenuTotalInServ',
-               JSON.parse(contenu.length ?? 0)
+               JSON.stringify(contenus.length ?? 0)
             );
 
             //type
-            insertOrUpdateToDBFunc('database', 'type', type);
+            insertOrUpdateToDBFunc('database', 'type', types);
 
             //thematique
-            insertOrUpdateToDBFunc('database', 'thematique', thematique);
+            insertOrUpdateToDBFunc('database', 'thematique', thematiques);
+
+            //tag
+            insertOrUpdateToDBFunc('database', 'tag', tags);
 
             //article
             insertOrUpdateToDBFunc(
                'database',
                'article',
-               parseStructureDataForArticle(article)
+               parseStructureDataForArticle(articles)
             );
 
             //contenu
             await insertOrUpdateToDBFunc(
                'database',
                'contenu',
-               parseStructureDataForContenu(contenu)
+               parseStructureDataForContenu(contenus)
             );
             setIsUploadData(false);
             storeDataToLocalStorage('isAllDataImported', 'true');
             dispatch(checktatusData(true));
          } else {
+            ToastAndroid.show(
+               `Impossible d'importer ce genre de fichier, importer seulement les fichiers .aloe!`,
+               ToastAndroid.SHORT
+            );
             setIsUploadData(false);
          }
       } catch (error) {
-         console.log(error);
+         ToastAndroid.show(
+            `Erreur survenu à l'importation du fichier.`,
+            ToastAndroid.LONG
+         );
          setIsUploadData(false);
       }
    };
@@ -172,7 +190,7 @@ export default function DownloadData({ navigation }) {
    useEffect(() => {
       if (isUserConnectedToInternet && isUserNetworkActive) {
          setMessageStatusInternet(
-            'Comme vous êtes connecté à internet, vous pouvez soit télechargés les datas via votre connexion soit uploader le fichier datas'
+            'Vous pouvez soit télécharger les données via votre connexion, soit charger le fichier de données.'
          );
          checkAndsendMailFromLocalDBToAPI();
       }
@@ -182,12 +200,12 @@ export default function DownloadData({ navigation }) {
             isUserConnectedToInternet === null)
       ) {
          setMessageStatusInternet(
-            'Votre connexion ne peut pas accéder à internet. Vous pouvez quand même importer le fichier datas depuis votre appareil.'
+            "Vous n'avez pas accès à Internet. Vous pouvez tout de même importer les fichiers de données à partir de votre appareil."
          );
       }
       if (isNetworkActive === false || isNetworkActive === null) {
          setMessageStatusInternet(
-            "Vous n'êtes pas connecté à internet. Vous pouvez importer le fichier datas depuis votre appareil."
+            "Vous n'avez pas accès à Internet. Vous pouvez tout de même importer les fichiers de données à partir de votre appareil."
          );
       }
    }, [isUserConnectedToInternet, isUserNetworkActive]);
@@ -222,48 +240,83 @@ export default function DownloadData({ navigation }) {
    ]);
 
    return (
-      <View style={styles.view_container_download}>
-         <Lottie
-            autoPlay
-            ref={animation}
-            style={styles.images_welcome}
-            source={require('_images/upload.json')}
-         />
-         <View style={styles.view_instruction}>
-            <View style={styles.view_status_connexion}>
-               <Text
-                  style={{
-                     fontSize: 16,
-                     fontWeight: 'bold',
-                     textAlign: 'center',
-                  }}
-               >
-                  Status :{' '}
-                  {isUserNetworkActive && isUserConnectedToInternet
-                     ? 'Vous êtes connectés à internet'
-                     : "Vous n'êtes pas connectés"}
+      <ScrollView>
+         <View style={styles.view_container_download}>
+            <Lottie
+               autoPlay
+               ref={animation}
+               style={styles.images_welcome}
+               source={require('_images/upload.json')}
+            />
+            <View style={styles.view_instruction}>
+               <View style={styles.view_status_connexion}>
+                  <Text
+                     style={{
+                        fontSize: 16,
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                     }}
+                  >
+                     Status :{' '}
+                     {isUserNetworkActive && isUserConnectedToInternet
+                        ? 'Vous avez accès à Internet'
+                        : "Vous n'avez pas accès à Internet"}
+                  </Text>
+                  {isUserNetworkActive && isUserConnectedToInternet ? (
+                     <Icon
+                        name={'sentiment-satisfied-alt'}
+                        color={Colors.greenAvg}
+                        size={24}
+                     />
+                  ) : (
+                     <Icon
+                        name={'sentiment-very-dissatisfied'}
+                        color={Colors.redError}
+                        size={24}
+                     />
+                  )}
+               </View>
+               <Text style={{ textAlign: 'center' }}>
+                  {messageStatusInternet}
                </Text>
-               {isUserNetworkActive && isUserConnectedToInternet ? (
-                  <Icon
-                     name={'sentiment-satisfied-alt'}
-                     color={Colors.greenAvg}
-                     size={24}
-                  />
-               ) : (
-                  <Icon
-                     name={'sentiment-very-dissatisfied'}
-                     color={Colors.redError}
-                     size={24}
-                  />
-               )}
-            </View>
-            <Text style={{ textAlign: 'center' }}>{messageStatusInternet}</Text>
-            <View style={styles.view_for_button}>
-               {isUserNetworkActive && isUserConnectedToInternet && (
+               <View style={styles.view_for_button}>
+                  {isUserNetworkActive && isUserConnectedToInternet && (
+                     <Button
+                        title="Télecharger les données"
+                        icon={{
+                           name: 'file-download',
+                           type: 'material',
+                           size: 24,
+                           color: Colors.white,
+                        }}
+                        titleStyle={{ fontSize: 16 }}
+                        buttonStyle={{
+                           borderRadius: 15,
+                           backgroundColor: Colors.greenAvg,
+                        }}
+                        containerStyle={{
+                           width: 250,
+                           marginVertical: 5,
+                        }}
+                        onPress={() => {
+                           setIsFetchData(true);
+                           getOnlineDatas();
+                        }}
+                        loading={isFetchData}
+                     />
+                  )}
+
+                  {isUserNetworkActive && isUserConnectedToInternet && (
+                     <Text style={{ textAlign: 'center', fontSize: 18 }}>
+                        {' '}
+                        ou{' '}
+                     </Text>
+                  )}
+
                   <Button
-                     title="Télecharger les datas"
+                     title="Importer le fichier"
                      icon={{
-                        name: 'file-download',
+                        name: 'file-upload',
                         type: 'material',
                         size: 24,
                         color: Colors.white,
@@ -277,70 +330,39 @@ export default function DownloadData({ navigation }) {
                         width: 250,
                         marginVertical: 5,
                      }}
-                     onPress={() => {
-                        setIsFetchData(true);
-                        getOnlineDatas();
-                     }}
-                     loading={isFetchData}
+                     onPress={() => handleFileSelectionAndImportData()}
+                     loading={isUploadData}
                   />
-               )}
-
-               {isUserNetworkActive && isUserConnectedToInternet && (
-                  <Text style={{ textAlign: 'center', fontSize: 18 }}>
-                     {' '}
-                     ou{' '}
-                  </Text>
-               )}
-
+               </View>
+            </View>
+            <View>
                <Button
-                  title="Importer le fichier"
+                  title="Commencer"
                   icon={{
-                     name: 'file-upload',
+                     name: 'double-arrow',
                      type: 'material',
                      size: 24,
                      color: Colors.white,
                   }}
-                  titleStyle={{ fontSize: 16 }}
+                  titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
                   buttonStyle={{
-                     borderRadius: 15,
+                     borderRadius: 30,
                      backgroundColor: Colors.greenAvg,
+                     paddingVertical: 24,
+                     width: width < 370 ? 170 : 190,
                   }}
                   containerStyle={{
-                     width: 250,
-                     marginVertical: 5,
+                     marginVertical: 10,
                   }}
-                  onPress={() => handleFileSelectionAndImportData()}
-                  loading={isUploadData}
+                  onPress={async () => {
+                     setIsDataLoaded(true);
+                     await getOfflineDatas();
+                  }}
+                  loading={isDataLoaded}
+                  disabled={buttonStartDisabled}
                />
             </View>
          </View>
-         <View>
-            <Button
-               title="Commencer"
-               icon={{
-                  name: 'double-arrow',
-                  type: 'material',
-                  size: 24,
-                  color: Colors.white,
-               }}
-               titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
-               buttonStyle={{
-                  borderRadius: 30,
-                  backgroundColor: Colors.greenAvg,
-                  paddingVertical: 24,
-                  width: width < 370 ? 170 : 190,
-               }}
-               containerStyle={{
-                  marginVertical: 10,
-               }}
-               onPress={() => {
-                  setIsDataLoaded(true);
-                  getOfflineDatas();
-               }}
-               loading={isDataLoaded}
-               disabled={buttonStartDisabled}
-            />
-         </View>
-      </View>
+      </ScrollView>
    );
 }

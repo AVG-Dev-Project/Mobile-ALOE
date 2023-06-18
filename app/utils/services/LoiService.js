@@ -78,7 +78,7 @@ function getTypeFromServ() {
       });
 }
 
-function fetchStatistiqueFromServ(){
+function fetchStatistiqueFromServ() {
    return RouteAxios.get('/statistique')
       .then((response) => {
          return response.data;

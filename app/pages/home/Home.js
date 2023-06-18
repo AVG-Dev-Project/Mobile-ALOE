@@ -6,31 +6,30 @@ import {
    SafeAreaView,
    ActivityIndicator,
    useWindowDimensions,
+   ScrollView,
    ToastAndroid,
-   StyleSheet,
+   ImageBackground,
    TouchableOpacity,
 } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { useTranslation } from 'react-i18next';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Icon } from '@rneui/themed';
-import Carousel from 'react-native-snap-carousel';
 import { useSelector, useDispatch } from 'react-redux';
-import HeaderGlobal from '_components/header/HeaderGlobal';
 import BottomSheetCustom from '_components/bottomSheet/bottomSheet';
-import {
-   nameStackNavigation as nameNav,
-   fetchPartialDataForUpdating,
-} from '_utils';
 import { styles } from './styles';
+import bgImageThematique from '_images/thematique.jpg';
 import { Colors } from '_theme/Colors';
 import { dataForStatistique } from '_utils/redux/actions/action_creators';
 import {
+   nameStackNavigation as nameNav,
+   fetchPartialDataForUpdating,
    checkAndsendMailFromLocalDBToAPI,
    fetchTypesToApi,
    fetchTagsToApi,
    fetchThematiquesToApi,
    storeStatistiqueToLocalStorage,
    getDataFromLocalStorage,
+   widthPercentageToDP,
 } from '_utils';
 
 export default function Home({ navigation }) {
@@ -57,6 +56,7 @@ export default function Home({ navigation }) {
    );
 
    //all functions
+
    const fetchStatistique = () => {
       getDataFromLocalStorage('articleTotalInServ').then((res) => {
          dispatch(dataForStatistique({ statsFor: 'article', value: res ?? 0 }));
@@ -64,6 +64,10 @@ export default function Home({ navigation }) {
       getDataFromLocalStorage('contenuTotalInServ').then((res) => {
          dispatch(dataForStatistique({ statsFor: 'contenu', value: res ?? 0 }));
       });
+   };
+
+   const openBottomSheet = () => {
+      return bottomSheetRef.current?.present();
    };
 
    const updatingPartialData = async () => {
@@ -99,12 +103,18 @@ export default function Home({ navigation }) {
    const bottomSheetRef = useRef(null);
 
    //all efects
-
    useEffect(() => {
       if (isUserConnectedToInternet && isUserNetworkActive) {
          checkAndsendMailFromLocalDBToAPI();
       }
    }, [isUserNetworkActive, isUserConnectedToInternet]);
+
+   //all keys
+   const _idKeyExtractorThematique = (item, index) =>
+      item?.id == null ? index.toString() : item.id.toString();
+
+   const _idKeyExtractorContenu = (item, index) =>
+      item?.id == null ? index.toString() : item.id.toString();
 
    //all components
    const _renderItemContenu = ({ item }) => {
@@ -114,7 +124,9 @@ export default function Home({ navigation }) {
             onPress={() => {
                navigation.navigate(nameNav.listArticle, {
                   titleScreen: `${
-                     langueActual === 'fr' ? 'Loi n°' : 'Lalana faha '
+                     langueActual === 'fr'
+                        ? `${item.type_nom_fr} n° `
+                        : `${item.type_nom_mg} faha `
                   } ${item.numero}`,
                   idOfThisContenu: item.id,
                });
@@ -123,8 +135,8 @@ export default function Home({ navigation }) {
             <View key={item.id} style={styles.view_container_renderItemArticle}>
                <Image
                   style={styles.image_poster_style_article}
-                  source={require('_images/abstract_3.jpg')}
-                  blurRadius={6}
+                  source={require('_images/contenu.jpg')}
+                  blurRadius={2}
                />
 
                <Text
@@ -135,10 +147,12 @@ export default function Home({ navigation }) {
                      fontSize: height < 700 ? 13 : 17,
                   }}
                >
-                  {langueActual === 'fr' ? 'Loi n° ' : 'Lalana faha '}
+                  {langueActual === 'fr'
+                     ? `${item.type_nom_fr} n° `
+                     : `${item.type_nom_mg ?? item.type_nom_fr} faha `}
                   {langueActual === 'fr' ? item.numero : item.numero}
                </Text>
-               <Text style={{ fontSize: 12 }} numberOfLines={1}>
+               <Text style={{ fontSize: 12, width: 220 }} numberOfLines={1}>
                   {langueActual === 'fr'
                      ? item.objet_contenu_fr
                      : item.objet_contenu_mg ?? item.objet_contenu_fr}
@@ -162,48 +176,74 @@ export default function Home({ navigation }) {
                });
             }}
          >
-            <View
-               key={item.id}
-               style={styles.view_container_renderItemThematique}
+            <ImageBackground
+               source={bgImageThematique}
+               blurRadius={5}
+               style={{
+                  marginHorizontal: 4,
+                  height: 130,
+                  width: 230,
+               }}
+               imageStyle={{
+                  resizeMode: 'cover',
+                  borderRadius: 18,
+               }}
             >
                <View
-                  style={[StyleSheet.absoluteFillObject, styles.maskImageCatg]}
-               ></View>
-               <Text
-                  style={[styles.text_descriptif_for_carousel]}
-                  numberOfLines={4}
+                  key={item.id}
+                  style={styles.view_container_renderItemThematique}
                >
-                  {langueActual === 'fr'
-                     ? item.nom_fr
-                     : item.nom_mg ?? item.nom_fr}
-               </Text>
-            </View>
+                  <Text
+                     style={styles.text_descriptif_for_carousel}
+                     numberOfLines={4}
+                  >
+                     {langueActual === 'fr'
+                        ? item.nom_fr
+                        : item.nom_mg ?? item.nom_fr}
+                  </Text>
+               </View>
+            </ImageBackground>
          </TouchableOpacity>
       );
    };
 
    return (
-      <KeyboardAwareScrollView style={{ backgroundColor: Colors.background }}>
+      <ScrollView style={{ backgroundColor: Colors.background }}>
          <View style={styles.view_container}>
-            <View style={styles.head_content}>
-               <HeaderGlobal
-                  navigation={navigation}
-                  bottomSheetRef={bottomSheetRef}
-               />
+            <View style={styles.container_header}>
+               <Text style={styles.titre_salutation}>
+                  {t('bienvenue_header_text')}
+               </Text>
+               <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => openBottomSheet()}
+               >
+                  <Image
+                     style={styles.flagImg}
+                     source={
+                        langueActual === 'fr'
+                           ? require('_images/french.png')
+                           : require('_images/malagasy.png')
+                     }
+                  />
+               </TouchableOpacity>
             </View>
 
             <View style={styles.landing_screen}>
-               <Text
-                  style={[styles.text_landing_screen, { textAlign: 'center' }]}
-               >
+               <Text style={styles.text_landing_screen}>
                   {t('txt_landing_home')}
                </Text>
                <View style={styles.content_in_landing_screen}>
                   <Image
                      style={styles.icon_in_content_landing}
-                     source={require('_images/abstract_3.jpg')}
+                     source={require('_images/contenu.jpg')}
                   />
-                  <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                  <Text
+                     style={{
+                        fontSize: widthPercentageToDP(3.5),
+                        fontWeight: 'bold',
+                     }}
+                  >
                      {t('renseignez')}
                   </Text>
                   {isFetchData ? (
@@ -244,19 +284,19 @@ export default function Home({ navigation }) {
                <View>
                   <SafeAreaView>
                      <View style={styles.view_carousel}>
-                        <Carousel
-                           layout="default"
-                           ref={isCarousel}
+                        <FlashList
+                           horizontal={true}
+                           showHorizontalScrollIndicator={false}
                            data={allThematiques}
-                           loop={false}
-                           loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
-                           //fin des props spéficifique au section annonce
+                           key={'_'}
+                           keyExtractor={_idKeyExtractorThematique}
                            renderItem={_renderItemThematique}
-                           sliderWidth={150}
-                           itemWidth={240}
-                           inactiveSlideOpacity={0.9} //on uniformise tous les opacity
-                           inactiveSlideScale={1} //on uniformise tous les hauteur
-                           useScrollView={true}
+                           estimatedItemSize={20}
+                           getItemLayout={(data, index) => ({
+                              length: data.length,
+                              offset: data.length * index,
+                              index,
+                           })}
                         />
                      </View>
                   </SafeAreaView>
@@ -298,19 +338,19 @@ export default function Home({ navigation }) {
                <View>
                   <SafeAreaView>
                      <View style={styles.view_carousel}>
-                        <Carousel
-                           layout="default"
-                           ref={isCarousel}
+                        <FlashList
+                           horizontal={true}
+                           showHorizontalScrollIndicator={false}
                            data={allContenus}
-                           loop={true}
-                           loopClonesPerSide={5} //Nombre de clones à ajouter de chaque côté des éléments d'origine. Lors d'un balayage très rapide
-                           //fin des props spéficifique au section annonce
+                           key={'_'}
+                           keyExtractor={_idKeyExtractorContenu}
                            renderItem={_renderItemContenu}
-                           sliderWidth={150}
-                           itemWidth={240}
-                           inactiveSlideOpacity={0.9} //on uniformise tous les opacity
-                           inactiveSlideScale={1} //on uniformise tous les hauteur
-                           useScrollView={true}
+                           estimatedItemSize={20}
+                           getItemLayout={(data, index) => ({
+                              length: data.length,
+                              offset: data.length * index,
+                              index,
+                           })}
                         />
                      </View>
                   </SafeAreaView>
@@ -321,6 +361,6 @@ export default function Home({ navigation }) {
             bottomSheetRef={bottomSheetRef}
             snapPoints={snapPoints}
          />
-      </KeyboardAwareScrollView>
+      </ScrollView>
    );
 }
