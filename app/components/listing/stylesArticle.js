@@ -14,7 +14,14 @@ export const styles = StyleSheet.create({
       borderRadius: 8,
    },
    view_search: {
-      marginBottom: 6,
+      height: '12%',
+   },
+   button_after_inputSearch: {
+      flexDirection: 'row',
+   },
+   button_entete: {
+      flex: 1,
+      marginVertical: 8,
    },
    view_render: {
       marginVertical: 8,

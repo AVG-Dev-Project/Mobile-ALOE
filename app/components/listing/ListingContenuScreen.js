@@ -216,23 +216,46 @@ export default function ListingContenu({ navigation }) {
                         ? item.type_nom_fr + ' n° '
                         : item.type_nom_mg + ' faha '
                   } ${item.numero}`,
-                  idOfThisContenu: item.id,
+                  contenuMother: item,
                });
             }}
          >
             <View style={styles.view_render}>
                <View>
-                  <Text
+                  <View
                      style={{
-                        fontWeight: 'bold',
-                        fontSize: 18,
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
                      }}
                   >
-                     {langueActual === 'fr'
-                        ? item.type_nom_fr + ' n°'
-                        : item.type_nom_mg ?? 'Votoantiny' + ' faha '}{' '}
-                     {item.numero}
-                  </Text>
+                     <Text
+                        style={{
+                           fontWeight: 'bold',
+                           fontSize: 18,
+                        }}
+                     >
+                        {langueActual === 'fr'
+                           ? item.type_nom_fr + ' n°'
+                           : item.type_nom_mg ?? 'Votoantiny' + ' faha '}{' '}
+                        {item.numero}
+                     </Text>
+                     {/*<Pressable
+                        activeOpacity={0.5}
+                        onPress={() => {
+                           navigation.navigate(nameNav.overview, {
+                              titleScreen: `Overview`,
+                           });
+                        }}
+                     >
+                        <Icon
+                           name="visibility"
+                           color={Colors.greenAvg}
+                           size={25}
+                        />
+                     </Pressable>*/}
+                  </View>
                   <Text
                      style={{
                         fontSize: heightPercentageToDP(1.5),
