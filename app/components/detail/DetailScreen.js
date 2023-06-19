@@ -663,19 +663,6 @@ export default function Detail({ navigation, route }) {
 
                <View style={styles.view_one_item_in_bottomsheet}>
                   <Text style={styles.label_info_article}>
-                     {langueActual === 'fr' ? 'Visa ' : 'Visa '}{' '}
-                  </Text>
-                  <Text style={styles.value_info_article}>
-                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                     {langueActual === 'fr'
-                        ? contenuMother[0].en_tete_contenu_fr ?? ''
-                        : contenuMother[0].en_tete_contenu_mg ??
-                          contenuMother[0].en_tete_contenu_fr}
-                  </Text>
-               </View>
-
-               <View style={styles.view_one_item_in_bottomsheet}>
-                  <Text style={styles.label_info_article}>
                      {langueActual === 'fr' ? 'Objet ' : 'Votoatiny '}{' '}
                   </Text>
                   <Text style={styles.value_info_article}>
@@ -732,21 +719,6 @@ export default function Detail({ navigation, route }) {
                         ? oneArticle.chapitre_titre_fr ?? ''
                         : oneArticle.chapitre_titre_mg ??
                           'Tsy misy dikan-teny malagasy.'}
-                  </Text>
-               </View>
-
-               <View style={styles.view_one_item_in_bottomsheet}>
-                  <Text style={styles.label_info_article}>
-                     {langueActual === 'fr'
-                        ? 'Exposé des motifs '
-                        : 'Exposé des motifs'}{' '}
-                  </Text>
-                  <Text style={styles.value_info_article}>
-                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                     {langueActual === 'fr'
-                        ? oneArticle.expose_des_motifs_contenu_fr ?? ''
-                        : oneArticle.expose_des_motifs_contenu_mg ??
-                          oneArticle.expose_des_motifs_contenu_fr}
                   </Text>
                </View>
 

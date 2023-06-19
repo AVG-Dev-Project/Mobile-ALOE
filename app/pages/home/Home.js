@@ -128,7 +128,7 @@ export default function Home({ navigation }) {
                         ? `${item.type_nom_fr} n° `
                         : `${item.type_nom_mg} faha `
                   } ${item.numero}`,
-                  idOfThisContenu: item.id,
+                  contenuMother: item,
                });
             }}
          >

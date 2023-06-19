@@ -216,7 +216,7 @@ export default function ListingContenu({ navigation }) {
                         ? item.type_nom_fr + ' n° '
                         : item.type_nom_mg + ' faha '
                   } ${item.numero}`,
-                  idOfThisContenu: item.id,
+                  contenuMother: item,
                });
             }}
          >
@@ -241,7 +241,7 @@ export default function ListingContenu({ navigation }) {
                            : item.type_nom_mg ?? 'Votoantiny' + ' faha '}{' '}
                         {item.numero}
                      </Text>
-                     <Pressable
+                     {/*<Pressable
                         activeOpacity={0.5}
                         onPress={() => {
                            navigation.navigate(nameNav.overview, {
@@ -254,7 +254,7 @@ export default function ListingContenu({ navigation }) {
                            color={Colors.greenAvg}
                            size={25}
                         />
-                     </Pressable>
+                     </Pressable>*/}
                   </View>
                   <Text
                      style={{

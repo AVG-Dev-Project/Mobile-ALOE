@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import ListingArticle from '_components/listing/ListingArticleScreen';
 import ListingContenu from '_components/listing/ListingContenuScreen';
 import Detail from '_components/detail/DetailScreen';
-import OverviewScreen from '_components/overview/OverviewScreen';
+import DetailEnteteScreen from '_components/detail/DetailEnteteScreen';
 import Information from '_components/informationAvg/information';
 
 let Stack = createStackNavigator();
@@ -39,14 +39,6 @@ export default function StackNavigation() {
                   title: route.params.titleScreen,
                })}
             />
-
-            <Stack.Screen
-               name={nameNav.overview}
-               component={OverviewScreen}
-               options={({ route }) => ({
-                  title: route.params.titleScreen,
-               })}
-            />
          </Stack.Group>
 
          <Stack.Group screenOptions={configStack.screenOptionsForHeaderDisable}>
@@ -58,8 +50,15 @@ export default function StackNavigation() {
                })}
             />
             <Stack.Screen
+               name={nameNav.detailEntete}
+               component={DetailEnteteScreen}
+               options={({ route }) => ({
+                  title: route.params.titleScreen,
+               })}
+            />
+            <Stack.Screen
                name={nameNav.importedData}
-               component={OverviewScreen}
+               component={ImportedData}
             />
          </Stack.Group>
 
