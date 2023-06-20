@@ -14,6 +14,7 @@ import NetInfo from '@react-native-community/netinfo';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import {
+   getStarted,
    isNetworkActive,
    addFavoris,
    isConnectedToInternet,
@@ -25,15 +26,14 @@ import {
    parseStructureDataForContenu,
    storeDataToLocalStorage,
    getDataFromLocalStorage,
-   getFavoriteFromLocalStorage,
    fetchAllDataToLocalDatabase,
    checkAndsendMailFromLocalDBToAPI,
-   isAloeFile,
    storeStatistiqueToLocalStorage,
+   isAloeFile,
 } from '_utils';
 import styles from './styles';
 
-export default function DownloadData({ navigation }) {
+export default function ImportedData({ navigation }) {
    //all datas
    const animation = useRef(null);
    const { width } = useWindowDimensions();
@@ -62,23 +62,18 @@ export default function DownloadData({ navigation }) {
       });
    };
 
-   const getOfflineDatas = () => {
+   const getOfflineDatas = async () => {
       //EXCEPTION THIS CODE it need connection internet
       if (isUserNetworkActive && isUserConnectedToInternet) {
          storeStatistiqueToLocalStorage();
       }
-      getFavoriteFromLocalStorage().then((res) => {
-         if (res !== null) {
-            dispatch(addFavoris(res));
-         }
-      });
       fetchStatistique();
-      fetchAllDataToLocalDatabase(dispatch);
-      setIsDataLoaded(false);
+      await fetchAllDataToLocalDatabase(dispatch);
       ToastAndroid.show(
          `Contenu de l'application mis à jour.`,
          ToastAndroid.SHORT
       );
+      setIsDataLoaded(false);
    };
 
    const handleFileSelectionAndImportData = async () => {
@@ -122,6 +117,10 @@ export default function DownloadData({ navigation }) {
                'database',
                'contenu',
                parseStructureDataForContenu(contenus)
+            );
+            ToastAndroid.show(
+               `Les données sont importées et insérées avec succès.`,
+               ToastAndroid.SHORT
             );
             setIsUploadData(false);
          } else {
@@ -228,7 +227,7 @@ export default function DownloadData({ navigation }) {
                      buttonStyle={{
                         borderRadius: 15,
                         backgroundColor: Colors.greenAvg,
-                        paddingVertical: 12,
+                        paddingVertical: 14,
                      }}
                      containerStyle={{
                         width: 250,
@@ -255,9 +254,9 @@ export default function DownloadData({ navigation }) {
                   containerStyle={{
                      marginVertical: 10,
                   }}
-                  onPress={() => {
+                  onPress={async () => {
                      setIsDataLoaded(true);
-                     getOfflineDatas();
+                     await getOfflineDatas();
                      navigation.navigate('About');
                   }}
                   loading={isDataLoaded}

@@ -4,12 +4,13 @@ import { nameStackNavigation as nameNav } from '_utils';
 /*tab Navitation (top and bottom both)*/
 import BottomBarTabs from '_components/navigation/tabs/BottomBarTabs';
 /*screen normal |screen indépendant à afficher|*/
-import { Welcome, Doleance, DownloadData } from '_pages';
+import { Welcome, Doleance, DownloadData, ImportedData } from '_pages';
 import { configStack } from './configStack';
 import { useSelector } from 'react-redux';
 import ListingArticle from '_components/listing/ListingArticleScreen';
 import ListingContenu from '_components/listing/ListingContenuScreen';
 import Detail from '_components/detail/DetailScreen';
+import DetailEnteteScreen from '_components/detail/DetailEnteteScreen';
 import Information from '_components/informationAvg/information';
 
 let Stack = createStackNavigator();
@@ -49,8 +50,11 @@ export default function StackNavigation() {
                })}
             />
             <Stack.Screen
-               name={nameNav.downloadData}
-               component={DownloadData}
+               name={nameNav.detailEntete}
+               component={DetailEnteteScreen}
+               options={({ route }) => ({
+                  title: route.params.titleScreen,
+               })}
             />
          </Stack.Group>
 

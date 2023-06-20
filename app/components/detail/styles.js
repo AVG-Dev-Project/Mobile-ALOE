@@ -31,6 +31,13 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
       width: '90%',
    },
+   view_header_nav_detail_entete: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '90%',
+      height: 80,
+   },
    view_button_switch_article: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -44,6 +51,15 @@ export const styles = StyleSheet.create({
    view_round_button_detail_article: {
       position: 'absolute',
       top: heightPercentageToDP(-4.5),
+      right: 14,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+   },
+   view_round_button_detail_article_detail_entete: {
+      position: 'absolute',
+      top: heightPercentageToDP(-3.5),
       right: 14,
       display: 'flex',
       flexDirection: 'row',

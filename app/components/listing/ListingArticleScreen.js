@@ -1,8 +1,6 @@
 import {
    View,
    Text,
-   StyleSheet,
-   Image,
    TextInput,
    ActivityIndicator,
    TouchableOpacity,
@@ -15,7 +13,7 @@ import { FlashList } from '@shopify/flash-list';
 import React, { useCallback, useEffect, useState } from 'react';
 import { nameStackNavigation as nameNav } from '_utils/constante/NameStackNavigation';
 import { styles } from './stylesArticle';
-import { Icon } from '@rneui/themed';
+import { Icon, Button } from '@rneui/themed';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '_theme/Colors';
 import {
@@ -60,7 +58,6 @@ const filterGlobal = (langueActual, array, query) => {
          );
       }
    }
-   console.log('res : ', res);
    return res;
 };
 
@@ -87,7 +84,8 @@ export default function ListingArticle({ navigation, route }) {
    const valueForDeepSearch = useSelector(
       (selector) => selector.fonctionnality.valueForDeepSearch
    );
-   const idOfTheContenuMother = route.params.idOfThisContenu;
+   const idOfTheContenuMother = route.params.contenuMother?.id;
+   const contenuMother = route.params.contenuMother;
    const [isGetNextData, setIsGetNextData] = useState(false);
    const [articleList, setArticleList] = useState(
       filterArticleToListByContenu(idOfTheContenuMother, allArticles).map(
@@ -223,7 +221,6 @@ export default function ListingArticle({ navigation, route }) {
          );
       }
    }, [valueForSearch]);
-   console.log('valueForSearch : ', valueForSearch);
 
    //all components
    const _renderItem = useCallback(({ item }) => {
@@ -280,7 +277,7 @@ export default function ListingArticle({ navigation, route }) {
                            ? item.titre_fr
                            : item.titre_mg ?? item.titre_fr}
                      </Text>
-                     {item.chapitre_id && (
+                     {item.chapitre_titre_fr && (
                         <Text
                            style={{ fontSize: 12, width: width - 200 }}
                            numberOfLines={1}
@@ -399,6 +396,62 @@ export default function ListingArticle({ navigation, route }) {
                   setValueForSearch(text);
                }}
             />
+            <View style={styles.button_after_inputSearch}>
+               {contenuMother.en_tete_contenu_fr !== null && (
+                  <Button
+                     title="VISA"
+                     icon={{
+                        name: 'article',
+                        type: 'material',
+                        size: 20,
+                        color: Colors.white,
+                     }}
+                     titleStyle={{ fontSize: 16 }}
+                     buttonStyle={{
+                        borderRadius: 15,
+                        backgroundColor: Colors.greenAvg,
+                     }}
+                     containerStyle={styles.button_entete}
+                     onPress={() => {
+                        navigation.navigate(nameNav.detailEntete, {
+                           titleScreen: `${
+                              langueActual === 'fr' ? 'VISA' : 'Fahazoan-dalàna'
+                           }`,
+                           contenuMother: contenuMother,
+                           typeOfData: 'VISA',
+                        });
+                     }}
+                  />
+               )}
+               {contenuMother.expose_des_motifs_contenu_fr !== null && (
+                  <Button
+                     title="Exposé des motifs"
+                     icon={{
+                        name: 'article',
+                        type: 'material',
+                        size: 20,
+                        color: Colors.white,
+                     }}
+                     titleStyle={{ fontSize: 16 }}
+                     buttonStyle={{
+                        borderRadius: 15,
+                        backgroundColor: Colors.greenAvg,
+                     }}
+                     containerStyle={styles.button_entete}
+                     onPress={() => {
+                        navigation.navigate(nameNav.detailEntete, {
+                           titleScreen: `${
+                              langueActual === 'fr'
+                                 ? 'Exposé des motifs'
+                                 : 'Famelabelarana ny antonantony'
+                           }`,
+                           contenuMother: contenuMother,
+                           typeOfData: 'Exposer',
+                        });
+                     }}
+                  />
+               )}
+            </View>
          </View>
          <View style={styles.container_safe}>
             <FlashList

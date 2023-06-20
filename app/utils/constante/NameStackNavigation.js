@@ -10,4 +10,5 @@ export const nameStackNavigation = {
    doleance: 'Doleance',
    downloadData: 'DownloadData',
    information: 'Information',
+   detailEntete: 'DetailEntete',
 };
