@@ -108,10 +108,16 @@ export const parseDataContenuLazyLoading = (d) => {
       en_tete_mot_cle: d.en_tete?.mot_cle,
       en_tete_contenu_fr: d.en_tete?.contenu_fr,
       en_tete_contenu_mg: d.en_tete?.contenu_mg,
+      en_tete_contenu_fr_mobile: d.en_tete?.contenu_fr_mobile,
+      en_tete_contenu_mg_mobile: d.en_tete?.contenu_mg_mobile,
       expose_des_motifs_id: d.expose_des_motifs?.id,
       expose_des_motifs_mot_cle: d.expose_des_motifs?.mot_cle,
       expose_des_motifs_contenu_fr: d.expose_des_motifs?.contenu_fr,
       expose_des_motifs_contenu_mg: d.expose_des_motifs?.contenu_mg,
+      expose_des_motifs_contenu_fr_mobile:
+         d.expose_des_motifs?.contenu_fr_mobile,
+      expose_des_motifs_contenu_mg_mobile:
+         d.expose_des_motifs?.contenu_mg_mobile,
       etat_id: d.etat?.id,
       etat_nom_fr: d.etat?.nom_fr,
       etat_nom_mg: d.etat?.nom_mg,
