@@ -382,7 +382,15 @@ export default function ListingArticle({ navigation, route }) {
 
    return (
       <View style={styles.view_container}>
-         <View style={styles.view_search}>
+         <View
+            style={{
+               height:
+                  contenuMother.en_tete_contenu_fr !== null ||
+                  contenuMother.expose_des_motifs_contenu_fr !== null
+                     ? '12%'
+                     : 'auto',
+            }}
+         >
             <TextInput
                style={styles.input}
                keyboardType="default"
@@ -397,7 +405,7 @@ export default function ListingArticle({ navigation, route }) {
                }}
             />
             <View style={styles.button_after_inputSearch}>
-               {contenuMother.en_tete_contenu_fr !== null && (
+               {contenuMother.en_tete_contenu_fr !== null ? (
                   <Button
                      title="VISA"
                      icon={{
@@ -422,8 +430,8 @@ export default function ListingArticle({ navigation, route }) {
                         });
                      }}
                   />
-               )}
-               {contenuMother.expose_des_motifs_contenu_fr !== null && (
+               ) : null}
+               {contenuMother.expose_des_motifs_contenu_fr !== null ? (
                   <Button
                      title="Exposé des motifs"
                      icon={{
@@ -450,7 +458,7 @@ export default function ListingArticle({ navigation, route }) {
                         });
                      }}
                   />
-               )}
+               ) : null}
             </View>
          </View>
          <View style={styles.container_safe}>

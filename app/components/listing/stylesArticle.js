@@ -13,9 +13,7 @@ export const styles = StyleSheet.create({
       paddingHorizontal: 10,
       borderRadius: 8,
    },
-   view_search: {
-      height: '12%',
-   },
+   view_search: {},
    button_after_inputSearch: {
       flexDirection: 'row',
    },
