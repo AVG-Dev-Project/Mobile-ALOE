@@ -134,7 +134,7 @@ export default function About({ navigation }) {
                      ]}
                   >
                      {langueActual === 'fr'
-                        ? 'Importer le fichier'
+                        ? 'Importer les données'
                         : 'Hampiditra ny rakitra'}
                   </Text>
                </TouchableOpacity>
