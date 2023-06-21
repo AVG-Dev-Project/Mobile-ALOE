@@ -12,4 +12,5 @@ export const nameStackNavigation = {
    downloadData: 'DownloadData',
    importedData: 'ImportedData',
    information: 'Information',
+   overview: "Overview"
 };

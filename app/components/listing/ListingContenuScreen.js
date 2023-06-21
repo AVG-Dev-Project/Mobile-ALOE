@@ -241,11 +241,12 @@ export default function ListingContenu({ navigation }) {
                            : item.type_nom_mg ?? 'Votoantiny' + ' faha '}{' '}
                         {item.numero}
                      </Text>
-                     {/*<Pressable
+                     <Pressable
                         activeOpacity={0.5}
                         onPress={() => {
                            navigation.navigate(nameNav.overview, {
-                              titleScreen: `Overview`,
+                              titleScreen: `Vue d'ensemble`,
+                              contenuMother: item,
                            });
                         }}
                      >
@@ -254,7 +255,7 @@ export default function ListingContenu({ navigation }) {
                            color={Colors.greenAvg}
                            size={25}
                         />
-                     </Pressable>*/}
+                     </Pressable>
                   </View>
                   <Text
                      style={{
