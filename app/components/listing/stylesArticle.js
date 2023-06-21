@@ -18,6 +18,8 @@ export const styles = StyleSheet.create({
    },
    button_after_inputSearch: {
       flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
    },
    button_entete: {
       flex: 1,
