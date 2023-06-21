@@ -16,6 +16,8 @@ export const styles = StyleSheet.create({
    view_search: {},
    button_after_inputSearch: {
       flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
    },
    button_entete: {
       flex: 1,

@@ -405,7 +405,7 @@ export default function ListingArticle({ navigation, route }) {
                }}
             />
             <View style={styles.button_after_inputSearch}>
-               {contenuMother.en_tete_contenu_fr !== null ? (
+               {contenuMother.en_tete_contenu_fr && (
                   <Button
                      title="VISA"
                      icon={{
@@ -430,12 +430,40 @@ export default function ListingArticle({ navigation, route }) {
                         });
                      }}
                   />
-               ) : null}
-               {contenuMother.expose_des_motifs_contenu_fr !== null ? (
+               )}
+               {contenuMother.expose_des_motifs_contenu_fr && (
                   <Button
                      title="Exposé des motifs"
                      icon={{
-                        name: 'article',
+                        name: 'description',
+                        type: 'material',
+                        size: 20,
+                        color: Colors.white,
+                     }}
+                     titleStyle={{ fontSize: 16 }}
+                     buttonStyle={{
+                        borderRadius: 15,
+                        backgroundColor: Colors.greenAvg,
+                     }}
+                     containerStyle={{ flex: 2 }}
+                     onPress={() => {
+                        navigation.navigate(nameNav.detailEntete, {
+                           titleScreen: `${
+                              langueActual === 'fr'
+                                 ? 'Exposé des motifs'
+                                 : 'Famelabelarana ny antonantony'
+                           }`,
+                           contenuMother: contenuMother,
+                           typeOfData: 'Exposer',
+                        });
+                     }}
+                  />
+               )}
+               {contenuMother.note_contenu_fr && (
+                  <Button
+                     title="Notes"
+                     icon={{
+                        name: 'notes',
                         type: 'material',
                         size: 20,
                         color: Colors.white,
@@ -449,16 +477,14 @@ export default function ListingArticle({ navigation, route }) {
                      onPress={() => {
                         navigation.navigate(nameNav.detailEntete, {
                            titleScreen: `${
-                              langueActual === 'fr'
-                                 ? 'Exposé des motifs'
-                                 : 'Famelabelarana ny antonantony'
+                              langueActual === 'fr' ? 'Notes' : 'Naoty'
                            }`,
                            contenuMother: contenuMother,
-                           typeOfData: 'Exposer',
+                           typeOfData: 'Note',
                         });
                      }}
                   />
-               ) : null}
+               )}
             </View>
          </View>
          <View style={styles.container_safe}>

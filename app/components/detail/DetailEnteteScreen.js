@@ -13,7 +13,13 @@ import {
 } from 'react-native';
 import { ScrollView as ScrollViewBottomSheet } from 'react-native-gesture-handler';
 import * as Speech from 'expo-speech';
-import React, { useState, useMemo, useRef, useCallback } from 'react';
+import React, {
+   useState,
+   useMemo,
+   useRef,
+   useCallback,
+   useEffect,
+} from 'react';
 import { captureRef } from 'react-native-view-shot';
 import RenderHtml from 'react-native-render-html';
 import { useSelector } from 'react-redux';
@@ -41,6 +47,9 @@ export default function DetailEnteteScreen({ navigation, route }) {
    const [contenuMother, setContenuMother] = useState(
       route.params.contenuMother
    );
+   const [dataToSpeak, setDataToSpeak] = useState(null);
+   const [dataToRender, setDataToRender] = useState(null);
+   const [titleOfScreen, setTitleOfScreen] = useState(null);
    const typeOfData = route.params.typeOfData;
    const snapPoints = useMemo(() => [0, '60%', '90%'], []);
 
@@ -251,7 +260,107 @@ export default function DetailEnteteScreen({ navigation, route }) {
       [fontSizeDynamic]
    );
 
+   const pickDataToRenderInHtml = (contenu, dataType) => {
+      let resultData = null;
+      switch (dataType) {
+         case 'VISA':
+            resultData =
+               langueActual === 'fr'
+                  ? contenu.en_tete_contenu_fr_mobile?.split(
+                       '________________'
+                    )[1]
+                  : contenu.en_tete_contenu_mg_mobile?.split(
+                       '________________'
+                    )[1] ??
+                    contenu.en_tete_contenu_fr_mobile?.split(
+                       '________________'
+                    )[1];
+            break;
+         case 'Exposer':
+            resultData =
+               langueActual === 'fr'
+                  ? contenu.expose_des_motifs_contenu_fr_mobile?.split(
+                       '________________'
+                    )[1]
+                  : contenu.expose_des_motifs_contenu_mg_mobile?.split(
+                       '________________'
+                    )[1] ??
+                    contenu.expose_des_motifs_contenu_fr_mobile?.split(
+                       '________________'
+                    )[1];
+            break;
+         case 'Note':
+            resultData =
+               langueActual === 'fr'
+                  ? contenu.note_contenu_fr
+                  : contenu.note_contenu_fr ?? contenu.note_contenu_fr;
+         default:
+            resultData = `<p>Le contenu est vide</p>`;
+      }
+      setDataToRender(resultData);
+   };
+
+   const pickDataToSpeak = (contenu, dataType) => {
+      let resultData = null;
+      switch (dataType) {
+         case 'VISA':
+            resultData =
+               langueActual === 'fr'
+                  ? contenu.en_tete_contenu_fr_mobile?.split(
+                       '________________'
+                    )[0]
+                  : contenu.en_tete_contenu_mg_mobile?.split(
+                       '________________'
+                    )[0] ??
+                    contenu.en_tete_contenu_fr_mobile?.split(
+                       '________________'
+                    )[0];
+            break;
+         case 'Exposer':
+            resultData =
+               langueActual === 'fr'
+                  ? contenu.expose_des_motifs_contenu_fr_mobile?.split(
+                       '________________'
+                    )[0]
+                  : contenu.expose_des_motifs_contenu_mg_mobile?.split(
+                       '________________'
+                    )[0] ??
+                    contenu.expose_des_motifs_contenu_fr_mobile?.split(
+                       '________________'
+                    )[0];
+            break;
+         case 'Note':
+            resultData =
+               langueActual === 'fr'
+                  ? contenu.note_contenu_fr
+                  : contenu.note_contenu_fr ?? contenu.note_contenu_fr;
+         default:
+            resultData = `Le contenu est vide`;
+      }
+      setDataToSpeak(resultData);
+   };
+
+   const getTitleOfScreen = (typeOfData) => {
+      switch (typeOfData) {
+         case 'VISA':
+            return langueActual === 'fr' ? 'VISA' : 'VISA';
+         case 'Exposer':
+            return langueActual === 'fr'
+               ? 'Exposé des motifs'
+               : 'Fampahafantarana ny antony';
+         case 'Note':
+            return langueActual === 'fr' ? 'Note' : 'Naoty';
+         default:
+            return '';
+      }
+   };
+
    //all efects
+   useEffect(() => {
+      pickDataToRenderInHtml(contenuMother, typeOfData);
+      pickDataToSpeak(contenuMother, typeOfData);
+      setTitleOfScreen(getTitleOfScreen(typeOfData))
+   }, []);
 
    //all components
    const renderBackDrop = useCallback(
@@ -303,13 +412,7 @@ export default function DetailEnteteScreen({ navigation, route }) {
                            color: Colors.white,
                         }}
                      >
-                        {typeOfData === 'VISA'
-                           ? langueActual === 'fr'
-                              ? 'VISA'
-                              : 'Fahazoan-dalana'
-                           : langueActual === 'fr'
-                           ? 'Exposé des motifs'
-                           : 'Famelabelarana ny antonantony'}
+                        {titleOfScreen}
                      </Text>
                   </View>
                   <View style={styles.description_section}>
@@ -339,29 +442,13 @@ export default function DetailEnteteScreen({ navigation, route }) {
                               marginTop: 18,
                            }}
                         >
-                           {langueActual === 'fr' ? (
+                           {
                               <RenderHtml
                                  contentWidth={width}
-                                 source={sourceHTML(
-                                    typeOfData === 'VISA'
-                                       ? contenuMother.en_tete_contenu_fr
-                                       : contenuMother.expose_des_motifs_contenu_fr
-                                 )}
+                                 source={sourceHTML(dataToRender)}
                                  tagsStyles={tagsStyles}
                               />
-                           ) : (
-                              <RenderHtml
-                                 contentWidth={width}
-                                 source={sourceHTML(
-                                    typeOfData === 'VISA'
-                                       ? contenuMother.en_tete_contenu_mg ??
-                                            contenuMother.en_tete_contenu_fr
-                                       : contenuMother.expose_des_motifs_contenu_mg ??
-                                            contenuMother.expose_des_motifs_contenu_fr
-                                 )}
-                                 tagsStyles={tagsStyles}
-                              />
-                           )}
+                           }
                         </ScrollView>
                      </View>
                   </View>
@@ -409,39 +496,7 @@ export default function DetailEnteteScreen({ navigation, route }) {
                         color={Colors.greenAvg}
                         onPress={() => {
                            setIsSpeakPlay(!isSpeakPlay);
-                           if (langueActual === 'fr') {
-                              if (typeOfData === 'VISA') {
-                                 playPauseSpeak(
-                                    contenuMother.en_tete_contenu_fr_mobile
-                                       ?.split('________________')[0]
-                                       .substring(0, 4000) ??
-                                       'Le contenu est vide'
-                                 );
-                              } else {
-                                 playPauseSpeak(
-                                    contenuMother.expose_des_motifs_contenu_fr_mobile
-                                       ?.split('________________')[0]
-                                       .substring(0, 4000) ??
-                                       'Le contenu est vide'
-                                 );
-                              }
-                           } else {
-                              if (typeOfData === 'VISA') {
-                                 playPauseSpeak(
-                                    contenuMother.en_tete_contenu_mg_mobile
-                                       ?.split('________________')[0]
-                                       .substring(0, 4000) ??
-                                       'Le contenu est vide.'
-                                 );
-                              } else {
-                                 playPauseSpeak(
-                                    contenuMother.expose_des_motifs_contenu_mg_mobile
-                                       ?.split('________________')[0]
-                                       .substring(0, 4000) ??
-                                       'Le contenu est vide.'
-                                 );
-                              }
-                           }
+                           playPauseSpeak(dataToSpeak?.substring(0, 4000));
                         }}
                      />
                   </View>
@@ -538,19 +593,6 @@ export default function DetailEnteteScreen({ navigation, route }) {
                         ? contenuMother.thematique_nom_fr
                         : contenuMother.thematique_nom_mg ??
                           contenuMother.thematique_nom_fr}
-                  </Text>
-               </View>
-
-               <View style={styles.view_one_item_in_bottomsheet}>
-                  <Text style={styles.label_info_article}>
-                     {langueActual === 'fr' ? 'Note ' : 'Naoty '}{' '}
-                  </Text>
-                  <Text style={styles.value_info_article}>
-                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                     {langueActual === 'fr'
-                        ? contenuMother.note_contenu_fr
-                        : contenuMother.note_contenu_mg ??
-                          contenuMother.note_contenu_fr}
                   </Text>
                </View>
 
