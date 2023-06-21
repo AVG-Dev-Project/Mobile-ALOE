@@ -13,7 +13,13 @@ import {
 } from 'react-native';
 import { ScrollView as ScrollViewBottomSheet } from 'react-native-gesture-handler';
 import * as Speech from 'expo-speech';
-import React, { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+import React, {
+   useState,
+   useMemo,
+   useRef,
+   useCallback,
+   useEffect,
+} from 'react';
 import { captureRef } from 'react-native-view-shot';
 import RenderHtml from 'react-native-render-html';
 import { useSelector } from 'react-redux';
@@ -337,7 +343,7 @@ export default function DetailEnteteScreen({ navigation, route }) {
    useEffect(() => {
       pickDataToRenderInHtml(contenuMother, typeOfData);
       pickDataToSpeak(contenuMother, typeOfData);
-   }, [])
+   }, []);
 
    //all components
    const renderBackDrop = useCallback(
@@ -576,19 +582,6 @@ export default function DetailEnteteScreen({ navigation, route }) {
                         ? contenuMother.thematique_nom_fr
                         : contenuMother.thematique_nom_mg ??
                           contenuMother.thematique_nom_fr}
-                  </Text>
-               </View>
-
-               <View style={styles.view_one_item_in_bottomsheet}>
-                  <Text style={styles.label_info_article}>
-                     {langueActual === 'fr' ? 'Note ' : 'Naoty '}{' '}
-                  </Text>
-                  <Text style={styles.value_info_article}>
-                     <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
-                     {langueActual === 'fr'
-                        ? contenuMother.note_contenu_fr
-                        : contenuMother.note_contenu_mg ??
-                          contenuMother.note_contenu_fr}
                   </Text>
                </View>
 
