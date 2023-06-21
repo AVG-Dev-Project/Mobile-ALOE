@@ -339,6 +339,21 @@ export default function DetailEnteteScreen({ navigation, route }) {
       setDataToSpeak(resultData);
    };
 
+   const getTitleOfScreen = (typeOfData) => {
+      switch (typeOfData) {
+         case 'VISA':
+            return langueActual === 'fr' ? 'VISA' : 'VISA';
+         case 'Exposer':
+            return langueActual === 'fr'
+               ? 'Exposé des motifs'
+               : 'Fampahafantarana ny antony';
+         case 'Note':
+            return langueActual === 'fr' ? 'Note' : 'Naoty';
+         default:
+            return '';
+      }
+   };
+
    //all efects
    useEffect(() => {
       pickDataToRenderInHtml(contenuMother, typeOfData);
@@ -395,13 +410,7 @@ export default function DetailEnteteScreen({ navigation, route }) {
                            color: Colors.white,
                         }}
                      >
-                        {typeOfData === 'VISA'
-                           ? langueActual === 'fr'
-                              ? 'VISA'
-                              : 'Fahazoan-dalana'
-                           : langueActual === 'fr'
-                           ? 'Exposé des motifs'
-                           : 'Famelabelarana ny antonantony'}
+                        {getTitleOfScreen(typeOfData)}
                      </Text>
                   </View>
                   <View style={styles.description_section}>
