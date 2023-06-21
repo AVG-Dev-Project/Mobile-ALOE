@@ -49,6 +49,7 @@ export default function DetailEnteteScreen({ navigation, route }) {
    );
    const [dataToSpeak, setDataToSpeak] = useState(null);
    const [dataToRender, setDataToRender] = useState(null);
+   const [titleOfScreen, setTitleOfScreen] = useState(null);
    const typeOfData = route.params.typeOfData;
    const snapPoints = useMemo(() => [0, '60%', '90%'], []);
 
@@ -358,6 +359,7 @@ export default function DetailEnteteScreen({ navigation, route }) {
    useEffect(() => {
       pickDataToRenderInHtml(contenuMother, typeOfData);
       pickDataToSpeak(contenuMother, typeOfData);
+      setTitleOfScreen(getTitleOfScreen(typeOfData))
    }, []);
 
    //all components
@@ -410,7 +412,7 @@ export default function DetailEnteteScreen({ navigation, route }) {
                            color: Colors.white,
                         }}
                      >
-                        {getTitleOfScreen(typeOfData)}
+                        {titleOfScreen}
                      </Text>
                   </View>
                   <View style={styles.description_section}>
