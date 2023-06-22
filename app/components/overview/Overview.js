@@ -8,7 +8,6 @@ import {
    SafeAreaView,
    ScrollView,
    TouchableOpacity,
-   ToastAndroid,
    useWindowDimensions,
 } from 'react-native';
 import { ScrollView as ScrollViewBottomSheet } from 'react-native-gesture-handler';
@@ -19,15 +18,12 @@ import React, {
    useCallback,
    useEffect,
 } from 'react';
-import { captureRef } from 'react-native-view-shot';
 import RenderHtml from 'react-native-render-html';
 import { useSelector } from 'react-redux';
-import ReactNativeBlobUtil from 'react-native-blob-util';
 import * as MediaLibrary from 'expo-media-library';
 import { styles } from './styles';
-import { Icon, FAB, Button } from '@rneui/themed';
+import { Icon, Button } from '@rneui/themed';
 import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
-import { printToFileAsync } from 'expo-print';
 import bgImage from '_images/abstract_3.jpg';
 import { Colors } from '_theme/Colors';
 import { parsingTags, heightPercentageToDP } from '_utils';
@@ -38,17 +34,16 @@ export default function OverviewScreen({ navigation, route }) {
       (selector) => selector.fonctionnality.langue
    );
    const { width } = useWindowDimensions();
-   const [isFABshow, setIsFABshow] = useState(false);
    const [fontSizeDynamic, setFontSizeDynamic] = useState(
       width < 380 ? 14 : 18
    );
    const [contenuMother, setContenuMother] = useState(
       route.params.contenuMother
    );
+   const allArticlesRelatedToTheContenu = route.params.allArticles;
    const [dataToRender, setDataToRender] = useState(null);
-   const typeOfData = route.params.typeOfData;
    const snapPoints = useMemo(() => [0, '60%', '90%'], []);
-
+console.log(allArticlesRelatedToTheContenu)
    //permission
    if (status === null) {
       requestPermission();
@@ -63,166 +58,6 @@ export default function OverviewScreen({ navigation, route }) {
    /*function to speach article*/
    const openBottomSheet = () => {
       return bottomSheetRef.current.present();
-   };
-
-   const onSaveImageAsync = async () => {
-      try {
-         const localUri = await captureRef(imageRef, {
-            quality: 1,
-         });
-
-         await MediaLibrary.saveToLibraryAsync(localUri);
-         if (localUri) {
-            ToastAndroid.show(
-               langueActual === 'fr'
-                  ? `Image sauvegarder dans votre galérie.`
-                  : `Lahatsoratra voatahiry ao anaty lisitry ny sarinao.`,
-               ToastAndroid.SHORT
-            );
-         }
-      } catch (e) {
-         ToastAndroid.show(
-            langueActual === 'fr'
-               ? `La capture a été intérompu. Veuillez réessayer!`
-               : "Nisy olana teo amin'ny fangalana ny sary.",
-            ToastAndroid.SHORT
-         );
-      }
-   };
-
-   const downloadAsPdf = async () => {
-      const html = `
-          <html>
-             <body>
-                <h1 style="text-align: center; color: ${Colors.greenAvg}">${
-         langueActual === 'fr'
-            ? contenuMother.type_nom_fr + ' n°'
-            : contenuMother.type_nom_mg ?? contenuMother.type_nom_fr + ' n°'
-      }
-                ${contenuMother.numero}</h1>
-                <h3 style="text-align: left;">Date: <span style="font-weight: normal;">${
-                   contenuMother.date
-                }</span></h3>
-                <h3 style="text-align: left;">Numero: <span style="font-weight: normal;">${
-                   contenuMother.numero
-                }</span></h3>
-
-                <h3 style="text-decoration: underline; color: ${
-                   Colors.greenAvg
-                }">VISA</h3>
-                 <p style="width: 90%">${
-                    langueActual === 'fr'
-                       ? contenuMother.en_tete_contenu_fr_mobile?.split(
-                            '________________'
-                         )[0]
-                       : contenuMother.en_tete_contenu_mg_mobile?.split(
-                            '________________'
-                         )[0]
-                 }</p>
-
-                 <h3 style="text-decoration: underline; color: ${
-                    Colors.greenAvg
-                 }">Exposé des motifs</h3>
-                 <p style="width: 90%">${
-                    langueActual === 'fr'
-                       ? contenuMother.expose_des_motifs_contenu_fr_mobile?.split(
-                            '________________'
-                         )[0]
-                       : contenuMother.expose_des_motifs_contenu_mg_mobile?.split(
-                            '________________'
-                         )[0]
-                 }</p>
-
-                <h3 style="text-align: left;">Type: <span style="font-weight: normal;">${
-                   langueActual === 'fr'
-                      ? contenuMother.type_nom_fr
-                      : contenuMother.type_nom_mg ?? contenuMother.type_nom_fr
-                }</span></h3>
-                <h3 style="text-align: left;">Thematique: <span style="font-weight: normal;">${
-                   langueActual === 'fr'
-                      ? contenuMother.thematique_nom_fr
-                      : contenuMother.thematique_nom_mg ??
-                        contenuMother.thematique_nom_fr
-                }</span></h3>
-                <h3 style="text-align: left;">Objet: <span style="font-weight: normal;">${
-                   langueActual === 'fr'
-                      ? contenuMother.objet_contenu_fr ?? ' '
-                      : contenuMother.objet_contenu_mg ?? ' '
-                }</span></h3>
-                <h3 style="text-align: left;">Etat: <span style="font-weight: normal;">${
-                   langueActual === 'fr'
-                      ? contenuMother.etat_nom_fr ?? ' '
-                      : contenuMother.etat_nom_mg ?? ' '
-                }</span></h3>
-                <h3 style="text-align: left;">Organisme: <span style="font-weight: normal;">${
-                   langueActual === 'fr'
-                      ? contenuMother.organisme_nom_fr ?? ' '
-                      : contenuMother.organisme_nom_mg ?? ' '
-                }</span></h3>
-                <h3 style="text-align: left;">Note: <span style="font-weight: normal;">${
-                   langueActual === 'fr'
-                      ? contenuMother.note_contenu_fr ?? ' '
-                      : contenuMother.note_contenu_mg ?? ' '
-                }</span></h3>
-                
-                <footer style="margin-top: 100px; font-size: 12px;text-align:center;">
-                   PDF généré par l'application de l'Alliance Voary Gasy ou AVG
-                </footer>
-             </body>
-          </html>
-       `;
-
-      const file = await printToFileAsync({
-         html: html,
-         base64: false,
-      });
-      await saveToDownloadDirectory(file.uri);
-   };
-
-   const saveToDownloadDirectory = async (uri) => {
-      try {
-         //for version 10 and up
-         if (Platform.Version >= 29) {
-            const filename = `${
-               typeOfData === 'VISA' ? 'VISA du' : 'Exposé des motifs du'
-            } ${contenuMother.type_nom_fr} ${contenuMother.numero ?? ''}`;
-            await ReactNativeBlobUtil.MediaCollection.copyToMediaStore(
-               {
-                  name: filename,
-                  parentFolder: 'aloe/pdf',
-                  mimeType: 'application/pdf',
-               },
-               'Download',
-               uri.replace('file://', '')
-            );
-            ToastAndroid.show(
-               `Fichier télecharger dans download/aloe/pdf.`,
-               ToastAndroid.SHORT
-            );
-         }
-
-         // for version 9 and down
-         if (Platform.Version < 29) {
-            const asset = await MediaLibrary.createAssetAsync(uri);
-            const album = await MediaLibrary.getAlbumAsync('Download');
-            if (album === null) {
-               await MediaLibrary.createAlbumAsync('Download', asset, false);
-            } else {
-               await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-            }
-            ToastAndroid.show(
-               `Fichier télecharger dans le dossier download!`,
-               ToastAndroid.SHORT
-            );
-         }
-      } catch (e) {
-         ToastAndroid.show(
-            langueActual === 'fr'
-               ? 'Erreur durant le télechargement du pdf'
-               : 'Nisy olana teo ampangalana ny pdf.',
-            ToastAndroid.LONG
-         );
-      }
    };
 
    const sourceHTML = (data) => {
@@ -242,49 +77,15 @@ export default function OverviewScreen({ navigation, route }) {
       [fontSizeDynamic]
    );
 
-   const pickDataToRenderInHtml = (contenu, dataType) => {
+   const pickDataToRenderInHtml = (contenu) => {
       let resultData = null;
-      switch (dataType) {
-         case 'VISA':
-            resultData =
-               langueActual === 'fr'
-                  ? contenu.en_tete_contenu_fr_mobile?.split(
-                       '________________'
-                    )[1]
-                  : contenu.en_tete_contenu_mg_mobile?.split(
-                       '________________'
-                    )[1] ??
-                    contenu.en_tete_contenu_fr_mobile?.split(
-                       '________________'
-                    )[1];
-            break;
-         case 'Exposer':
-            resultData =
-               langueActual === 'fr'
-                  ? contenu.expose_des_motifs_contenu_fr_mobile?.split(
-                       '________________'
-                    )[1]
-                  : contenu.expose_des_motifs_contenu_mg_mobile?.split(
-                       '________________'
-                    )[1] ??
-                    contenu.expose_des_motifs_contenu_fr_mobile?.split(
-                       '________________'
-                    )[1];
-            break;
-         case 'Note':
-            resultData =
-               langueActual === 'fr'
-                  ? contenu.note_contenu_fr
-                  : contenu.note_contenu_fr ?? contenu.note_contenu_fr;
-         default:
-            resultData = `<p>Le contenu est vide</p>`;
-      }
+      console.log("tayu")
       setDataToRender(resultData);
    };
 
    //all efects
    useEffect(() => {
-      pickDataToRenderInHtml(contenuMother, typeOfData);
+      pickDataToRenderInHtml(contenuMother);
    }, []);
 
    //all components
