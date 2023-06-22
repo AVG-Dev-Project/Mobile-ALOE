@@ -214,7 +214,7 @@ export default function ListingContenu({ navigation }) {
                   titleScreen: `${
                      langueActual === 'fr'
                         ? item.type_nom_fr + ' n° '
-                        : item.type_nom_mg + ' faha '
+                        : `${item.type_nom_mg ?? item.type_nom_fr } faha`
                   } ${item.numero}`,
                   contenuMother: item,
                });
@@ -238,7 +238,7 @@ export default function ListingContenu({ navigation }) {
                      >
                         {langueActual === 'fr'
                            ? item.type_nom_fr + ' n°'
-                           : item.type_nom_mg ?? 'Votoantiny' + ' faha '}{' '}
+                           : `${item.type_nom_mg ?? item.type_nom_fr } faha` }{' '}
                         {item.numero}
                      </Text>
                      <Pressable
@@ -323,8 +323,7 @@ export default function ListingContenu({ navigation }) {
                            {parsingTags(item.tag).map((tag) =>
                               langueActual === 'fr'
                                  ? tag.contenu_fr + ', '
-                                 : tag.contenu_mg ??
-                                   ', ' + tag.contenu_fr + ', '
+                                 : `${tag.contenu_mg ?? tag.contenu_fr},}`
                            )}
                         </Text>
                      </View>
