@@ -11,14 +11,9 @@ import {
    useWindowDimensions,
 } from 'react-native';
 import { ScrollView as ScrollViewBottomSheet } from 'react-native-gesture-handler';
-import React, {
-   useState,
-   useMemo,
-   useRef,
-   useCallback,
-   useEffect,
-} from 'react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
 import RenderHtml from 'react-native-render-html';
+import { FlashList } from '@shopify/flash-list';
 import { useSelector } from 'react-redux';
 import * as MediaLibrary from 'expo-media-library';
 import { styles } from './styles';
@@ -26,7 +21,11 @@ import { Icon, Button } from '@rneui/themed';
 import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import bgImage from '_images/abstract_3.jpg';
 import { Colors } from '_theme/Colors';
-import { parsingTags, heightPercentageToDP } from '_utils';
+import {
+   parsingTags,
+   heightPercentageToDP,
+   filterArticleToListByContenu,
+} from '_utils';
 
 export default function OverviewScreen({ navigation, route }) {
    const [status, requestPermission] = MediaLibrary.usePermissions();
@@ -40,10 +39,12 @@ export default function OverviewScreen({ navigation, route }) {
    const [contenuMother, setContenuMother] = useState(
       route.params.contenuMother
    );
-   const allArticlesRelatedToTheContenu = route.params.allArticles;
-   const [dataToRender, setDataToRender] = useState(null);
+   const allArticles = useSelector((selector) => selector.loi.articles);
+   const allArticlesRelatedToTheContenu =
+      allArticles.length &&
+      filterArticleToListByContenu(contenuMother.id, allArticles);
    const snapPoints = useMemo(() => [0, '60%', '90%'], []);
-console.log(allArticlesRelatedToTheContenu)
+
    //permission
    if (status === null) {
       requestPermission();
@@ -55,7 +56,6 @@ console.log(allArticlesRelatedToTheContenu)
 
    //all function
 
-   /*function to speach article*/
    const openBottomSheet = () => {
       return bottomSheetRef.current.present();
    };
@@ -77,16 +77,91 @@ console.log(allArticlesRelatedToTheContenu)
       [fontSizeDynamic]
    );
 
-   const pickDataToRenderInHtml = (contenu) => {
-      let resultData = null;
-      console.log("tayu")
-      setDataToRender(resultData);
-   };
+   // Initialisation des variables pour le titre, le chapitre et la section actuels
+   let currentTitre = null;
+   let currentChapitre = null;
+   let currentSection = null;
+
+   // Fonction pour afficher les articles
+   const renderArticle = useCallback(
+      (article) => {
+         // Vérification et affichage du titre
+         if (currentTitre !== article.titre_fr) {
+            currentTitre = article.titre_fr;
+            return (
+               <View>
+                  <Text style={styles.label_titre}>
+                     TITRE N° {article.titre_numero}: {currentTitre}
+                  </Text>
+                  {
+                     <RenderHtml
+                        contentWidth={width}
+                        source={sourceHTML(
+                           article.contenu_fr?.split('________________')[1]
+                        )}
+                        tagsStyles={tagsStyles}
+                     />
+                  }
+               </View>
+            );
+         }
+
+         // Vérification et affichage du chapitre
+         if (currentChapitre !== article.chapitre_titre_fr) {
+            currentChapitre = article.chapitre_titre_fr;
+            return (
+               <View>
+                  <Text style={styles.label_chapitre}>
+                     CHAPITRE N° {article.chapitre_numero}: {currentChapitre}
+                  </Text>
+                  {
+                     <RenderHtml
+                        contentWidth={width}
+                        source={sourceHTML(
+                           article.contenu_fr?.split('________________')[1]
+                        )}
+                        tagsStyles={tagsStyles}
+                     />
+                  }
+               </View>
+            );
+         }
+
+         // Vérification et affichage de la section
+         if (currentSection !== article.section_titre_fr) {
+            currentSection = article.section_titre_fr;
+            return (
+               <View>
+                  <Text style={styles.label_section}>
+                     SECTION: {currentSection}
+                  </Text>
+                  {
+                     <RenderHtml
+                        contentWidth={width}
+                        source={sourceHTML(
+                           article.contenu_fr?.split('________________')[1]
+                        )}
+                        tagsStyles={tagsStyles}
+                     />
+                  }
+               </View>
+            );
+         }
+
+         return (
+            <RenderHtml
+               contentWidth={width}
+               source={sourceHTML(
+                  article.contenu_fr?.split('________________')[1]
+               )}
+               tagsStyles={tagsStyles}
+            />
+         );
+      },
+      [fontSizeDynamic]
+   );
 
    //all efects
-   useEffect(() => {
-      pickDataToRenderInHtml(contenuMother);
-   }, []);
 
    //all components
    const renderBackDrop = useCallback(
@@ -127,20 +202,24 @@ console.log(allArticlesRelatedToTheContenu)
                      >
                         <Icon name="arrow-back" color={Colors.white} />
                      </Button>
-                     <Text
-                        style={{
-                           fontWeight: 'bold',
-                           fontSize: width < 370 ? 18 : 22,
-                           textDecorationLine: 'underline',
-                           marginBottom: 8,
-                           textAlign: 'center',
-                           width: '90%',
-                           color: Colors.white,
-                        }}
-                     >
-                        Vue d'ensemble
-                     </Text>
+                     <View style={styles.titleOfOverview}>
+                        <Text
+                           style={{
+                              fontWeight: 'bold',
+                              fontSize: width < 370 ? 18 : 22,
+                              textDecorationLine: 'underline',
+                              textAlign: 'center',
+                              color: Colors.white,
+                           }}
+                        >
+                           Vue d'ensemble
+                        </Text>
+                        <Text
+                           style={styles.typeOfContenu}
+                        >{`${contenuMother.type_nom_fr} ${contenuMother.numero}`}</Text>
+                     </View>
                   </View>
+
                   <View style={styles.description_section}>
                      <View
                         style={
@@ -161,40 +240,45 @@ console.log(allArticlesRelatedToTheContenu)
                         </TouchableOpacity>
                      </View>
 
-                     <View>
-                        <ScrollView
-                           style={{
-                              paddingRight: 4,
-                              marginTop: 18,
-                           }}
-                        >
-                           {
-                              <RenderHtml
-                                 contentWidth={width}
-                                 source={sourceHTML(dataToRender)}
-                                 tagsStyles={tagsStyles}
-                              />
-                           }
-                        </ScrollView>
+                     <View
+                        style={{
+                           flex: 1,
+                           paddingRight: 4,
+                           marginTop: 18,
+                        }}
+                     >
+                        <FlashList
+                           key={'_'}
+                           data={allArticlesRelatedToTheContenu}
+                           renderItem={({ item }) => renderArticle(item)}
+                           keyExtractor={(item) => item.id.toString()}
+                           estimatedItemSize={100}
+                           getItemLayout={(data, index) => ({
+                              length: data.length,
+                              offset: data.length * index,
+                              index,
+                           })}
+                           extraData={allArticlesRelatedToTheContenu}
+                        />
                      </View>
                   </View>
                </View>
-                <View style={styles.view_button_zoom}>
-                    <Button
-                    type="clear"
-                    size="sm"
-                    onPress={() => setFontSizeDynamic(fontSizeDynamic + 2)}
-                    >
-                    <Icon name="zoom-in" color={Colors.greenAvg} />
-                    </Button>
-                    <Button
-                    type="clear"
-                    size="sm"
-                    onPress={() => setFontSizeDynamic(fontSizeDynamic - 2)}
-                    >
-                    <Icon name="zoom-out" color={Colors.greenAvg} />
-                    </Button>
-                </View>
+               <View style={styles.view_button_zoom}>
+                  <Button
+                     type="clear"
+                     size="sm"
+                     onPress={() => setFontSizeDynamic(fontSizeDynamic + 2)}
+                  >
+                     <Icon name="zoom-in" color={Colors.greenAvg} />
+                  </Button>
+                  <Button
+                     type="clear"
+                     size="sm"
+                     onPress={() => setFontSizeDynamic(fontSizeDynamic - 2)}
+                  >
+                     <Icon name="zoom-out" color={Colors.greenAvg} />
+                  </Button>
+               </View>
             </ImageBackground>
          </SafeAreaView>
 

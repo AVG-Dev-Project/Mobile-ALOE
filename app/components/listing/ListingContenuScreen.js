@@ -18,7 +18,6 @@ import {
    fetchContenusToApi,
    parseDataContenuLazyLoading,
    parsingTags,
-   widthPercentageToDP,
    heightPercentageToDP,
 } from '_utils';
 import { styles } from './stylesContenu';
@@ -46,7 +45,6 @@ export default function ListingContenu({ navigation }) {
    );
    const urlApiAttachement = 'https://aloe.iteam-s.mg';
    const [isGetNextData, setIsGetNextData] = useState(false);
-   const allArticles = useSelector((selector) => selector.loi.articles);
    const [contenuList, setContenuList] = useState(
       allContenusFromStore.map((item) => {
          return {
@@ -204,7 +202,7 @@ export default function ListingContenu({ navigation }) {
          return;
       }
    };
-console.log("allArticles ",  allArticles)
+
    //all logics
    const _renderItem = useCallback(({ item }) => {
       return (
@@ -215,10 +213,9 @@ console.log("allArticles ",  allArticles)
                   titleScreen: `${
                      langueActual === 'fr'
                         ? item.type_nom_fr + ' n° '
-                        : `${item.type_nom_mg ?? item.type_nom_fr } faha`
+                        : `${item.type_nom_mg ?? item.type_nom_fr} faha`
                   } ${item.numero}`,
                   contenuMother: item,
-                  allArticles: filterArticleToListByContenu(item.id, allArticles)
                });
             }}
          >
@@ -240,14 +237,20 @@ console.log("allArticles ",  allArticles)
                      >
                         {langueActual === 'fr'
                            ? item.type_nom_fr + ' n°'
-                           : `${item.type_nom_mg ?? item.type_nom_fr } faha` }{' '}
+                           : `${
+                                item.type_nom_mg ?? item.type_nom_fr
+                             } faha`}{' '}
                         {item.numero}
                      </Text>
                      <Pressable
                         activeOpacity={0.5}
                         onPress={() => {
                            navigation.navigate(nameNav.overview, {
-                              titleScreen: `${langueActual === 'fr' ? "Vue d'ensemble" : "Fampisehoana ny rehetra"}`,
+                              titleScreen: `${
+                                 langueActual === 'fr'
+                                    ? "Vue d'ensemble"
+                                    : 'Fampisehoana ny rehetra'
+                              }`,
                               contenuMother: item,
                            });
                         }}
