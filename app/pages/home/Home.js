@@ -288,6 +288,7 @@ export default function Home({ navigation }) {
                            horizontal={true}
                            showHorizontalScrollIndicator={false}
                            data={allThematiques}
+                           extraData={langueActual}
                            key={'_'}
                            keyExtractor={_idKeyExtractorThematique}
                            renderItem={_renderItemThematique}
@@ -342,6 +343,7 @@ export default function Home({ navigation }) {
                            horizontal={true}
                            showHorizontalScrollIndicator={false}
                            data={allContenus}
+                           extraData={langueActual}
                            key={'_'}
                            keyExtractor={_idKeyExtractorContenu}
                            renderItem={_renderItemContenu}

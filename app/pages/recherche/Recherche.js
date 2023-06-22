@@ -538,7 +538,7 @@ export default function Recherche({ navigation, route }) {
                      titleScreen: `${
                         langueActual === 'fr'
                            ? item.type_nom_fr + ' n° '
-                           : item.type_nom_mg + ' faha '
+                           : `${item.type_nom_mg ?? item.type_nom_fr} faha}`
                      } ${item.numero}`,
                      contenuMother: item,
                   });
@@ -626,8 +626,7 @@ export default function Recherche({ navigation, route }) {
                               {parsingTags(item.tag).map((tag) =>
                                  langueActual === 'fr'
                                     ? tag.contenu_fr + ', '
-                                    : tag.contenu_mg ??
-                                      ', ' + tag.contenu_fr + ', '
+                                    : `${tag.contenu_mg ?? tag.contenu_fr},}`
                               )}
                            </Text>
                         </View>
