@@ -113,15 +113,16 @@ export default function Welcome({ navigation }) {
             <View style={styles.images_welcome}>
                <Text
                   style={{
-                     fontSize: width < 370 ? 20 : 30,
+                     fontSize: width < 370 ? 25 : 35,
                      fontWeight: 'bold',
                      textAlign: 'center',
                   }}
                >
-                  Bienvenue sur ALOE
+                  Bienvenue sur{' '}
+                  <Text style={{ color: Colors.greenAvg }}>ALOE</Text>
                </Text>
             </View>
-            
+
             {isDataAvailable ? (
                <Text style={{ textAlign: 'center', marginVertical: 5 }}>
                   ALOE ou{' '}

@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
    },
    images_welcome: {
       width: widthPercentageToDP(90),
-      marginTop: heightPercentageToDP(16),
+      marginTop: heightPercentageToDP(25),
    },
    logo_image: {
       height: heightPercentageToDP(18),
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
       width: '100%',
    },
    labelDescriptionLogoUsaid: {
-      fontSize: 12,
+      fontSize: 13,
       fontWeight: 'bold',
    },
 });
