@@ -110,22 +110,18 @@ export default function Welcome({ navigation }) {
    return (
       <ScrollView style={styles.view_container_welcome}>
          <View style={{ alignItems: 'center' }}>
-            <Image
-               style={styles.images_welcome}
-               source={require('_images/aloe.png')}
-            />
-            {/* <View style={styles.images_welcome}>
-
-            </View> */}
-            <Text
-               style={{
-                  fontSize: width < 370 ? 20 : 30,
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-               }}
-            >
-               Bienvenue sur ALOE
-            </Text>
+            <View style={styles.images_welcome}>
+               <Text
+                  style={{
+                     fontSize: width < 370 ? 20 : 30,
+                     fontWeight: 'bold',
+                     textAlign: 'center',
+                  }}
+               >
+                  Bienvenue sur ALOE
+               </Text>
+            </View>
+            
             {isDataAvailable ? (
                <Text style={{ textAlign: 'center', marginVertical: 5 }}>
                   ALOE ou{' '}
