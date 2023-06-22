@@ -82,7 +82,7 @@ export default function OverviewScreen({ navigation, route }) {
    let currentChapitre = null;
    let currentSection = null;
 
-   // Fonction pour afficher les articles
+   // Fonction pour afficher tous les articles
    const renderArticle = useCallback(
       (article) => {
          // Vérification et affichage du titre
@@ -93,7 +93,7 @@ export default function OverviewScreen({ navigation, route }) {
                   <Text style={styles.label_titre}>
                      TITRE N° {article.titre_numero}: {currentTitre}
                   </Text>
-                  {
+                  {langueActual === 'fr' ? (
                      <RenderHtml
                         contentWidth={width}
                         source={sourceHTML(
@@ -101,7 +101,16 @@ export default function OverviewScreen({ navigation, route }) {
                         )}
                         tagsStyles={tagsStyles}
                      />
-                  }
+                  ) : (
+                     <RenderHtml
+                        contentWidth={width}
+                        source={sourceHTML(
+                           article.contenu_mg?.split('________________')[1] ??
+                              article.contenu_fr?.split('________________')[1]
+                        )}
+                        tagsStyles={tagsStyles}
+                     />
+                  )}
                </View>
             );
          }
@@ -114,7 +123,7 @@ export default function OverviewScreen({ navigation, route }) {
                   <Text style={styles.label_chapitre}>
                      CHAPITRE N° {article.chapitre_numero}: {currentChapitre}
                   </Text>
-                  {
+                  {langueActual === 'fr' ? (
                      <RenderHtml
                         contentWidth={width}
                         source={sourceHTML(
@@ -122,7 +131,16 @@ export default function OverviewScreen({ navigation, route }) {
                         )}
                         tagsStyles={tagsStyles}
                      />
-                  }
+                  ) : (
+                     <RenderHtml
+                        contentWidth={width}
+                        source={sourceHTML(
+                           article.contenu_mg?.split('________________')[1] ??
+                              article.contenu_fr?.split('________________')[1]
+                        )}
+                        tagsStyles={tagsStyles}
+                     />
+                  )}
                </View>
             );
          }
@@ -148,11 +166,20 @@ export default function OverviewScreen({ navigation, route }) {
             );
          }
 
-         return (
+         return langueActual === 'fr' ? (
             <RenderHtml
                contentWidth={width}
                source={sourceHTML(
                   article.contenu_fr?.split('________________')[1]
+               )}
+               tagsStyles={tagsStyles}
+            />
+         ) : (
+            <RenderHtml
+               contentWidth={width}
+               source={sourceHTML(
+                  article.contenu_mg?.split('________________')[1] ??
+                     article.contenu_fr?.split('________________')[1]
                )}
                tagsStyles={tagsStyles}
             />
@@ -212,11 +239,17 @@ export default function OverviewScreen({ navigation, route }) {
                               color: Colors.white,
                            }}
                         >
-                           Vue d'ensemble
+                           {langueActual === 'fr'
+                              ? "Vue d'ensemble"
+                              : 'Fampisehona ny rehetra'}
                         </Text>
-                        <Text
-                           style={styles.typeOfContenu}
-                        >{`${contenuMother.type_nom_fr} ${contenuMother.numero}`}</Text>
+                        <Text style={styles.typeOfContenu}>{`${
+                           langueActual === 'fr'
+                              ? contenuMother.type_nom_fr
+                              : contenuMother.type_nom_fr
+                        } ${langueActual === 'fr' ? 'n° ' : 'faha '} ${
+                           contenuMother.numero
+                        }`}</Text>
                      </View>
                   </View>
 
