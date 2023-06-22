@@ -153,7 +153,7 @@ export default function OverviewScreen({ navigation, route }) {
                   <Text style={styles.label_section}>
                      SECTION: {currentSection}
                   </Text>
-                  {
+                  {langueActual === 'fr' ? (
                      <RenderHtml
                         contentWidth={width}
                         source={sourceHTML(
@@ -161,7 +161,16 @@ export default function OverviewScreen({ navigation, route }) {
                         )}
                         tagsStyles={tagsStyles}
                      />
-                  }
+                  ) : (
+                     <RenderHtml
+                        contentWidth={width}
+                        source={sourceHTML(
+                           article.contenu_mg?.split('________________')[1] ??
+                              article.contenu_fr?.split('________________')[1]
+                        )}
+                        tagsStyles={tagsStyles}
+                     />
+                  )}
                </View>
             );
          }
