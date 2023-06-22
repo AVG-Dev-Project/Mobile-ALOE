@@ -11,16 +11,27 @@ const styles = StyleSheet.create({
    images_welcome: {
       height:
          Dimensions.get('window').height < 800
-            ? heightPercentageToDP(30)
-            : heightPercentageToDP(40),
+            ? heightPercentageToDP(20)
+            : heightPercentageToDP(30),
       width:
          Dimensions.get('window').width < 800
-            ? widthPercentageToDP(50)
-            : widthPercentageToDP(60),
+            ? widthPercentageToDP(30)
+            : widthPercentageToDP(40),
    },
+   /*
+   images_welcome: {
+      height:
+         Dimensions.get('window').height < 800
+            ? heightPercentageToDP(20)
+            : heightPercentageToDP(30),
+      width:
+         Dimensions.get('window').width < 800
+            ? widthPercentageToDP(30)
+            : widthPercentageToDP(40),
+   },*/
    logo_image: {
-      height: heightPercentageToDP(8),
-      width: widthPercentageToDP(48),
+      height: heightPercentageToDP(18),
+      width: widthPercentageToDP(76),
    },
    view_button_arrondi: {
       borderWidth: 2,

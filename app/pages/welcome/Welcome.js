@@ -114,6 +114,9 @@ export default function Welcome({ navigation }) {
                style={styles.images_welcome}
                source={require('_images/aloe.png')}
             />
+            {/* <View style={styles.images_welcome}>
+
+            </View> */}
             <Text
                style={{
                   fontSize: width < 370 ? 20 : 30,
