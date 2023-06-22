@@ -273,27 +273,39 @@ export default function OverviewScreen({ navigation, route }) {
                         </TouchableOpacity>
                      </View>
 
-                     <View
-                        style={{
-                           flex: 1,
-                           paddingRight: 4,
-                           marginTop: 18,
-                        }}
-                     >
-                        <FlashList
-                           key={'_'}
-                           data={allArticlesRelatedToTheContenu}
-                           renderItem={({ item }) => renderArticle(item)}
-                           keyExtractor={(item) => item.id.toString()}
-                           estimatedItemSize={100}
-                           getItemLayout={(data, index) => ({
-                              length: data.length,
-                              offset: data.length * index,
-                              index,
-                           })}
-                           extraData={allArticlesRelatedToTheContenu}
+                     {allArticlesRelatedToTheContenu.length ? (
+                        <View
+                           style={{
+                              flex: 1,
+                              paddingRight: 4,
+                              marginTop: 18,
+                           }}
+                        >
+                           <FlashList
+                              key={'_'}
+                              data={allArticlesRelatedToTheContenu}
+                              renderItem={({ item }) => renderArticle(item)}
+                              keyExtractor={(item) => item.id.toString()}
+                              estimatedItemSize={100}
+                              getItemLayout={(data, index) => ({
+                                 length: data.length,
+                                 offset: data.length * index,
+                                 index,
+                              })}
+                              extraData={allArticlesRelatedToTheContenu}
+                           />
+                        </View>
+                     ) : (
+                        <RenderHtml
+                           contentWidth={width}
+                           source={sourceHTML(
+                              langueActual === 'fr'
+                                 ? '<h3 style="text-align: center; margin-top: 60px;">Aucun article télecharger pour ce contenu!</h3>'
+                                 : '<h3 style="text-align: center; margin-top: 60px;">Tsy mbola misy andininy nalainao ito didy aman-dalàna ito.</h3>'
+                           )}
+                           tagsStyles={tagsStyles}
                         />
-                     </View>
+                     )}
                   </View>
                </View>
                <View style={styles.view_button_zoom}>
