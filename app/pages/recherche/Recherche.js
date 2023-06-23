@@ -27,6 +27,8 @@ import {
    nameStackNavigation as nameNav,
    parsingTags,
    heightPercentageToDP,
+   getOverviewData,
+   filterArticleToListByContenu,
 } from '_utils';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import * as FileSystem from 'expo-file-system';
@@ -582,6 +584,7 @@ export default function Recherche({ navigation, route }) {
                                        : 'Fampisehoana ny rehetra'
                                  }`,
                                  contenuMother: item,
+                                 overviewData: getOverviewData(filterArticleToListByContenu(item.id, allArticles))
                               });
                            }}
                         >

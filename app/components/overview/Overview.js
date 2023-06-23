@@ -45,6 +45,8 @@ export default function OverviewScreen({ navigation, route }) {
       requestPermission();
    }
 
+   console.log("overviewData : ", overviewData);
+
    //all refs
    const bottomSheetRef = useRef(null);
    const imageRef = useRef();
@@ -282,13 +284,13 @@ export default function OverviewScreen({ navigation, route }) {
                               marginTop: 18,
                            }}
                         >
-                        <RenderHtml
+                        {/* <RenderHtml
                            contentWidth={width}
                            source={sourceHTML(
                               overviewData
                            )}
                            tagsStyles={tagsStyles}
-                        />
+                        /> */}
                         </ScrollView>
                      ) : (
                         <RenderHtml

@@ -18,8 +18,8 @@ export const parseStructureDataForArticle = (data) => {
       titre_mg: obj.titre?.titre_mg,
       chapitre_id: obj.chapitre?.id,
       chapitre_numero: obj.chapitre?.numero,
-      chapitre_titre_fr: obj.chapitre?.titre_fr,
-      chapitre_titre_mg: obj.chapitre?.titre_mg,
+      chapitre_titre_fr: obj.chapitre?.titre_chapitre_fr,
+      chapitre_titre_mg: obj.chapitre?.titre_chapitre_mg,
       section_id: obj.section?.id,
       section_titre_fr: obj.section?.titre_section_fr,
       section_titre_mg: obj.section?.titre_section_mg,
@@ -81,8 +81,8 @@ export const parseDataArticleLazyLoading = (obj) => {
       titre_mg: obj.titre?.titre_mg,
       chapitre_id: obj.chapitre?.id,
       chapitre_numero: obj.chapitre?.numero,
-      chapitre_titre_fr: obj.chapitre?.titre_fr,
-      chapitre_titre_mg: obj.chapitre?.titre_mg,
+      chapitre_titre_fr: obj.chapitre?.titre_chapitre_fr,
+      chapitre_titre_mg: obj.chapitre?.titre_chapitre_mg,
       section_id: obj.section?.id,
       section_titre_fr: obj.section?.titre_section_fr,
       section_titre_mg: obj.section?.titre_section_mg,
@@ -150,18 +150,18 @@ export const getOverviewData = (articles) => {
       for(let article of articles){
          if(article.titre_fr){
             if(!idTitres.includes(article.titre_id)){
-               overview += `<br/><h2 style="color:${Colors.greenAvg}">TITRE N° ${article.titre_numero}: ${article.titre_fr}</h2>`;
+               overview += `<h3 style="color:${Colors.greenAvg}">TITRE N° ${article.titre_numero}: ${article.titre_fr}</h3>`;
                idTitres.push(article.titre_id);
             }
             if(article.chapitre_titre_fr){
                if(!idChapitres.includes(article.chapitre_id)){
-                  overview += `<br/><h3 style="color:${Colors.black}">CHAPITRE N° ${article.chapitre_numero}: ${article.chapitre_titre_fr}</h3>`;
+                  overview += `<h4 style="color:${Colors.black}">CHAPITRE N° ${article.chapitre_numero}: ${article.chapitre_titre_fr}</h4>`;
                   idChapitres.push(article.chapitre_titre_id);
                }
             }
             if(article.section_titre_fr){
                if(!idSections.includes(article.section_id)){
-                  overview += `<br/><h4 style="color:${Colors.black}; text-decoration: underline">SECTION: ${article.section_titre_fr}</h4>`;
+                  overview += `<h4 style="color:${Colors.black}; text-decoration: underline">SECTION: ${article.section_titre_fr}</h4>`;
                   idSections.push(article.section_id);
                }
             }

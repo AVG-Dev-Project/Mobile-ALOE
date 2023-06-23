@@ -22,6 +22,7 @@ import {
    widthPercentageToDP,
    heightPercentageToDP,
    fetchArticlesByContenuToApi,
+   getOverviewData
 } from '_utils';
 import {
    addFavoris,
@@ -419,6 +420,7 @@ export default function ListingArticle({ navigation, route }) {
                               : 'Fampisehoana ny rehetra'
                         }`,
                         contenuMother: contenuMother,
+                        overviewData: getOverviewData(filterArticleToListByContenu(idOfTheContenuMother, allArticles))
                      });
                   }}
                />
