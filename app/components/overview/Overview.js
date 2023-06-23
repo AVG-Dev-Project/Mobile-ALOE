@@ -13,7 +13,6 @@ import {
 import { ScrollView as ScrollViewBottomSheet } from 'react-native-gesture-handler';
 import React, { useState, useMemo, useRef, useCallback } from 'react';
 import RenderHtml from 'react-native-render-html';
-import { FlashList } from '@shopify/flash-list';
 import { useSelector } from 'react-redux';
 import * as MediaLibrary from 'expo-media-library';
 import { styles } from './styles';
@@ -24,7 +23,6 @@ import { Colors } from '_theme/Colors';
 import {
    parsingTags,
    heightPercentageToDP,
-   filterArticleToListByContenu,
 } from '_utils';
 
 export default function OverviewScreen({ navigation, route }) {
@@ -39,10 +37,7 @@ export default function OverviewScreen({ navigation, route }) {
    const [contenuMother, setContenuMother] = useState(
       route.params.contenuMother
    );
-   const allArticles = useSelector((selector) => selector.loi.articles);
-   const allArticlesRelatedToTheContenu =
-      allArticles.length &&
-      filterArticleToListByContenu(contenuMother.id, allArticles);
+   const overviewData = route.params.overviewData;
    const snapPoints = useMemo(() => [0, '60%', '90%'], []);
 
    //permission
@@ -53,6 +48,7 @@ export default function OverviewScreen({ navigation, route }) {
    //all refs
    const bottomSheetRef = useRef(null);
    const imageRef = useRef();
+
 
    //all function
 
@@ -77,13 +73,9 @@ export default function OverviewScreen({ navigation, route }) {
       [fontSizeDynamic]
    );
 
-   // Initialisation des variables pour le titre, le chapitre et la section actuels
-   let currentTitre = null;
-   let currentChapitre = null;
-   let currentSection = null;
 
    // Fonction pour afficher tous les articles
-   const renderArticle = useCallback(
+   /*const renderArticle = useCallback(
       (article) => {
          // Vérification et affichage du titre
          if (currentTitre !== article.titre_fr) {
@@ -195,7 +187,7 @@ export default function OverviewScreen({ navigation, route }) {
          );
       },
       [fontSizeDynamic, currentTitre, currentChapitre, currentSection]
-   );
+   );*/
 
    //all efects
 
@@ -282,28 +274,22 @@ export default function OverviewScreen({ navigation, route }) {
                         </TouchableOpacity>
                      </View>
 
-                     {allArticlesRelatedToTheContenu.length ? (
-                        <View
+                     {overviewData ? (
+                        <ScrollView
                            style={{
                               flex: 1,
                               paddingRight: 4,
                               marginTop: 18,
                            }}
                         >
-                           <FlashList
-                              key={'_'}
-                              data={allArticlesRelatedToTheContenu}
-                              renderItem={({ item }) => renderArticle(item)}
-                              keyExtractor={(item) => item.id.toString()}
-                              estimatedItemSize={100}
-                              getItemLayout={(data, index) => ({
-                                 length: data.length,
-                                 offset: data.length * index,
-                                 index,
-                              })}
-                              extraData={allArticlesRelatedToTheContenu}
-                           />
-                        </View>
+                        <RenderHtml
+                           contentWidth={width}
+                           source={sourceHTML(
+                              overviewData
+                           )}
+                           tagsStyles={tagsStyles}
+                        />
+                        </ScrollView>
                      ) : (
                         <RenderHtml
                            contentWidth={width}

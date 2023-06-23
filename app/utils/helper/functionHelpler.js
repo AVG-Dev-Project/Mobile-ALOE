@@ -1,6 +1,7 @@
 // packages
 import { LoiService } from '_utils/services/LoiService';
 import { DoleanceSchema } from '_utils/storage/database';
+import { Colors } from '_theme/Colors';
 import { Dimensions, PixelRatio } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
@@ -139,6 +140,36 @@ export const filterArticleToListByContenu = (idContenu, articles) => {
    );
    return res;
 };
+
+export const getOverviewData = (articles) => {
+      let overview = "";
+      let idTitres = [];
+      let idChapitres = [];
+      let idSections = [];
+
+      for(let article of articles){
+         if(article.titre_fr){
+            if(!idTitres.includes(article.titre_id)){
+               overview += `<br/><h2 style="color:${Colors.greenAvg}">TITRE N° ${article.titre_numero}: ${article.titre_fr}</h2>`;
+               idTitres.push(article.titre_id);
+            }
+            if(article.chapitre_titre_fr){
+               if(!idChapitres.includes(article.chapitre_id)){
+                  overview += `<br/><h3 style="color:${Colors.black}">CHAPITRE N° ${article.chapitre_numero}: ${article.chapitre_titre_fr}</h3>`;
+                  idChapitres.push(article.chapitre_titre_id);
+               }
+            }
+            if(article.section_titre_fr){
+               if(!idSections.includes(article.section_id)){
+                  overview += `<br/><h4 style="color:${Colors.black}; text-decoration: underline">SECTION: ${article.section_titre_fr}</h4>`;
+                  idSections.push(article.section_id);
+               }
+            }
+         }
+         overview += article.contenu_fr?.split('________________')[1];
+      }
+      return overview;
+   }
 
 export const checkAndsendMailFromLocalDBToAPI = async () => {
    let mails = await DoleanceSchema.query({ columns: '*' });

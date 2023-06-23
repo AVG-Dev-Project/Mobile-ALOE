@@ -8,7 +8,7 @@ import {
    Platform,
    Pressable,
 } from 'react-native';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import { FlashList } from '@shopify/flash-list';
 import * as FileSystem from 'expo-file-system';
@@ -19,6 +19,8 @@ import {
    parseDataContenuLazyLoading,
    parsingTags,
    heightPercentageToDP,
+   filterArticleToListByContenu,
+   getOverviewData
 } from '_utils';
 import { styles } from './stylesContenu';
 import { Icon } from '@rneui/themed';
@@ -43,6 +45,7 @@ export default function ListingContenu({ navigation }) {
    const allContenusFromStore = useSelector(
       (selector) => selector.loi.contenus
    );
+   const allArticlesFromStore = useSelector((selector) => selector.loi.articles);
    const urlApiAttachement = 'https://aloe.iteam-s.mg';
    const [isGetNextData, setIsGetNextData] = useState(false);
    const [contenuList, setContenuList] = useState(
@@ -252,6 +255,7 @@ export default function ListingContenu({ navigation }) {
                                     : 'Fampisehoana ny rehetra'
                               }`,
                               contenuMother: item,
+                              overviewData: getOverviewData(filterArticleToListByContenu(item.id, allArticlesFromStore))
                            });
                         }}
                      >
