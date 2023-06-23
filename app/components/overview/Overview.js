@@ -194,7 +194,7 @@ export default function OverviewScreen({ navigation, route }) {
             />
          );
       },
-      [fontSizeDynamic]
+      [fontSizeDynamic, currentTitre, currentChapitre, currentSection]
    );
 
    //all efects
