@@ -20,10 +20,7 @@ import { Icon, Button } from '@rneui/themed';
 import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import bgImage from '_images/abstract_3.jpg';
 import { Colors } from '_theme/Colors';
-import {
-   parsingTags,
-   heightPercentageToDP,
-} from '_utils';
+import { parsingTags, heightPercentageToDP } from '_utils';
 
 export default function OverviewScreen({ navigation, route }) {
    const [status, requestPermission] = MediaLibrary.usePermissions();
@@ -45,12 +42,11 @@ export default function OverviewScreen({ navigation, route }) {
       requestPermission();
    }
 
-   console.log("overviewData : ", overviewData);
+   //console.log('overviewData : ', overviewData);
 
    //all refs
    const bottomSheetRef = useRef(null);
    const imageRef = useRef();
-
 
    //all function
 
@@ -74,7 +70,6 @@ export default function OverviewScreen({ navigation, route }) {
       }),
       [fontSizeDynamic]
    );
-
 
    // Fonction pour afficher tous les articles
    /*const renderArticle = useCallback(
@@ -284,13 +279,11 @@ export default function OverviewScreen({ navigation, route }) {
                               marginTop: 18,
                            }}
                         >
-                        {/* <RenderHtml
-                           contentWidth={width}
-                           source={sourceHTML(
-                              overviewData
-                           )}
-                           tagsStyles={tagsStyles}
-                        /> */}
+                           <RenderHtml
+                              contentWidth={width}
+                              source={sourceHTML(overviewData)}
+                              tagsStyles={tagsStyles}
+                           />
                         </ScrollView>
                      ) : (
                         <RenderHtml

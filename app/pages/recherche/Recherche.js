@@ -27,8 +27,6 @@ import {
    nameStackNavigation as nameNav,
    parsingTags,
    heightPercentageToDP,
-   getOverviewData,
-   filterArticleToListByContenu,
 } from '_utils';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import * as FileSystem from 'expo-file-system';
@@ -574,26 +572,6 @@ export default function Recherche({ navigation, route }) {
                                 } faha`}{' '}
                            {item.numero}
                         </Text>
-                        <Pressable
-                           activeOpacity={0.5}
-                           onPress={() => {
-                              navigation.navigate(nameNav.overview, {
-                                 titleScreen: `${
-                                    langueActual === 'fr'
-                                       ? "Vue d'ensemble"
-                                       : 'Fampisehoana ny rehetra'
-                                 }`,
-                                 contenuMother: item,
-                                 overviewData: getOverviewData(filterArticleToListByContenu(item.id, allArticles))
-                              });
-                           }}
-                        >
-                           <Icon
-                              name="visibility"
-                              color={Colors.greenAvg}
-                              size={25}
-                           />
-                        </Pressable>
                      </View>
                      <Text
                         style={{
