@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
       borderRadius: 8,
    },
    view_search: {
-      height: Dimensions.get('window').width < 800 ?  '14%' : "12%",
+      height: Dimensions.get('window').width < 800 ? '14%' : '12%',
    },
    button_after_inputSearch: {
       flexDirection: 'row',

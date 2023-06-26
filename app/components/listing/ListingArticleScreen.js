@@ -22,7 +22,7 @@ import {
    widthPercentageToDP,
    heightPercentageToDP,
    fetchArticlesByContenuToApi,
-   getOverviewData
+   getOverviewData,
 } from '_utils';
 import {
    addFavoris,
@@ -420,13 +420,19 @@ export default function ListingArticle({ navigation, route }) {
                               : 'Fampisehoana ny rehetra'
                         }`,
                         contenuMother: contenuMother,
-                        overviewData: getOverviewData(filterArticleToListByContenu(idOfTheContenuMother, allArticles))
+                        overviewData: getOverviewData(
+                           filterArticleToListByContenu(
+                              idOfTheContenuMother,
+                              allArticles
+                           ),
+                           langueActual
+                        ),
                      });
                   }}
                />
                {contenuMother.en_tete_contenu_fr && (
                   <Button
-                     title="VISA"
+                     title={langueActual === 'fr' ? 'VISA' : 'Fahalalana'}
                      icon={{
                         name: 'article',
                         type: 'material',
@@ -453,7 +459,11 @@ export default function ListingArticle({ navigation, route }) {
                )}
                {contenuMother.expose_des_motifs_contenu_fr && (
                   <Button
-                     title="Exposé des motifs"
+                     title={
+                        langueActual === 'fr'
+                           ? 'Exposé des motifs'
+                           : 'Famelabelarana ny antonantony'
+                     }
                      icon={{
                         name: 'description',
                         type: 'material',
@@ -482,7 +492,7 @@ export default function ListingArticle({ navigation, route }) {
                )}
                {contenuMother.note_contenu_fr && (
                   <Button
-                     title="Notes"
+                     title={langueActual === 'fr' ? 'Notes' : 'Naoty'}
                      icon={{
                         name: 'notes',
                         type: 'material',
