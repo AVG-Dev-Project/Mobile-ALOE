@@ -22,6 +22,7 @@ import {
    widthPercentageToDP,
    heightPercentageToDP,
    fetchArticlesByContenuToApi,
+   getOverviewData,
 } from '_utils';
 import {
    addFavoris,
@@ -304,7 +305,7 @@ export default function ListingArticle({ navigation, route }) {
                      {langueActual === 'fr'
                         ? item.contenu_fr?.split('________________')[0]
                         : item.contenu_mg?.split('________________')[0] ??
-                          'Tsy misy dikan-teny malagasy ito andininy iray ito.'}
+                          item.contenu_fr?.split('________________')[0]}
                      {' ...'}
                   </Text>
                   <View
@@ -405,9 +406,41 @@ export default function ListingArticle({ navigation, route }) {
                }}
             />
             <View style={styles.button_after_inputSearch}>
+               <Button
+                  icon={{
+                     name: 'visibility',
+                     type: 'material',
+                     size: 20,
+                     color: Colors.white,
+                  }}
+                  titleStyle={{ fontSize: 16 }}
+                  buttonStyle={{
+                     borderRadius: 20,
+                     marginHorizontal: 1,
+                     backgroundColor: Colors.greenAvg,
+                  }}
+                  containerStyle={styles.button_entete}
+                  onPress={() => {
+                     navigation.navigate(nameNav.overview, {
+                        titleScreen: `${
+                           langueActual === 'fr'
+                              ? "Vue d'ensemble"
+                              : 'Fampisehoana ny rehetra'
+                        }`,
+                        contenuMother: contenuMother,
+                        overviewData: getOverviewData(
+                           filterArticleToListByContenu(
+                              idOfTheContenuMother,
+                              allArticles
+                           ),
+                           langueActual
+                        ),
+                     });
+                  }}
+               />
                {contenuMother.en_tete_contenu_fr && (
                   <Button
-                     title="VISA"
+                     title={langueActual === 'fr' ? 'VISA' : 'Fahalalana'}
                      icon={{
                         name: 'article',
                         type: 'material',
@@ -416,7 +449,8 @@ export default function ListingArticle({ navigation, route }) {
                      }}
                      titleStyle={{ fontSize: 16 }}
                      buttonStyle={{
-                        borderRadius: 15,
+                        borderRadius: 20,
+                        marginHorizontal: 1,
                         backgroundColor: Colors.greenAvg,
                      }}
                      containerStyle={styles.button_entete}
@@ -433,7 +467,11 @@ export default function ListingArticle({ navigation, route }) {
                )}
                {contenuMother.expose_des_motifs_contenu_fr && (
                   <Button
-                     title="Exposé des motifs"
+                     title={
+                        langueActual === 'fr'
+                           ? 'Exposé des motifs'
+                           : 'Famelabelarana ny antonantony'
+                     }
                      icon={{
                         name: 'description',
                         type: 'material',
@@ -442,7 +480,8 @@ export default function ListingArticle({ navigation, route }) {
                      }}
                      titleStyle={{ fontSize: 16 }}
                      buttonStyle={{
-                        borderRadius: 15,
+                        borderRadius: 20,
+                        marginHorizontal: 1,
                         backgroundColor: Colors.greenAvg,
                      }}
                      containerStyle={{ flex: 2 }}
@@ -461,7 +500,7 @@ export default function ListingArticle({ navigation, route }) {
                )}
                {contenuMother.note_contenu_fr && (
                   <Button
-                     title="Notes"
+                     title={langueActual === 'fr' ? 'Notes' : 'Naoty'}
                      icon={{
                         name: 'notes',
                         type: 'material',
@@ -470,7 +509,8 @@ export default function ListingArticle({ navigation, route }) {
                      }}
                      titleStyle={{ fontSize: 16 }}
                      buttonStyle={{
-                        borderRadius: 15,
+                        borderRadius: 20,
+                        marginHorizontal: 1,
                         backgroundColor: Colors.greenAvg,
                      }}
                      containerStyle={styles.button_entete}

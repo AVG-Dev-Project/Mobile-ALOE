@@ -16,11 +16,6 @@ export default function BottomSheetCustom({ bottomSheetRef, snapPoints }) {
       dispatch(changeLanguage(langue));
    };
 
-   //all efects
-   // useEffect(() => {
-   //    bottomSheetRef.current.close();
-   // }, []);
-
    //components
    const renderBackDrop = useCallback(
       (props) => <BottomSheetBackdrop {...props} opacity={0.6} />,

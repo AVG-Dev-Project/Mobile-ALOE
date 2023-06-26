@@ -28,6 +28,7 @@ export class ArticleSchema extends BaseModel {
          chapitre_titre_fr: { type: types.TEXT },
          chapitre_titre_mg: { type: types.TEXT },
          section_id: { type: types.INTEGER },
+         section_numero: { type: types.INTEGER },
          section_titre_fr: { type: types.TEXT },
          section_titre_mg: { type: types.TEXT },
          contenu_fr: { type: types.TEXT },

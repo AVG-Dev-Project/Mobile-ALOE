@@ -27,6 +27,7 @@ import {
    widthPercentageToDP,
    heightPercentageToDP,
    isAloeFile,
+   getOverviewData
 } from './helper/functionHelpler';
 
 import {
@@ -73,4 +74,5 @@ export {
    widthPercentageToDP,
    heightPercentageToDP,
    isAloeFile,
+   getOverviewData
 };

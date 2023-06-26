@@ -4,6 +4,7 @@ import {
    useWindowDimensions,
    ScrollView,
    TouchableOpacity,
+   Pressable,
    Platform,
    ToastAndroid,
    Dimensions,
@@ -22,7 +23,11 @@ import { useTranslation } from 'react-i18next';
 import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { FlashList } from '@shopify/flash-list';
 import { useDispatch, useSelector } from 'react-redux';
-import { nameStackNavigation as nameNav, parsingTags } from '_utils';
+import {
+   nameStackNavigation as nameNav,
+   parsingTags,
+   heightPercentageToDP,
+} from '_utils';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
@@ -546,22 +551,31 @@ export default function Recherche({ navigation, route }) {
             >
                <View style={styles.view_render}>
                   <View>
-                     <Text
+                     <View
                         style={{
-                           fontWeight: 'bold',
-                           fontSize: 18,
+                           display: 'flex',
+                           flexDirection: 'row',
+                           alignItems: 'center',
+                           justifyContent: 'space-between',
                         }}
                      >
-                        {langueActual === 'fr'
-                           ? item.type_nom_fr + ' n°'
-                           : item.type_nom_mg ??
-                             item.type_nom_fr + ' faha '}{' '}
-                        {item.numero}
-                     </Text>
+                        <Text
+                           style={{
+                              fontWeight: 'bold',
+                              fontSize: 18,
+                           }}
+                        >
+                           {langueActual === 'fr'
+                              ? item.type_nom_fr + ' n°'
+                              : `${
+                                   item.type_nom_mg ?? item.type_nom_fr
+                                } faha`}{' '}
+                           {item.numero}
+                        </Text>
+                     </View>
                      <Text
                         style={{
-                           fontSize:
-                              Dimensions.get('window').height < 700 ? 10 : 12,
+                           fontSize: heightPercentageToDP(1.5),
                            textTransform: 'lowercase',
                         }}
                      >

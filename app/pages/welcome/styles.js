@@ -9,26 +9,9 @@ const styles = StyleSheet.create({
       paddingHorizontal: 4,
    },
    images_welcome: {
-      height:
-         Dimensions.get('window').height < 800
-            ? heightPercentageToDP(20)
-            : heightPercentageToDP(30),
-      width:
-         Dimensions.get('window').width < 800
-            ? widthPercentageToDP(30)
-            : widthPercentageToDP(40),
+      width: widthPercentageToDP(90),
+      marginTop: heightPercentageToDP(25),
    },
-   /*
-   images_welcome: {
-      height:
-         Dimensions.get('window').height < 800
-            ? heightPercentageToDP(20)
-            : heightPercentageToDP(30),
-      width:
-         Dimensions.get('window').width < 800
-            ? widthPercentageToDP(30)
-            : widthPercentageToDP(40),
-   },*/
    logo_image: {
       height: heightPercentageToDP(18),
       width: widthPercentageToDP(76),
@@ -62,7 +45,7 @@ const styles = StyleSheet.create({
       width: '100%',
    },
    labelDescriptionLogoUsaid: {
-      fontSize: 12,
+      fontSize: 13,
       fontWeight: 'bold',
    },
 });

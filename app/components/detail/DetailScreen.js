@@ -716,9 +716,9 @@ export default function Detail({ navigation, route }) {
                   <Text style={styles.value_info_article}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
                      {langueActual === 'fr'
-                        ? oneArticle.chapitre_titre_fr ?? ''
+                        ? oneArticle.chapitre_titre_fr
                         : oneArticle.chapitre_titre_mg ??
-                          'Tsy misy dikan-teny malagasy.'}
+                          oneArticle.chapitre_titre_fr}
                   </Text>
                </View>
 
