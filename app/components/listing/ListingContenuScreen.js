@@ -1,14 +1,13 @@
 import {
    View,
    Text,
-   Dimensions,
    ToastAndroid,
    TouchableOpacity,
    ActivityIndicator,
    Platform,
    Pressable,
 } from 'react-native';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import { FlashList } from '@shopify/flash-list';
 import * as FileSystem from 'expo-file-system';
@@ -18,7 +17,6 @@ import {
    fetchContenusToApi,
    parseDataContenuLazyLoading,
    parsingTags,
-   widthPercentageToDP,
    heightPercentageToDP,
 } from '_utils';
 import { styles } from './stylesContenu';
@@ -214,7 +212,7 @@ export default function ListingContenu({ navigation }) {
                   titleScreen: `${
                      langueActual === 'fr'
                         ? item.type_nom_fr + ' n° '
-                        : item.type_nom_mg + ' faha '
+                        : `${item.type_nom_mg ?? item.type_nom_fr} faha`
                   } ${item.numero}`,
                   contenuMother: item,
                });
@@ -238,23 +236,11 @@ export default function ListingContenu({ navigation }) {
                      >
                         {langueActual === 'fr'
                            ? item.type_nom_fr + ' n°'
-                           : item.type_nom_mg ?? 'Votoantiny' + ' faha '}{' '}
+                           : `${
+                                item.type_nom_mg ?? item.type_nom_fr
+                             } faha`}{' '}
                         {item.numero}
                      </Text>
-                     {/*<Pressable
-                        activeOpacity={0.5}
-                        onPress={() => {
-                           navigation.navigate(nameNav.overview, {
-                              titleScreen: `Overview`,
-                           });
-                        }}
-                     >
-                        <Icon
-                           name="visibility"
-                           color={Colors.greenAvg}
-                           size={25}
-                        />
-                     </Pressable>*/}
                   </View>
                   <Text
                      style={{
@@ -322,8 +308,7 @@ export default function ListingContenu({ navigation }) {
                            {parsingTags(item.tag).map((tag) =>
                               langueActual === 'fr'
                                  ? tag.contenu_fr + ', '
-                                 : tag.contenu_mg ??
-                                   ', ' + tag.contenu_fr + ', '
+                                 : `${tag.contenu_mg ?? tag.contenu_fr},}`
                            )}
                         </Text>
                      </View>
