@@ -9,34 +9,18 @@ const styles = StyleSheet.create({
       paddingHorizontal: 4,
    },
    images_welcome: {
-      height:
-         Dimensions.get('window').height < 800
-            ? heightPercentageToDP(30)
-            : heightPercentageToDP(40),
-      width:
-         Dimensions.get('window').width < 800
-            ? widthPercentageToDP(50)
-            : widthPercentageToDP(60),
+      width: widthPercentageToDP(90),
+      marginTop: heightPercentageToDP(25),
    },
    logo_image: {
-      height: heightPercentageToDP(8),
-      width: widthPercentageToDP(48),
+      height: heightPercentageToDP(18),
+      width: widthPercentageToDP(76),
    },
    view_button_arrondi: {
       borderWidth: 2,
       borderColor: Colors.greenAvg,
       borderRadius: 60,
       marginVertical: 20,
-   },
-   view_button_indicator: {
-      marginVertical: 20,
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-   },
-   label_indicator: {
-      fontSize: 11,
-      color: Colors.greenAvg,
    },
    bouttonStyle: {
       backgroundColor: Colors.greenAvg,
@@ -61,7 +45,7 @@ const styles = StyleSheet.create({
       width: '100%',
    },
    labelDescriptionLogoUsaid: {
-      fontSize: 12,
+      fontSize: 13,
       fontWeight: 'bold',
    },
 });

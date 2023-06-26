@@ -49,9 +49,6 @@ export default function Welcome() {
    const isUserConnectedToInternet = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
-   /*const [isAllDataAlsoUploaded, setIsAllDataAlsoUploaded] = useState(false);
-   const [isAllDataAlsoDownloaded, setIsAllDataAlsoDownloaded] =
-      useState(false);*/
    const [isDataLoaded, setIsDataLoaded] = useState(false);
 
    //function
@@ -167,19 +164,18 @@ export default function Welcome() {
    return (
       <ScrollView style={styles.view_container_welcome}>
          <View style={{ alignItems: 'center' }}>
-            <Image
-               style={styles.images_welcome}
-               source={require('_images/aloe.png')}
-            />
-            <Text
-               style={{
-                  fontSize: width < 370 ? 20 : 30,
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-               }}
-            >
-               Bienvenue sur ALOE
-            </Text>
+            <View style={styles.images_welcome}>
+               <Text
+                  style={{
+                     fontSize: width < 370 ? 25 : 35,
+                     fontWeight: 'bold',
+                     textAlign: 'center',
+                  }}
+               >
+                  Bienvenue sur{' '}
+                  <Text style={{ color: Colors.greenAvg }}>ALOE</Text>
+               </Text>
+            </View>
             {isDataAvailable ? (
                <Text style={{ textAlign: 'center', marginVertical: 5 }}>
                   ALOE ou{' '}

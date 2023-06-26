@@ -17,16 +17,16 @@ export const parseStructureDataForArticle = (data) => {
       titre_mg: obj.titre?.titre_mg,
       chapitre_id: obj.chapitre?.id,
       chapitre_numero: obj.chapitre?.numero,
-      chapitre_titre_fr: obj.chapitre?.titre_fr,
-      chapitre_titre_mg: obj.chapitre?.titre_mg,
+      chapitre_titre_fr: obj.chapitre?.titre_chapitre_fr,
+      chapitre_titre_mg: obj.chapitre?.titre_chapitre_mg,
       section_id: obj.section?.id,
+      section_numero: obj.section?.numero,
       section_titre_fr: obj.section?.titre_section_fr,
       section_titre_mg: obj.section?.titre_section_mg,
       contenu_fr: obj.contenu_fr,
       contenu_mg: obj.contenu_mg,
    }));
 };
-
 export const parseStructureDataForContenu = (data) => {
    return data.map((d) => ({
       id: d.id,
@@ -81,9 +81,10 @@ export const parseDataArticleLazyLoading = (obj) => {
       titre_mg: obj.titre?.titre_mg,
       chapitre_id: obj.chapitre?.id,
       chapitre_numero: obj.chapitre?.numero,
-      chapitre_titre_fr: obj.chapitre?.titre_fr,
-      chapitre_titre_mg: obj.chapitre?.titre_mg,
+      chapitre_titre_fr: obj.chapitre?.titre_chapitre_fr,
+      chapitre_titre_mg: obj.chapitre?.titre_chapitre_mg,
       section_id: obj.section?.id,
+      section_numero: obj.section?.numero,
       section_titre_fr: obj.section?.titre_section_fr,
       section_titre_mg: obj.section?.titre_section_mg,
       contenu_fr: obj.contenu_fr,
@@ -139,6 +140,54 @@ export const filterArticleToListByContenu = (idContenu, articles) => {
       (article) => parseInt(article.contenu) === parseInt(idContenu)
    );
    return res;
+};
+
+export const getOverviewData = (articles, lang) => {
+   let overview = '';
+   let idTitres = [];
+   let idChapitres = [];
+   let idSections = [];
+
+   for (let article of articles) {
+      let titre =
+         lang === 'fr'
+            ? article.titre_fr
+            : article.titre_mg ?? article.titre_fr;
+      let chapitre =
+         lang === 'fr'
+            ? article.chapitre_titre_fr
+            : article.chapitre_titre_mg ?? article.chapitre_titre_fr;
+      let section =
+         lang === 'fr'
+            ? article.section_titre_fr
+            : article.section_titre_mg ?? article.section_titre_fr;
+      let article_contenu =
+         lang === 'fr'
+            ? article.contenu_fr?.split('________________')[1]
+            : article.contenu_mg?.split('________________')[1] ??
+              article.contenu_fr?.split('________________')[1];
+
+      if (article.titre_fr) {
+         if (!idTitres.includes(article.titre_id)) {
+            overview += `<h3 style="color:${Colors.greenAvg}">TITRE N° ${article.titre_numero}: ${titre}</h3>`;
+            idTitres.push(article.titre_id);
+         }
+         if (article.chapitre_titre_fr) {
+            if (!idChapitres.includes(article.chapitre_id)) {
+               overview += `<h4 style="color:${Colors.black}">CHAPITRE N° ${article.chapitre_numero}: ${chapitre}</h4>`;
+               idChapitres.push(article.chapitre_titre_id);
+            }
+         }
+         if (article.section_titre_fr) {
+            if (!idSections.includes(article.section_id)) {
+               overview += `<h4 style="color:${Colors.black}; text-decoration: underline">SECTION N° ${article.section_numero}: ${section}</h4>`;
+               idSections.push(article.section_id);
+            }
+         }
+      }
+      overview += `${article_contenu}`;
+   }
+   return overview;
 };
 
 export const checkAndsendMailFromLocalDBToAPI = async () => {
