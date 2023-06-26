@@ -42,8 +42,6 @@ export default function OverviewScreen({ navigation, route }) {
       requestPermission();
    }
 
-   //console.log('overviewData : ', overviewData);
-
    //all refs
    const bottomSheetRef = useRef(null);
    const imageRef = useRef();

@@ -11,6 +11,5 @@ export const insertOrUpdateToDBFunc = async (
       db_table
    );
    const result = await databaseLayer.bulkInsertOrReplace(data_to_insert);
-   console.log(`${db_table} inséré dans la base!`);
    return result;
 };
