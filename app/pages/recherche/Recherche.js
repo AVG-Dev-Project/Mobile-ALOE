@@ -76,10 +76,16 @@ const filterGlobal = (langue, array, theme, type, query, tagChoice) => {
       res = array;
    }
    if (theme && theme !== 'tout') {
-      res = res.filter((_contenu) => _contenu.thematique_nom_fr === theme);
+      res =
+         langue === 'fr'
+            ? res.filter((_contenu) => _contenu.thematique_nom_fr === theme)
+            : res.filter((_contenu) => _contenu.thematique_nom_mg === theme);
    }
    if (type && type !== 'tout') {
-      res = res.filter((_contenu) => _contenu.type_nom_fr === type);
+      res =
+         langue === 'fr'
+            ? res.filter((_contenu) => _contenu.type_nom_fr === type)
+            : res.filter((_contenu) => _contenu.type_nom_mg === type);
    }
    if (query) {
       if (langue === 'fr') {
@@ -135,11 +141,20 @@ const filterGlobal = (langue, array, theme, type, query, tagChoice) => {
       }
    }
    if (tagChoice.length > 0) {
-      res = res.filter((_contenu) => {
-         return parsingTags(_contenu.tag).some((tag) =>
-            tagChoice.includes(tag.contenu_fr)
-         );
-      });
+      if (langue === 'fr') {
+         res = res.filter((_contenu) => {
+            return parsingTags(_contenu.tag).some((tag) =>
+               tagChoice.includes(tag.contenu_fr)
+            );
+         });
+      }
+      if (langue === 'mg') {
+         res = res.filter((_contenu) => {
+            return parsingTags(_contenu.tag).some((tag) =>
+               tagChoice.includes(tag.contenu_mg)
+            );
+         });
+      }
    }
 
    return res;
@@ -161,10 +176,16 @@ const filterGlobalForDeepSearch = (
       res = arrayContenu;
    }
    if (theme && theme !== 'tout') {
-      res = res.filter((_contenu) => _contenu.thematique_nom_fr === theme);
+      res =
+         langue === 'fr'
+            ? res.filter((_contenu) => _contenu.thematique_nom_fr === theme)
+            : res.filter((_contenu) => _contenu.thematique_nom_mg === theme);
    }
    if (type && type !== 'tout') {
-      res = res.filter((_contenu) => _contenu.type_nom_fr === type);
+      res =
+         langue === 'fr'
+            ? res.filter((_contenu) => _contenu.type_nom_fr === type)
+            : res.filter((_contenu) => _contenu.type_nom_mg === type);
    }
    if (query) {
       if (langue === 'fr') {
@@ -208,11 +229,20 @@ const filterGlobalForDeepSearch = (
       }
    }
    if (tagChoice.length > 0) {
-      res = res.filter((_contenu) => {
-         return parsingTags(_contenu.tag).some((tag) =>
-            tagChoice.includes(tag.contenu_fr)
-         );
-      });
+      if (langue === 'fr') {
+         res = res.filter((_contenu) => {
+            return parsingTags(_contenu.tag).some((tag) =>
+               tagChoice.includes(tag.contenu_fr)
+            );
+         });
+      }
+      if (langue === 'mg') {
+         res = res.filter((_contenu) => {
+            return parsingTags(_contenu.tag).some((tag) =>
+               tagChoice.includes(tag.contenu_mg)
+            );
+         });
+      }
    }
 
    return res;
@@ -952,7 +982,11 @@ export default function Recherche({ navigation, route }) {
                         reference={bottomSheetTypeRef}
                         filterBy={filterByType}
                         key={type.id}
-                        text={langueActual === 'fr' ? type.nom_fr : type.nom_mg}
+                        text={
+                           langueActual === 'fr'
+                              ? type.nom_fr
+                              : type.nom_mg ?? type.nom_fr
+                        }
                      />
                   ))}
                   <TouchableOpacity
@@ -1000,7 +1034,7 @@ export default function Recherche({ navigation, route }) {
                         text={
                            langueActual === 'fr'
                               ? thematique.nom_fr
-                              : thematique.nom_mg
+                              : thematique.nom_mg ?? thematique.nom_fr
                         }
                      />
                   ))}
