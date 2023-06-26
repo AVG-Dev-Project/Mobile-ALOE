@@ -43,9 +43,6 @@ export default function Welcome({ navigation }) {
    const isUserConnectedToInternet = useSelector(
       (selector) => selector.fonctionnality.isConnectedToInternet
    );
-   /*const [isAllDataAlsoUploaded, setIsAllDataAlsoUploaded] = useState(false);
-   const [isAllDataAlsoDownloaded, setIsAllDataAlsoDownloaded] =
-      useState(false);*/
    const [isDataLoaded, setIsDataLoaded] = useState(false);
 
    //function
