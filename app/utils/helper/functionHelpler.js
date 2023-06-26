@@ -2,6 +2,7 @@
 import { LoiService } from '_utils/services/LoiService';
 import { DoleanceSchema } from '_utils/storage/database';
 import { Dimensions, PixelRatio } from 'react-native';
+import { Colors } from '_theme/Colors';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
