@@ -4,6 +4,11 @@
    "txt_landing_home": "Ireo lalàna momba ny tontolo iainana sy miady amin'ny kolikoly eo am-pelatananao",
    "renseignez": "Fantaro izao!",
    "thematique": "Lohahevitra",
+   "status_connected": "Afaka manjifa aterneto ianao.",
+   "status_no_connected": "Tsy afaka manjifa aterneto ianao.",
+   "label_can_import_files": "Afaka ampidirinao eto ny rakitra misy ny lalàna rehetra.",
+   "label_import": "Hampiditra ny rakitra",
+   "label_return": "Hiverina",
    "contenu": "Didy aman-dalàna",
    "mot_publie_home": "Nivoaka ny ",
    "listing": {

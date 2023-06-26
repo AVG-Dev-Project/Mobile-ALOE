@@ -4,6 +4,11 @@
    "txt_landing_home": "Les lois environnementales et anticorruption à portée de main",
    "renseignez": "Renseignez-vous ici!",
    "thematique": "Thématique",
+   "label_import": "Importer le fichier",
+   "label_return": "Retour",
+   "status_connected": "Vous avez accès à Internet",
+   "status_no_connected": "Vous n'avez pas accès à Internet",
+   "label_can_import_files": "Vous pouvez importer les fichiers de données à partir de votre appareil.",
    "contenu": "Textes juridiques",
    "mot_publie_home": "Publié le ",
    "listing": {

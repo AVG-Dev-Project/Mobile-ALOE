@@ -35,7 +35,6 @@ import {
 export default function Home({ navigation }) {
    //all states
    const dispatch = useDispatch();
-   const isCarousel = React.useRef(null);
    const { height } = useWindowDimensions();
    const { t } = useTranslation();
    const allContenus = useSelector((selector) => selector.loi.contenus);

@@ -9,14 +9,13 @@ import {
 import { Colors } from '_theme/Colors';
 import Lottie from 'lottie-react-native';
 import { Icon, Button } from '@rneui/themed';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import NetInfo from '@react-native-community/netinfo';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import {
-   getStarted,
    isNetworkActive,
-   addFavoris,
    isConnectedToInternet,
    dataForStatistique,
 } from '_utils/redux/actions/action_creators';
@@ -37,6 +36,7 @@ export default function ImportedData({ navigation }) {
    //all datas
    const animation = useRef(null);
    const { width } = useWindowDimensions();
+   const { t } = useTranslation();
    const dispatch = useDispatch();
    const isUserNetworkActive = useSelector(
       (selector) => selector.fonctionnality.isNetworkActive
@@ -153,9 +153,7 @@ export default function ImportedData({ navigation }) {
 
    useEffect(() => {
       if (isUserConnectedToInternet && isUserNetworkActive) {
-         setMessageStatusInternet(
-            'Vous pouvez importer les fichiers de données à partir de votre appareil.'
-         );
+         setMessageStatusInternet(t('label_can_import_files'));
          checkAndsendMailFromLocalDBToAPI();
       }
       if (
@@ -194,8 +192,8 @@ export default function ImportedData({ navigation }) {
                   >
                      Status :{' '}
                      {isUserNetworkActive && isUserConnectedToInternet
-                        ? 'Vous avez accès à Internet'
-                        : "Vous n'avez pas accès à Internet"}
+                        ? t('status_connected')
+                        : t('status_no_connected')}
                   </Text>
                   {isUserNetworkActive && isUserConnectedToInternet ? (
                      <Icon
@@ -216,7 +214,7 @@ export default function ImportedData({ navigation }) {
                </Text>
                <View style={styles.view_for_button}>
                   <Button
-                     title="Importer le fichier"
+                     title={t('label_import')}
                      icon={{
                         name: 'file-upload',
                         type: 'material',
@@ -243,7 +241,7 @@ export default function ImportedData({ navigation }) {
             </View>
             <View>
                <Button
-                  title="Retour"
+                  title={t('label_return')}
                   titleStyle={{ fontSize: 20, fontWeight: 'bold' }}
                   buttonStyle={{
                      borderRadius: 30,
