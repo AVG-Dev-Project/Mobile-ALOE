@@ -119,7 +119,7 @@ export default function About({ navigation }) {
                <TouchableOpacity
                   activeOpacity={0.6}
                   onPress={() =>
-                     navigation.navigate(nameNav.importedData, {
+                     navigation.navigate(nameNav.downloadData, {
                         titleScreen:
                            langueActual === 'fr'
                               ? 'Importer les données'

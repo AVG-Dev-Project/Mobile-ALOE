@@ -131,6 +131,7 @@ export default function ListingContenu({ navigation }) {
                }`,
                ToastAndroid.SHORT
             );
+            handleToogleIsDownloading(contenu.id);
          }
       } catch (e) {
          ToastAndroid.show(

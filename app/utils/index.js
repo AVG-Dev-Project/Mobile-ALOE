@@ -27,6 +27,7 @@ import {
    widthPercentageToDP,
    heightPercentageToDP,
    isAloeFile,
+   getOverviewData,
    pushNotification,
 } from './helper/functionHelpler';
 
@@ -74,5 +75,6 @@ export {
    filterArticleToListByContenu,
    widthPercentageToDP,
    heightPercentageToDP,
+   getOverviewData,
    isAloeFile,
 };
