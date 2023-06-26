@@ -664,10 +664,7 @@ export default function Recherche({ navigation, route }) {
                                        : 'Andalam-pangalana ...',
                                     ToastAndroid.SHORT
                                  );
-                                 downloadPdfFile(
-                                    item,
-                                    item.attachement?.slice(21)
-                                 );
+                                 downloadPdfFile(item, item.attachement);
                               }}
                            >
                               <Icon

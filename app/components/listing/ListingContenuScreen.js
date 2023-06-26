@@ -327,10 +327,7 @@ export default function ListingContenu({ navigation }) {
                         <Pressable
                            activeOpacity={0.8}
                            onPress={() => {
-                              downloadPdfFile(
-                                 item,
-                                 item.attachement?.slice(21)
-                              );
+                              downloadPdfFile(item, item.attachement);
                               handleToogleIsDownloading(item.id);
                            }}
                         >
