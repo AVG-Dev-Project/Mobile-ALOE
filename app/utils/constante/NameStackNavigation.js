@@ -11,4 +11,5 @@ export const nameStackNavigation = {
    downloadData: 'DownloadData',
    information: 'Information',
    detailEntete: 'DetailEntete',
+   overview: 'Overview',
 };

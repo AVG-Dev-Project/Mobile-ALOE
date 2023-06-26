@@ -278,6 +278,7 @@ export default function Favoris({ navigation }) {
                </View>
             }
             data={dataForFlatList}
+            extraData={langueActual}
             key={'_'}
             keyExtractor={_idKeyExtractor}
             estimatedItemSize={100}

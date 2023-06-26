@@ -119,7 +119,7 @@ export default function About({ navigation }) {
                <TouchableOpacity
                   activeOpacity={0.6}
                   onPress={() =>
-                     navigation.navigate(nameNav.downloadData, {
+                     navigation.navigate(nameNav.importedData, {
                         titleScreen:
                            langueActual === 'fr'
                               ? 'Importer les données'
@@ -129,12 +129,12 @@ export default function About({ navigation }) {
                >
                   <Text
                      style={[
-                        styles.button_link_download,
+                        styles.button_link_import,
                         { borderBottomWidth: 1 },
                      ]}
                   >
                      {langueActual === 'fr'
-                        ? 'Importer le fichier'
+                        ? 'Importer les données'
                         : 'Hampiditra ny rakitra'}
                   </Text>
                </TouchableOpacity>

@@ -21,11 +21,7 @@ import ReactNativeBlobUtil from 'react-native-blob-util';
 import * as MediaLibrary from 'expo-media-library';
 import { styles } from './styles';
 import { Icon, FAB, Button } from '@rneui/themed';
-import {
-   BottomSheetModal,
-   BottomSheetBackdrop,
-   BottomSheetScrollView,
-} from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { printToFileAsync } from 'expo-print';
 import bgImage from '_images/abstract_3.jpg';
 import { Colors } from '_theme/Colors';
@@ -708,9 +704,8 @@ export default function Detail({ navigation, route }) {
                   <Text style={styles.value_info_article}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
                      {langueActual === 'fr'
-                        ? contenuMother[0].titre_fr
-                        : contenuMother[0].titre_mg ??
-                          contenuMother[0].titre_fr}
+                        ? oneArticle.titre_fr
+                        : oneArticle.titre_mg ?? oneArticle.titre_fr}
                   </Text>
                </View>
 
@@ -721,9 +716,9 @@ export default function Detail({ navigation, route }) {
                   <Text style={styles.value_info_article}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
                      {langueActual === 'fr'
-                        ? oneArticle.chapitre_titre_fr ?? ''
+                        ? oneArticle.chapitre_titre_fr
                         : oneArticle.chapitre_titre_mg ??
-                          'Tsy misy dikan-teny malagasy.'}
+                          oneArticle.chapitre_titre_fr}
                   </Text>
                </View>
 
@@ -734,9 +729,9 @@ export default function Detail({ navigation, route }) {
                   <Text style={styles.value_info_article}>
                      <Icon name={'star'} color={Colors.greenAvg} size={16} />{' '}
                      {langueActual === 'fr'
-                        ? contenuMother[0].section_titre_fr
-                        : contenuMother[0].section_titre_mg ??
-                          contenuMother[0].section_titre_fr}
+                        ? oneArticle.section_titre_fr
+                        : oneArticle.section_titre_mg ??
+                          oneArticle.section_titre_fr}
                   </Text>
                </View>
 
