@@ -385,12 +385,7 @@ export default function ListingArticle({ navigation, route }) {
       <View style={styles.view_container}>
          <View
             style={{
-               height:
-                  contenuMother.en_tete_contenu_fr !== null ||
-                  contenuMother.expose_des_motifs_contenu_fr !== null
-                     ? '12%'
-                     : 'auto',
-            }}
+               height: "14%"}}
          >
             <TextInput
                style={styles.input}
