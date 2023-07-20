@@ -130,13 +130,13 @@ export default function Welcome({ navigation }) {
                         color: Colors.greenAvg,
                      }}
                   >
-                     Accès sur les LOis Environnementales
+                     Accès aux LOis Environnementales
                   </Text>{' '}
-                  est une application mobile, accessible avec ou sans internet,
-                  qui regroupe les textes de lois environnementales et
-                  anticorruption pour contribuer à la réduction du trafic
-                  d'espèces sauvages afin d'améliorer la gouvernance des
-                  ressources naturelles.
+                  est une application mobile, accessible avec ou sans Internet,
+                  qui regroupe les textes sur les espèces sauvages, la lutte
+                  contre la corruption et le blanchiment d'argent pour
+                  contribuer à la réduction du trafic d'espèces sauvages afin
+                  d'améliorer la gouvernance des ressources naturelles.
                </Text>
             ) : (
                <>
@@ -156,13 +156,13 @@ export default function Welcome({ navigation }) {
                            color: Colors.greenAvg,
                         }}
                      >
-                        Accès sur les LOis Environnementales
+                        Accès aux LOis Environnementales
                      </Text>{' '}
                      est une application mobile, accessible avec ou sans
-                     Internet, qui regroupe les textes de lois environnementales
-                     et anticorruption pour contribuer à la réduction du trafic
-                     d'espèces sauvages afin d'améliorer la gouvernance des
-                     ressources naturelles.
+                     Internet, qui regroupe les textes sur les espèces sauvages,
+                     la lutte contre la corruption et le blanchiment d'argent
+                     pour contribuer à la réduction du trafic d'espèces sauvages
+                     afin d'améliorer la gouvernance des ressources naturelles.
                   </Text>
                </>
             )}
